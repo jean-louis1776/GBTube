@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3333;
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(path.resolve(path.resolve(), 'assets', 'static')));
 app.use(fileUpload({}));

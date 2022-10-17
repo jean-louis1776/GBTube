@@ -1,10 +1,13 @@
 import { jwt } from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import { ApiError } from '../errors/apiError.js'
 
+dotenv.config();
+
 export const authMiddleware = (req, res, next) => {
   try {
-    const authorization = req.headers.authorization
+    const authorization = req.headers.authorization;
     if (!authorization) {
       return next(ApiError.UnAuthorization());
     }
