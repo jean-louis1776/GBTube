@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 
 import { tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
 
-dotenv.config();
+//dotenv.config();
 
 class TokenService {
   async createNewTokens (user, refreshTokenId) {

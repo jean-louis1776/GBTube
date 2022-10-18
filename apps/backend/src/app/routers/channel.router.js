@@ -6,6 +6,6 @@ router.post('/', /*create()*/);
 router.put('/', /*edit()*/);
 router.get('/:id', /*getById*/ );
 router.get('/', /*getAll*/ );
-router.del('/:id', /*removeById*/)
+router.delete('/:id', /*removeById*/)
 
 export default router;
