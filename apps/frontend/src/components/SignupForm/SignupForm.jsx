@@ -9,7 +9,7 @@ const SignupForm = (props) => {
   return (
     <Stack className="signup-section">
       <Paper elevation={3} className="signup-paper">
-        <div className="signup-logo">
+        <Link to="/" className="signup-logo">
           <img src={logo} alt="Logo" height={45} />
 
           <Typography
@@ -20,7 +20,7 @@ const SignupForm = (props) => {
           >
             Geek<span style={{ color: '#fc1503' }}>Tube</span>
           </Typography>
-        </div>
+        </Link>
 
         <form
           // onSubmit={handleSubmit}
@@ -39,6 +39,15 @@ const SignupForm = (props) => {
 
             <input
               placeholder="Придумайте пароль"
+              name="password"
+              type="password"
+              // onChange={handlePassChange}
+              // value={password}
+              className="signup-input"
+            />
+
+            <input
+              placeholder="Повторите пароль"
               name="password"
               type="password"
               // onChange={handlePassChange}

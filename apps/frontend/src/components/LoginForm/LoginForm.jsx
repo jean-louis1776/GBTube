@@ -9,7 +9,7 @@ const LoginForm = (props) => {
   return (
     <Stack className="login-section">
       <Paper elevation={3} className="login-paper">
-        <div className="login-logo">
+        <Link to="/" className="login-logo">
           <img src={logo} alt="Logo" height={45} />
 
           <Typography
@@ -20,7 +20,7 @@ const LoginForm = (props) => {
           >
             Geek<span style={{ color: '#fc1503' }}>Tube</span>
           </Typography>
-        </div>
+        </Link>
 
         <form
           // onSubmit={handleSubmit}

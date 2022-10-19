@@ -13,8 +13,6 @@ import {
 export function App() {
   return (
     <Box sx={{ backgroundColor: '#fff' }}>
-      <Header />
-
       <Routes>
         <Route path="/" exact element={<MainPage />} />
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
