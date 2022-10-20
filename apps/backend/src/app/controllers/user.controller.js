@@ -1,13 +1,15 @@
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 
 import userService from '../services/user.service.js'
 
 dotenv.config();
 
 class UserController {
-  MAX_AGE = process.env.REFRESH_LIVE_IN_DAYS * 24 * 60 * 60 * 1000;
+  constructor() {
+    this.MAX_AGE = process.env.REFRESH_LIVE_IN_DAYS * 24 * 60 * 60 * 1000;
+  }
 
-  createCookies = (res, tokensObject) => {
+  createCookies(res, tokensObject) {
     res.cookie('refreshToken', tokensObject.tokens.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
     res.cookie('refreshTokenId', tokensObject.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
     return res.json(tokensObject.tokens);
@@ -15,8 +17,8 @@ class UserController {
 
   async create(req, res, next) {
     try {
-      const { name, email, password } = req.body;
-      const tokensObject = await userService.registration(name, email, password);
+      const { nickName, email, password, role } = req.body;
+      const tokensObject = await userService.registration(nickName, email, password, role);
       return this.createCookies(res, tokensObject);
     } catch(e) {
       next(e);
@@ -25,8 +27,8 @@ class UserController {
 
   async login(req, res, next) {
     try {
-      const { name, password } = req.body;
-      const tokensObject = await userService.login(name, password);
+      const { nickName, password } = req.body;
+      const tokensObject = await userService.login(nickName, password);
       return this.createCookies(res, tokensObject);
     } catch (e) {
       next(e);

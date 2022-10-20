@@ -2,33 +2,42 @@ import bcrypt from 'bcrypt';
 
 import { ApiError } from '../errors/apiError.js';
 import tokenService from './token.service.js';
-import { userModel, tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
+import { userModel, userInfoModel, tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
 
 class UserService {
-  async registration(name, email, password, role = 'user') {
-    let newUser = await userModel.findOne({ where: { name } });
-    if (newUser) {
-      throw ApiError.BadRequest(`Пользователь с именем ${name} уже существует`);
+  async registration(nickName, email, password, role) {
+    //const candidate = await userModel.findOne({ where: { nickName } });
+    const candidate = userModel.findOneByName(nickName);      //! TMP
+    if (candidate) {
+      throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
     }
     password = await bcrypt.hash(password, 5);
-    newUser = await userModel.create(name, email, password, role);
-    return await tokenService.createNewTokens(newUser);
+    //newUser = await userModel.create(nickName, email, password, role);
+    const newUser = userModel.create(nickName);      //! TMP
+    console.log(newUser);
+    userInfoModel.create(newUser.id, email, password, role);      //! TMP
+    return await tokenService.createNewTokens({ ...newUser, email, role });
   }
 
-  async login(name, password) {
-    let newUser = await userModel.findOne({ where: { name } });
+  async login(nickName, password) {
+    //const newUser = await userModel.findOne({ where: { name } });
+    const newUser = userModel.findOneByName(nickName);             //! TMP
     if (!newUser) {
-      throw ApiError.BadRequest(`Пользователя с именем ${name} не существует`);
+      throw ApiError.BadRequest(`Пользователя с именем ${nickName} не существует`);
     }
-    const isEqual = await bcrypt.compare(password, newUser.password);
+    const newUserInfo = userInfoModel.findOneById(newUser.id);
+    console.log('password = ', password);
+    console.log('newUserInfo = ', newUserInfo);
+    const isEqual = await bcrypt.compare(password, newUserInfo.password);
     if (!isEqual) {
       throw ApiError.BadRequest('Неправильный пароль');
     }
-    return await tokenService.createNewTokens(newUser);
+    return await tokenService.createNewTokens({ ...newUser, email: newUserInfo.email, role: newUserInfo.role });
   }
 
   async logout(refreshTokenId) {
-    await tokenModel.destroy({ where: { id: refreshTokenId } });
+    //await tokenModel.destroy({ where: { id: refreshTokenId } });
+    tokenModel.destroy(refreshTokenId);             //! TMP
   }
 
   async refresh(refreshToken) {
@@ -37,7 +46,8 @@ class UserService {
     }
 
     const user = tokenService.validateToken(refreshToken, true);
-    const refreshTokenFromDB = await tokenModel.findOne({ where: { token: refreshToken } });
+    // const refreshTokenFromDB = await tokenModel.findOne({ where: { token: refreshToken } });
+    const refreshTokenFromDB = tokenModel.findOneByToken(refreshToken);      //!TMP
     if (!user || !refreshTokenFromDB) {
       throw ApiError.UnAuthorization();
     }
