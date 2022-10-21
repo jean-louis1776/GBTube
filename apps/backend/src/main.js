@@ -20,7 +20,7 @@ app.use(express.static(path.resolve(path.resolve(), 'assets', 'static')));
 app.use(fileUpload({}));
 app.use('/api', router);
 
-app.use(apiErrorMiddleware);          //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
+app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
 
 const start = async () => {
   try {

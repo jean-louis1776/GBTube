@@ -37,10 +37,12 @@ class UserController {
 
   async logout(req, res, next) {
     try {
-      await userService.logout(req.cookies.refreshTokenId);
-      res.clearCookie('refreshToken');
-      res.clearCookie('refreshTokenId');
-      return res.json('Logout is success')
+      if (await userService.logout(+req.cookies.refreshTokenId)) {
+        res.clearCookie('refreshToken');
+        res.clearCookie('refreshTokenId');
+        return res.json({ message: 'Logout is success' });
+      }
+      return res.json({ message: 'Error! Can\'t logout' });
     } catch (e) {
       next(e);
     }
@@ -53,6 +55,19 @@ class UserController {
     } catch (e) {
       next(e);
     }
+  }
+
+  async remove(req, res, next) {
+    try {
+      const success = await userService.remove(req.params.id);
+      return res.json({ message: success ? 'User has been removed' : 'Can\'t remove user'});
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getAll(req, res) {
+    return res.json(await userService.getAll());
   }
 }
 

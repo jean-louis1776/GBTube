@@ -44,12 +44,27 @@ class UserModel {
   create(nickName) {
     const user = { id: getId(this.userList), nickName }
     this.userList.push(user);
-    console.log(this.userList);
+    // console.log(this.userList);
     return user;
+  }
+
+  findOneById(id) {
+    return this.userList.find((user) => user.id === id);
   }
 
   findOneByName(nickName) {
     return this.userList.find((user) => user.nickName === nickName);
+  }
+
+  findAll() {
+    return this.userList;
+  }
+
+  delete(id) {
+    const findIndex = this.userList.findIndex(el => el.id === id);
+    if (findIndex === -1) return false;
+    this.userList.splice(findIndex, 1);
+    return true;
   }
 }
 
@@ -66,11 +81,19 @@ class UserInfoModel {
       channelsCount: 0
     };
     this.userInfoList.push(userInfo);
-    console.log(this.userInfoList);
+    // console.log(this.userInfoList);
     return userInfo;
   }
+
   findOneById(userId) {
     return this.userInfoList.find((el) => el.userId === userId);
+  }
+
+  delete(id) {
+    const findIndex = this.userInfoList.findIndex(el => el.userId === id);
+    if (findIndex === -1) return false;
+    this.userInfoList.splice(findIndex, 1);
+    return true;
   }
 }
 
@@ -80,14 +103,14 @@ class TokenModel {
   create(userId, token) {
     const newToken = { id: getId(this.tokenList), userId, token };
     this.tokenList.push(newToken);
-    console.log(this.tokenList);
+    // console.log(this.tokenList);
     return newToken;
   }
 
   update(token, id) {
     const findIndex = this.tokenList.findIndex((tokenElement) => tokenElement.id === id);
     this.tokenList[findIndex].token = token;
-    console.log(this.tokenList[findIndex].token);
+    // console.log(this.tokenList[findIndex].token);
     return this.tokenList[findIndex].token;
   }
 
@@ -99,8 +122,12 @@ class TokenModel {
     const findIndex = this.tokenList.findIndex((token) => token.id === id);
     if (findIndex === -1) return false;
     this.tokenList.splice(findIndex, 1);
-    console.log(this.tokenList);
+    console.log('tokenList = ', this.tokenList);
     return true;
+  }
+
+  deleteAllByUserId(userId) {
+    this.tokenList = this.tokenList.filter(el => el.userId !== userId);
   }
 }
 

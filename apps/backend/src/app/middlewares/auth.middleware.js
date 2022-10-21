@@ -1,11 +1,8 @@
-import { jwt } from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import { ApiError } from '../errors/apiError.js';
+import { userModel } from '../../stub.js';
+import tokenService from '../services/token.service.js';
 
-import { ApiError } from '../errors/apiError.js'
-
-dotenv.config();
-
-export const authMiddleware = (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
   try {
     const authorization = req.headers.authorization;
     if (!authorization) {
@@ -17,15 +14,16 @@ export const authMiddleware = (req, res, next) => {
       return next(ApiError.UnAuthorization());
     }
 
-    const userProperties = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
+    const userProperties = tokenService.validateToken(accessToken, false);
     if (!userProperties) {
       return next(ApiError.UnAuthorization());
     }
 
-    // const userFromDB = await функцияДляПолученияЮзераИзБазыПоIdИEmail(userProperty.id, userProperty.email);
-    // if (!userFormDB) {
-    //   return next(ApiError.UnAuthorization());
-    // }
+    // const userFormDB = await userModel.findOne({ where: { id: userProperties.id } });    //! TMP
+    const userFromDB = userModel.findOneById(userProperties.id);
+    if (!userFromDB) {
+      return next(ApiError.UnAuthorization());
+    }
 
     next();
   } catch (e) {

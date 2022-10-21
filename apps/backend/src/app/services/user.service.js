@@ -5,6 +5,10 @@ import tokenService from './token.service.js';
 import { userModel, userInfoModel, tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
 
 class UserService {
+  async getAll() {
+    return userModel.findAll();
+  }
+
   async registration(nickName, email, password, role) {
     //const candidate = await userModel.findOne({ where: { nickName } });
     const candidate = userModel.findOneByName(nickName);      //! TMP
@@ -14,7 +18,6 @@ class UserService {
     password = await bcrypt.hash(password, 5);
     //newUser = await userModel.create(nickName, email, password, role);
     const newUser = userModel.create(nickName);      //! TMP
-    console.log(newUser);
     userInfoModel.create(newUser.id, email, password, role);      //! TMP
     return await tokenService.createNewTokens({ ...newUser, email, role });
   }
@@ -26,8 +29,6 @@ class UserService {
       throw ApiError.BadRequest(`Пользователя с именем ${nickName} не существует`);
     }
     const newUserInfo = userInfoModel.findOneById(newUser.id);
-    console.log('password = ', password);
-    console.log('newUserInfo = ', newUserInfo);
     const isEqual = await bcrypt.compare(password, newUserInfo.password);
     if (!isEqual) {
       throw ApiError.BadRequest('Неправильный пароль');
@@ -36,8 +37,9 @@ class UserService {
   }
 
   async logout(refreshTokenId) {
-    //await tokenModel.destroy({ where: { id: refreshTokenId } });
-    tokenModel.destroy(refreshTokenId);             //! TMP
+    //const index = await tokenModel.destroy({ where: { id: refreshTokenId } });
+    const index = tokenModel.destroy(refreshTokenId);             //! TMP
+    return !!index;
   }
 
   async refresh(refreshToken) {
@@ -53,6 +55,25 @@ class UserService {
     }
 
     return await tokenService.createNewTokens(user, refreshTokenFromDB.id);
+  }
+
+  async remove(id) {
+    //TODO Удалить все Answers написанные User'ом
+    //TODO Удалить все Comments написанные User'ом
+    //TODO Удалить все подписки сделанные User'ом
+    //TODO Удалить таблицу лайков-дизлайков для каждого Answers, относящиеся к Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить все Answers, относящиеся к Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить таблицу лайков-дизлайков для каждого Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить все Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить все Videos, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить все подписки, относящиеся к Channels, относящиеся к Users
+    //TODO Удалить все Channels, относящиеся к Users
+    //TODO Удалить все Tokens, относящиеся к Users
+    tokenModel.deleteAllByUserId(id);
+    //TODO Удалить UserInfo, относящееся к Users
+    userInfoModel.delete(id);
+    //TODO Удалить Users
+    userModel.delete(id);
   }
 }
 

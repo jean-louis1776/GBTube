@@ -12,7 +12,13 @@ class TokenService {
     return { tokens, refreshTokenId };
   }
 
-  generateTokens(payload) {
+  generateTokens(user) {
+    const payload = {
+      id: user.id,
+      nickName: user.nickName,
+      email: user.email,
+      role: user.role
+    }
     return {
       accessToken: jwt.sign(payload, process.env.ACCESS_SECRET_KEY, {expiresIn: `${process.env.ACCESS_LIVE_IN_MINUTES}m`}),
       refreshToken: jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {expiresIn: `${process.env.REFRESH_LIVE_IN_DAYS}d`})
