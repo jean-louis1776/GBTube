@@ -10,10 +10,9 @@ export const USER = '1';
 const DEFAULT_PASSWORD = '1111';
 
 export type Roles = /*ADMIN*/'3' | /*Moderator*/'2' | /*User*/'1';
-export type Grades = 'like' | 'dislike' | 'ungraded';
+export type Grades = typeof LIKE | typeof DISLIKE | typeof UNGRADED;
 export type UserRegData = { id: string, email: string, name: string }
 
-//TODO подумать как сообщить, что пользователь не авторизован, и нужно ли оно вообще тут
 export class User {
     private activeStatus = true;
     private email: string;
@@ -28,7 +27,6 @@ export class User {
     private readonly id: string;
     private name: string;
     private role = USER;
-    //TODO вспомнить зачем оно нужно
     private subscribers: Set<string> = new Set();
     private subscriptions: Set<string> = new Set();
     constructor(personalData: UserRegData) {
@@ -61,7 +59,6 @@ export class User {
     changeName(name: string): void {
         this.name = name;
     };
-    //TODO Подумать как инициировать смену пароля.
     changePassword(password: string): void {
 
     };
@@ -71,27 +68,27 @@ export class User {
     getEmail(): string {
         return this.email;
     };
-    getVideosViewCount(userChannelGroupList: UserChannelGroupList): Map<string, number> {
+/*    getVideosViewCount(userChannelGroupList: UserChannelGroupList): Map<string, number> {
         const videoViewCount: Map<string, number> = new Map();
-        userChannelGroupList.getUserChannelGroup(this.id).forEach((channel) => {
-            channel.getPlayLists().forEach((playList) => {
-                playList.getVideoList().forEach((video) => {
+        userChannelGroupList.getChild(this.id).forEach((channel) => {
+            channel.getChildren().forEach((playList) => {
+                playList.getChildren().forEach((video) => {
                     videoViewCount.set(video.getId(), video.getViewingCount());
                 });
             })
         });
         return videoViewCount;
-    };
-    getCommentsCount(userChannelGroupList: UserChannelGroupList): Map<string, number> {
+    };*/
+/*    getCommentsCount(userChannelGroupList: UserChannelGroupList): Map<string, number> {
         const commentCount: Map<string, number> = new Map();
         let counter = 0;
-        userChannelGroupList.getUserChannelGroup(this.id).forEach((channel) => {
-            channel.getPlayLists().forEach((playList) => {
-                playList.getVideoList().forEach((video) => {
+        userChannelGroupList.getChild(this.id).forEach((channel) => {
+            channel.getChildren().forEach((playList) => {
+                playList.getChildren().forEach((video) => {
                     const videoId = video.getId();
-                    video.getMasterCommentList().forEach((masterComment) => {
+                    video.getChildren().forEach((masterComment) => {
                         counter += 1;
-                        masterComment.getSubCommentList().forEach((subcomment) => {
+                        masterComment.getChildren().forEach((subcomment) => {
                             counter += 1;
                         });
                     });
@@ -101,18 +98,18 @@ export class User {
             })
         });
         return commentCount;
-    };
-    getGradedOwnVideosCount(userChannelGroupList: UserChannelGroupList): Map<string, {like: number, dislike: number}> {
+    };*/
+/*    getGradedOwnVideosCount(userChannelGroupList: UserChannelGroupList): Map<string, {like: number, dislike: number}> {
         const videoGradeCount: Map<string, {like: number, dislike: number}> = new Map();
         userChannelGroupList.getUserChannelGroup(this.id).forEach((channel) => {
-            channel.getPlayLists().forEach((playList) => {
-                playList.getVideoList().forEach((video) => {
+            channel.getChildren().forEach((playList) => {
+                playList.getChildren().forEach((video) => {
                     videoGradeCount.set(video.getId(), video.getGrades());
                 });
             })
         });
         return videoGradeCount;
-    };
+    };*/
     getId(): string {
         return this.id;
     };
@@ -160,7 +157,6 @@ export class User {
     };
 
     //Moderator methods
-    //TODO Дописать методы модератора и админа
     toggleBanUser(userId: string): void {
         if (this.role === USER) {
             throw new Error('No previligies for this method');
@@ -168,12 +164,9 @@ export class User {
         this.activeStatus = !this.activeStatus;
     };
     deleteUserComment(userChannelGroupList: UserChannelGroupList, commentId: string): void {
-        //TODO убрать в том числе из списка лайкнутых у пользователей
 
-        // userChannelGroupList.getUserChannelGroup()
     };
     deleteUserVideo(videoId: string, authorId: string): void {
-        //TODO убрать в том числе из списка лайкнутых у пользователей
         if (this.role === USER) {
             throw new Error('No previligies for this method');
         }
@@ -185,14 +178,12 @@ export class User {
         if (this.role !== ADMIN) {
             throw new Error('No previligies for method dropUserPassword');
         }
-        //TODO Дождаться реализации функции смены пароля в контроллере
     };
     deleteUser(userProfileList: UserProfileList, userId: string): void {
         if (this.role !== ADMIN) {
             throw new Error('No previligies for method deleteUser');
         }
         userProfileList.deleteUserProfile(userId);
-        //TODO убрать в том числе из списков подписанных.
     };
     changeUserRole(userProfileList: UserProfileList, userId: string, role: Roles): void {
         if (this.role !== ADMIN) {

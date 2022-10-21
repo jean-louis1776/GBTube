@@ -1,32 +1,24 @@
-import {Channel, CreateChannelData} from "./Channel";
+import { ChannelGroup } from './ChannelGroup';
 
+//TODO Проверить, что idList работает как надо
 export class UserChannelGroupList {
-    private list: Map<string, Map<string, Channel>> = new Map();
-    getUserChannelGroup(authorId: string): Map<string, Channel> {
-        if (this.list.has(authorId)) {
-            return <Map<string, Channel>>this.list.get(authorId);
+    private children: Map<string, ChannelGroup> = new Map();
+    addChild(authorId: string): void {
+      this.children.set(authorId, new ChannelGroup([authorId]));
+    };
+    deleteChild(authorId: string): void {
+      if (!this.children.has(authorId)) {
+        throw new Error(`authorId ${authorId} not found in UserChannelGroupList`);
+      }
+      this.children.delete(authorId);
+    };
+    getChild(authorId: string): ChannelGroup {
+        if (this.children.has(authorId)) {
+            return <ChannelGroup>this.children.get(authorId);
         }
-        throw new Error(`user ID ${authorId} not found in UserProfileList`);
+        throw new Error(`user ID ${authorId} not found in UserChannelGroupList`);
     };
-    createUserChannelGroup(authorId: string) {
-        this.list.set(authorId, new Map());
-    };
-    createUserChannel(channelData: CreateChannelData) {
-        const { channelId, authorId } = channelData;
-        const newChannel =  new Channel(channelData);
-        const userChannelGroup = this.getUserChannelGroup(authorId);
-        userChannelGroup.set(channelId, newChannel);
-    };
-    deleteUserChannelGroup(authorId: string): void {
-        if (!this.list.has(authorId)) {
-            throw new Error(`user ID ${authorId} not found in UserProfileList`);
-        }
-        this.list.delete(authorId);
-    };
-    deleteUserChannel(authorId: string): void {
-        if (!this.list.has(authorId)) {
-            throw new Error(`user ID ${authorId} not found in UserProfileList`);
-        }
-        this.list.delete(authorId);
-    };
+    getChildren(): Map<string, ChannelGroup> {
+      return this.children;
+    }
 }

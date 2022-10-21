@@ -1,55 +1,61 @@
 import {CreateVideoData, Video} from "./Video";
-import {IdentsChannel} from "./Channel";
 
-export type IdentsPlayList = IdentsChannel & { playListId: string };
-export type CreatePlayListData = IdentsPlayList & { name: string, infoAbout: string };
+export type CreatePlayListData = { name: string, textContent: string };
 
 export class PlayList {
-    private readonly idents: IdentsPlayList = { playListId: '', authorId: '', channelId: '' };
-    private infoAbout: string;
+    private children: Map<string, Video> = new Map();
+    private readonly createDate = new Date();
+    private readonly idList: string[];
+    private textContent: string;
     private name: string;
-    private videoList: Map<string, Video> = new Map();
-    constructor(playListData: CreatePlayListData) {
-        const { playListId, authorId, channelId, name, infoAbout } = playListData;
-        this.idents.authorId = authorId;
-        this.idents.playListId = playListId;
-        this.idents.channelId = channelId;
-        this.name = name;
-        this.infoAbout = infoAbout;
+
+    constructor(playListData: CreatePlayListData, iDList: string[]) {
+      const { name, textContent } = playListData;
+      this.idList = iDList;
+      this.name = name;
+      this.textContent = textContent;
     }
-    changeInfoAbout(infoAbout: string): void {
-        this.infoAbout = infoAbout;
-    };
-    changeName(name: string): void {
-        this.name = name;
-    };
-    createVideo(videoData: CreateVideoData): void {
-        const { videoId } = videoData;
-        this.videoList.set(videoId, new Video(videoData));
+
+    addChild(videoData: CreateVideoData, videoId: string): void {
+      const idListForVideo = this.getIdList().concat(videoId);
+      this.children.set(videoId, new Video(videoData, idListForVideo));
     };
     //TODO Подумать, что ещё у кого почистить с инфой об видео
-    deleteVideo(videoId: string): void {
-        this.videoList.delete(videoId);
+    deleteChild(videoId: string): void {
+      this.children.delete(videoId);
+    };
+    getAuthorId(): string {
+      return this.idList[0];
+    };
+    getChild(videoId: string): Video {
+      if (this.children.has(videoId)) {
+        return <Video>this.children.get(videoId);
+      }
+      throw new Error(`videoId ${videoId} not found in children`);
+    };
+    getChildren(): Map<string, Video> {
+      return this.children;
+    };
+    getCreateDate(): Date {
+      return this.createDate;
     };
     getId():string {
-        return this.idents.playListId;
+      const list = this.getIdList();
+      return list[list.length - 1];
     };
-    getAllIdents(): IdentsPlayList  {
-        return this.idents;
-    }
-    getInfoAbout(): string {
-        return this.infoAbout;
-    }
+    getIdList(): string[]  {
+      return this.idList;
+    };
     getName(): string {
-        return this.name;
-    }
-    getVideoList(): Map<string, Video> {
-        return this.videoList;
+      return this.name;
     };
-    getVideo(videoId: string): Video {
-        if (this.videoList.has(videoId)) {
-            return <Video>this.videoList.get(videoId);
-        }
-        throw new Error(`videoId ${videoId} not found in videoList`);
-    }
+    getTextContent(): string {
+      return this.textContent;
+    };
+    setName(name: string): void {
+      this.name = name;
+    };
+    setTextContent(textContent: string): void {
+      this.textContent = textContent;
+    };
 }

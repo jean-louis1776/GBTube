@@ -1,59 +1,54 @@
 import {Grades, User} from "./User";
 import {UserProfileList} from "./UserProfileList";
-import {IdentsMasterComment} from "./MasterComment";
 
-export type IdentsComment = IdentsMasterComment & { commentId: string };
-export type CreateCommentData = IdentsComment & { textContent: string };
+export type CreateCommentData = { textContent: string };
 
 export class BaseComment {
-    private readonly ident: IdentsComment = {
-        commentId: '',
-        masterCommentId: '',
-        authorId: '',
-        channelId: '',
-        playListId: '',
-        videoId: ''};
-    private readonly authorId: string;
     private readonly createDate = new Date();
-    private grades = {
-        like: 0,
-        dislike: 0,
-    }
+    private readonly idList: string[];
+    private grades = { like: 0, dislike: 0 };
     private textContent: string;
 
-    constructor(commentData: CreateCommentData) {
-        const { commentId, authorId, textContent } = commentData;
-        this.ident.commentId = commentId;
-        this.authorId = authorId;
-        this.textContent = textContent;
+    constructor(commentData: CreateCommentData, idList: string[]) {
+      const { textContent } = commentData;
+      this.idList = idList;
+      this.textContent = textContent;
     };
-    changeTextContent(text: string): void {
-        this.textContent = text;
-    };
+
     getAuthorId(): string {
-        return this.authorId;
+      return this.idList[0];
     };
     getAuthorName(userProfileList: UserProfileList): string {
-        return userProfileList.getUserProfile(this.authorId).getName();
+      return userProfileList.getUserProfile(this.getAuthorId()).getName();
     };
     getCreateDate(): Date {
-        return this.createDate;
+      return this.createDate;
     };
     getGrade(currentUserProfile: User): Grades {
-        return currentUserProfile.getCommentGrade(this.ident.commentId);
+      return currentUserProfile.getCommentGrade(this.getId());
+    };
+    getGrades(): {like: number, dislike: number} {
+      return this.grades;
     };
     getId(): string {
-        return this.ident.commentId;
+      const list = this.getIdList();
+      return list[list.length - 1];
+    };
+    getIdList(): string[] {
+      return this.idList;
     };
     getTextContent(): string {
-        return this.textContent;
+      return this.textContent;
     };
     gradeDislike(userProfileList: UserProfileList): void {
-        this.grades.dislike += 1;
-        userProfileList.getUserProfile(this.authorId).addCommentDisliked(this.ident.commentId);
+      this.grades.dislike += 1;
+      userProfileList.getUserProfile(this.getAuthorId()).addCommentDisliked(this.getId());
     };
     gradeLike(userProfileList: UserProfileList): void {
-        this.grades.like += 1;
-        userProfileList.getUserProfile(this.authorId).addCommentLiked(this.ident.commentId);
+      this.grades.like += 1;
+      userProfileList.getUserProfile(this.getAuthorId()).addCommentLiked(this.getId());
+    };
+    setTextContent(text: string): void {
+      this.textContent = text;
     };
 }
