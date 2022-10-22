@@ -1,3 +1,17 @@
+export const CREATE_DATE = 'createDate';
+export const ID = 'id';
+export const ID_LIST = 'idList';
+export const NAME = 'name';
+export const TEXT_CONTENT = 'textContent';
+/**
+ * @type {{name: string, textContent: string, idList: string[], createDate: Date}}
+ */
+export const TChildDataConstructor = {[CREATE_DATE]: new Date() , [ID_LIST]: [''], [NAME]: '', [TEXT_CONTENT]: ''};
+/**
+ * @type {{name: string, textContent: string, id: string, createDate: Date}}
+ */
+export const TChildDataAddMethod = {[CREATE_DATE]: new Date() , [ID]: '', [NAME]: '', [TEXT_CONTENT]: ''};
+
 export class BaseElement {
   createDate = new Date();
   children = new Map();
@@ -5,22 +19,22 @@ export class BaseElement {
   name = '';
   textContent = '';
   /**
-   * @param {{name: string, textContent: string}} childData
-   * @param {string[]} idList
+   * @param {{ idList: string[], createDate: Date, name: string, textContent: string}} childData
    */
-  constructor(idList, childData = {name: '', textContent: ''}) {
-    const fixedChildData = {...{name: '', textContent: ''}, childData};
-    const { name, textContent } = fixedChildData;
+  constructor(childData = TChildDataConstructor) {
+    const fixedChildData = {...TChildDataConstructor, ...childData};
+    const { idList, createDate, name, textContent } = fixedChildData;
     this.idList = idList;
+    this.createDate = createDate;
     this.name = name;
     this.textContent = textContent;
   }
   /**
-   * @param {{name: string, textContent: string}} childData
-   * @param {string} childId
+   * @param {{ id: string, createDate: Date, name: string, textContent: string}} childData
    * @param {{constructor: Function}} Constructor
    */
-    addChild(childId, Constructor, childData = {name: '', textContent: ''}) {
+    addChild(Constructor, childData = TChildDataAddMethod) {
+      const childId = TChildDataAddMethod[ID];
       const childIdList = this.getIdList().concat(childId);
     // @ts-ignore
       this.children.set(childId, new Constructor(childIdList, childData));
