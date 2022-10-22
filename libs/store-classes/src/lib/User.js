@@ -4,7 +4,7 @@ export const UNGRADED = 'ungraded';
 
 export class User {
   /**
-   * @param {{id: string, name: string, email: string}} personalData
+   * @param {{id: string, name: string, email: string, createDate: Date}} personalData
    */
     constructor(personalData) {
         this.gradedUsersComments = {
@@ -18,10 +18,11 @@ export class User {
         //TODO вспомнить зачем оно нужно
         this.subscribers = new Set();
         this.subscriptions = new Set();
-        const { id, email, name } = personalData;
+        const { id, email, name, createDate } = personalData;
         this.id = id;
         this.email = email;
         this.name = name;
+        this.createDate = createDate;
     }
   /**
    * @param {string} commentId
@@ -54,24 +55,17 @@ export class User {
       this.subscribers.add(subscriberId);
     }
   /**
-   * @param {string} email
+   * @returns {Date}
    */
-  setEmail(email) {
-      this.email = email;
-    }
-  /**
-   * @param {string} name
-   */
-  setName(name) {
-      this.name = name;
-    }
+  getCreateDate() {
+    return this.createDate;
+  }
   /**
    * @returns {string}
    */
     getEmail() {
         return this.email;
     }
-
   /**
    * @param {Map<string, Object>} ChannelGroup
    */
@@ -188,6 +182,18 @@ export class User {
   isSubscribed(userId) {
       return this.subscriptions.has(userId);
     }
+  /**
+   * @param {string} email
+   */
+  setEmail(email) {
+    this.email = email;
+  }
+  /**
+   * @param {string} name
+   */
+  setName(name) {
+    this.name = name;
+  }
   /**
    * @param {string} userId
    */
