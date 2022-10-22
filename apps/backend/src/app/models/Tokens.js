@@ -7,12 +7,9 @@ export const Token = sequelize.define('Token', {
       primaryKey: true,
       autoIncrement: true
     },
-    userID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     token: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
   }, {}
 );

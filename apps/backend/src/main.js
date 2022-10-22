@@ -1,6 +1,7 @@
 import * as express from 'express';
-import { Sequelize } from 'sequelize';
-import { sequelize } from "./app/models";
+// import { Sequelize } from 'sequelize';
+// import { sequelize } from "./app/models";
+import {runDB} from "./app/models";
 
 const app = express();
 
@@ -8,7 +9,7 @@ const app = express();
 //   host: 'mysql79.hostland.ru',
 //   dialect: 'mysql'
 // });
-
+runDB();
 
 
 

@@ -1,7 +1,8 @@
 import {DataTypes} from 'sequelize';
 import {sequelize} from "./index";
 
-export const Users = sequelize.define('Users', {
+// console.log('db', db);
+export const User = sequelize.define('Users', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -9,12 +10,12 @@ export const Users = sequelize.define('Users', {
     },
     nickName: {
       type: DataTypes.CHAR,
-      primaryKey: false,
+      allowNull: false,
       unique: true,
     }
 
   }, {
-  timestamps: true,
+  // timestamps: true,
   }
 );
 

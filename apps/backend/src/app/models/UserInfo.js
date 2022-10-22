@@ -7,10 +7,6 @@ export const UserInfo = sequelize.define('UserInfo', {
       primaryKey: true,
       autoIncrement: true
     },
-    userID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     firstName: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -21,21 +17,25 @@ export const UserInfo = sequelize.define('UserInfo', {
     },
     email: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
     password: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
     role: {
-      type: DataTypes.TINYINT,
-      defaultValue: 'user',
+      type: DataTypes.TEXT,
+      allowNull: false,
+      defaultValue: "user",
     },
     isBaned: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "false",
     },
     channelsCount: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
   }, {}
 );

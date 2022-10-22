@@ -7,10 +7,6 @@ export const Video = sequelize.define('Video', {
       primaryKey: true,
       autoIncrement: true
     },
-    channelID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     path: {
       type: DataTypes.CHAR,
     },

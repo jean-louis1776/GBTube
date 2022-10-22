@@ -7,16 +7,9 @@ export const Answer = sequelize.define('Answer', {
       primaryKey: true,
       autoIncrement: true
     },
-    commentID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
-    userID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     textInfo: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
   }, {}
 );

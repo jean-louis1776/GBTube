@@ -7,16 +7,9 @@ export const Comment = sequelize.define('Comment', {
       primaryKey: true,
       autoIncrement: true
     },
-    videoID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
-    userID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     textInfo: {
       type: DataTypes.CHAR,
+      allowNull: false,
     },
   }, {}
 );

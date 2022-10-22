@@ -7,10 +7,6 @@ export const ChannelInfo = sequelize.define('ChannelInfo', {
       primaryKey: true,
       autoIncrement: true
     },
-    channelID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     textInfo: {
       type: DataTypes.CHAR,
     },

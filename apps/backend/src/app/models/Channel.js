@@ -7,12 +7,9 @@ export const Channel = sequelize.define('Channel', {
       primaryKey: true,
       autoIncrement: true
     },
-    userID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     subscribersCount: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
   }, {}
 );

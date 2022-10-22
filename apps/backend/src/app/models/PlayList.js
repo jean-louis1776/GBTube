@@ -7,12 +7,9 @@ export const PlayList = sequelize.define('PlayList', {
       primaryKey: true,
       autoIncrement: true
     },
-    channelID: {
-      type: DataTypes.INTEGER,
-      foreignKey: true,
-    },
     textInfo: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
   }, {}
 );
