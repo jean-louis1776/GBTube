@@ -1,13 +1,19 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import * as express from 'express';
+import { Sequelize } from 'sequelize';
+import { sequelize } from "./app/models";
 
 const app = express();
 
+// const sequelize = new Sequelize('host1847338_tube', 'host1847338_gdtube', 'gdtube_2022', {
+//   host: 'mysql79.hostland.ru',
+//   dialect: 'mysql'
+// });
+
+
+
+
 app.get('/api', (req, res) => {
+
   res.send({ message: 'Welcome to backend!' });
 });
 
