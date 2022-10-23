@@ -14,4 +14,12 @@ export class ApiError extends Error {
   static UnAuthorization() {
     return new ApiError(401, 'Пользователь не авторизован');
   }
+
+  static UnProcessableEntity(message) {
+    return new ApiError(422, message);
+  }
+
+  static InternalServerError(message) {
+    return new ApiError(500, message);
+  }
 }
