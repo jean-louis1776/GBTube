@@ -14,7 +14,6 @@ export const Video = sequelize.define('Video', {
     name: {
       type: DataTypes.CHAR,
       allowNull: false,
-      unique: true,
     },
     hashName: {
       type: DataTypes.CHAR,
@@ -25,7 +24,7 @@ export const Video = sequelize.define('Video', {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    shortDescriptions: {
+    shortDescription: {
       type: DataTypes.CHAR,
       allowNull: true,
     },
