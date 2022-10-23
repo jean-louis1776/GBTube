@@ -11,5 +11,17 @@ export const Answer = sequelize.define('Answer', {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-  }, {}
+    likesCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    dislikesCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  }, {
+    timestamps: true,
+    createdAt: 'createdTimestamp',
+    updatedAt: 'updateTimestamp',
+  }
 );

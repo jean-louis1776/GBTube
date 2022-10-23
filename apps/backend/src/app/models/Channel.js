@@ -11,5 +11,7 @@ export const Channel = sequelize.define('Channel', {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, {}
+  }, {
+  timestamps: false,
+  }
 );

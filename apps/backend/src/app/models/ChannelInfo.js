@@ -7,11 +7,15 @@ export const ChannelInfo = sequelize.define('ChannelInfo', {
       primaryKey: true,
       autoIncrement: true
     },
-    textInfo: {
+    name: {
       type: DataTypes.CHAR,
     },
-    isSubscribed: {
-      type: DataTypes.BOOLEAN,
+    description: {
+      type: DataTypes.CHAR,
     },
-  }, {}
+  }, {
+    timestamps: true,
+    createdAt: false,
+    updatedAt: 'updateTimestamp',
+  }
 );

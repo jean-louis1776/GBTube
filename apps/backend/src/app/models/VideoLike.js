@@ -1,19 +1,17 @@
 import {DataTypes} from 'sequelize';
 import {sequelize} from "./index";
 
-export const User = sequelize.define('Users', {
+export const VideoLike = sequelize.define('VideoLikes', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    nickName: {
-      type: DataTypes.CHAR,
+    liked: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      unique: true,
-    }
-
+    },
   }, {
-  timestamps: false,
+    timestamps: false,
   }
 );

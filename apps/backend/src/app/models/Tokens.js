@@ -11,5 +11,9 @@ export const Token = sequelize.define('Token', {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-  }, {}
+  }, {
+  timestamps: true,
+  createdAt: 'createdTimestamp',
+  updatedAt: 'updateTimestamp',
+  }
 );

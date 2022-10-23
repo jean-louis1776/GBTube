@@ -18,6 +18,7 @@ export const UserInfo = sequelize.define('UserInfo', {
     email: {
       type: DataTypes.CHAR,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.CHAR,
@@ -37,5 +38,9 @@ export const UserInfo = sequelize.define('UserInfo', {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, {}
+  }, {
+    timestamps: true,
+    createdAt: 'createdTimestamp',
+    updatedAt: 'updateTimestamp',
+  }
 );

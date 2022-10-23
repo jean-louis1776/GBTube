@@ -11,5 +11,9 @@ export const PlayList = sequelize.define('PlayList', {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-  }, {}
+  }, {
+    timestamps: true,
+    createdAt: false,
+    updatedAt: 'updateTimestamp',
+  }
 );
