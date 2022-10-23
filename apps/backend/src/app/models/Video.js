@@ -16,16 +16,21 @@ export const Video = sequelize.define('Video', {
       allowNull: false,
       unique: true,
     },
-    categoty: {
-      type: DataTypes.TEXT,
-      allowNull: true,
+    hashName: {
+      type: DataTypes.CHAR,
+      allowNull: false,
+      unique: true,
     },
-    shortDescription: {
-      type: DataTypes.TEXT,
+    category: {
+      type: DataTypes.CHAR,
+      allowNull: false,
+    },
+    shortDescriptions: {
+      type: DataTypes.CHAR,
       allowNull: true,
     },
     fullDescription: {
-      type: DataTypes.TEXT,
+      type: DataTypes.CHAR,
       allowNull: true,
     },
     likesCount: {
