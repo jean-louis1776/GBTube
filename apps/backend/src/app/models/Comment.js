@@ -14,10 +14,12 @@ export const Comment = sequelize.define('Comment', {
     likesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     dislikesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
   }, {
     timestamps: true,

@@ -14,10 +14,12 @@ export const Answer = sequelize.define('Answer', {
     likesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     dislikesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
   }, {
     timestamps: true,

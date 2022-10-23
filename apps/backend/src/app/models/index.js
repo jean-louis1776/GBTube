@@ -11,6 +11,7 @@ import {User} from "./Users";
 import {UserInfo} from "./UserInfo";
 import {Token} from "./Tokens";
 import {Video} from "./Video";
+import {VideoInfo} from "./VideoInfo";
 import {Channel} from "./Channel";
 import {ChannelInfo} from "./ChannelInfo";
 import {ChannelSubscriber} from "./ChannelSubscribers";
@@ -150,24 +151,17 @@ Video.hasMany(Comment, {
 Comment.belongsTo(Video, {
   foreignKey: 'videoId'
 });
-Video.hasMany(AnswerLike, {
+
+Video.hasMany(VideoInfo, {
   foreignKey: {
     name: 'videoId',
     allowNull: false,
   },
 });
-AnswerLike.belongsTo(Video, {
+VideoInfo.belongsTo(Video, {
   foreignKey: 'videoId'
 });
-Video.hasMany(CommentLike, {
-  foreignKey: {
-    name: 'videoId',
-    allowNull: false,
-  },
-});
-CommentLike.belongsTo(Video, {
-  foreignKey: 'videoId'
-});
+
 Video.hasMany(VideoLike, {
   foreignKey: {
     name: 'videoId',
@@ -178,6 +172,15 @@ VideoLike.belongsTo(Video, {
   foreignKey: 'videoId'
 });
 //Связи для таблицы Коментариев
+Comment.hasMany(CommentLike, {
+  foreignKey: {
+    name: 'сommentId',
+    allowNull: false,
+  },
+});
+CommentLike.belongsTo(Comment, {
+  foreignKey: 'сommentId'
+});
 Comment.hasMany(Answer, {
   foreignKey: {
     name: 'сommentId',
@@ -186,6 +189,16 @@ Comment.hasMany(Answer, {
 });
 Answer.belongsTo(Comment, {
   foreignKey: 'сommentId'
+});
+//Связи для таблицы Ответов
+Answer.hasMany(AnswerLike, {
+  foreignKey: {
+    name: 'answerId',
+    allowNull: false,
+  },
+});
+AnswerLike.belongsTo(Answer, {
+  foreignKey: 'answerId'
 });
 
 export const runDB = async function () {

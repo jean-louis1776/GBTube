@@ -7,11 +7,10 @@ export const Channel = sequelize.define('Channel', {
       primaryKey: true,
       autoIncrement: true
     },
-    subscribersCount: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    name: {
+      type: DataTypes.CHAR,
     },
   }, {
-  timestamps: false,
+    timestamps: false,
   }
 );

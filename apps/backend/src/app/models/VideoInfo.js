@@ -1,47 +1,46 @@
-import {DataTypes, INTEGER} from 'sequelize';
+import {DataTypes} from 'sequelize';
 import {sequelize} from "./index";
 
-export const UserInfo = sequelize.define('UserInfo', {
+export const VideoInfo = sequelize.define('VideoInfo', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
-    firstName: {
+    path: {
       type: DataTypes.CHAR,
-      allowNull: true,
+      allowNull: false,
     },
-    lastName: {
-      type: DataTypes.CHAR,
-      allowNull: true,
-    },
-    email: {
+    hashName: {
       type: DataTypes.CHAR,
       allowNull: false,
       unique: true,
     },
-    password: {
+    category: {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    role: {
+    shortDescription: {
       type: DataTypes.CHAR,
-      allowNull: false,
-      defaultValue: "user",
+      allowNull: true,
     },
-    isBaned: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "false",
+    fullDescription: {
+      type: DataTypes.CHAR,
+      allowNull: true,
     },
-    channelsCount: {
+    likesCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    dislikesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
     },
   }, {
     timestamps: true,
-    createdAt: 'createdTimestamp',
+    createdAt: false,
     updatedAt: 'updateTimestamp',
   }
 );
