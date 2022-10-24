@@ -11,7 +11,7 @@ import { apiErrorMiddleware } from './app/middlewares/apiError.middleware.js';
 import {runDB} from "./app/models";
 
 //Подключение базы
-runDB()
+
 //Подключение базы
 
 dotenv.config();
@@ -36,6 +36,7 @@ app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕ
 (async () => {
   try {
     /* Here should be initialisation of DB */
+    await runDB();
     app.listen(PORT, () => {
       console.log(`Api server has been started at http://localhost:${PORT}/api...`);
     });
