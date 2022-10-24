@@ -4,13 +4,13 @@ export const ID_LIST = 'idList';
 export const NAME = 'name';
 export const TEXT_CONTENT = 'textContent';
 /**
- * @type {{name: string, textContent: string, idList: string[], createDate: Date}}
+ * @type {{name: string, textContent: string, idList: number[], createDate: Date}}
  */
-export const TChildDataConstructor = {[CREATE_DATE]: new Date() , [ID_LIST]: [''], [NAME]: '', [TEXT_CONTENT]: ''};
+export const TChildDataConstructor = {[CREATE_DATE]: new Date() , [ID_LIST]: [0], [NAME]: '', [TEXT_CONTENT]: ''};
 /**
- * @type {{name: string, textContent: string, id: string, createDate: Date}}
+ * @type {{name: string, textContent: string, id: number, createDate: Date}}
  */
-export const TChildDataAddMethod = {[CREATE_DATE]: new Date() , [ID]: '', [NAME]: '', [TEXT_CONTENT]: ''};
+export const TChildDataAddMethod = {[CREATE_DATE]: new Date() , [ID]: 0, [NAME]: '', [TEXT_CONTENT]: ''};
 
 export class BaseElement {
   createDate = new Date();
@@ -19,7 +19,7 @@ export class BaseElement {
   name = '';
   textContent = '';
   /**
-   * @param {{ idList: string[], createDate: Date, name: string, textContent: string}} childData
+   * @param {{ idList: number[], createDate: Date, name: string, textContent: string}} childData
    */
   constructor(childData = TChildDataConstructor) {
     const fixedChildData = {...TChildDataConstructor, ...childData};
@@ -30,7 +30,7 @@ export class BaseElement {
     this.textContent = textContent;
   }
   /**
-   * @param {{ id: string, createDate: Date, name: string, textContent: string}} childData
+   * @param {{ id: number, createDate: Date, name: string, textContent: string}} childData
    * @param {{constructor: Function}} Constructor
    */
     addChild(Constructor, childData = TChildDataAddMethod) {
@@ -40,7 +40,7 @@ export class BaseElement {
       this.children.set(childId, new Constructor(childIdList, childData));
     }
   /**
-   * @returns {string}
+   * @returns {number}
    */
   getAuthorId() {
       return this.idList[0];
@@ -88,14 +88,14 @@ export class BaseElement {
       return this.grades;
     }
   /**
-   * @returns {string}
+   * @returns {number}
    */
   getId() {
       const list = this.getIdList();
       return list[list.length - 1];
     }
   /**
-   * @returns {string[]}
+   * @returns {number[]}
    */
   getIdList() {
       return this.idList;
