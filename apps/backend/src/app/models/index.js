@@ -1,5 +1,5 @@
 import {DataTypes} from 'sequelize';
-import {sequelize} from "../config/db";
+import {sequelize} from "../dbConfig/db";
 
 //Импортирование моделей
 import {User} from "./Users";
@@ -16,8 +16,6 @@ import {Answer} from "./Answer";
 import {AnswerLike} from "./AnswerLike";
 import {CommentLike} from "./CommentLike";
 import {VideoLike} from "./VideoLike";
-
-
 
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
@@ -148,7 +146,6 @@ Video.hasMany(Comment, {
 Comment.belongsTo(Video, {
   foreignKey: 'videoId'
 });
-
 Video.hasMany(VideoInfo, {
   foreignKey: {
     name: 'videoId',
@@ -158,7 +155,6 @@ Video.hasMany(VideoInfo, {
 VideoInfo.belongsTo(Video, {
   foreignKey: 'videoId'
 });
-
 Video.hasMany(VideoLike, {
   foreignKey: {
     name: 'videoId',
@@ -201,9 +197,9 @@ AnswerLike.belongsTo(Answer, {
 export const runDB = async function () {
   try {
     await sequelize.authenticate();
-    await sequelize.sync()
+    await sequelize.sync();
     // await sequelize.sync({force: true});
-    console.log('Connection has been established successfully.');
+    // console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

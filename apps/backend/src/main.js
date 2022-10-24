@@ -5,14 +5,10 @@ import cors from 'cors';
 import path from 'path';
 import fileUpload from 'express-fileupload';
 
-import { router } from './app/routers/routers.js';
-import { apiErrorMiddleware } from './app/middlewares/apiError.middleware.js';
+import { router } from './app/routers/routers';
+import { apiErrorMiddleware } from './app/middlewares/apiError.middleware';
 
-import {runDB} from "./app/models";
-
-//Подключение базы
-
-//Подключение базы
+import { runDB } from "./app/models";
 
 dotenv.config();
 

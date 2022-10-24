@@ -1,5 +1,5 @@
 import {DataTypes} from 'sequelize';
-import {sequelize} from "../config/db";
+import {sequelize} from "../dbConfig/db";
 
 export const ChannelInfo = sequelize.define('ChannelInfo', {
     id: {
