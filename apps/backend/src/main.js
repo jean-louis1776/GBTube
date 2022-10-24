@@ -5,14 +5,21 @@ import cors from 'cors';
 import path from 'path';
 import fileUpload from 'express-fileupload';
 
-import { router } from './app/routers/routers.js';
-import { apiErrorMiddleware } from './app/middlewares/apiError.middleware.js';
+import { router } from './app/routers/routers';
+import { apiErrorMiddleware } from './app/middlewares/apiError.middleware';
+
+import { runDB } from "./app/models";
 
 dotenv.config();
 
 const PORT = process.env.PORT || 3333;
 
+
+
 const app = express();
+
+
+
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -25,10 +32,9 @@ app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕ
 (async () => {
   try {
     /* Here should be initialisation of DB */
+    await runDB();
     app.listen(PORT, () => {
-      console.log(`-----------------------------------------------------------
-
-Api server has been started at http://localhost:${PORT}/api...`);
+      console.log(`Api server has been started at http://localhost:${PORT}/api...`);
     });
   } catch(e) {
     console.log(e);
