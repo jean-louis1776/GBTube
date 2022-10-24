@@ -1,10 +1,12 @@
+import { ChannelGroup } from "./ChannelGroup";
+
 export const LIKE = 'like';
 export const DISLIKE = 'dislike';
 export const UNGRADED = 'ungraded';
 
 export class User {
   /**
-   * @param {{id: string, name: string, email: string, createDate: Date}} personalData
+   * @param {{id: number, name: string, email: string, createDate: Date}} personalData
    */
     constructor(personalData) {
         this.gradedUsersComments = {
@@ -67,60 +69,63 @@ export class User {
         return this.email;
     }
   /**
-   * @param {Map<string, Object>} ChannelGroup
+   * @param {Map<string, ChannelGroup>} channelGroup
    */
-  getVideosViewCount(ChannelGroup) {
-        // const videoViewCount = new Map();
-        // userChannelGroupList.getChild(this.id).forEach((channel) => {
-        //     channel.getChildren().forEach((playList) => {
-        //         playList.getChildren().forEach((video) => {
-        //             videoViewCount.set(video.getId(), video.getViewingCount());
-        //         });
-        //     });
-        // });
-        // return videoViewCount;
+  getVideosViewCount(channelGroup) {
+    const videoViewCount = new Map();
+        channelGroup.forEach((channel) => {
+            channel.getChildren().forEach((playList) => {
+              // @ts-ignore
+                playList.getChildren().forEach((video) => {
+                    videoViewCount.set(video.getId(), video.getViewingCount());
+                });
+            });
+        });
+        return videoViewCount;
     }
 //TODO Доработать методы выборки
   /**
-   * @param {Map<string, Object>} ChannelGroup
+   * @param {Map<string, ChannelGroup>} channelGroup
    */
-  getCommentsCount(ChannelGroup) {
-        // const commentCount = new Map();
-        // let counter = 0;
-        // userChannelGroupList.getChild(this.id).forEach((channel) => {
-        //     channel.getChildren().forEach((playList) => {
-        //         playList.getChildren().forEach((video) => {
-        //             const videoId = video.getId();
-        //             video.getChildren().forEach((masterComment) => {
-        //                 counter += 1;
-        //                 masterComment.getChildren().forEach((subcomment) => {
-        //                     counter += 1;
-        //                 });
-        //             });
-        //             commentCount.set(videoId, counter);
-        //             counter = 0;
-        //         });
-        //     });
-        // });
-        // return commentCount;
+  getCommentsCount(channelGroup) {
+        const commentCount = new Map();
+        let counter = 0;
+        channelGroup.forEach((channel) => {
+            channel.getChildren().forEach((playList) => {
+              // @ts-ignore
+                playList.getChildren().forEach((video) => {
+                    const videoId = video.getId();
+                    video.getChildren().forEach((/** @type {{ getChildren: () => any[]; }} */ masterComment) => {
+                        counter += 1;
+                        masterComment.getChildren().forEach(() => {
+                            counter += 1;
+                        });
+                    });
+                    commentCount.set(videoId, counter);
+                    counter = 0;
+                });
+            });
+        });
+        return commentCount;
     }
 
   /**
-   * @param {Map<string, Object>} ChannelGroup
+   * @param {Map<string, ChannelGroup>} channelGroup
    */
-  getGradedOwnVideosCount(ChannelGroup) {
-        // const videoGradeCount = new Map();
-        // userChannelGroupList.getUserChannelGroup(this.id).forEach((channel) => {
-        //     channel.getChildren().forEach((playList) => {
-        //         playList.getChildren().forEach((video) => {
-        //             videoGradeCount.set(video.getId(), video.getGrades());
-        //         });
-        //     });
-        // });
-        // return videoGradeCount;
+  getGradedOwnVideosCount(channelGroup) {
+        const videoGradeCount = new Map();
+        channelGroup.forEach((channel) => {
+            channel.getChildren().forEach((playList) => {
+              // @ts-ignore
+                playList.getChildren().forEach((video) => {
+                    videoGradeCount.set(video.getId(), video.getGrades());
+                });
+            });
+        });
+        return videoGradeCount;
     }
   /**
-   * @returns {string}
+   * @returns {number}
    */
   getId() {
       return this.id;
