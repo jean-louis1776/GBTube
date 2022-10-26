@@ -14,12 +14,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 3333;
 
-
-
 const app = express();
-
-
-
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -31,7 +26,6 @@ app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕ
 
 (async () => {
   try {
-    /* Here should be initialisation of DB */
     await runDB();
     app.listen(PORT, () => {
       console.log(`Api server has been started at http://localhost:${PORT}/api...`);

@@ -4,9 +4,9 @@ import videoController from '../controllers/video.controller.js';
 
 const router = new Router();
 
-router.post('/upload', videoController.upload);
+router.post('/upload', (...args) => videoController.upload(...args));
 router.put('/', /*edit*/);
-router.get('/:id', /*download*/ );
+router.get('/download/:videoName', (...args) => videoController.download(...args));
 router.get('/', /*getAll*/ );
 router.delete('/:id', /*removeById*/)
 
