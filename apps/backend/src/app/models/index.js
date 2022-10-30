@@ -1,21 +1,21 @@
-import {DataTypes} from 'sequelize';
-import {sequelize} from "../dbConfig/db";
+import { DataTypes } from 'sequelize';
+import { sequelize } from "../dbConfig/db";
 
 //Импортирование моделей
-import {User} from "./Users";
-import {UserInfo} from "./UserInfo";
-import {Token} from "./Tokens";
-import {Video} from "./Video";
-import {VideoInfo} from "./VideoInfo";
-import {Channel} from "./Channel";
-import {ChannelInfo} from "./ChannelInfo";
-import {ChannelSubscriber} from "./ChannelSubscribers";
-import {PlayList} from "./PlayList";
-import {Comment} from "./Comment";
-import {Answer} from "./Answer";
-import {AnswerLike} from "./AnswerLike";
-import {CommentLike} from "./CommentLike";
-import {VideoLike} from "./VideoLike";
+import { User } from "./Users";
+import { UserInfo } from "./UserInfo";
+import { Token } from "./Tokens";
+import { Video } from "./Video";
+import { VideoInfo } from "./VideoInfo";
+import { Channel } from "./Channel";
+import { ChannelInfo } from "./ChannelInfo";
+import { ChannelSubscriber } from "./ChannelSubscribers";
+import { PlayList } from "./PlayList"
+import { Comment } from "./Comment";
+import { Answer } from "./Answer";
+import { AnswerLike } from "./AnswerLike";
+import { CommentLike } from "./CommentLike";
+import { VideoLike } from "./VideoLike";
 
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
@@ -197,7 +197,28 @@ AnswerLike.belongsTo(Answer, {
 export const runDB = async function () {
   try {
     await sequelize.authenticate();
-    await sequelize.sync();
+
+    // const cUser = await User.create({
+    //   nickName: 'Jenya9',
+    // })
+    // console.log(cUser.id);
+
+
+    // const isCreate =  !!(await User.findOne({
+    //     where: {
+    //       nickName: 'Jenya10',
+    //     },
+    //   }))
+    // console.log(isCreate);
+
+    const allUsers = await User.findOne({
+      where: {
+        id: 2,
+      }
+    })
+    console.log(allUsers.id)
+
+    // await sequelize.sync();
     // await sequelize.sync({force: true});
     // console.log('Connection has been established successfully.');
   } catch (error) {

@@ -1,11 +1,11 @@
-import {DataTypes} from 'sequelize';
-import {sequelize} from "../dbConfig/db";
+import { DataTypes } from 'sequelize';
+import { sequelize } from "../dbConfig/db";
 
 export const VideoInfo = sequelize.define('VideoInfo', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     path: {
       type: DataTypes.CHAR,
@@ -20,11 +20,7 @@ export const VideoInfo = sequelize.define('VideoInfo', {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    shortDescription: {
-      type: DataTypes.CHAR,
-      allowNull: true,
-    },
-    fullDescription: {
+    Description: {
       type: DataTypes.CHAR,
       allowNull: true,
     },
@@ -42,5 +38,5 @@ export const VideoInfo = sequelize.define('VideoInfo', {
     timestamps: true,
     createdAt: false,
     updatedAt: 'updateTimestamp',
-  }
+  },
 );
