@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 //Импортирование моделей
@@ -10,12 +10,13 @@ import { VideoInfo } from "./VideoInfo";
 import { Channel } from "./Channel";
 import { ChannelInfo } from "./ChannelInfo";
 import { ChannelSubscriber } from "./ChannelSubscribers";
-import { PlayList } from "./PlayList"
+import { PlayList } from "./PlayList";
 import { Comment } from "./Comment";
 import { Answer } from "./Answer";
 import { AnswerLike } from "./AnswerLike";
 import { CommentLike } from "./CommentLike";
 import { VideoLike } from "./VideoLike";
+import { includes } from "core-js/internals/array-includes";
 
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
@@ -34,7 +35,7 @@ User.hasMany(Token, {
   },
 });
 Token.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(Channel, {
   foreignKey: {
@@ -43,7 +44,7 @@ User.hasMany(Channel, {
   },
 });
 Channel.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(ChannelSubscriber, {
   foreignKey: {
@@ -52,7 +53,7 @@ User.hasMany(ChannelSubscriber, {
   },
 });
 ChannelSubscriber.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(Comment, {
   foreignKey: {
@@ -61,7 +62,7 @@ User.hasMany(Comment, {
   },
 });
 Comment.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(Answer, {
   foreignKey: {
@@ -70,7 +71,7 @@ User.hasMany(Answer, {
   },
 });
 Answer.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(AnswerLike, {
   foreignKey: {
@@ -79,7 +80,7 @@ User.hasMany(AnswerLike, {
   },
 });
 AnswerLike.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(CommentLike, {
   foreignKey: {
@@ -88,7 +89,7 @@ User.hasMany(CommentLike, {
   },
 });
 CommentLike.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 User.hasMany(VideoLike, {
   foreignKey: {
@@ -97,7 +98,7 @@ User.hasMany(VideoLike, {
   },
 });
 VideoLike.belongsTo(User, {
-  foreignKey: 'userId'
+  foreignKey: 'userId',
 });
 //Связи для таблицы Каналов
 Channel.hasOne(ChannelInfo, {
@@ -107,7 +108,7 @@ Channel.hasOne(ChannelInfo, {
   },
 });
 ChannelInfo.belongsTo(Channel, {
-  foreignKey: 'сhannelId'
+  foreignKey: 'сhannelId',
 });
 Channel.hasMany(ChannelSubscriber, {
   foreignKey: {
@@ -116,7 +117,7 @@ Channel.hasMany(ChannelSubscriber, {
   },
 });
 ChannelSubscriber.belongsTo(Channel, {
-  foreignKey: 'сhannelId'
+  foreignKey: 'сhannelId',
 });
 Channel.hasMany(Video, {
   foreignKey: {
@@ -125,7 +126,7 @@ Channel.hasMany(Video, {
   },
 });
 Video.belongsTo(Channel, {
-  foreignKey: 'сhannelId'
+  foreignKey: 'сhannelId',
 });
 Channel.hasMany(PlayList, {
   foreignKey: {
@@ -134,7 +135,7 @@ Channel.hasMany(PlayList, {
   },
 });
 PlayList.belongsTo(Channel, {
-  foreignKey: 'сhannelId'
+  foreignKey: 'сhannelId',
 });
 //Связи для таблицы Видео
 Video.hasMany(Comment, {
@@ -144,7 +145,7 @@ Video.hasMany(Comment, {
   },
 });
 Comment.belongsTo(Video, {
-  foreignKey: 'videoId'
+  foreignKey: 'videoId',
 });
 Video.hasMany(VideoInfo, {
   foreignKey: {
@@ -153,7 +154,7 @@ Video.hasMany(VideoInfo, {
   },
 });
 VideoInfo.belongsTo(Video, {
-  foreignKey: 'videoId'
+  foreignKey: 'videoId',
 });
 Video.hasMany(VideoLike, {
   foreignKey: {
@@ -162,7 +163,7 @@ Video.hasMany(VideoLike, {
   },
 });
 VideoLike.belongsTo(Video, {
-  foreignKey: 'videoId'
+  foreignKey: 'videoId',
 });
 //Связи для таблицы Коментариев
 Comment.hasMany(CommentLike, {
@@ -172,7 +173,7 @@ Comment.hasMany(CommentLike, {
   },
 });
 CommentLike.belongsTo(Comment, {
-  foreignKey: 'сommentId'
+  foreignKey: 'сommentId',
 });
 Comment.hasMany(Answer, {
   foreignKey: {
@@ -181,7 +182,7 @@ Comment.hasMany(Answer, {
   },
 });
 Answer.belongsTo(Comment, {
-  foreignKey: 'сommentId'
+  foreignKey: 'сommentId',
 });
 //Связи для таблицы Ответов
 Answer.hasMany(AnswerLike, {
@@ -191,7 +192,7 @@ Answer.hasMany(AnswerLike, {
   },
 });
 AnswerLike.belongsTo(Answer, {
-  foreignKey: 'answerId'
+  foreignKey: 'answerId',
 });
 
 export const runDB = async function () {
@@ -211,12 +212,29 @@ export const runDB = async function () {
     //   }))
     // console.log(isCreate);
 
-    const allUsers = await User.findOne({
-      where: {
-        id: 2,
-      }
-    })
-    console.log(allUsers.id)
+    // const cUserInfo = await UserInfo.create({
+    //   firstName: 'Jenya2',
+    //   lastName: 'Pogorelov2',
+    //   email: '1@4.3',
+    //   password: '123456',
+    //   userId: 2,
+    // });
+    // console.log(cUserInfo);
+
+    const allUsers = await User.findOne(
+      {
+        where: {
+          id: 2,
+        },
+        include: [
+          {
+            model: UserInfo,
+          },
+        ],
+      },
+    );
+    // console.log(allUsers[0].dataValues);
+    console.log(JSON.stringify(allUsers, null, 1));
 
     // await sequelize.sync();
     // await sequelize.sync({force: true});
@@ -224,4 +242,4 @@ export const runDB = async function () {
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
-}
+};

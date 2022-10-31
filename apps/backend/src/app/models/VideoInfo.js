@@ -20,7 +20,7 @@ export const VideoInfo = sequelize.define('VideoInfo', {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    Description: {
+    description: {
       type: DataTypes.CHAR,
       allowNull: true,
     },
