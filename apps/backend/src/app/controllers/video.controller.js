@@ -1,26 +1,15 @@
 import path from 'path';
 import { v4 as uuidV4 } from 'uuid';
-import Client from 'ftp';
-import * as dotenv from 'dotenv';
+import ffmpeg from 'ffmpeg';
+import fs from 'fs-extra';
 
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoExtensions.js';
-
-dotenv.config();
+import { ftpServer } from '../../main.js';
 
 class VideoController {
-  ftpServerConnect() {
-    const ftpServer =  new Client();
-    ftpServer.connect({
-      host: process.env.STORE_SERVER_HOST,
-      port: process.env.STORE_SERVER_PORT,
-      user: process.env.STORE_SERVER_USER,
-      password: process.env.STORE_SERVER_PASSWORD
-    });
-    return ftpServer;
-  }
-  // Принять видео с фронта и сохранить
-  upload(req, res, next) {
+  // Принять видео с фронта, сделать frameShot и сохранить
+  async upload(req, res, next) {
     try {
       if (!req.files) {
         next(ApiError.BadRequest('Отсутствует видеофайл для загрузки'));
@@ -28,23 +17,34 @@ class VideoController {
 
       const file = req.files.videoFile;
       const extension = path.extname(file.name);
-      const hashName = uuidV4() + extension;
+      const hashName = uuidV4();
+      const videoHashName = hashName + extension;
+      const frameHashName = hashName + '.jpg';
       if (!videoExtensions.includes(extension)) {
         next(ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату'));
       }
 
-      const ftpServer = this.ftpServerConnect();
+      await ftpServer.put(file.tempFilePath, videoHashName);
 
-      ftpServer.on('ready', async () => {
-        ftpServer.put(file.data, hashName, err => {
+      const video = await new ffmpeg(file.tempFilePath);
+      await video.fnExtractFrameToJPG(
+        'tmp',
+        {
+          number: 1,
+          every_n_percentage: 50
+        },
+        async (err, files) => {
           if (err) {
-            return next(ApiError.InternalServerError(err));
+            console.log('error = ', err);                     //TODO   Задать вопрос на созвоне
+          } else {
+            await ftpServer.put(files[0], frameHashName);
+            await fs.remove(path.resolve(path.resolve(), 'tmp'), err => { if (err) console.log(err); });
+            return res.json({videoHashName});
           }
-          ftpServer.end();
-          return res.json(hashName);
-        })
-      });
+        }
+      );
     } catch (e) {
+      console.log('e = ', e);
       next(e);
     }
   }
@@ -62,19 +62,8 @@ class VideoController {
         next(ApiError.BadRequest(`Видеофайл ${videoName} не найден`));
       }
 
-      const ftpServer = this.ftpServerConnect();
-
-      ftpServer.on('ready', () => {
-        ftpServer.get(hashName, (err, stream) => {
-          if (err) {
-            return next(ApiError.InternalServerError(err));
-          }
-          stream.once('close', () => {
-            ftpServer.end();
-          });
-          stream.pipe(res);
-        });
-      });
+      const stream = await ftpServer.get(hashName);
+      stream.pipe(res);
     } catch (e) {
       next(e);
     }
