@@ -71,17 +71,19 @@ class UserModel {
 class UserInfoModel {
   userInfoList = [];
 
-  create(userId, email, password, role) {
+  create(userId, email, password, activateLink) {
     const userInfo = {
       userId,
       email,
       password,
-      role,
+      role: 'user',
+      activateLink,
+      isActivated: false,
       isBanned: false,
       channelsCount: 0
     };
     this.userInfoList.push(userInfo);
-    // console.log(this.userInfoList);
+  //  console.log(this.userInfoList);
     return userInfo;
   }
 
@@ -89,11 +91,25 @@ class UserInfoModel {
     return this.userInfoList.find((el) => el.userId === userId);
   }
 
+  findOneByActivateLink(activateLink) {
+    return this.userInfoList.find((el) => el.activateLink === activateLink);
+  }
+
   delete(id) {
     const findIndex = this.userInfoList.findIndex(el => el.userId === id);
     if (findIndex === -1) return false;
     this.userInfoList.splice(findIndex, 1);
     return true;
+  }
+
+  update(id, userFrom) {
+    const userTo = this.userInfoList.find(el => el.userId === id);
+    if (!userTo) return null;
+    for (let key in userFrom) {
+      userTo[key] = userFrom[key];
+    }
+    console.log(this.userInfoList);
+    return userTo;
   }
 }
 

@@ -17,8 +17,8 @@ class UserController {
 
   async create(req, res, next) {
     try {
-      const { nickName, email, password, role } = req.body;
-      const tokensObject = await userService.registration(nickName, email, password, role);
+      const { nickName, email, password } = req.body;
+      const tokensObject = await userService.registration(nickName, email, password);
       return this.createCookies(res, tokensObject);
     } catch(e) {
       next(e);
@@ -68,6 +68,15 @@ class UserController {
 
   async getAll(req, res) {
     return res.json(await userService.getAll());
+  }
+
+  async activate(req, res, next) {
+    try {
+      await userService.activate(req.params.link);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (e) {
+      next(e);
+    }
   }
 }
 

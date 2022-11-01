@@ -1,25 +1,31 @@
 import bcrypt from 'bcrypt';
+import { v4 as uuidV4 } from 'uuid';
 
 import { ApiError } from '../errors/apiError.js';
 import tokenService from './token.service.js';
 import { userModel, userInfoModel, tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
+import mailService from './mail.service.js';
 
 class UserService {
   async getAll() {
     return userModel.findAll();
   }
 
-  async registration(nickName, email, password, role) {
-    //const candidate = await userModel.findOne({ where: { nickName } });
+  async registration(nickName, email, password) {
+    //const candidate = await userModel.findOne({ where: { nickName } }); //  Здесь нужно сделать запрос
     const candidate = userModel.findOneByName(nickName);      //! TMP
     if (candidate) {
       throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
     }
     password = await bcrypt.hash(password, 5);
-    //newUser = await userModel.create(nickName, email, password, role);
+    const activateLink = uuidV4();
+
+    //newUser = await userModel.create(nickName, email, password, activateLink);
     const newUser = userModel.create(nickName);      //! TMP
-    userInfoModel.create(newUser.id, email, password, role);      //! TMP
-    return await tokenService.createNewTokens({ ...newUser, email, role });
+    const newUserInfo = userInfoModel.create(newUser.id, email, password, activateLink);      //! TMP
+    const tokenObject =  await tokenService.createNewTokens({ ...newUser, email, role: newUserInfo.role });
+    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activateLink}`);
+    return tokenObject;
   }
 
   async login(nickName, password) {
@@ -55,6 +61,16 @@ class UserService {
     }
 
     return await tokenService.createNewTokens(user, refreshTokenFromDB.id);
+  }
+
+  async activate(link) {
+    const user = userInfoModel.findOneByActivateLink(link);
+    if (!user) {
+      throw ApiError.BadRequest('Пользователь не найден');
+    }
+    user.isActivated = true;
+    const updatedUser = userInfoModel.update(user.userId, user);
+    if (!updatedUser) throw ApiError.BadRequest(`Пользователь не сохранен`);
   }
 
   async remove(id) {
