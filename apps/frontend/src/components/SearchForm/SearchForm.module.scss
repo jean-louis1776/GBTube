@@ -1,0 +1,23 @@
+.searchInput {
+  border: none;
+  outline: none;
+  width: 350px;
+  background: transparent;
+  color: #474747;
+  font-size: 1rem;
+}
+
+.searchBtn {
+  transition: 0.2s !important;
+
+  &:hover {
+    background-color: rgba(252, 21, 3, 0.04) !important;
+    color: #fc1503 !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .searchBar {
+    width: 200px;
+  }
+}

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { logo } from '../../utils/constants';
+// import { logo } from '../../utils/constants';
+import { logo } from '@constants/frontend';
 
-import './Header.scss';
+import styles from './Header.module.scss';
 
-import SearchForm from '../SearchForm/SearchForm';
+import { SearchForm } from '../';
 
 const Header = (props) => {
   return (
@@ -15,21 +16,21 @@ const Header = (props) => {
       p={2}
       sx={{
         position: 'sticky',
-        background: '#fff',
         top: 0,
         justifyContent: 'space-between',
         boxShadow: '0 8px 6px -6px #ccc',
       }}
+      className={styles.header}
     >
       <Link
         to="/"
         style={{ display: 'flex', alignItems: 'center' }}
-        className="logo"
+        className={styles.logo}
       >
         <img src={logo} alt="Home" height={45} />
 
         <Typography
-          className="logo-name"
+          className={styles.logoName}
           variant="h4"
           fontWeight="bold"
           sx={{ color: '#000', ml: 1 }}

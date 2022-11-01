@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Paper, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import './SearchForm.scss';
+import styles from './SearchForm.module.scss';
 
 const SearchForm = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,14 +15,13 @@ const SearchForm = (props) => {
 
     if (searchTerm) {
       navigate(`/search/${searchTerm}`);
-
       setSearchTerm('');
     }
   };
 
   return (
     <Paper
-      className="search-bar"
+      className={styles.searchBar}
       component="form"
       onSubmit={handleSubmit}
       sx={{
@@ -35,13 +34,13 @@ const SearchForm = (props) => {
       }}
     >
       <input
-        className="search-input"
+        className={styles.searchInput}
         placeholder="Искать..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <IconButton
-        className="search-btn"
+        className={styles.searchBtn}
         type="submit"
         sx={{ p: '10px', color: '#fc1503' }}
       >

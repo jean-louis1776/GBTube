@@ -1,19 +1,19 @@
 import React from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { logo } from '../../utils/constants';
+import { logo } from '@constants/frontend';
 
-import './SignupForm.scss';
+import styles from './SignupForm.module.scss';
 
 const SignupForm = (props) => {
   return (
-    <Stack className="signup-section">
-      <Paper elevation={3} className="signup-paper">
-        <Link to="/" className="signup-logo">
+    <Stack className={styles.signupSection}>
+      <Paper elevation={3} className={styles.signupPaper}>
+        <Link to="/" className={styles.signupLogo}>
           <img src={logo} alt="Logo" height={45} />
 
           <Typography
-            className="logo-name"
+            className={styles.logoName}
             variant="h4"
             fontWeight="bold"
             sx={{ color: '#000', ml: 1 }}
@@ -24,17 +24,17 @@ const SignupForm = (props) => {
 
         <form
           // onSubmit={handleSubmit}
-          className="signup-form"
+          className={styles.signupForm}
         >
           <h3>Создайте свой аккаунт</h3>
-          <Stack className="input-stuck">
+          <Stack className={styles.inputStuck}>
             <input
               placeholder="E-mail"
               name="email"
               type="email"
               // onChange={handleEmailChange}
               // value={email}
-              className="signup-input"
+              className={styles.signupInput}
             />
 
             <input
@@ -43,7 +43,7 @@ const SignupForm = (props) => {
               type="password"
               // onChange={handlePassChange}
               // value={password}
-              className="signup-input"
+              className={styles.signupInput}
             />
 
             <input
@@ -52,7 +52,7 @@ const SignupForm = (props) => {
               type="password"
               // onChange={handlePassChange}
               // value={password}
-              className="signup-input"
+              className={styles.signupInput}
             />
           </Stack>
 
@@ -66,7 +66,7 @@ const SignupForm = (props) => {
               Зарегистрироваться
             </Button>
           </div>
-          <p className="redirect">
+          <p className={styles.redirect}>
             Уже есть аккаунт?{' '}
             <Link to="/login">
               <span style={{ color: '#fc1503' }}>Войдите в аккаунт</span>
@@ -74,7 +74,7 @@ const SignupForm = (props) => {
           </p>
         </form>
 
-        <p className="copyright">
+        <p className={styles.copyright}>
           &copy; 2022 GeekTube Team. Все права защищены
         </p>
       </Paper>

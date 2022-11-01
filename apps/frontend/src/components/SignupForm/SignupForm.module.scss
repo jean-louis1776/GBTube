@@ -1,32 +1,36 @@
-.login-section {
+.signupSection {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  .login-paper {
+  .signupPaper {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 50px;
 
-    .login-logo {
+    .signupLogo {
       display: flex;
       align-items: center;
       margin-bottom: 30px;
       user-select: none;
+
+      .logoName {
+        font-size: 1.5rem;
+      }
     }
 
-    .login-form {
+    .signupForm {
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      .input-stuck {
-        margin-bottom: 20px;
+      .inputStuck {
         width: 100%;
+        margin-bottom: 20px;
 
-        .login-input {
+        .signupInput {
           border-radius: 20px;
           border: 1px solid #cecece;
           outline: none;

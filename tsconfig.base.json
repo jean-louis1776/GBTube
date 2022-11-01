@@ -14,7 +14,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@constants/frontend": ["libs/constants/frontend/src/index.js"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

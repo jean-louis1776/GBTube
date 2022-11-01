@@ -3,10 +3,10 @@ import { Box, Stack, Typography } from '@mui/material';
 
 import { Header, Navbar } from '../';
 
-import styles from './MainPage.module.scss';
+import styles from './Subscriptions.module.scss';
 
-const MainPage = (props) => {
-  const [selectedCategory, setSelectedCategory] = useState('Домой');
+const Subscriptions = (props) => {
+  const [selectedCategory, setSelectedCategory] = useState('Подписки');
 
   return (
     <>
@@ -39,13 +39,10 @@ const MainPage = (props) => {
           </Typography>
         </Box>
 
-        {/* <Box p={2} sx={{ overflowY: 'auto', height: '93vh', flex: 2 }}>
-          <VideoGrid videos={videos} />
-        </Box> */}
-        <div>Home</div>
+        <div>Subscriptions</div>
       </Stack>
     </>
   );
 };
 
-export default MainPage;
+export default Subscriptions;

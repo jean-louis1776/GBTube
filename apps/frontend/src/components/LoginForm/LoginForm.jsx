@@ -1,19 +1,19 @@
 import React from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { logo } from '../../utils/constants';
+import { logo } from '@constants/frontend';
 
-import './LoginForm.scss';
+import styles from './LoginForm.module.scss';
 
 const LoginForm = (props) => {
   return (
-    <Stack className="login-section">
-      <Paper elevation={3} className="login-paper">
-        <Link to="/" className="login-logo">
+    <Stack className={styles.loginSection}>
+      <Paper elevation={3} className={styles.loginPaper}>
+        <Link to="/" className={styles.loginLogo}>
           <img src={logo} alt="Logo" height={45} />
 
           <Typography
-            className="logo-name"
+            className={styles.logoName}
             variant="h4"
             fontWeight="bold"
             sx={{ color: '#000', ml: 1 }}
@@ -24,17 +24,17 @@ const LoginForm = (props) => {
 
         <form
           // onSubmit={handleSubmit}
-          className="login-form"
+          className={styles.loginForm}
         >
           <h3>Войдите в свой аккаунт</h3>
-          <Stack className="input-stuck">
+          <Stack className={styles.inputStuck}>
             <input
               placeholder="E-mail"
               name="email"
               type="email"
               // onChange={handleEmailChange}
               // value={email}
-              className="login-input"
+              className={styles.loginInput}
             />
 
             <input
@@ -43,7 +43,7 @@ const LoginForm = (props) => {
               type="password"
               // onChange={handlePassChange}
               // value={password}
-              className="login-input"
+              className={styles.loginInput}
             />
           </Stack>
 
@@ -57,7 +57,7 @@ const LoginForm = (props) => {
               Войти
             </Button>
           </div>
-          <p className="redirect">
+          <p className={styles.redirect}>
             Ещё нет аккаунта?{' '}
             <Link to="/signup">
               <span style={{ color: '#fc1503' }}>Создайте аккаунт</span>
@@ -65,7 +65,7 @@ const LoginForm = (props) => {
           </p>
         </form>
 
-        <p className="copyright">
+        <p className={styles.copyright}>
           &copy; 2022 GeekTube Team. Все права защищены
         </p>
       </Paper>
