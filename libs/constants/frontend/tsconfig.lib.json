@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "declaration": true,
+    "types": []
+  },
+  "include": ["**/*.ts", "**/*.js", "src/lib/constants-frontend.jsx"],
+  "exclude": ["jest.config.ts", "**/*.spec.ts", "**/*.spec.js"]
+}
