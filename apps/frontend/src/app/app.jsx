@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getAuthDataFromLS, removeUser } from './utils/auth';
+// import { getAuthDataFromLS, removeUser } from './utils/auth';
 import { Box } from '@mui/material';
 
 import './app.module.scss';
@@ -20,17 +20,17 @@ import {
 } from '../components';
 
 export function App() {
-  useEffect(() => {
-    const auth = getAuthDataFromLS();
-
-    if (!auth || !auth.accessToken || !auth.refreshToken) {
-      removeUser();
-      return;
-    }
-    // здесь необходимо передавать данные об авторизации юзера
-    setAuth(true);
-    setUser(auth.user)
-  }, []);
+  // useEffect(() => {
+  //   const auth = getAuthDataFromLS();
+  //
+  //   if (!auth || !auth.accessToken || !auth.refreshToken) {
+  //     removeUser();
+  //     return;
+  //   }
+  //   // здесь необходимо передавать данные об авторизации юзера
+  //   setAuth(true);
+  //   setUser(auth.user)
+  // }, []);
   return (
     <Box sx={{ backgroundColor: '#fff' }}>
       <Routes>
