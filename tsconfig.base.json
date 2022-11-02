@@ -15,7 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@gbtube-fullstack/store-classes": ["libs/store-classes/src/index.ts"]
+      "@gbtube-fullstack/frontend/functions": [
+        "libs/frontend/functions/src/index.ts"
+      ],
+      "@gbtube-fullstack/store-classes": ["libs/store-classes/src/index.ts"],
+      "frontend/store-classes": ["libs/frontend/store-classes/src/index.js"]
     }
   },
   "exclude": ["node_modules", "tmp"]

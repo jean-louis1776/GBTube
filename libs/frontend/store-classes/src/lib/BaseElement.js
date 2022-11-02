@@ -1,49 +1,50 @@
 export const CREATE_DATE = 'createDate';
 export const ID = 'id';
 export const ID_LIST = 'idList';
-export const NAME = 'name';
+export const TITLE = 'title';
 export const TEXT_CONTENT = 'textContent';
 /**
- * @type {{name: string, textContent: string, idList: number[], createDate: Date}}
+ * @type {{title: string, textContent: string, idList: number[], createDate: Date}}
  */
-export const TChildDataConstructor = {[CREATE_DATE]: new Date() , [ID_LIST]: [0], [NAME]: '', [TEXT_CONTENT]: ''};
+export const TChildDataConstructor = {[CREATE_DATE]: new Date() , [ID_LIST]: [0], [TITLE]: '', [TEXT_CONTENT]: ''};
 /**
- * @type {{name: string, textContent: string, id: number, createDate: Date}}
+ * @type {{title: string, textContent: string, id: number, createDate: Date}}
  */
-export const TChildDataAddMethod = {[CREATE_DATE]: new Date() , [ID]: 0, [NAME]: '', [TEXT_CONTENT]: ''};
+export const TChildDataAddMethod = {[CREATE_DATE]: new Date() , [ID]: 0, [TITLE]: '', [TEXT_CONTENT]: ''};
 
 export class BaseElement {
-  createDate = new Date();
-  children = new Map();
-  grades = { like: 0, dislike: 0 };
-  name = '';
-  textContent = '';
+  #idList
+  #createDate = new Date();
+  #children = new Map();
+  #grades = { like: 0, dislike: 0 };
+  #title = '';
+  #textContent = '';
   /**
-   * @param {{ idList: number[], createDate: Date, name: string, textContent: string}} childData
+   * @param {{ idList: number[], createDate: Date, title: string, textContent: string}} childData
    */
   constructor(childData = TChildDataConstructor) {
     const fixedChildData = {...TChildDataConstructor, ...childData};
-    const { idList, createDate, name, textContent } = fixedChildData;
-    this.idList = idList;
-    this.createDate = createDate;
-    this.name = name;
-    this.textContent = textContent;
+    const { idList, createDate, title, textContent } = fixedChildData;
+    this.#idList = idList;
+    this.#createDate = createDate;
+    this.#title = title;
+    this.#textContent = textContent;
   }
   /**
-   * @param {{ id: number, createDate: Date, name: string, textContent: string}} childData
-   * @param {{constructor: Function}} Constructor
+   * @param {{ id: number, createDate: Date, title: string, textContent: string}} childData
+   * @param {Object} Constructor
    */
     addChild(Constructor, childData = TChildDataAddMethod) {
       const childId = TChildDataAddMethod[ID];
       const childIdList = this.getIdList().concat(childId);
     // @ts-ignore
-      this.children.set(childId, new Constructor(childIdList, childData));
+      this.#children.set(childId, new Constructor(childIdList, childData));
     }
   /**
    * @returns {number}
    */
   getAuthorId() {
-      return this.idList[0];
+      return this.#idList[0];
     }
   /**
    * @param {{getName: Function}} userProfile
@@ -57,8 +58,8 @@ export class BaseElement {
    * @returns {Map<string, Object>}
    */
   getChild(commentId) {
-      if (this.children.has(commentId)) {
-          return this.children.get(commentId);
+      if (this.#children.has(commentId)) {
+          return this.#children.get(commentId);
       }
       throw new Error(`commentId ${commentId} not found in ${this.constructor.name}`);
     }
@@ -66,13 +67,13 @@ export class BaseElement {
    * @returns {Map<string, Object>}
    */
   getChildren() {
-      return this.children;
+      return this.#children;
     }
   /**
    * @returns {Date}
    */
   getCreateDate() {
-      return this.createDate;
+      return this.#createDate;
     }
   /**
    * @param {{getVideoGrade: Function}} userProfile
@@ -85,7 +86,7 @@ export class BaseElement {
    * @returns {{like: number, dislike: number}}
    */
   getGrades() {
-      return this.grades;
+      return this.#grades;
     }
   /**
    * @returns {number}
@@ -98,44 +99,44 @@ export class BaseElement {
    * @returns {number[]}
    */
   getIdList() {
-      return this.idList;
+      return this.#idList;
     }
   /**
    * @returns {string}
    */
   getName() {
-      return this.name;
+      return this.#title;
     }
   /**
    * @returns {string}
    */
   getTextContent() {
-      return this.textContent;
+      return this.#textContent;
     }
   /**
    * @param {{addVideoDisliked: Function}} userProfile
    */
   gradeDislike(userProfile) {
-      this.grades.dislike += 1;
+      this.#grades.dislike += 1;
       userProfile.addVideoDisliked(this.getId());
     }
   /**
    * @param {{addVideoLiked: Function}} userProfile
    */
   gradeLike(userProfile) {
-      this.grades.like += 1;
+      this.#grades.like += 1;
       userProfile.addVideoLiked(this.getId());
     }
   /**
-   * @param {string} name
+   * @param {string} title
    */
-  setName(name) {
-      this.name = name;
+  setName(title) {
+      this.#title = title;
     }
   /**
    * @param {string} textContent
    */
   setTextContent(textContent) {
-        this.textContent = textContent;
+        this.#textContent = textContent;
     }
 }

@@ -5,8 +5,18 @@ export const DISLIKE = 'dislike';
 export const UNGRADED = 'ungraded';
 
 export class User {
+  //TODO вспомнить зачем оно нужно
+  #subscribers = new Set();
+  #subscriptions = new Set();
+  #id = '';
+  #birthDay = new Date;
+  #email = '';
+  #nicName = '';
+  #firstName = '';
+  #lastName = '';
+  #createDate = new Date();
   /**
-   * @param {{id: number, name: string, email: string, createDate: Date}} personalData
+   * @param {{id: string, nicName: string, email: string, createDate: Date}} personalData
    */
     constructor(personalData) {
         this.gradedUsersComments = {
@@ -17,14 +27,13 @@ export class User {
             liked: new Set(),
             disliked: new Set(),
         };
-        //TODO вспомнить зачем оно нужно
-        this.subscribers = new Set();
-        this.subscriptions = new Set();
-        const { id, email, name, createDate } = personalData;
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.createDate = createDate;
+
+
+        const { id, email, nicName, createDate } = personalData;
+        this.#id = id;
+        this.#email = email;
+        this.#nicName = nicName;
+        this.#createDate = createDate;
     }
   /**
    * @param {string} commentId
@@ -54,19 +63,38 @@ export class User {
    * @param {string} subscriberId
    */
   addSubscriber(subscriberId) {
-      this.subscribers.add(subscriberId);
+      this.#subscribers.add(subscriberId);
     }
   /**
    * @returns {Date}
    */
   getCreateDate() {
-    return this.createDate;
+    return this.#createDate;
   }
   /**
    * @returns {string}
    */
     getEmail() {
-        return this.email;
+        return this.#email;
+    }
+  /**
+   * @returns {Date}
+   */
+  getBirthDay() {
+      return this.#birthDay;
+    }
+  /**
+   * @returns {string}
+   */
+  getFirstName() {
+      return this.#firstName;
+    }
+
+  /**
+   * @returns {string}
+   */
+  getLastName() {
+      return this.#lastName;
     }
   /**
    * @param {Map<string, ChannelGroup>} channelGroup
@@ -125,34 +153,34 @@ export class User {
         return videoGradeCount;
     }
   /**
-   * @returns {number}
+   * @returns {string}
    */
   getId() {
-      return this.id;
+      return this.#id;
     }
   /**
    * @returns {string}
    */
   getName() {
-      return this.name;
+      return this.#nicName;
     }
   /**
    * @returns {Set<string>}
    */
   getSubscribers() {
-      return this.subscribers;
+      return this.#subscribers;
     }
   /**
    * @returns {number}
    */
   getSubscribersCount() {
-      return this.subscribers.size;
+      return this.#subscribers.size;
     }
   /**
    * @returns {Set<string>}
    */
   getSubscriptions() {
-        return this.subscriptions;
+        return this.#subscriptions;
     }
   /**
    * @param {string} commentId
@@ -185,8 +213,26 @@ export class User {
    * @returns {boolean}
    */
   isSubscribed(userId) {
-      return this.subscriptions.has(userId);
+      return this.#subscriptions.has(userId);
     }
+  /**
+   * @param {Date} birthDay
+   */
+  setBirthDay(birthDay) {
+      this.#birthDay = birthDay;
+    }
+  /**
+   * @param {string} firstName
+   */
+  setFirstName(firstName) {
+      this.#firstName = firstName;
+    }
+  /**
+   * @param {string} lastName
+   */
+  setLastName(lastName) {
+    this.#lastName = lastName;
+  }
   /**
    * @param {string} email
    */
@@ -203,14 +249,13 @@ export class User {
    * @param {string} userId
    */
   subscribe(userId) {
-        this.subscriptions.add(userId);
+        this.#subscriptions.add(userId);
     }
-
   /**
    * @param {string} userId
    */
   unsubscribe(userId) {
-        this.subscriptions.delete(userId);
+        this.#subscriptions.delete(userId);
     }
     //Moderator methods
     //TODO Подумать нужны ли тут методы модератора и админа

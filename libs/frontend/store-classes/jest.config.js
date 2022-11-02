@@ -1,7 +1,7 @@
 /* eslint-disable */
-export default {
-  displayName: 'store-classes',
-  preset: '../../jest.preset.js',
+module.exports = {
+  displayName: 'frontend-store-classes',
+  preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -11,5 +11,5 @@ export default {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/libs/store-classes',
+  coverageDirectory: '../../../coverage/libs/frontend/store-classes',
 };
