@@ -1,5 +1,5 @@
-import {DataTypes} from 'sequelize';
-import {sequelize} from "../dbConfig/db";
+import { DataTypes } from 'sequelize';
+import { sequelize } from "../dbConfig/db";
 
 export const Token = sequelize.define('Token', {
     id: {
@@ -12,6 +12,6 @@ export const Token = sequelize.define('Token', {
       allowNull: false,
     },
   }, {
-  timestamps: false,
+    timestamps: false,
   }
 );
