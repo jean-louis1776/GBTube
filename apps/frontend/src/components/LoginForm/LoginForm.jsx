@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { logo } from '@constants/frontend';
+import AuthController from '../../controllers/AuthController';
 
 import styles from './LoginForm.module.scss';
 
 const LoginForm = (props) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleEmailChange = (evt) => {
+    setEmail(evt.target.value);
+  }
+  const handlePassChange = (evt) => {
+    setPassword(evt.target.value);
+  }
+  const handleSubmit = async (evt) => {
+    evt.preventDefault();
+    try {
+      await AuthController.login(email, password);
+    } catch {
+      console.log('Login failed');
+    }
+    setPassword('');
+    setEmail('');
+  }
+
   return (
     <Stack className={styles.loginSection}>
       <Paper elevation={3} className={styles.loginPaper}>
@@ -23,7 +44,7 @@ const LoginForm = (props) => {
         </Link>
 
         <form
-          // onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           className={styles.loginForm}
         >
           <h3>Войдите в свой аккаунт</h3>
@@ -32,8 +53,8 @@ const LoginForm = (props) => {
               placeholder="E-mail"
               name="email"
               type="email"
-              // onChange={handleEmailChange}
-              // value={email}
+              onChange={handleEmailChange}
+              value={email}
               className={styles.loginInput}
             />
 
@@ -41,8 +62,8 @@ const LoginForm = (props) => {
               placeholder="Пароль"
               name="password"
               type="password"
-              // onChange={handlePassChange}
-              // value={password}
+              onChange={handlePassChange}
+              value={password}
               className={styles.loginInput}
             />
           </Stack>
