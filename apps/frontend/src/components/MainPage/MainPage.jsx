@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 
-import { Header, Navbar } from '../';
+import { Header, Navbar, VideoGrid } from '../';
 
 import styles from './MainPage.module.scss';
 
 const MainPage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState('Домой');
+  const [videos, setVideos] = useState([]);
 
   return (
     <>
@@ -39,10 +40,10 @@ const MainPage = (props) => {
           </Typography>
         </Box>
 
-        {/* <Box p={2} sx={{ overflowY: 'auto', height: '93vh', flex: 2 }}>
+        <Box p={2} sx={{ overflowY: 'auto', height: '93vh', flex: 2 }}>
           <VideoGrid videos={videos} />
-        </Box> */}
-        <div>Home</div>
+        </Box>
+        {/* <div>Home</div> */}
       </Stack>
     </>
   );

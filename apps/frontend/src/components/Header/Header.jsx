@@ -1,12 +1,22 @@
-import React from 'react';
-import { Button, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Avatar,
+  Button,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
-// import { logo } from '../../utils/constants';
-import { logo } from '@constants/frontend';
+import { logo, userMenu } from '@constants/frontend';
 
 import styles from './Header.module.scss';
 
-import { SearchForm } from '../';
+import { SearchForm, UserMenu } from '../';
 
 const Header = (props) => {
   return (
@@ -22,24 +32,26 @@ const Header = (props) => {
       }}
       className={styles.header}
     >
-      <Link
-        to="/"
-        style={{ display: 'flex', alignItems: 'center' }}
-        className={styles.logo}
-      >
-        <img src={logo} alt="Home" height={45} />
-
-        <Typography
-          className={styles.logoName}
-          variant="h4"
-          fontWeight="bold"
-          sx={{ color: '#000', ml: 1 }}
+      <Tooltip title="Домашняя страница GeekTube">
+        <Link
+          to="/"
+          style={{ display: 'flex', alignItems: 'center' }}
+          className={styles.logo}
         >
-          Geek<span style={{ color: '#fc1503' }}>Tube</span>
-        </Typography>
-      </Link>
+          <img src={logo} alt="Home" height={45} />
 
-      <Stack direction="row" alignItems="center">
+          <Typography
+            className={styles.logoName}
+            variant="h4"
+            fontWeight="bold"
+            sx={{ color: '#000', ml: 1 }}
+          >
+            Geek<span style={{ color: '#fc1503' }}>Tube</span>
+          </Typography>
+        </Link>
+      </Tooltip>
+
+      <Stack direction="row" alignItems="center" sx={{ gap: '1rem' }}>
         <SearchForm />
 
         <Link to="/login">
@@ -47,6 +59,8 @@ const Header = (props) => {
             Войти
           </Button>
         </Link>
+
+        <UserMenu />
       </Stack>
     </Stack>
   );

@@ -11,5 +11,8 @@ export { default as SearchFeed } from './SearchFeed/SearchFeed';
 export { default as SearchForm } from './SearchForm/SearchForm';
 export { default as SignupForm } from './SignupForm/SignupForm';
 export { default as Subscriptions } from './Subscriptions/Subscriptions';
+export { default as UploadVideo } from './UploadVideo/UploadVideo';
+export { default as UserMenu } from './UserMenu/UserMenu';
 export { default as VideoCard } from './VideoCard/VideoCard';
+export { default as VideoDetail } from './VideoDetail/VideoDetail';
 export { default as VideoGrid } from './VideoGrid/VideoGrid';
