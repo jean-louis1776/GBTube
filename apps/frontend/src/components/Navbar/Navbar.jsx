@@ -50,7 +50,7 @@ const Navbar = ({ selectedCategory, setSelectedCategory }) => {
       <Divider />
       <Typography className={styles.playlist}>
         <PlaylistPlayIcon className={styles.playlistIcon} />
-        Плейлисты
+        Мои подборки
       </Typography>
     </Stack>
   );

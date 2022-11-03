@@ -7,4 +7,14 @@ export const theme = createTheme({
       contrastText: '#fff',
     },
   },
+
+  // components: {
+  //   MuiStepIcon: {
+  //     styleOverrides: {
+  //       root: ({ theme }) => ({
+  //         color: theme.palette.red.main,
+  //       }),
+  //     },
+  //   },
+  // },
 });

@@ -14,6 +14,7 @@ import {
   SearchFeed,
   SignupForm,
   Subscriptions,
+  UploadVideo,
   VideoCard,
 } from '../components';
 
@@ -22,6 +23,7 @@ export function App() {
     <Box sx={{ backgroundColor: '#fff' }}>
       <Routes>
         <Route path="/" exact element={<MainPage />} />
+        <Route path="/uploadVideo" element={<UploadVideo />} />
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
