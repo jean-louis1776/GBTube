@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@frontend/store-classes": ["libs/frontend/store-classes/src/index.js"],
       "@constants/frontend": ["libs/constants/frontend/src/index.js"],
+      "@frontend/store-classes": ["libs/frontend/store-classes/src/index.js"],
     }
   },
   "exclude": ["node_modules", "tmp"]
