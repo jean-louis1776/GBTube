@@ -16,13 +16,14 @@ dotenv.config();
 const PORT = process.env.PORT || 3333;
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: process.env.CLIENT_URL
+}));
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.static(path.resolve(path.resolve(), 'apps', 'backend', 'src', 'assets', 'static')));
-app.use(fileUpload({
-  useTempFiles : true ,
-}));
+// app.use(express.static(path.resolve(path.resolve(), 'apps', 'backend', 'src', 'assets', 'static')));
+app.use(fileUpload({ useTempFiles : true }));
 app.use('/api', router);
 
 app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
