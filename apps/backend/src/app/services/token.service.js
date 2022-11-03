@@ -20,8 +20,8 @@ class TokenService {
       role: user.role
     }
     return {
-      accessToken: jwt.sign(payload, process.env.ACCESS_SECRET_KEY, {expiresIn: `${process.env.ACCESS_LIVE_IN_MINUTES}m`}),
-      refreshToken: jwt.sign(payload, process.env.REFRESH_SECRET_KEY, {expiresIn: `${process.env.REFRESH_LIVE_IN_DAYS}d`})
+      accessToken: jwt.sign(payload, process.env.ACCESS_KEY, {expiresIn: `${process.env.ACCESS_LIVE_IN_MINUTES}m`}),
+      refreshToken: jwt.sign(payload, process.env.REFRESH_KEY, {expiresIn: `${process.env.REFRESH_LIVE_IN_DAYS}d`})
     };
   }
 
@@ -38,7 +38,7 @@ class TokenService {
 
   validateToken (token, isRefresh) {
     try {
-      return jwt.verify(token, isRefresh ? process.env.REFRESH_SECRET_KEY : process.env.ACCESS_SECRET_KEY);
+      return jwt.verify(token, isRefresh ? process.env.REFRESH_KEY : process.env.ACCESS_KEY);
     } catch (e) {
       return null;
     }
