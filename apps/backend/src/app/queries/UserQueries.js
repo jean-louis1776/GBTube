@@ -66,7 +66,11 @@ class UserQueries {
     );
   }
 
-  /**
+  async findOneByEmail(email) {
+    return User.findOne({where: {email}, include: [{model: UserInfo}]});
+  }
+
+/**
    * Поиск всех пользователей
    * @returns {Object[]}
    */
@@ -89,6 +93,7 @@ class UserQueries {
         delete data.nickName;
       }
       let count = 0;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       for (let key in data) count++;
       if (count > 0) {
         await UserInfo.update({...data}, {where: {userId: id}});

@@ -9,17 +9,17 @@ class UserController {
     this.MAX_AGE = process.env.REFRESH_LIVE_IN_DAYS * 24 * 60 * 60 * 1000;
   }
 
-  createCookies(res, tokensObject) {
-    res.cookie('refreshToken', tokensObject.tokens.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
-    res.cookie('refreshTokenId', tokensObject.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
-    return res.json(tokensObject.tokens);
+  createCookies(res, userResponse) {
+    res.cookie('refreshToken', userResponse.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
+    res.cookie('refreshTokenId', userResponse.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
   }
 
   async create(req, res, next) {
     try {
-      const { nickName, email, password } = req.body;
-      const tokensObject = await userService.registration(nickName, email, password);
-      return this.createCookies(res, tokensObject);
+      const { username, email, password } = req.body;
+      const userResponse = await userService.registration(username, email, password);
+      this.createCookies(res, userResponse);
+      return res.json({id: userResponse.id, accessToken: userResponse.accessToken});
     } catch(e) {
       next(e);
     }
@@ -27,9 +27,10 @@ class UserController {
 
   async login(req, res, next) {
     try {
-      const { nickName, password } = req.body;
-      const tokensObject = await userService.login(nickName, password);
-      return this.createCookies(res, tokensObject);
+      const { email, password } = req.body;
+      const userResponse = await userService.login(email, password);
+      this.createCookies(res, userResponse);
+      return res.json(userResponse);
     } catch (e) {
       next(e);
     }

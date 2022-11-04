@@ -9,7 +9,7 @@ class TokenService {
   async createNewTokens (user, refreshTokenId) {
     const tokens = this.generateTokens(user);
     refreshTokenId = await this.saveRefreshTokenToDB(user.id, tokens.refreshToken, refreshTokenId);
-    return { tokens, refreshTokenId };
+    return { ...tokens, refreshTokenId };
   }
 
   generateTokens(user) {

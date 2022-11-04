@@ -5,6 +5,7 @@ import { ApiError } from '../errors/apiError.js';
 import tokenService from './token.service.js';
 import { userModel, userInfoModel, tokenModel } from '../../stub.js';     //! Это заглушка, ждем БД
 import mailService from './mail.service.js';
+import { userQueries } from '../queries/UserQueries.js';
 
 class UserService {
   async getAll() {
@@ -12,34 +13,39 @@ class UserService {
   }
 
   async registration(nickName, email, password) {
-    //const candidate = await userModel.findOne({ where: { nickName } }); //  Здесь нужно сделать запрос
-    const candidate = userModel.findOneByName(nickName);      //! TMP
-    if (candidate) {
-      throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
-    }
-    password = await bcrypt.hash(password, 5);
-    const activateLink = uuidV4();
+    try {
+      password = await bcrypt.hash(password, 5);
+      const activateLink = uuidV4();
 
-    //newUser = await userModel.create(nickName, email, password, activateLink);
-    const newUser = userModel.create(nickName);      //! TMP
-    const newUserInfo = userInfoModel.create(newUser.id, email, password, activateLink);      //! TMP
-    const tokenObject =  await tokenService.createNewTokens({ ...newUser, email, role: newUserInfo.role });
-    await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activateLink}`);
-    return tokenObject;
+      const newUserId = await userQueries.create(nickName, email, password, activateLink);
+      const tokenObject =  await tokenService.createNewTokens({ id: newUserId, nickName, email, role: 'user' });
+      await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activateLink}`);
+      return { id: newUserId, ...tokenObject };
+    } catch (e) {
+      return e;
+    }
   }
 
-  async login(nickName, password) {
-    //const newUser = await userModel.findOne({ where: { name } });
-    const newUser = userModel.findOneByName(nickName);             //! TMP
-    if (!newUser) {
-      throw ApiError.BadRequest(`Пользователя с именем ${nickName} не существует`);
+  async login(email, password) {
+    try {
+      const newUser = userQueries.findOneByEmail(email);
+      if (!newUser) {
+        throw ApiError.BadRequest(`Пользователя с email ${email} не существует`);
+      }
+      const isEqual = await bcrypt.compare(password, newUser.password);
+      if (!isEqual) {
+        throw ApiError.BadRequest('Неправильный пароль');
+      }
+      const tokenObject = await tokenService.createNewTokens({
+        id: newUser.id,
+        nickName: newUser.nickName,
+        email: newUser.email,
+        role: newUser.role
+      });
+      return { ...newUser, ... tokenObject };
+    } catch (e) {
+      return e;
     }
-    const newUserInfo = userInfoModel.findOneById(newUser.id);
-    const isEqual = await bcrypt.compare(password, newUserInfo.password);
-    if (!isEqual) {
-      throw ApiError.BadRequest('Неправильный пароль');
-    }
-    return await tokenService.createNewTokens({ ...newUser, email: newUserInfo.email, role: newUserInfo.role });
   }
 
   async logout(refreshTokenId) {
