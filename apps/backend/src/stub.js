@@ -44,7 +44,8 @@ class UserModel {
   create(nickName) {
     const user = { id: getId(this.userList), nickName }
     this.userList.push(user);
-    // console.log(this.userList);
+    console.log('HELLO FROM BACKEND!!!');
+    console.log(this.userList);
     return user;
   }
 
@@ -83,7 +84,7 @@ class UserInfoModel {
       channelsCount: 0
     };
     this.userInfoList.push(userInfo);
-  //  console.log(this.userInfoList);
+    console.log(this.userInfoList);
     return userInfo;
   }
 

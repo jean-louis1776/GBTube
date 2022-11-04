@@ -71,6 +71,7 @@ class UserService {
     user.isActivated = true;
     const updatedUser = userInfoModel.update(user.userId, user);
     if (!updatedUser) throw ApiError.BadRequest(`Пользователь не сохранен`);
+    return updatedUser;
   }
 
   async remove(id) {

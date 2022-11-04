@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
-import path from 'path';
+// import path from 'path';
 import fileUpload from 'express-fileupload';
 import PromiseFtp from 'promise-ftp';
 
