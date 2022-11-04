@@ -1,29 +1,22 @@
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
-import { where } from "sequelize";
+import { ApiError } from "../errors/apiError";
 
 class UserQueries {
-
-  /**
-   * Создание пользователя
-   * @param {string} nickName - nickName пользователя
-   * @param {Object} userInfo - информация о пользователе
-   * @returns {boolean}
-   */
-  async createUser(nickName, userInfo) {
-    if (this.checkUser(nickName)) {
-      const cUser = await User.create({
-        nickName: nickName,
-      });
-      await UserInfo.create({
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-        email: userInfo.email,
-        password: userInfo.password,
-        userId: cUser.id,
-      });
-      return true;
-    } else return false;
+  async createUser(nickName, email, password, activateLink) {
+    try {
+      if (await User.findOne({where: {nickName}})) {
+        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
+      }
+      if (await UserInfo.findOne({where: {email}})) {
+        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`);
+      }
+      const cUser = await User.create({nickName});
+      await UserInfo.create({email, password, activateLink, userId: cUser.id});
+      return cUser.id;
+    } catch (e) {
+      return ApiError.BadRequest(e.message);
+    }
   }
 
   /**
@@ -43,9 +36,7 @@ class UserQueries {
   async findOneById(id) {
     return User.findOne(
       {
-        where: {
-          id: id,
-        },
+        where: {id},
         include: [
           {
             model: UserInfo,
@@ -91,48 +82,20 @@ class UserQueries {
     );
   }
 
-  /**
-   * Обновление таблицы пользователя
-   * @param {Object} data - обьект с данными для изменения информации
-   * @returns {boolean}
-   */
-  async updateUser(data) {
-    return await User.update(
-      {
-        nickName: data.nickName,
-      },
-      {
-        where: {
-          Id: data.Id,
-        },
-      },
-    );
-  }
-
-  /**
-   * Обновление таблицы информации о пользователе
-   * @param {Object} data - обьект с данными для изменения информации
-   * @returns {boolean}
-   */
-  async updateUserInfo(data) {
-    return await UserInfo.update(
-      {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        password: data.password,
-        role: data.role,
-        isBaned: data.isBaned,
-        channelsCount: data.channelsCount,
-        activateLink: data.activateLink,
-        isActivate: data.isActivate,
-        birthDay: data.birthDay,
-      }, {
-        where: {
-          userId: data.id
-        },
-      },
-    )
+  async updateUser(id, data) {
+    try {
+      if (data.nickName) {
+        await User.update({nickName: data.nickName}, {where: {id}});
+        delete data.nickName;
+      }
+      let count = 0;
+      for (let key in data) count++;
+      if (count > 0) {
+        await UserInfo.update({...data}, {where: {userId: id}});
+      }
+    } catch (e) {
+      return ApiError.BadRequest(e.message);
+    }
   }
 
   /**
