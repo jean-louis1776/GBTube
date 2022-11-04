@@ -17,6 +17,7 @@ import { AnswerLike } from "./AnswerLike";
 import { CommentLike } from "./CommentLike";
 import { VideoLike } from "./VideoLike";
 import { includes } from "core-js/internals/array-includes";
+import excludeVariablesFromRoot from "@mui/material/styles/excludeVariablesFromRoot";
 
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
@@ -199,11 +200,14 @@ export const runDB = async function () {
   try {
     await sequelize.authenticate();
 
+    // await sequelize.sync();
+    // await sequelize.sync({force: true});
+    // await sequelize.sync({ alter: true });
+
     // const cUser = await User.create({
     //   nickName: 'Jenya9',
     // })
     // console.log(cUser.id);
-
 
     // const isCreate =  !!(await User.findOne({
     //     where: {
@@ -221,23 +225,52 @@ export const runDB = async function () {
     // });
     // console.log(cUserInfo);
 
-    const allUsers = await User.findOne(
-      {
-        where: {
-          id: 2,
-        },
-        include: [
-          {
-            model: UserInfo,
-          },
-        ],
-      },
-    );
-    // console.log(allUsers[0].dataValues);
-    console.log(JSON.stringify(allUsers, null, 1));
+    // const allUsers = await User.findOne(
+    //   {
+    //
+    //     where: {
+    //       id: 2,
+    //     },
+    //     include: [
+    //       {
+    //         model: UserInfo,
+    //         attributes: {
+    //           exclude: ['isActivate']
+    //         }
+    //       },
+    //
+    //     ],
+    //   },
+    // );
+    // // console.log(allUsers[0].dataValues);
+    // console.log(JSON.stringify(allUsers, null, 1));
 
-    // await sequelize.sync();
-    // await sequelize.sync({force: true});
+    // const uUser2 = function test(data) {
+    //   return (User.update(
+    //     {
+    //       nickName: data.name,
+    //     },
+    //     {
+    //       where: {
+    //         Id: 4,
+    //       },
+    //     }
+    //   ))
+    // }
+    // console.log(uUser2({}));
+
+    // const uUser = await User.update(
+    //   {
+    //     nickName: 'John34',
+    //   },
+    //   {
+    //     where: {
+    //       Id: 5,
+    //     },
+    //   }
+    // )
+    // console.log(uUser);
+
     // console.log('Connection has been established successfully.');
   } catch (error) {
     console.error('Unable to connect to the database:', error);
