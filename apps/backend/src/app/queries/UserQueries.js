@@ -11,9 +11,9 @@ class UserQueries {
       if (await UserInfo.findOne({where: {email}})) {
         throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`);
       }
-      const cUser = await User.create({nickName});
-      await UserInfo.create({email, password, activateLink, userId: cUser.id});
-      return cUser.id;
+      const userId = (await User.create({nickName}).id);
+      await UserInfo.create({email, password, activateLink, userId: userId});
+      return userId;
     } catch (e) {
       return ApiError.BadRequest(e.message);
     }
@@ -67,7 +67,24 @@ class UserQueries {
   }
 
   async findOneByEmail(email) {
-    return User.findOne({where: {email}, include: [{model: UserInfo}]});
+    try {
+      const result = (await User.findOne({include: [{model: UserInfo, where: {email}}]})).dataValues;
+      const user = {
+        ...result.UserInfo.dataValues,
+        id: result.id,
+        nickName: result.nickName
+      };
+      delete user.userId;
+      delete user.updateTimestamp;
+      return user;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async findOneByActivateLink(activateLink) {
+    const result = await UserInfo.findOne({where: {activateLink}});
+    return result.dataValues;
   }
 
 /**

@@ -29,8 +29,8 @@ class UserController {
     try {
       const { email, password } = req.body;
       const userResponse = await userService.login(email, password);
-      this.createCookies(res, userResponse);
-      return res.json(userResponse);
+      this.createCookies(res, userResponse.tokenObject);
+      return res.json({ ...userResponse.newUser, accessToken: userResponse.tokenObject.accessToken });
     } catch (e) {
       next(e);
     }
@@ -41,9 +41,9 @@ class UserController {
       if (await userService.logout(+req.cookies.refreshTokenId)) {
         res.clearCookie('refreshToken');
         res.clearCookie('refreshTokenId');
-        return res.json({ message: 'Logout is success' });
+        return res.status(200).json({ message: 'Logout is success' });
       }
-      return res.json({ message: 'Error! Can\'t logout' });
+      return res.status(500).json({ message: 'Error! Can\'t logout' });
     } catch (e) {
       next(e);
     }
@@ -52,7 +52,8 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const tokenObject = await userService.refresh(req.cookies.refreshToken);
-      return this.createCookies(res, tokenObject);
+      this.createCookies(res, tokenObject);
+      return res.json(tokenObject.accessToken);
     } catch (e) {
       next(e);
     }
@@ -60,8 +61,8 @@ class UserController {
 
   async remove(req, res, next) {
     try {
-      const success = await userService.remove(req.params.id);
-      return res.json({ message: success ? 'User has been removed' : 'Can\'t remove user'});
+      if (await userService.remove(req.params.id)) return res.status(200).json({ message: 'User has been removed' });
+      return res.ststus(500).json({ message: 'Can\'t remove user' });
     } catch (e) {
       next(e);
     }
@@ -73,8 +74,7 @@ class UserController {
 
   async activate(req, res, next) {
     try {
-      const user = await userService.activate(req.params.link);
-      console.log('user.isActivated = ', user.isActivated);
+      await userService.activate(req.params.link);
       return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
       next(e);

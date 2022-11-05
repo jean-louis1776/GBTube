@@ -1,4 +1,5 @@
-import { Token } from "../models/Tokens";
+import { ApiError } from '../errors/apiError';
+import { Token } from '../models/Tokens';
 
 class TokenQueries {
   /**
@@ -7,11 +8,28 @@ class TokenQueries {
    * @param {string} token - token пользователя
    * @returns {Object}
    */
-  async writeToken(userId, token) {
-    return await Token.create({
-      token: token,
-      userId: userId,
-    });
+  async createToken(token, userId) {
+    try {
+      return (await Token.create({token, userId})).dataValues;
+    } catch (e) {
+      return ApiError.InternalServerError('Не удалось создать токен');
+    }
+  }
+
+  async updateToken(id, token) {
+    return await Token.update({token}, {where: {id}});
+  }
+
+  async removeToken(id) {
+    try {
+      return !!(await Token.destroy({where: {id}}));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async findByToken(token) {
+    return (await Token.findOne({where: {token}})).dataValues;
   }
 }
 
