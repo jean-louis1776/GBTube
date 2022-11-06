@@ -13,13 +13,13 @@ const SignupForm = (props) => {
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
-  }
+  };
   const handlePassChange = (evt) => {
     setPassword(evt.target.value);
-  }
+  };
   const handlePassChange2 = (evt) => {
     setPassword2(evt.target.value);
-  }
+  };
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     if (password === password2) {
@@ -35,7 +35,7 @@ const SignupForm = (props) => {
     } else {
       console.log('Passwords not equal');
     }
-  }
+  };
 
   return (
     <Stack className={styles.signupSection}>
@@ -47,18 +47,31 @@ const SignupForm = (props) => {
             className={styles.logoName}
             variant="h4"
             fontWeight="bold"
-            sx={{ color: '#000', ml: 1 }}
+            sx={{ ml: 1 }}
           >
-            Geek<span style={{ color: '#fc1503' }}>Tube</span>
+            Geek
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{
+                color: 'baseBlue.main',
+                display: 'inline',
+                fontSize: '1.5rem',
+              }}
+            >
+              Tube
+            </Typography>
           </Typography>
         </Link>
 
-        <form
-          onSubmit={handleSubmit}
-          className={styles.signupForm}
-        >
-          <h3>Создайте свой аккаунт</h3>
-          <Stack className={styles.inputStuck}>
+        <form onSubmit={handleSubmit} className={styles.signupForm}>
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Войдите в свой аккаунт
+          </Typography>
+          <Stack
+            className={styles.inputStuck}
+            sx={{ backgroundColor: 'shadows.main' }}
+          >
             <input
               placeholder="E-mail"
               name="email"
@@ -93,16 +106,21 @@ const SignupForm = (props) => {
                 Ошибка: такого аккаунта не существует
               </p>
             )} */}
-            <Button type="submit" color="red" variant="contained">
+            <Button type="submit" color="baseBlue" variant="contained">
               Зарегистрироваться
             </Button>
           </div>
-          <p className={styles.redirect}>
-            Уже есть аккаунт?{' '}
-            <Link to="/login">
-              <span style={{ color: '#fc1503' }}>Войдите в аккаунт</span>
-            </Link>
-          </p>
+          <Typography className={styles.redirectText}>
+            Уже есть аккаунт?
+          </Typography>
+          <Link to="/login">
+            <Typography
+              sx={{ color: 'baseBlue.main' }}
+              className={styles.redirectUrl}
+            >
+              Войдите в аккаунт
+            </Typography>
+          </Link>
         </form>
 
         <p className={styles.copyright}>

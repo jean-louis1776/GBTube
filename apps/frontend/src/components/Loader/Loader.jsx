@@ -9,7 +9,7 @@ const Loader = () => (
       alignItems="center"
       height="80vh"
     >
-      <CircularProgress color="red" />
+      <CircularProgress color="baseBlue" />
     </Stack>
   </Box>
 );

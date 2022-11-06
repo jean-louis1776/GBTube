@@ -17,13 +17,33 @@ import {
 } from '@mui/material';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import { useTheme } from '@mui/material/styles';
+import { useForm, Controller } from 'react-hook-form';
 
 import { Header } from '../';
 
 import styles from './UploadVideo.module.scss';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const channels = [
+  'Oliver Hansen',
+  'Van Henry',
+  'April Tucker',
+  'Ralph Hubbard',
+  'Omar Alexander',
+  'Carlos Abbott',
+  'Miriam Wagner',
+  'Bradley Wilkerson',
+  'Virginia Andrews',
+  'Kelly Snyder',
   'Oliver Hansen',
   'Van Henry',
   'April Tucker',
@@ -62,6 +82,10 @@ const UploadVideo = (props) => {
     setActiveStep(0);
   };
 
+  const { control, handleSubmit } = useForm();
+
+  const onSubmit = (data) => console.log(JSON.stringify(data));
+
   return (
     <>
       <Header />
@@ -91,14 +115,14 @@ const UploadVideo = (props) => {
                     {...stepProps}
                     sx={{
                       '& .MuiStepLabel-root .Mui-completed': {
-                        color: '#fc1503', // circle color (COMPLETED)
+                        color: 'baseBlue', // circle color (COMPLETED)
                       },
                       '& .MuiStepLabel-label.Mui-completed.MuiStepLabel-alternativeLabel':
                         {
                           color: 'grey.500', // Just text label (COMPLETED)
                         },
                       '& .MuiStepLabel-root .Mui-active': {
-                        color: '#fc1503', // circle color (ACTIVE)
+                        color: 'baseBlue', // circle color (ACTIVE)
                       },
                       '& .MuiStepLabel-label.Mui-active.MuiStepLabel-alternativeLabel':
                         {
@@ -126,7 +150,7 @@ const UploadVideo = (props) => {
                   }}
                 >
                   <DoneOutlineIcon
-                    color="red"
+                    color="baseBlue"
                     sx={{ width: '2.5rem', height: '2.5rem' }}
                   />
                   <Typography
@@ -144,123 +168,129 @@ const UploadVideo = (props) => {
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Box sx={{ flex: '1 1 auto' }} />
-                  <Button onClick={handleReset} color="red">
+                  <Button onClick={handleReset} color="baseBlue">
                     Загрузить еще
                   </Button>
                 </Box>
               </Fragment>
-            ) : activeStep === 0 ? (
-              <Fragment>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <FormControl sx={{ width: '500px' }}>
-                    <InputLabel id="demo-simple-select-label">
-                      Каналы
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={channelId}
-                      label="Каналы"
-                      onChange={handleChange}
-                    >
-                      {channels.map((channels) => (
-                        <MenuItem key={channels}>{channels}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                  <Button
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    Назад
-                  </Button>
-                  <Box sx={{ flex: '1 1 auto' }} />
-
-                  <Button onClick={handleNext} color="red">
-                    Далее
-                  </Button>
-                </Box>
-              </Fragment>
-            ) : activeStep === 1 ? (
-              <Fragment>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Button variant="contained" color="red" component="label">
-                    <VideocamIcon sx={{ mr: 1 }} />
-                    Выбрать файл
-                    <input
-                      hidden
-                      accept="video/*,.3gp,.avi,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.wmv,.swf,.webm"
-                      type="file"
-                    />
-                  </Button>
-                  <Typography
-                    sx={{
-                      mt: 2,
-                      color: '#999',
-                      textAlign: 'center',
-                      userSelect: 'none',
-                    }}
-                  >
-                    Допускаются файлы формата: <br /> .3gp, .avi, .flv, .m4v,
-                    .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
-                  </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                  <Button
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    Назад
-                  </Button>
-                  <Box sx={{ flex: '1 1 auto' }} />
-
-                  <Button onClick={handleNext} color="red">
-                    Далее
-                  </Button>
-                </Box>
-              </Fragment>
             ) : (
-              <Fragment>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div
+                  style={
+                    activeStep === 0
+                      ? { display: 'block' }
+                      : { display: 'none' }
+                  }
                 >
-                  <TextField
-                    sx={{ width: '500px', mb: 1.5 }}
-                    required
-                    label="Название видео"
+                  <Controller
+                    name="chooseChannel"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <div style={{ width: '500px' }}>
+                        <InputLabel id="select-channel">Каналы</InputLabel>
+                        <Select
+                          labelId="select-channel"
+                          id="channel-select"
+                          value={channelId}
+                          label="Каналы"
+                          onChange={handleChange}
+                          MenuProps={MenuProps}
+                        >
+                          {channels.map((channels) => (
+                            <MenuItem key={channels}>{channels}</MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+                    )}
                   />
-                  <TextField
-                    sx={{ width: '500px' }}
-                    label="Описание (опционально)"
-                    multiline
-                    rows={4}
+                </div>
+
+                <div
+                  style={
+                    activeStep === 1
+                      ? { display: 'block' }
+                      : { display: 'none' }
+                  }
+                >
+                  <Controller
+                    name="chooseFile"
+                    control={control}
+                    rules={{ required: true }}
+                    render={() => (
+                      <div>
+                        <Button
+                          variant="contained"
+                          color="baseBlue"
+                          component="label"
+                        >
+                          <VideocamIcon sx={{ mr: 1 }} />
+                          Выбрать файл
+                          <input
+                            hidden
+                            accept="video/*,.3gp,.avi,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.wmv,.swf,.webm"
+                            type="file"
+                          />
+                        </Button>
+                        <Typography
+                          sx={{
+                            mt: 2,
+                            color: '#999',
+                            textAlign: 'center',
+                            userSelect: 'none',
+                          }}
+                        >
+                          Допускаются файлы формата: <br /> .3gp, .avi, .flv,
+                          .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
+                        </Typography>
+                      </div>
+                    )}
                   />
-                </Box>
+                </div>
+
+                <div
+                  style={
+                    activeStep === 2
+                      ? { display: 'block' }
+                      : { display: 'none' }
+                  }
+                >
+                  <Controller
+                    name="chooseTitle"
+                    control={control}
+                    rules={{ required: true }}
+                    render={() => (
+                      <TextField
+                        sx={{ width: '500px', mb: 1.5 }}
+                        required
+                        label="Название видео"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="chooseDescription"
+                    control={control}
+                    render={() => (
+                      <TextField
+                        sx={{ width: '500px' }}
+                        label="Описание (опционально)"
+                        multiline
+                        rows={4}
+                      />
+                    )}
+                  />
+                </div>
+
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                   <Button
                     color="inherit"
@@ -272,11 +302,11 @@ const UploadVideo = (props) => {
                   </Button>
                   <Box sx={{ flex: '1 1 auto' }} />
 
-                  <Button onClick={handleNext} color="red">
-                    {activeStep === steps.length - 1 ? 'Готово' : 'Вперед'}
+                  <Button onClick={handleNext} color="baseBlue">
+                    {activeStep === steps.length - 1 ? 'Готово' : 'Далее'}
                   </Button>
                 </Box>
-              </Fragment>
+              </form>
             )}
           </Box>
         </Paper>

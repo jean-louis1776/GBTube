@@ -1,4 +1,14 @@
 /* Your styles goes here. */
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #fff;
+  opacity: 0.6; /* Firefox */
+}
+
+body {
+  background-color: #1f1f1f !important;
+}
+
 @media screen and (max-width: 600px) {
   .scroll-horizontal {
     overflow: auto !important;
