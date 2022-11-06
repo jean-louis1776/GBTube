@@ -1,5 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { BOOLEAN, DataTypes } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
+import { bool } from "prop-types";
 
 
 export const UserInfo = sequelize.define('UserInfo', {
@@ -16,6 +17,9 @@ export const UserInfo = sequelize.define('UserInfo', {
       type: DataTypes.CHAR,
       allowNull: true,
     },
+    birthDay: {
+      type: DataTypes.DATE,
+    },
     email: {
       type: DataTypes.CHAR,
       allowNull: false,
@@ -29,6 +33,14 @@ export const UserInfo = sequelize.define('UserInfo', {
       type: DataTypes.CHAR,
       allowNull: false,
       defaultValue: "user",
+    },
+    activateLink: {
+      type: DataTypes.CHAR,
+    },
+    isActivate: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "false",
     },
     isBaned: {
       type: DataTypes.STRING,
@@ -44,5 +56,5 @@ export const UserInfo = sequelize.define('UserInfo', {
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',
-  }
+  },
 );

@@ -10,6 +10,7 @@ import { router } from './app/routers/routers';
 import { apiErrorMiddleware } from './app/middlewares/apiError.middleware';
 
 import { runDB } from "./app/models";
+import { removeDeadTokens } from './app/util/removeDeadTokens';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(express.json());
 // app.use(express.static(path.resolve(path.resolve(), 'apps', 'backend', 'src', 'assets', 'static')));
 app.use(fileUpload({ useTempFiles : true }));
 app.use('/api', router);
+app.all('*', (req, res) => res.redirect(process.env.CLIENT_URL)); // if nonexistent method-URL pair
 
 app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
 
@@ -40,6 +42,7 @@ export const ftpServer = new PromiseFtp();   // Instance of remote ftp-server
     });
     await ftpServer.cwd('/test');             // Sets the curent working directory of the FTP Server
     await runDB();
+    setInterval(removeDeadTokens, 60 * 60 * 24 * 1000);
     app.listen(PORT, () => {
       console.log(`Api server has been started at http://localhost:${PORT}/api...`);
     });

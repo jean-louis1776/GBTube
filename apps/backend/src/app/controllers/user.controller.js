@@ -9,17 +9,17 @@ class UserController {
     this.MAX_AGE = process.env.REFRESH_LIVE_IN_DAYS * 24 * 60 * 60 * 1000;
   }
 
-  createCookies(res, tokensObject) {
-    res.cookie('refreshToken', tokensObject.tokens.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
-    res.cookie('refreshTokenId', tokensObject.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
-    return res.json(tokensObject.tokens);
+  createCookies(res, userResponse) {
+    res.cookie('refreshToken', userResponse.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
+    res.cookie('refreshTokenId', userResponse.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
   }
 
   async create(req, res, next) {
     try {
-      const { nickName, email, password } = req.body;
-      const tokensObject = await userService.registration(nickName, email, password);
-      return this.createCookies(res, tokensObject);
+      const { username, email, password } = req.body;
+      const userResponse = await userService.registration(username, email, password);
+      this.createCookies(res, userResponse);
+      return res.json({id: userResponse.id, accessToken: userResponse.accessToken});
     } catch(e) {
       next(e);
     }
@@ -27,9 +27,10 @@ class UserController {
 
   async login(req, res, next) {
     try {
-      const { nickName, password } = req.body;
-      const tokensObject = await userService.login(nickName, password);
-      return this.createCookies(res, tokensObject);
+      const { email, password } = req.body;
+      const userResponse = await userService.login(email, password);
+      this.createCookies(res, userResponse.tokenObject);
+      return res.json({ ...userResponse.newUser, accessToken: userResponse.tokenObject.accessToken });
     } catch (e) {
       next(e);
     }
@@ -40,9 +41,9 @@ class UserController {
       if (await userService.logout(+req.cookies.refreshTokenId)) {
         res.clearCookie('refreshToken');
         res.clearCookie('refreshTokenId');
-        return res.json({ message: 'Logout is success' });
+        return res.status(200).json({ message: 'Logout is success' });
       }
-      return res.json({ message: 'Error! Can\'t logout' });
+      return res.status(500).json({ message: 'Error! Can\'t logout' });
     } catch (e) {
       next(e);
     }
@@ -51,7 +52,8 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const tokenObject = await userService.refresh(req.cookies.refreshToken);
-      return this.createCookies(res, tokenObject);
+      this.createCookies(res, tokenObject);
+      return res.json(tokenObject.accessToken);
     } catch (e) {
       next(e);
     }
@@ -59,8 +61,8 @@ class UserController {
 
   async remove(req, res, next) {
     try {
-      const success = await userService.remove(req.params.id);
-      return res.json({ message: success ? 'User has been removed' : 'Can\'t remove user'});
+      if (await userService.remove(req.params.id)) return res.status(200).json({ message: 'User has been removed' });
+      return res.ststus(500).json({ message: 'Can\'t remove user' });
     } catch (e) {
       next(e);
     }
@@ -72,8 +74,7 @@ class UserController {
 
   async activate(req, res, next) {
     try {
-      const user = await userService.activate(req.params.link);
-      console.log('user.isActivated = ', user.isActivated);
+      await userService.activate(req.params.link);
       return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
       next(e);

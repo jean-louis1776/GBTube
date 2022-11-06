@@ -1,6 +1,6 @@
 import { ApiError } from '../errors/apiError.js';
-import { userModel } from '../../stub.js';
 import tokenService from '../services/token.service.js';
+import { userQueries } from '../queries/UserQueries.js';
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -19,8 +19,7 @@ export const authMiddleware = async (req, res, next) => {
       return next(ApiError.UnAuthorization());
     }
 
-    // const userFormDB = await userModel.findOne({ where: { id: userProperties.id } });    //! TMP
-    const userFromDB = userModel.findOneById(userProperties.id);
+    const userFromDB = userQueries.findOneById(userProperties.id);
     if (!userFromDB) {
       return next(ApiError.UnAuthorization());
     }
