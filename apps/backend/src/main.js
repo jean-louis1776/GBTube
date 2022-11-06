@@ -40,7 +40,7 @@ export const ftpServer = new PromiseFtp();   // Instance of remote ftp-server
       user: process.env.STORE_SERVER_USER,
       password: process.env.STORE_SERVER_PASSWORD
     });
-    await ftpServer.cwd('/test');             // Sets the curent working directory of the FTP Server
+    await ftpServer.cwd('/gbtube');             // Sets the curent working directory of the FTP Server
     await runDB();
     setInterval(removeDeadTokens, 60 * 60 * 24 * 1000);
     app.listen(PORT, () => {

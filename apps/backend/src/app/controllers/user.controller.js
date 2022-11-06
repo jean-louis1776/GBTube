@@ -61,8 +61,16 @@ class UserController {
 
   async remove(req, res, next) {
     try {
-      if (await userService.remove(req.params.id)) return res.status(200).json({ message: 'User has been removed' });
+      if (await userService.remove(+req.params.id)) return res.status(200).json({ message: 'User has been removed' });
       return res.ststus(500).json({ message: 'Can\'t remove user' });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getOneById(req, res, next) {
+    try {
+      return res.json(await userService.getOneById(+req.params.id));
     } catch (e) {
       next(e);
     }
@@ -76,6 +84,22 @@ class UserController {
     try {
       await userService.activate(req.params.link);
       return res.redirect(process.env.CLIENT_URL);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async edit(req, res, next) {
+    try {
+      return res.json(await userService.edit(req.params.id, req.body.updatingUser));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async uploadAvatar(req, res, next) {
+    try {
+      return res.json(await userService.uploadAvatar(+req.params.id, req.files));
     } catch (e) {
       next(e);
     }

@@ -1,15 +1,26 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidV4 } from 'uuid';
+import path from 'path';
+import fs from 'fs-extra';
 
 import { ApiError } from '../errors/apiError.js';
 import tokenService from './token.service.js';
 import mailService from './mail.service.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { tokenQueries } from '../queries/TokenQueries.js';
+import { imageExtensions } from '../util/videoImageExtensions.js';
+import { ftpServer } from '../../main.js';
 
 class UserService {
   async getAll() {
     return userQueries.findAllUsers();
+  }
+
+  async getOneById(id) {
+    const user = await userQueries.findOneById(id);
+    delete user.activateLink;
+    delete user.password;
+    return user;
   }
 
   async registration(nickName, email, password) {
@@ -60,16 +71,17 @@ class UserService {
     }
 
     const user = tokenService.validateToken(refreshToken, true);
-    const refreshTokenFromDB = tokenQueries.findByToken(refreshToken);
+    const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
     if (!user || !refreshTokenFromDB) {
       throw ApiError.UnAuthorization();
     }
-
+    delete user.iat;
+    delete user.exp;
     return await tokenService.createNewTokens(user, refreshTokenFromDB.id);
   }
 
-  async edit(id, updatedUser) {
-    return await userQueries.updateUser(id, updatedUser);
+  async edit(id, updatingUser) {
+    return await userQueries.updateUser(id, updatingUser);
   }
 
   async activate(link) {
@@ -95,10 +107,34 @@ class UserService {
     //TODO Удалить все Videos, относящиеся к Channels, относящиеся к Users
     //TODO Удалить все подписки, относящиеся к Channels, относящиеся к Users
     //TODO Удалить все Channels, относящиеся к Users
-    //TODO Удалить все Tokens, относящиеся к Users
-    //TODO Удалить UserInfo, относящееся к Users
-    //TODO Удалить Users
-    id;
+    return userQueries.deleteUser(id);  // удаляет Users, UserInfos, Tokens
+  }
+
+  async uploadAvatar(id, files) {
+    try {
+      if (!files) {
+        throw ApiError.BadRequest('Отсутствует файл аватара для загрузки');
+      }
+      const file = files.avatarFile;
+      const extension = path.extname(file.name);
+
+      if (!imageExtensions.includes(extension)) {
+        throw ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату');
+      }
+
+      const oldAvatar = (await userQueries.findOneById(id)).avatar;              // Проверяем нет ли у юзера аватарки
+      if (oldAvatar) {
+        await ftpServer.delete(oldAvatar);                                       // Если есть - удаляем
+      }
+
+      const hashName = uuidV4() + extension;
+      await ftpServer.put(file.tempFilePath, hashName);                          // Сохраняем аватарку на ftp-сервер
+      const result = await userQueries.updateUser(id, { avatar: hashName });     //Прописываем имя файла сохраненной аватарки в userInfos
+      await fs.remove(path.resolve(path.resolve(), 'tmp'), err => { if (err) console.log(err); });
+      return result;
+    } catch (e) {
+      return e;
+    }
   }
 }
 

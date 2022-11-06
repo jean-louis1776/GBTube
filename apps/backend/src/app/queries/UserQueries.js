@@ -1,8 +1,21 @@
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
+import { Token } from "../models/Tokens";
 import { ApiError } from "../errors/apiError";
 
 class UserQueries {
+  parsingQueryModel(modelFromQuery) {
+    modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
+    const user = {
+      ...modelFromQuery.UserInfo,
+      id: modelFromQuery.id,
+      nickName: modelFromQuery.nickName
+    };
+    delete user.userId;
+    delete user.updateTimestamp;
+    return user;
+  }
+
   async createUser(nickName, email, password, activateLink) {
     try {
       if (await User.findOne({where: {nickName}})) {
@@ -11,7 +24,8 @@ class UserQueries {
       if (await UserInfo.findOne({where: {email}})) {
         throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`);
       }
-      const userId = (await User.create({nickName}).id);
+      const userId = (await User.create({nickName})).dataValues.id;
+      console.log('USERID = ', userId);
       await UserInfo.create({email, password, activateLink, userId: userId});
       return userId;
     } catch (e) {
@@ -34,7 +48,7 @@ class UserQueries {
    * @returns {Object}
    */
   async findOneById(id) {
-    return User.findOne(
+    const result = await User.findOne(
       {
         where: {id},
         include: [
@@ -44,6 +58,7 @@ class UserQueries {
         ],
       },
     );
+    return this.parsingQueryModel(result);
   }
 
   /**
@@ -52,7 +67,7 @@ class UserQueries {
    * @returns {Object}
    */
   async findOneByName(nickName) {
-    return User.findOne(
+    return await (User.findOne(
       {
         where: {
           nickName: nickName,
@@ -63,28 +78,25 @@ class UserQueries {
           },
         ],
       },
-    );
+    ));
   }
 
   async findOneByEmail(email) {
     try {
-      const result = (await User.findOne({include: [{model: UserInfo, where: {email}}]})).dataValues;
-      const user = {
-        ...result.UserInfo.dataValues,
-        id: result.id,
-        nickName: result.nickName
-      };
-      delete user.userId;
-      delete user.updateTimestamp;
-      return user;
+      const result = (await User.findOne({include: [{model: UserInfo, where: {email}}]}));
+      return this.parsingQueryModel(result);
     } catch (e) {
       console.log(e);
     }
   }
 
   async findOneByActivateLink(activateLink) {
-    const result = await UserInfo.findOne({where: {activateLink}});
-    return result.dataValues;
+    try {
+      const result = await UserInfo.findOne({where: {activateLink}});
+      return result.dataValues;
+    } catch (e) {
+      return e;
+    }
   }
 
 /**
@@ -92,29 +104,40 @@ class UserQueries {
    * @returns {Object[]}
    */
   async findAllUsers() {
-    return await User.findAll(
-      {
-        include: [
-          {
-            model: UserInfo,
-          },
-        ],
-      },
-    );
+    try {
+      const users = await User.findAll(
+        {
+          include: [
+            {
+              model: UserInfo,
+            },
+          ],
+        },
+      );
+      const result = [];
+      for (const user of users) {
+        result.push(this.parsingQueryModel(user));
+      }
+      return result;
+    } catch (e) {
+      return e;
+    }
   }
 
   async updateUser(id, data) {
+    let updateCount = 0;
     try {
       if (data.nickName) {
-        await User.update({nickName: data.nickName}, {where: {id}});
+        updateCount += await User.update({nickName: data.nickName}, {where: {id}});
         delete data.nickName;
       }
       let count = 0;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       for (let key in data) count++;
       if (count > 0) {
-        await UserInfo.update({...data}, {where: {userId: id}});
+        updateCount += await UserInfo.update({...data}, {where: {userId: id}});
       }
+      return !!updateCount;
     } catch (e) {
       return ApiError.BadRequest(e.message);
     }
@@ -126,11 +149,14 @@ class UserQueries {
    * @returns {boolean}
    */
   async deleteUser(id) {
-    return await User.destroy({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      return !!(await User.destroy({
+        where: {id},
+        include: [{model: UserInfo}, {model: Token}]
+      }));
+    } catch (e) {
+      return false;
+    }
   }
 }
 

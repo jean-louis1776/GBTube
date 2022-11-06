@@ -4,7 +4,7 @@ import ffmpeg from 'ffmpeg';
 import fs from 'fs-extra';
 
 import { ApiError } from '../errors/apiError.js';
-import { videoExtensions } from '../util/videoExtensions.js';
+import { videoExtensions } from '../util/videoImageExtensions.js';
 import { ftpServer } from '../../main.js';
 
 class VideoController {
