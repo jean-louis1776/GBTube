@@ -10,6 +10,9 @@ import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 export const logo = 'https://i.ibb.co/wdmBFMK/logo.png';
+export const RedirectLogo = 'https://i.ibb.co/JCB64v6/bar-chart.png';
+export const notFoundLogo = 'https://i.ibb.co/10yJzFx/Group-43.png';
+export const notFoundBg = 'https://i.ibb.co/923fFpS/Group-44.png';
 
 export const categories = [
   { name: 'Домой', icon: <HomeIcon color="baseBlue" />, link: '/' },

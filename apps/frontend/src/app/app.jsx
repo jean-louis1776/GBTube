@@ -8,11 +8,13 @@ import './app.module.scss';
 
 import {
   ChannelCard,
+  EmailConfirm,
   History,
   Library,
   Likes,
   LoginForm,
   MainPage,
+  NotFound,
   SearchFeed,
   SignupForm,
   Subscriptions,
@@ -46,6 +48,8 @@ export function App() {
         <Route path="/likes" element={<Likes />} />
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
+        <Route path="/404NotFound" element={<NotFound />} />
+        <Route path="/emailConfirm" element={<EmailConfirm />} />
       </Routes>
     </Box>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Avatar,
   Button,
+  Collapse,
   Divider,
   IconButton,
   ListItemIcon,
@@ -31,6 +32,7 @@ import { logo, userMenu } from '@constants/frontend';
 import styles from './Header.module.scss';
 
 import { Navbar, SearchForm, UserMenu } from '../';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -101,20 +103,25 @@ const Drawer = styled(MuiDrawer, {
 
 const Header = (props) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
+  const [openColl, setOpenColl] = useState(true);
 
   const handleDrawerOpen = () => {
-    setOpen(true);
+    setOpenMenu(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setOpenMenu(false);
+  };
+
+  const handleCollClick = () => {
+    setOpenColl(!openColl);
   };
 
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={openMenu}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Stack direction="row" alignItems="center" className={styles.header}>
             <Tooltip title="Меню">
@@ -125,7 +132,7 @@ const Header = (props) => {
                 edge="start"
                 sx={{
                   marginRight: 3,
-                  ...(open && { display: 'none' }),
+                  ...(openMenu && { display: 'none' }),
                 }}
               >
                 <MenuIcon />
@@ -175,7 +182,7 @@ const Header = (props) => {
 
       {/* NAVBAR MENU */}
 
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={openMenu}>
         <DrawerHeader sx={{ justifyContent: 'space-between' }}>
           <Typography sx={{ pl: '12px' }}>Панель навигации</Typography>
           <IconButton sx={{ color: '#fff' }} onClick={handleDrawerClose}>
@@ -193,51 +200,68 @@ const Header = (props) => {
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
+                  justifyContent: openMenu ? 'initial' : 'center',
                   px: 2.5,
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : 'auto',
+                    mr: openMenu ? 3 : 'auto',
                     justifyContent: 'center',
                     color: 'baseBlue.main',
                   }}
                 >
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={text}
+                  sx={{ opacity: openMenu ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
+
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
+
+        <ListItemButton onClick={handleCollClick}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Inbox" />
+          {openColl ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openColl} timeout="auto" unmountOnExit>
+          <List>
+            {['All mail', 'Trash', 'Spam'].map((text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                    color: 'baseBlue.main',
+                    minHeight: 48,
+                    justifyContent: openColl ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: openColl ? 3 : 'auto',
+                      justifyContent: 'center',
+                      color: 'baseBlue.main',
+                    }}
+                  >
+                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={text}
+                    sx={{ opacity: openColl ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Collapse>
       </Drawer>
     </>
   );

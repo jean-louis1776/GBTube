@@ -70,13 +70,5 @@ export const theme = createTheme({
         }),
       },
     },
-
-    // MuiDivider: {
-    //   styleOverrides: {
-    //     root: ({ theme }) => ({
-    //       color: theme.pallete.shadows.second,
-    //     }),
-    //   },
-    // },
   },
 });
