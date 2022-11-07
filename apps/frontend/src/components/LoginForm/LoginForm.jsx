@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
 import AuthController from '../../controllers/AuthController';
 
 import styles from './LoginForm.module.scss';
 
-const LoginForm = (props) => {
+const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
@@ -20,6 +21,7 @@ const LoginForm = (props) => {
     evt.preventDefault();
     try {
       await AuthController.login(email, password);
+      navigate('/');
     } catch {
       console.log('Login failed');
     }
@@ -105,7 +107,7 @@ const LoginForm = (props) => {
         </form>
 
         <p className={styles.copyright}>
-          &copy; 2022 GeekTube Team. Все права защищены
+          &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
         </p>
       </Paper>
     </Stack>
