@@ -104,40 +104,52 @@ VideoLike.belongsTo(User, {
 //Связи для таблицы Каналов
 Channel.hasOne(ChannelInfo, {
   foreignKey: {
-    name: 'сhannelId',
+    name: 'channelId',
     allowNull: false,
   },
 });
 ChannelInfo.belongsTo(Channel, {
-  foreignKey: 'сhannelId',
+  foreignKey: 'channelId',
 });
 Channel.hasMany(ChannelSubscriber, {
   foreignKey: {
-    name: 'сhannelId',
+    name: 'channelId',
     allowNull: false,
   },
 });
 ChannelSubscriber.belongsTo(Channel, {
-  foreignKey: 'сhannelId',
+  foreignKey: 'channelId',
 });
-Channel.hasMany(Video, {
-  foreignKey: {
-    name: 'сhannelId',
-    allowNull: false,
-  },
-});
-Video.belongsTo(Channel, {
-  foreignKey: 'сhannelId',
-});
+// Channel.hasMany(Video, {
+//   foreignKey: {
+//     name: 'channelId',
+//     allowNull: false,
+//   },
+// });
+// Video.belongsTo(Channel, {
+//   foreignKey: 'channelId',
+// });
 Channel.hasMany(PlayList, {
   foreignKey: {
-    name: 'сhannelId',
+    name: 'channelId',
     allowNull: false,
   },
 });
 PlayList.belongsTo(Channel, {
-  foreignKey: 'сhannelId',
+  foreignKey: 'channelId',
 });
+//Связи плэйлиста
+PlayList.hasMany(Video, {
+  foreignKey: {
+    name: 'playListId',
+    allowNull:false,
+  }
+});
+Video.belongsTo(PlayList, {
+  foreignKey: {
+    name: 'playListId',
+  }
+})
 //Связи для таблицы Видео
 Video.hasMany(Comment, {
   foreignKey: {
@@ -202,7 +214,9 @@ export const runDB = async function () {
 
     // await sequelize.sync();
     // await sequelize.sync({force: true});
-    // await sequelize.sync({ alter: true });
+    // await UserInfo.sync({ alter: true });
+    // await PlayList.sync({ alter: true });
+    // await Channel.sync({ alter: true });
 
     // const cUser = await User.create({
     //   nickName: 'Jenya9',
@@ -243,7 +257,11 @@ export const runDB = async function () {
     //   },
     // );
     // // console.log(allUsers[0].dataValues);
-    // console.log(JSON.stringify(allUsers, null, 1));
+    // // console.log(JSON.stringify(allUsers, null, 1));
+    // const allUser = allUsers.toJSON()
+    // console.log(allUser);
+
+
 
     // const uUser2 = function test(data) {
     //   return (User.update(

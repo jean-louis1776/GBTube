@@ -18,3 +18,4 @@ export { default as UserMenu } from './UserMenu/UserMenu';
 export { default as VideoCard } from './VideoCard/VideoCard';
 export { default as VideoDetail } from './VideoDetail/VideoDetail';
 export { default as VideoGrid } from './VideoGrid/VideoGrid';
+export { default as UserProfile } from './userProfile/userProfile';

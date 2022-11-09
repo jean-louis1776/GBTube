@@ -27,6 +27,7 @@ const Navbar = ({ selectedCategory, setSelectedCategory }) => {
         overflowY: 'auto',
         height: { sx: 'auto' },
         flexDirection: { md: 'column' },
+        position: 'static',
       }}
     >
       {categories.map((category) => (
@@ -37,14 +38,14 @@ const Navbar = ({ selectedCategory, setSelectedCategory }) => {
               setSelectedCategory(selectedCategory);
             }}
             style={{
-              background: category.name === selectedCategory && '#fc1503',
+              background: category.name === selectedCategory && '#0089EB',
               color: category.name === selectedCategory ? '#fff' : '#000',
             }}
             key={category.name}
           >
             <span
               style={{
-                color: category.name === selectedCategory ? '#fff' : '#fc1503',
+                color: category.name === selectedCategory ? '#fff' : '#0089EB',
                 marginRight: '15px',
               }}
             >
