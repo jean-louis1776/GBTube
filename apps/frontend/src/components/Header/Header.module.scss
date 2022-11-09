@@ -1,0 +1,11 @@
+.header {
+  .logo {
+    user-select: none;
+    display: flex;
+    align-items: center;
+
+    .logoName {
+      font-size: 1.5rem;
+    }
+  }
+}
