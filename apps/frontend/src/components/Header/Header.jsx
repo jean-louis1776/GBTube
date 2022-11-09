@@ -31,10 +31,6 @@ import { logo, userMenu } from '@constants/frontend';
 
 import styles from './Header.module.scss';
 
-<<<<<<< HEAD
-import { SearchForm } from '../';
-import { theme } from '../../theme';
-=======
 import { Navbar, SearchForm, UserMenu } from '../';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
@@ -104,7 +100,6 @@ const Drawer = styled(MuiDrawer, {
     '& .MuiDrawer-paper': closedMixin(theme),
   }),
 }));
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
 
 const Header = (props) => {
   const theme = useTheme();
@@ -144,21 +139,9 @@ const Header = (props) => {
               </IconButton>
             </Tooltip>
 
-<<<<<<< HEAD
-        <Typography
-          className={styles.logoName}
-          variant="h4"
-          fontWeight="bold"
-          sx={{ color: '#000', ml: 1 }}
-        >
-          Geek<span style={{ color: '#0089EB' }}>Tube</span>
-        </Typography>
-      </Link>
-=======
             <Tooltip title="Домашняя страница GeekTube">
               <Link to="/" className={styles.logo}>
                 <img src={logo} alt="Logo" height={45} />
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
 
                 <Typography
                   className={styles.logoName}
@@ -183,13 +166,6 @@ const Header = (props) => {
             </Tooltip>
           </Stack>
 
-<<<<<<< HEAD
-        <Link to="/login">
-          <Button variant="outlined">Войти</Button>
-        </Link>
-      </Stack>
-    </Stack>
-=======
           <Stack direction="row" alignItems="center" sx={{ gap: '1rem' }}>
             <SearchForm />
 
@@ -288,7 +264,6 @@ const Header = (props) => {
         </Collapse>
       </Drawer>
     </>
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
   );
 };
 

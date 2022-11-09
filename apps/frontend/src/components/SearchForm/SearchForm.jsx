@@ -36,15 +36,6 @@ const SearchForm = (props) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-<<<<<<< HEAD
-      <IconButton
-        className={styles.searchBtn}
-        type="submit"
-        sx={{ p: '10px', color: '#0089EB' }}
-      >
-        <SearchIcon />
-      </IconButton>
-=======
       <Tooltip title="Поиск">
         <IconButton
           className={styles.searchBtn}
@@ -54,7 +45,6 @@ const SearchForm = (props) => {
           <SearchIcon />
         </IconButton>
       </Tooltip>
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
     </Paper>
   );
 };

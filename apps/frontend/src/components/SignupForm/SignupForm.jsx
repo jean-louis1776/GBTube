@@ -50,9 +50,6 @@ const SignupForm = () => {
             fontWeight="bold"
             sx={{ ml: 1 }}
           >
-<<<<<<< HEAD
-            Geek<span style={{ color: '#0089EB' }}>Tube</span>
-=======
             Geek
             <Typography
               variant="h4"
@@ -65,7 +62,6 @@ const SignupForm = () => {
             >
               Tube
             </Typography>
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
           </Typography>
         </Link>
 
@@ -115,14 +111,6 @@ const SignupForm = () => {
               Зарегистрироваться
             </Button>
           </div>
-<<<<<<< HEAD
-          <p className={styles.redirect}>
-            Уже есть аккаунт?{' '}
-            <Link to="/login">
-              <span style={{ color: '#0089EB' }}>Войдите в аккаунт</span>
-            </Link>
-          </p>
-=======
           <Typography className={styles.redirectText}>
             Уже есть аккаунт?
           </Typography>
@@ -134,7 +122,6 @@ const SignupForm = () => {
               Войдите в аккаунт
             </Typography>
           </Link>
->>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
         </form>
 
         <p className={styles.copyright}>
