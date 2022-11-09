@@ -20,6 +20,7 @@ import {
   Subscriptions,
   UploadVideo,
   VideoCard,
+  UserProfile,
 } from '../components';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
 
@@ -43,6 +44,7 @@ export function App() {
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/channel/:channelId" element={<ChannelCard />} />
         <Route path="/video/:videoId" element={<VideoCard />} />
         <Route path="/subscriptions" element={<Subscriptions />} />

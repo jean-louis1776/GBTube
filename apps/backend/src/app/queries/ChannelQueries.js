@@ -1,106 +1,138 @@
 import { Channel } from "../models/Channel";
 import { ChannelInfo } from "../models/ChannelInfo";
 import { ChannelSubscriber } from "../models/ChannelSubscribers";
+import { ApiError } from "../errors/apiError";
+import { User } from "../models/Users";
+import { PlayList } from "../models/PlayList";
+import { Video } from "../models/Video";
 
 class ChannelQueries {
-  //TODO реализовать обновление информации о канале
+  parsingQueryModel(modelFromQuery) {
+    // modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
+    modelFromQuery = modelFromQuery.toJSON();
+    return {
+      ...modelFromQuery.ChannelInfos,
+      id: modelFromQuery.id,
+      title: modelFromQuery.title,
+      userId: modelFromQuery.UserId
+    };
+  }
+
   /**
    * Добавление канала
    * @param {number} userId - id пользователя
-   * @param {string} channelName - название канала
-   * @param {Object} channelInfo - информация о канале
-   * @returns {boolean}
+   * @param {string} title - название канала
+   * @param {string} description - описание канала
+   * @returns {number} - id созданого канала
    */
-  async createChannel(userId, channelName, channelInfo) {
-    const cChannel = await Channel.create({
-      name: channelName,
-      userId: userId,
-    });
-    const cChannelInfo = await ChannelInfo.create({
-      description: channelInfo.description,
-      channelId: cChannel.id,
-    });
-    return !!(cChannelInfo);
+  async createChannel(userId, title, description) {
+    try {
+      if (await User.findOne({where: {userId, title}})) {
+        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
+      }
+      const cChannel = (await Channel.create({title, userId})).toJSON();
+      await ChannelInfo.create({
+        description,
+        channelId: cChannel.id,
+      });
+      return cChannel.id;
+    } catch (e) {
+      console.log(e.message);
+      throw (e);
+    }
   }
 
   /**
-   * Поиск канала по имени
-   * @param {string} channelName - имя канала
+   * Поиск канала по ID
+   * @param {string} Id - имя канала
    * @returns {Object}
    */
-  async findChannel(channelName) {
-    return Channel.findOne(
-      {
-        where: {
-          name: channelName,
-        },
-        include: [
-          {
-            model: ChannelInfo,
-          },
-        ],
-      },
-    );
+  async findChannelById(Id) {
+    try {
+      Channel.findOne({
+        where: {Id},
+        include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
+      });
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
   /**
-   * Поиск всех каналов
+   * Поиск всех каналов по ID
    * @returns {Object[]}
    */
-  async findAllChannel() {
-    return await Channel.findAll(
-      {
-        include: [
-          {
-            model: ChannelInfo,
-          },
-        ],
-      },
-    );
-  }
-
-  /**
-   * Добавление подписки
-   * @param {number} userId - id подписавшегося пользователя
-   * @param {number} channelId - id канала на который подписались
-   * @returns {boolean}
-   */
-  async addSubscriber(userId, channelId) {
-    return !!(
-      await ChannelSubscriber.create({
-        userId: userId,
-        channelId: channelId,
-      })
-    );
-  }
-
-  /**
-   * Удаление подписки
-   * @param {number} userId - id пользователя отписавшегося от канала
-   * @returns {boolean}
-   */
-  async deleteSubscriber(userId) {
-    return !!(
-      await ChannelSubscriber.destroy({
-        where: {
-          userId: userId,
+  async findAllChannelByUserId(UserId) {
+    try {
+      const channels = await Channel.findAll(
+        {
+          where: {UserId},
+          include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
         },
-      })
-    );
+      );
+      if (!channels) return null;
+      const result = [];
+      for (const channel of channels) {
+        result.push(this.parsingQueryModel(channel));
+      }
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
-  //TODO надо уточнить по какому параметру будет удаляться канал
+  /**
+   * Добавление/Удаление подписки
+   * @param {number} userId - id пользователя отписавшегося от канала
+   * @param {number} channelId  id канала
+   * @returns {boolean}
+   */
+  async subscriber(channelId, userId) {
+    try {
+      if (await User.findOne({where: {channelId, userId}})) {
+        return !!(await ChannelSubscriber.destroy({where: {channelId, userId}}));
+      }
+      if (!(await User.findOne({where: {channelId, userId}}))) {
+        return !!(await ChannelSubscriber.create({channelId, userId}));
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+
   /**
    * Удаление канала
    * @param {number} id - id канала
-   * @returns {Object}
+   * @returns {boolean}
    */
   async deleteChannel(id) {
-    return await Channel.destroy({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      return !!(await Channel.destroy({
+        where: {id},
+        include: [{model: ChannelInfo}, {model: PlayList}, {model: ChannelSubscriber}, {model: Video}],
+      }));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async updateChannel(id, data) {
+    let isUpdate = 0;
+    try {
+      if (data.title) {
+        isUpdate += await Channel.update({title: data.title}, {where: {id}});
+        delete data.title;
+      }
+      if (Object.keys(data).length) {
+        isUpdate += await ChannelInfo.update({...data}, {where: {channelId: id}});
+      }
+      return !!isUpdate;
+    } catch (e) {
+      return ApiError.InternalServerError(e.message);
+    }
   }
 }
 
