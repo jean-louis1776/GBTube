@@ -1,4 +1,5 @@
 export { default as ChannelCard } from './ChannelCard/ChannelCard';
+export { default as EmailConfirm } from './EmailConfirm/EmailConfirm';
 export { default as Header } from './Header/Header';
 export { default as History } from './History/History';
 export { default as Library } from './Library/Library';
@@ -7,6 +8,7 @@ export { default as Loader } from './Loader/Loader';
 export { default as LoginForm } from './LoginForm/LoginForm';
 export { default as MainPage } from './MainPage/MainPage';
 export { default as Navbar } from './Navbar/Navbar';
+export { default as NotFound } from './NotFound/NotFound';
 export { default as SearchFeed } from './SearchFeed/SearchFeed';
 export { default as SearchForm } from './SearchForm/SearchForm';
 export { default as SignupForm } from './SignupForm/SignupForm';

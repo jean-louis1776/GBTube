@@ -1,10 +1,8 @@
 .header {
-  background-color: #fff;
-  padding: 0 16px !important;
-  height: 7vh !important;
-
   .logo {
     user-select: none;
+    display: flex;
+    align-items: center;
 
     .logoName {
       font-size: 1.5rem;

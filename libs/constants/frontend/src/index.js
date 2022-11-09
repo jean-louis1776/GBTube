@@ -10,34 +10,49 @@ import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 export const logo = 'https://i.ibb.co/wdmBFMK/logo.png';
+export const RedirectLogo = 'https://i.ibb.co/JCB64v6/bar-chart.png';
+export const notFoundLogo = 'https://i.ibb.co/10yJzFx/Group-43.png';
+export const notFoundBg = 'https://i.ibb.co/923fFpS/Group-44.png';
 
 export const categories = [
-  { name: 'Домой', icon: <HomeIcon />, link: '/' },
-  { name: 'Подписки', icon: <SubscriptionsIcon />, link: '/subscriptions' },
-  { name: 'История', icon: <HistoryIcon />, link: '/history' },
-  { name: 'Понравившиеся', icon: <ThumbUpIcon />, link: '/likes' },
-  { name: 'Библиотека', icon: <VideoLibraryIcon />, link: '/library' },
+  { name: 'Домой', icon: <HomeIcon color="baseBlue" />, link: '/' },
+  {
+    name: 'Подписки',
+    icon: <SubscriptionsIcon color="baseBlue" />,
+    link: '/subscriptions',
+  },
+  { name: 'История', icon: <HistoryIcon color="baseBlue" />, link: '/history' },
+  {
+    name: 'Понравившиеся',
+    icon: <ThumbUpIcon color="baseBlue" />,
+    link: '/likes',
+  },
+  {
+    name: 'Библиотека',
+    icon: <VideoLibraryIcon color="baseBlue" />,
+    link: '/library',
+  },
 ];
 
 export const userMenu = [
   {
     name: 'Добавить видео',
-    icon: <VideoCallIcon color="red" />,
+    icon: <VideoCallIcon color="baseBlue" />,
     link: '/uploadVideo',
   },
   {
     name: 'Мои каналы',
-    icon: <LiveTvIcon color="red" />,
+    icon: <LiveTvIcon color="baseBlue" />,
     link: '/myChannels',
   },
   {
     name: 'Настройки',
-    icon: <SettingsIcon color="red" />,
+    icon: <SettingsIcon color="baseBlue" />,
     link: '/settings',
   },
   {
     name: 'Выйти',
-    icon: <LogoutIcon color="red" />,
+    icon: <LogoutIcon color="baseBlue" />,
     link: '/',
   },
 ];

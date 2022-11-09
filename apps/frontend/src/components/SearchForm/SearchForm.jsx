@@ -26,11 +26,8 @@ const SearchForm = (props) => {
       onSubmit={handleSubmit}
       sx={{
         borderRadius: 20,
-        border: '1px solid #cecece',
-        background: '#fff',
         pl: 2,
         boxShadow: 'none',
-        // mr: { sm: 5 },
       }}
     >
       <input
@@ -43,7 +40,7 @@ const SearchForm = (props) => {
         <IconButton
           className={styles.searchBtn}
           type="submit"
-          sx={{ p: '10px', color: '#fc1503' }}
+          sx={{ p: '10px', color: 'baseBlue.main' }}
         >
           <SearchIcon />
         </IconButton>

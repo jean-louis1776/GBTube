@@ -25,10 +25,10 @@ const Subscriptions = (props) => {
             justifyContent: 'space-between',
           }}
         >
-          <Navbar
+          {/* <Navbar
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
-          />
+          /> */}
 
           <Typography
             className={styles.copy}

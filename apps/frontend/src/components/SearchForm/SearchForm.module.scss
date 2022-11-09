@@ -3,7 +3,7 @@
   outline: none;
   width: 350px;
   background: transparent;
-  color: #474747;
+  color: #fff;
   font-size: 1rem;
 }
 
@@ -11,8 +11,7 @@
   transition: 0.2s !important;
 
   &:hover {
-    background-color: rgba(252, 21, 3, 0.04) !important;
-    color: #fc1503 !important;
+    background-color: rgba(0, 137, 235, 0.04) !important;
   }
 }
 
