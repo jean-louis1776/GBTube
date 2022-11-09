@@ -13,3 +13,4 @@ export { default as SignupForm } from './SignupForm/SignupForm';
 export { default as Subscriptions } from './Subscriptions/Subscriptions';
 export { default as VideoCard } from './VideoCard/VideoCard';
 export { default as VideoGrid } from './VideoGrid/VideoGrid';
+export { default as UserProfile } from './userProfile/userProfile';

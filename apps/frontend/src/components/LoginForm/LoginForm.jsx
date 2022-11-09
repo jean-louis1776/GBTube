@@ -18,7 +18,7 @@ const LoginForm = (props) => {
             fontWeight="bold"
             sx={{ color: '#000', ml: 1 }}
           >
-            Geek<span style={{ color: '#fc1503' }}>Tube</span>
+            Geek<span style={{ color: '#0089EB' }}>Tube</span>
           </Typography>
         </Link>
 
@@ -60,7 +60,7 @@ const LoginForm = (props) => {
           <p className={styles.redirect}>
             Ещё нет аккаунта?{' '}
             <Link to="/signup">
-              <span style={{ color: '#fc1503' }}>Создайте аккаунт</span>
+              <span style={{ color: '#0089EB' }}>Создайте аккаунт</span>
             </Link>
           </p>
         </form>

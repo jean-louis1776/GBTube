@@ -42,7 +42,7 @@ const SearchForm = (props) => {
       <IconButton
         className={styles.searchBtn}
         type="submit"
-        sx={{ p: '10px', color: '#fc1503' }}
+        sx={{ p: '10px', color: '#0089EB' }}
       >
         <SearchIcon />
       </IconButton>

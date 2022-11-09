@@ -7,6 +7,7 @@ import { logo } from '@constants/frontend';
 import styles from './Header.module.scss';
 
 import { SearchForm } from '../';
+import { theme } from '../../theme';
 
 const Header = (props) => {
   return (
@@ -35,7 +36,7 @@ const Header = (props) => {
           fontWeight="bold"
           sx={{ color: '#000', ml: 1 }}
         >
-          Geek<span style={{ color: '#fc1503' }}>Tube</span>
+          Geek<span style={{ color: '#0089EB' }}>Tube</span>
         </Typography>
       </Link>
 
@@ -43,9 +44,7 @@ const Header = (props) => {
         <SearchForm />
 
         <Link to="/login">
-          <Button variant="outlined" color="red">
-            Войти
-          </Button>
+          <Button variant="outlined">Войти</Button>
         </Link>
       </Stack>
     </Stack>
