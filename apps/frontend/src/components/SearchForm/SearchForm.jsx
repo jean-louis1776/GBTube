@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Paper, IconButton } from '@mui/material';
+import { Paper, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './SearchForm.module.scss';
@@ -26,11 +26,8 @@ const SearchForm = (props) => {
       onSubmit={handleSubmit}
       sx={{
         borderRadius: 20,
-        border: '1px solid #cecece',
-        background: '#fff',
         pl: 2,
         boxShadow: 'none',
-        mr: { sm: 5 },
       }}
     >
       <input
@@ -39,6 +36,7 @@ const SearchForm = (props) => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+<<<<<<< HEAD
       <IconButton
         className={styles.searchBtn}
         type="submit"
@@ -46,6 +44,17 @@ const SearchForm = (props) => {
       >
         <SearchIcon />
       </IconButton>
+=======
+      <Tooltip title="Поиск">
+        <IconButton
+          className={styles.searchBtn}
+          type="submit"
+          sx={{ p: '10px', color: 'baseBlue.main' }}
+        >
+          <SearchIcon />
+        </IconButton>
+      </Tooltip>
+>>>>>>> 0c085dda2cd3537101afa8ddb8795702b5d8ef9a
     </Paper>
   );
 };

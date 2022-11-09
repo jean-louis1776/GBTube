@@ -42,12 +42,12 @@
         }
       }
 
-      .redirect {
-        margin: 40px auto 0;
+      .redirectText {
+        margin: 25px 0 0;
+      }
 
-        span:hover {
-          text-decoration: underline;
-        }
+      .redirectUrl:hover {
+        text-decoration: underline;
       }
     }
 

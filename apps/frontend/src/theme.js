@@ -3,11 +3,12 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     darkBackground: {
-      main: '#272C37',
+      main: '#1F1F1F',
       contrastText: '#fff',
     },
     shadows: {
-      main: '#A4ABBD',
+      main: '#464646',
+      second: 'rgba(245, 249, 255,.4)',
     },
     baseBlue: {
       main: '#0089EB',
@@ -20,25 +21,52 @@ export const theme = createTheme({
   },
 
   components: {
-    MuiBox: {
+    MuiPaper: {
+      styleOverrides: {
+        // Name of the slot
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.shadows.main,
+        }),
+      },
+    },
+
+    MuiStack: {
+      styleOverrides: {
+        // Name of the slot
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.darkBackground.main,
+        }),
+      },
+    },
+
+    MuiTypography: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.darkBackground.contrastText,
+        }),
+      },
+    },
+
+    MuiAppBar: {
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.darkBackground.main,
         }),
       },
     },
-    MuiButton: {
+
+    MuiDrawer: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          backgroundColor: theme.palette.baseBlue.main,
-          color: theme.palette.baseBlue.contrastText,
+        paper: ({ theme }) => ({
+          backgroundColor: theme.palette.darkBackground.main,
         }),
       },
     },
-    MuiAvatar: {
+
+    MuiDivider: {
       styleOverrides: {
         root: ({ theme }) => ({
-          backgroundColor: theme.palette.baseBlue.main,
+          backgroundColor: theme.palette.shadows.second,
         }),
       },
     },
