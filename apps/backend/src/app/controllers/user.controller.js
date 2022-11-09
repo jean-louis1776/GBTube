@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 
-import userService from '../services/user.service.js'
+import userService from '../services/user.service.js';
+import { ApiError } from '../errors/apiError';
 
 dotenv.config();
 
@@ -8,7 +9,6 @@ class UserController {
   constructor() {
     this.MAX_AGE = process.env.REFRESH_LIVE_IN_DAYS * 24 * 60 * 60 * 1000;
   }
-
   createCookies(res, userResponse) {
     res.cookie('refreshToken', userResponse.refreshToken, {maxAge: this.MAX_AGE, httpOnly: true});
     res.cookie('refreshTokenId', userResponse.refreshTokenId, {maxAge: this.MAX_AGE, httpOnly: true});
@@ -38,12 +38,10 @@ class UserController {
 
   async logout(req, res, next) {
     try {
-      if (await userService.logout(+req.cookies.refreshTokenId)) {
-        res.clearCookie('refreshToken');
-        res.clearCookie('refreshTokenId');
-        return res.status(200).json({ message: 'Logout is success' });
-      }
-      return res.status(500).json({ message: 'Error! Can\'t logout' });
+      await userService.logout(+req.cookies.refreshTokenId);
+      res.clearCookie('refreshToken');
+      res.clearCookie('refreshTokenId');
+      return res.json({ message: 'Logout is success' });
     } catch (e) {
       next(e);
     }
@@ -61,8 +59,8 @@ class UserController {
 
   async remove(req, res, next) {
     try {
-      if (await userService.remove(+req.params.id)) return res.status(200).json({ message: 'User has been removed' });
-      return res.ststus(500).json({ message: 'Can\'t remove user' });
+      await userService.remove(+req.params.id);
+      return res.json({ message: 'User has been removed' });
     } catch (e) {
       next(e);
     }
@@ -83,7 +81,7 @@ class UserController {
   async activate(req, res, next) {
     try {
       await userService.activate(req.params.link);
-      return res.redirect(process.env.CLIENT_URL);
+      return res.redirect(`${process.env.CLIENT_URL}/emailConfirm`);
     } catch (e) {
       next(e);
     }
@@ -100,6 +98,43 @@ class UserController {
   async uploadAvatar(req, res, next) {
     try {
       return res.json(await userService.uploadAvatar(+req.params.id, req.files));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async downloadAvatar(req, res, next) {
+    try {
+      const stream = await userService.downloadAvatar(+req.params.id);
+      stream.pipe(res);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async removeAvatar(req, res, next) {
+    try {
+      await userService.removeAvatar(+req.params.id);
+      return res.json({ message: 'Avatar has been removed'});
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async checkUnique(req, res, next) {
+    try {
+      const { nickName, email } = req.query;
+      if (!nickName && !email) {
+        next(ApiError.BadRequest('Отсутствует объект проверки на уникальность!!!'));
+      }
+      let uniqueNickName = true, uniqueEmail = true;
+      if (nickName) {
+        uniqueNickName = await userService.isNickNameUnique(nickName);
+      }
+      if (email) {
+        uniqueEmail = await userService.isEmailUnique(email);
+      }
+      res.json({unique: !!(uniqueNickName && uniqueEmail)});
     } catch (e) {
       next(e);
     }

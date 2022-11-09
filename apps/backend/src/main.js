@@ -26,7 +26,7 @@ app.use(express.json());
 // app.use(express.static(path.resolve(path.resolve(), 'apps', 'backend', 'src', 'assets', 'static')));
 app.use(fileUpload({ useTempFiles : true }));
 app.use('/api', router);
-app.all('*', (req, res) => res.redirect(process.env.CLIENT_URL)); // if nonexistent method-URL pair
+app.all('*', (req, res) => res.redirect(`${process.env.CLIENT_URL}/404NotFound`)); // if nonexistent method-URL pair
 
 app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
 

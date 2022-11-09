@@ -19,17 +19,17 @@ class UserQueries {
   async createUser(nickName, email, password, activateLink) {
     try {
       if (await User.findOne({where: {nickName}})) {
-        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
+        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует!`);
       }
       if (await UserInfo.findOne({where: {email}})) {
-        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`);
+        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует!`);
       }
       const userId = (await User.create({nickName})).dataValues.id;
-      console.log('USERID = ', userId);
       await UserInfo.create({email, password, activateLink, userId: userId});
       return userId;
     } catch (e) {
-      return ApiError.BadRequest(e.message);
+      console.log('Ошибка в userQueries.createUser!');
+      throw (e);
     }
   }
 
@@ -48,19 +48,23 @@ class UserQueries {
    * @returns {Object}
    */
   async findOneById(id) {
-    const result = await User.findOne(
-      {
-        where: {id},
-        include: [
-          {
-            model: UserInfo,
-          },
-        ],
-      },
-    );
-    return this.parsingQueryModel(result);
+    try {
+      let result = await User.findOne(
+        {
+          where: {id},
+          include: [
+            {
+              model: UserInfo,
+            },
+          ],
+        },
+      );
+      if (result) result = this.parsingQueryModel(result);
+      return result;
+    } catch(e) {
+      throw ApiError.InternalServerError(e);
+    }
   }
-
   /**
    * Поиск пользователя по nickName
    * @param nickName - nickName пользователя
@@ -83,19 +87,23 @@ class UserQueries {
 
   async findOneByEmail(email) {
     try {
-      const result = (await User.findOne({include: [{model: UserInfo, where: {email}}]}));
-      return this.parsingQueryModel(result);
+      let result = (await User.findOne({include: [{model: UserInfo, where: {email}}]}));
+      if (result) result = this.parsingQueryModel(result);
+      return result;
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      throw(e);
     }
   }
 
   async findOneByActivateLink(activateLink) {
     try {
-      const result = await UserInfo.findOne({where: {activateLink}});
-      return result.dataValues;
+      let result = await UserInfo.findOne({where: {activateLink}});
+      if (result) result = result.dataValues;
+      return result;
     } catch (e) {
-      return e;
+      console.log(e.message);
+      throw(e);
     }
   }
 
@@ -114,13 +122,15 @@ class UserQueries {
           ],
         },
       );
+      if (!users) return null;
       const result = [];
       for (const user of users) {
         result.push(this.parsingQueryModel(user));
       }
       return result;
     } catch (e) {
-      return e;
+      console.log(e.message);
+      throw(e);
     }
   }
 
@@ -131,15 +141,13 @@ class UserQueries {
         updateCount += await User.update({nickName: data.nickName}, {where: {id}});
         delete data.nickName;
       }
-      let count = 0;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      for (let key in data) count++;
-      if (count > 0) {
-        updateCount += await UserInfo.update({...data}, {where: {userId: id}});
+
+      if (Object.keys(data).length) {
+        updateCount += +(await UserInfo.update({...data}, {where: {userId: id}}));
       }
       return !!updateCount;
     } catch (e) {
-      return ApiError.BadRequest(e.message);
+      throw ApiError.InternalServerError(e.message);
     }
   }
 
@@ -154,8 +162,32 @@ class UserQueries {
         where: {id},
         include: [{model: UserInfo}, {model: Token}]
       }));
-    } catch (e) {
+    } catch {
       return false;
+    }
+  }
+
+  async isNickNameUnique(nickName) {
+    return !(await User.findOne({where: {nickName}}));
+  }
+
+  async isEmailUnique(email) {
+    return !(await UserInfo.findOne({where: {email}}));
+  }
+
+  async getUserAvatarById(id) {
+    try {
+      const result = await UserInfo.findOne(
+        {
+          attributes: ['avatar'],
+          where: {userId: id}
+        }
+      );
+      if (!result) return null;
+      return JSON.parse(JSON.stringify(result)).avatar;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
     }
   }
 }
