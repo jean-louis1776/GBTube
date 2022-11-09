@@ -1,7 +1,8 @@
 import React from 'react';
-import { notFoundLogo, notFoundBg } from '@constants/frontend';
+import { notFoundLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import styles from './NotFound.module.scss';
 
@@ -11,14 +12,14 @@ const NotFound = (props) => {
       sx={{
         height: '100vh',
         width: '100%',
-        backgroundImage: `url(${notFoundBg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
         justifyContent: 'center',
         userSelect: 'none',
+        position: 'relative',
       }}
     >
+      <Helmet>
+        <title>404 | GeekTube</title>
+      </Helmet>
       <Box
         sx={{
           width: '1150px',
@@ -30,7 +31,7 @@ const NotFound = (props) => {
         }}
       >
         <Box sx={{ mb: 4 }}>
-          <img src={notFoundLogo} alt="404 Logo" />
+          <img src={notFoundLogo} alt="404 Logo" style={{ width: '30rem' }} />
         </Box>
         <Box
           sx={{
@@ -40,9 +41,7 @@ const NotFound = (props) => {
             alignItems: 'center',
           }}
         >
-          <Typography
-            sx={{ textTransform: 'uppercase', fontSize: '4rem', lineHeight: 1 }}
-          >
+          <Typography sx={{ fontSize: '4rem', lineHeight: 1, fontWeight: 600 }}>
             Oops!
           </Typography>
           <Typography sx={{ fontWeight: 300, fontSize: '2rem', mb: 4 }}>
@@ -57,6 +56,20 @@ const NotFound = (props) => {
             </Button>
           </Link>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          width: '400px',
+          position: 'absolute',
+          bottom: '20px',
+          left: '50%',
+          marginLeft: '-200px',
+        }}
+      >
+        <Typography sx={{ color: '#999', textAlign: 'center' }}>
+          &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
+        </Typography>
       </Box>
     </Stack>
   );

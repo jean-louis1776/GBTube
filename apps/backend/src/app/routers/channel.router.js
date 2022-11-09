@@ -1,11 +1,14 @@
 import { Router } from 'express';
+import channelController from '../controllers/channel.controller';
 
 const router = new Router();
 
-router.post('/', /*create()*/);
-router.put('/', /*edit()*/);
-router.get('/:id', /*getById*/ );
-router.get('/', /*getAll*/ );
+router.post('/create', channelController.create);
+router.patch('/edit', );
+router.patch('/subscribe', );
+router.patch('/unsubscribe', );
 router.delete('/:id', /*removeById*/)
+router.get('/get_one:id', /*getById*/ );
+router.get('/get_all', /*getAll*/ );
 
 export default router;

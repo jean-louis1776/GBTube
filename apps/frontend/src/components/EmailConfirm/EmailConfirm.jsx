@@ -2,6 +2,7 @@ import React from 'react';
 import { RedirectLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import styles from './EmailConfirm.module.scss';
 
@@ -13,8 +14,12 @@ const EmailConfirm = (props) => {
         width: '100%',
         justifyContent: 'center',
         userSelect: 'none',
+        position: 'relative',
       }}
     >
+      <Helmet>
+        <title>Почта подтверждена | GeekTube</title>
+      </Helmet>
       <Box
         sx={{
           width: '1150px',
@@ -36,9 +41,7 @@ const EmailConfirm = (props) => {
             alignItems: 'center',
           }}
         >
-          <Typography
-            sx={{ textTransform: 'uppercase', fontSize: '4rem', lineHeight: 1 }}
-          >
+          <Typography sx={{ fontSize: '4rem', lineHeight: 1, fontWeight: 600 }}>
             Congratulations!
           </Typography>
           <Typography
@@ -62,6 +65,20 @@ const EmailConfirm = (props) => {
             </Button>
           </Link>
         </Box>
+      </Box>
+
+      <Box
+        sx={{
+          width: '400px',
+          position: 'absolute',
+          bottom: '20px',
+          left: '50%',
+          marginLeft: '-200px',
+        }}
+      >
+        <Typography sx={{ color: '#999', textAlign: 'center' }}>
+          &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
+        </Typography>
       </Box>
     </Stack>
   );

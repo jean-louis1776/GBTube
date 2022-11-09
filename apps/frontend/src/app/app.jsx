@@ -37,7 +37,7 @@ export function App() {
   //   setUser(auth.user)
   // }, []);
   return (
-    <Box sx={{ backgroundColor: '#fff' }}>
+    <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
         <Route path="/" exact element={<MainPage />} />
         <Route path="/uploadVideo" element={<UploadVideo />} />
