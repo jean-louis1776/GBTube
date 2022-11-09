@@ -4,8 +4,9 @@ import ffmpeg from 'ffmpeg';
 import fs from 'fs-extra';
 
 import { ApiError } from '../errors/apiError.js';
-import { videoExtensions } from '../util/videoExtensions.js';
+import { videoExtensions } from '../util/videoImageExtensions.js';
 import { ftpServer } from '../../main.js';
+import userService from '../services/user.service.js';
 
 class VideoController {
   // Принять видео с фронта, сделать frameShot и сохранить

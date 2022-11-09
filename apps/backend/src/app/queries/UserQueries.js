@@ -1,21 +1,35 @@
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
+import { Token } from "../models/Tokens";
 import { ApiError } from "../errors/apiError";
 
 class UserQueries {
+  parsingQueryModel(modelFromQuery) {
+    modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
+    const user = {
+      ...modelFromQuery.UserInfo,
+      id: modelFromQuery.id,
+      nickName: modelFromQuery.nickName
+    };
+    delete user.userId;
+    delete user.updateTimestamp;
+    return user;
+  }
+
   async createUser(nickName, email, password, activateLink) {
     try {
       if (await User.findOne({where: {nickName}})) {
-        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует`);
+        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует!`);
       }
       if (await UserInfo.findOne({where: {email}})) {
-        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует`);
+        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует!`);
       }
-      const userId = (await User.create({nickName}).id);
+      const userId = (await User.create({nickName})).dataValues.id;
       await UserInfo.create({email, password, activateLink, userId: userId});
       return userId;
     } catch (e) {
-      return ApiError.BadRequest(e.message);
+      console.log('Ошибка в userQueries.createUser!');
+      throw (e);
     }
   }
 
@@ -34,25 +48,30 @@ class UserQueries {
    * @returns {Object}
    */
   async findOneById(id) {
-    return User.findOne(
-      {
-        where: {id},
-        include: [
-          {
-            model: UserInfo,
-          },
-        ],
-      },
-    );
+    try {
+      let result = await User.findOne(
+        {
+          where: {id},
+          include: [
+            {
+              model: UserInfo,
+            },
+          ],
+        },
+      );
+      if (result) result = this.parsingQueryModel(result);
+      return result;
+    } catch(e) {
+      throw ApiError.InternalServerError(e);
+    }
   }
-
   /**
    * Поиск пользователя по nickName
    * @param nickName - nickName пользователя
    * @returns {Object}
    */
   async findOneByName(nickName) {
-    return User.findOne(
+    return await (User.findOne(
       {
         where: {
           nickName: nickName,
@@ -63,28 +82,29 @@ class UserQueries {
           },
         ],
       },
-    );
+    ));
   }
 
   async findOneByEmail(email) {
     try {
-      const result = (await User.findOne({include: [{model: UserInfo, where: {email}}]})).dataValues;
-      const user = {
-        ...result.UserInfo.dataValues,
-        id: result.id,
-        nickName: result.nickName
-      };
-      delete user.userId;
-      delete user.updateTimestamp;
-      return user;
+      let result = (await User.findOne({include: [{model: UserInfo, where: {email}}]}));
+      if (result) result = this.parsingQueryModel(result);
+      return result;
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      throw(e);
     }
   }
 
   async findOneByActivateLink(activateLink) {
-    const result = await UserInfo.findOne({where: {activateLink}});
-    return result.dataValues;
+    try {
+      let result = await UserInfo.findOne({where: {activateLink}});
+      if (result) result = result.dataValues;
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
 /**
@@ -92,31 +112,42 @@ class UserQueries {
    * @returns {Object[]}
    */
   async findAllUsers() {
-    return await User.findAll(
-      {
-        include: [
-          {
-            model: UserInfo,
-          },
-        ],
-      },
-    );
+    try {
+      const users = await User.findAll(
+        {
+          include: [
+            {
+              model: UserInfo,
+            },
+          ],
+        },
+      );
+      if (!users) return null;
+      const result = [];
+      for (const user of users) {
+        result.push(this.parsingQueryModel(user));
+      }
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
   async updateUser(id, data) {
+    let updateCount = 0;
     try {
       if (data.nickName) {
-        await User.update({nickName: data.nickName}, {where: {id}});
+        updateCount += await User.update({nickName: data.nickName}, {where: {id}});
         delete data.nickName;
       }
-      let count = 0;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      for (let key in data) count++;
-      if (count > 0) {
-        await UserInfo.update({...data}, {where: {userId: id}});
+
+      if (Object.keys(data).length) {
+        updateCount += +(await UserInfo.update({...data}, {where: {userId: id}}));
       }
+      return !!updateCount;
     } catch (e) {
-      return ApiError.BadRequest(e.message);
+      throw ApiError.InternalServerError(e.message);
     }
   }
 
@@ -126,11 +157,38 @@ class UserQueries {
    * @returns {boolean}
    */
   async deleteUser(id) {
-    return await User.destroy({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      return !!(await User.destroy({
+        where: {id},
+        include: [{model: UserInfo}, {model: Token}]
+      }));
+    } catch {
+      return false;
+    }
+  }
+
+  async isNickNameUnique(nickName) {
+    return !(await User.findOne({where: {nickName}}));
+  }
+
+  async isEmailUnique(email) {
+    return !(await UserInfo.findOne({where: {email}}));
+  }
+
+  async getUserAvatarById(id) {
+    try {
+      const result = await UserInfo.findOne(
+        {
+          attributes: ['avatar'],
+          where: {userId: id}
+        }
+      );
+      if (!result) return null;
+      return JSON.parse(JSON.stringify(result)).avatar;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 }
 
