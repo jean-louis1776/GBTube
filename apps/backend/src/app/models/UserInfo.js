@@ -20,6 +20,9 @@ export const UserInfo = sequelize.define('UserInfo', {
     birthDay: {
       type: DataTypes.DATE,
     },
+    avatar: {
+      type: DataTypes.STRING,
+    },
     email: {
       type: DataTypes.CHAR,
       allowNull: false,
