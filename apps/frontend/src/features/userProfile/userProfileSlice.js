@@ -12,14 +12,10 @@ export const getUserData = createAsyncThunk(
   'userProfile/getUserData',
   async (_, { dispatch }) => {
     try {
-<<<<<<< HEAD:apps/frontend/src/features/userProfile/userProfileSlice.js
-      const response = await UserController.getUsers();
-=======
       const response = await UserController.getUserById(
         'http://localhost:3333/api/user/find/:id'
       );
->>>>>>> 358c026c14aab39f6c2f930ba5c25b98a388b0c5:apps/frontend/src/features/userProfile/userProfile.js
-      dispatch(setUser(response.user));
+      dispatch(setUser(response));
     } catch (error) {
       console.log(error);
     }
@@ -30,21 +26,15 @@ export const userDataUpdate = createAsyncThunk(
   'userProfile/userDataUpdate',
   async (updatingUser, { dispatch }) => {
     try {
-<<<<<<< HEAD:apps/frontend/src/features/userProfile/userProfileSlice.js
       const response = await UserController.updateUser(updatingUser);
       dispatch(setUser(updatingUser));
       console.log(response);
-=======
-      const response = await UserController.updateUser(userForm);
-      dispatch(setUser(response.user));
->>>>>>> 358c026c14aab39f6c2f930ba5c25b98a388b0c5:apps/frontend/src/features/userProfile/userProfile.js
     } catch (error) {
       console.log(error);
     }
   }
 );
 
-<<<<<<< HEAD:apps/frontend/src/features/userProfile/userProfileSlice.js
 export const deleteUser = createAsyncThunk(
   'userProfile/deleteUser',
   async (id, { dispatch }) => {
@@ -55,13 +45,6 @@ export const deleteUser = createAsyncThunk(
     } catch (error) {
       console.log(error);
     }
-=======
-export const userPasswordUpdate = createAsyncThunk(
-  'userProfile/userPasswordUpdate',
-  async (passwordForm, { dispatch }) => {
-    const response = await UserController.changePassword(passwordForm);
-    dispatch(setPassword(response.user));
->>>>>>> 358c026c14aab39f6c2f930ba5c25b98a388b0c5:apps/frontend/src/features/userProfile/userProfile.js
   }
 );
 

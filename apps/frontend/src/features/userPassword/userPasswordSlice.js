@@ -9,7 +9,7 @@ export const userPasswordUpdate = createAsyncThunk(
   'userPassword/userPasswordUpdate',
   async (updatingPassword, { dispatch }) => {
     const response = await UserController.changePassword(updatingPassword);
-    // dispatch(setPassword(response.user));
+    dispatch(setPassword(response.user));
     console.log(response);
   }
 );
