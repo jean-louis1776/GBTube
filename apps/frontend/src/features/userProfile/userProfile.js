@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import UserController from '../../controllers/UsersController';
 
 const initialState = {
   user: {
@@ -12,7 +12,7 @@ export const getUserData = createAsyncThunk(
   'userProfile/getUserData',
   async (_, { dispatch }) => {
     try {
-      const response = await axios.get(
+      const response = await UserController.getUserById(
         'http://localhost:3333/api/user/find/:id'
       );
       dispatch(setUser(response.user));
@@ -26,10 +26,7 @@ export const userDataUpdate = createAsyncThunk(
   'userProfile/userDataUpdate',
   async (userForm, { dispatch }) => {
     try {
-      const response = await axios.patch(
-        'http://localhost:3333/api/user/edit/:id',
-        userForm
-      );
+      const response = await UserController.updateUser(userForm);
       dispatch(setUser(response.user));
     } catch (error) {
       console.log(error);
@@ -40,7 +37,7 @@ export const userDataUpdate = createAsyncThunk(
 export const userPasswordUpdate = createAsyncThunk(
   'userProfile/userPasswordUpdate',
   async (passwordForm, { dispatch }) => {
-    const response = await axios.post('url/xuypass', passwordForm);
+    const response = await UserController.changePassword(passwordForm);
     dispatch(setPassword(response.user));
   }
 );

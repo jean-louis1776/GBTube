@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
+import { useDispatch } from 'react-redux';
+import { loginHandler } from '../../features/auth/authSlice';
 import AuthController from '../../controllers/AuthController';
 
 import styles from './LoginForm.module.scss';
@@ -10,6 +12,8 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
@@ -20,7 +24,9 @@ const LoginForm = () => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     try {
-      await AuthController.login(email, password);
+      // await AuthController.login(email, password);
+
+      dispatch(loginHandler({email, password}));
       navigate('/');
     } catch {
       console.log('Login failed');

@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
 import styles from './SignupForm.module.scss';
 import AuthController from '../../controllers/AuthController';
+import { useDispatch } from 'react-redux';
+import { registrationHandler } from '../../features/auth/authSlice';
 import { nanoid } from 'nanoid';
 
 const SignupForm = () => {
@@ -11,6 +13,8 @@ const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
   };
@@ -25,7 +29,8 @@ const SignupForm = () => {
     if (password === password2 && password.length > 0) {
       const username = email.split('@')[0] + nanoid(10);
       try {
-        await AuthController.registration(username, email, password);
+        // await AuthController.registration(username, email, password);
+        dispatch(registrationHandler({ username, email, password }));
         navigate('/');
       } catch {
         console.log('Registration failed');
