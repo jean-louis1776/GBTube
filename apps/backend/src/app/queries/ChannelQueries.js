@@ -14,7 +14,7 @@ class ChannelQueries {
       ...modelFromQuery.ChannelInfos,
       id: modelFromQuery.id,
       title: modelFromQuery.title,
-      userId: modelFromQuery.UserId
+      userId: modelFromQuery.userId
     };
   }
 
@@ -49,10 +49,13 @@ class ChannelQueries {
    */
   async findChannelById(Id) {
     try {
-      Channel.findOne({
+      const channel = Channel.findOne({
         where: {Id},
         include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
       });
+      if (channel) {
+        return this.parsingQueryModel(channel);
+      }
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -125,6 +128,7 @@ class ChannelQueries {
       if (data.title) {
         isUpdate += await Channel.update({title: data.title}, {where: {id}});
         delete data.title;
+        delete data.id;
       }
       if (Object.keys(data).length) {
         isUpdate += await ChannelInfo.update({...data}, {where: {channelId: id}});
