@@ -7,7 +7,7 @@ export const Channel = sequelize.define('Channel', {
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
+    title: {
       type: DataTypes.CHAR,
     },
   }, {

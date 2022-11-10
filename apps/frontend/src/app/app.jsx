@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-// import { useEffect } from 'react';
-// import { getAuthDataFromLS, removeUser } from './utils/auth';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { checkAuthHandler } from '../features/auth/authSlice';
 import { Box } from '@mui/material';
 
 import './app.module.scss';
@@ -25,19 +26,15 @@ import {
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
 
 export function App() {
-  // useEffect(() => {
-  //   const auth = getAuthDataFromLS();
-  //
-  //   if (!auth || !auth.accessToken || !auth.refreshToken) {
-  //     removeUser();
-  //     return;
-  //   }
-  //   // здесь необходимо передавать данные об авторизации юзера
-  //   setAuth(true);
-  //   setUser(auth.user)
-  // }, []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      dispatch(checkAuthHandler());
+    }
+  }, []);
   return (
-    <Box sx={{ backgroundColor: '#fff' }}>
+    <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
         <Route path="/" exact element={<MainPage />} />
         <Route path="/uploadVideo" element={<UploadVideo />} />

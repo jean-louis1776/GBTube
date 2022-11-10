@@ -5,6 +5,7 @@ import userChannelListSlice from '../features/userChannels/userChannelsListSlice
 import commentSlice from '../features/commentVideo/commentSlice';
 import userProfileSlice from '../features/userProfile/userProfileSlice';
 import userPasswordSlice from '../features/userPassword/userPasswordSlice';
+import authSlice from '../features/auth/authSlice';
 
 export default configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export default configureStore({
     comment: commentSlice,
     userProfile: userProfileSlice,
     userPassword: userPasswordSlice,
+    auth: authSlice,
   },
 });
