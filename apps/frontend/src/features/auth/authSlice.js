@@ -42,9 +42,9 @@ export const loginHandler = createAsyncThunk(
 
 export const registrationHandler = createAsyncThunk(
   'auth/registrationHandler',
-  async (username, email, password, { dispatch }) => {
+  async (regData, { dispatch }) => {
     try {
-      // const { username, email, password } = regData;
+      const { username, email, password } = regData;
       const { data } = await AuthController.registration(
         username,
         email,
