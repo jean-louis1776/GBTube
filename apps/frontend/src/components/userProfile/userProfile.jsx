@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Header from '../Header/Header';
-import { TextField, Box, Avatar, Stack, Button } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { TextField, Box, Avatar, Stack, Button, Paper } from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -11,14 +11,14 @@ import {
   clearUser,
   getUserData,
   userDataUpdate,
-} from '../../features/userProfile/userProfile';
+} from '../../features/userProfile/userProfileSlice';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userProfileFormSchema } from './validation';
 import { getSelector } from '../../store/getSelector';
 
 const UserProfile = () => {
-  // const theme = useTheme();
+  const theme = useTheme();
 
   const user = useSelector(getSelector('userProfile', 'user'));
 
@@ -48,9 +48,9 @@ const UserProfile = () => {
     setValue('birthDate', date);
   };
 
-  const onSubmitForm = handleSubmit((userForm) => {
-    dispatch(userDataUpdate(userForm));
-    console.log(userForm);
+  const onSubmitForm = handleSubmit((updatingUser) => {
+    dispatch(userDataUpdate(updatingUser));
+    console.log(updatingUser);
   });
 
   useEffect(() => {
@@ -68,8 +68,8 @@ const UserProfile = () => {
   return (
     <>
       <Header />
-      <Box className={styles.userForm}>
-        <Box className={styles.userForm_container}>
+      <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
+        <Paper className={styles.userForm_container}>
           <Avatar
             sx={{ width: 100, height: 100, marginBottom: 3 }}
             alt="avatar"
@@ -83,8 +83,12 @@ const UserProfile = () => {
             autoComplete="off"
             onChange={compareUserData}
           >
-            <Stack spacing={2}>
-              <TextField label="Имя" {...register('firstName')} />
+            <Stack>
+              <TextField
+                label="Имя"
+                {...register('firstName')}
+                sx={{ bgcolor: 'paper.main' }}
+              />
               <TextField label="Фамилия" {...register('lastName')} />
               <TextField label="Никнейм" {...register('nickName')} />
               <Controller
@@ -105,21 +109,25 @@ const UserProfile = () => {
               <TextField
                 {...register('email')}
                 disabled={emailDisabled}
-                id="email"
                 defaultValue="usermail@mail.ru"
                 label="e-mail"
               />
             </Stack>
           </Box>
-          <Stack direction="row" spacing={2} marginTop={3}>
-            <Button disabled={isEqualUserData} onClick={onSubmitForm}>
+          <Stack direction="row" marginTop={3}>
+            <Button
+              disabled={isEqualUserData}
+              onClick={onSubmitForm}
+              variant="outlined"
+              color="baseBlue"
+            >
               Сохранить данные
             </Button>
-            <Button onClick={resolveMailEdit}>
+            <Button onClick={resolveMailEdit} variant="outlined">
               {emailDisabled ? 'Изменить почту' : 'Подтвердить'}
             </Button>
           </Stack>
-        </Box>
+        </Paper>
       </Box>
     </>
   );

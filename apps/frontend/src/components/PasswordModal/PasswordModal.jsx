@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPasswordSchema } from './validation';
-import { userPasswordUpdate } from '../../features/userProfile/userProfile';
+import { userPasswordUpdate } from '../../features/userProfile/userProfileSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getSelector } from '../../store/getSelector';

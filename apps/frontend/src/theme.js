@@ -30,14 +30,14 @@ export const theme = createTheme({
       },
     },
 
-    MuiStack: {
-      styleOverrides: {
-        // Name of the slot
-        root: ({ theme }) => ({
-          backgroundColor: theme.palette.darkBackground.main,
-        }),
-      },
-    },
+    // MuiStack: {
+    //   styleOverrides: {
+    //     // Name of the slot
+    //     root: ({ theme }) => ({
+    //       backgroundColor: theme.palette.darkBackground.main,
+    //     }),
+    //   },
+    // },
 
     MuiTypography: {
       styleOverrides: {
@@ -67,6 +67,22 @@ export const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.shadows.second,
+        }),
+      },
+    },
+
+    MuiFormControl: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.shadows.second,
+        }),
+      },
+    },
+
+    MuiBox: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: theme.palette.darkBackground.main,
         }),
       },
     },

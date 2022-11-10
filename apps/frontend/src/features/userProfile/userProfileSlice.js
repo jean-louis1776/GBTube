@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import UserController from '../../controllers/UsersController';
 
 const initialState = {
   user: {
@@ -12,9 +12,7 @@ export const getUserData = createAsyncThunk(
   'userProfile/getUserData',
   async (_, { dispatch }) => {
     try {
-      const response = await axios.get(
-        'http://localhost:3333/api/user/find/:id'
-      );
+      const response = await UserController.getUsers();
       dispatch(setUser(response.user));
     } catch (error) {
       console.log(error);
@@ -24,24 +22,27 @@ export const getUserData = createAsyncThunk(
 
 export const userDataUpdate = createAsyncThunk(
   'userProfile/userDataUpdate',
-  async (userForm, { dispatch }) => {
+  async (updatingUser, { dispatch }) => {
     try {
-      const response = await axios.patch(
-        'http://localhost:3333/api/user/edit/:id',
-        userForm
-      );
-      dispatch(setUser(response.user));
+      const response = await UserController.updateUser(updatingUser);
+      dispatch(setUser(updatingUser));
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
   }
 );
 
-export const userPasswordUpdate = createAsyncThunk(
-  'userProfile/userPasswordUpdate',
-  async (passwordForm, { dispatch }) => {
-    const response = await axios.post('url/xuypass', passwordForm);
-    dispatch(setPassword(response.user));
+export const deleteUser = createAsyncThunk(
+  'userProfile/deleteUser',
+  async (id, { dispatch }) => {
+    try {
+      const response = await UserController.deleteUser(id);
+      dispatch(deleteUser(id));
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -58,11 +59,8 @@ export const userProfileSlice = createSlice({
     deleteUser: (state) => {
       state.user = null;
     },
-    setPassword: (state, { payload }) => {
-      console.log((state.user.password = payload));
-    },
   },
 });
 
-export const { setUser, clearUser, setPassword } = userProfileSlice.actions;
+export const { setUser, clearUser } = userProfileSlice.actions;
 export default userProfileSlice.reducer;
