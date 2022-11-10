@@ -125,10 +125,13 @@ class ChannelQueries {
   async updateChannel(id, data) {
     let isUpdate = 0;
     try {
+      if (await User.findOne({where: {userId: data.userId, title: data.title}})) {
+        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
+      }
       if (data.title) {
         isUpdate += await Channel.update({title: data.title}, {where: {id}});
         delete data.title;
-        delete data.id;
+        delete data.userId;
       }
       if (Object.keys(data).length) {
         isUpdate += await ChannelInfo.update({...data}, {where: {channelId: id}});
