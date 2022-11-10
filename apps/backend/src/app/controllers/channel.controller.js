@@ -11,10 +11,10 @@ class ChannelController {
     }
   }
 
-  async encodeURIComponent(req, res, next) {
+  async edit(req, res, next) {
     try {
       const { updatingChannel, idList } = req.body;
-      
+
     } catch (e) {
       next(e);
     }
