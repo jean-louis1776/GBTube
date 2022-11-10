@@ -2,19 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import UserController from '../../controllers/UsersController';
 
 const initialState = {
-  user: {
-    nickName: 'Niklas',
-    email: 'niklas.buk@gmail.com',
-  },
+  user: {},
 };
 
 export const getUserData = createAsyncThunk(
   'userProfile/getUserData',
-  async (_, { dispatch }) => {
+  async (id, { dispatch }) => {
     try {
-      const response = await UserController.getUserById(
-        'http://localhost:3333/api/user/find/:id'
-      );
+      const response = await UserController.getUserById(id);
       dispatch(setUser(response));
     } catch (error) {
       console.log(error);

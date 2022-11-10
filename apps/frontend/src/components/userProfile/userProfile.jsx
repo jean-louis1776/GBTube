@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react';
 import Header from '../Header/Header';
-import { TextField, Box, Avatar, Stack, Button, Paper } from '@mui/material';
+import {
+  TextField,
+  Box,
+  Avatar,
+  Stack,
+  Button,
+  Paper,
+  IconButton,
+} from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,6 +24,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userProfileFormSchema } from './validation';
 import { getSelector } from '../../store/getSelector';
+import { PhotoCamera } from '@mui/icons-material';
 
 const UserProfile = () => {
   const theme = useTheme();
@@ -36,6 +45,8 @@ const UserProfile = () => {
   const resolveMailEdit = () => {
     setEmailDisabled((prevDisabled) => !prevDisabled);
   };
+
+  const { userData, setUserData } = useState({});
 
   const [isEqualUserData, setIsEqualUserData] = useState(true);
   const compareUserData = () => {
@@ -65,16 +76,52 @@ const UserProfile = () => {
     console.log('errors', errors);
   }, [errors]);
 
+  const ColorButton = styled(IconButton)(({ theme }) => ({
+    color: 'transparent',
+    backgroundColor: theme.palette.shadows.main,
+    opacity: 0.7,
+    transition: '.3s ease',
+    '&:hover': {
+      color: theme.palette.baseBlue.main,
+    },
+  }));
+
+  const AvatarUpload = styled(PhotoCamera)(({ theme }) => ({
+    width: 50,
+    height: 50,
+    color: 'transparent',
+    position: 'absolute',
+    top: '-600%',
+    backgroundColor: 'transparent',
+    transition: '.3s ease',
+    '&:hover': {
+      color: theme.palette.baseBlue.main,
+    },
+  }));
+
   return (
     <>
       <Header />
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
         <Paper className={styles.userForm_container}>
           <Avatar
-            sx={{ width: 100, height: 100, marginBottom: 3 }}
+            sx={{
+              width: 100,
+              height: 100,
+              marginBottom: 3,
+              position: 'relative',
+            }}
             alt="avatar"
             src=""
           />
+          <ColorButton
+            color="primary"
+            aria-label="upload picture"
+            component="label"
+          >
+            <input hidden accept="image/*" type="file" />
+            <AvatarUpload />
+          </ColorButton>
           <Box
             component="form"
             sx={{
@@ -109,22 +156,27 @@ const UserProfile = () => {
               <TextField
                 {...register('email')}
                 disabled={emailDisabled}
-                defaultValue="usermail@mail.ru"
+                // defaultValue="usermail@mail.ru"
                 label="e-mail"
               />
             </Stack>
           </Box>
-          <Stack direction="row" marginTop={3}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            spacing={4}
+            mt={3}
+          >
+            <Button onClick={resolveMailEdit} variant="contained">
+              {emailDisabled ? 'Изменить почту' : 'Подтвердить'}
+            </Button>
             <Button
               disabled={isEqualUserData}
               onClick={onSubmitForm}
-              variant="outlined"
-              color="baseBlue"
+              variant="contained"
             >
               Сохранить данные
-            </Button>
-            <Button onClick={resolveMailEdit} variant="outlined">
-              {emailDisabled ? 'Изменить почту' : 'Подтвердить'}
             </Button>
           </Stack>
         </Paper>
