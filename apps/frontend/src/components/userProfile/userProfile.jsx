@@ -29,6 +29,36 @@ import { PhotoCamera } from '@mui/icons-material';
 const UserProfile = () => {
   const theme = useTheme();
 
+  const ColorButton = styled(IconButton)(({ theme }) => ({
+    color: 'transparent',
+    backgroundColor: theme.palette.shadows.main,
+    opacity: 0.7,
+    transition: '.3s ease',
+    '&:hover': {
+      color: theme.palette.baseBlue.main,
+    },
+  }));
+
+  const AvatarUpload = styled(PhotoCamera)(({ theme }) => ({
+    width: 50,
+    height: 50,
+    color: 'transparent',
+    position: 'absolute',
+    top: '-600%',
+    backgroundColor: 'transparent',
+    transition: '.3s ease',
+    '&:hover': {
+      color: theme.palette.baseBlue.main,
+    },
+  }));
+
+  const FormField = styled(TextField)(({ theme }) => ({
+    backgroundColor: theme.palette.baseBlue.contrastText,
+    '&:active': {
+      borderColor: theme.palette.coplimentPink.main,
+    },
+  }));
+
   const user = useSelector(getSelector('userProfile', 'user'));
 
   const {
@@ -76,29 +106,6 @@ const UserProfile = () => {
     console.log('errors', errors);
   }, [errors]);
 
-  const ColorButton = styled(IconButton)(({ theme }) => ({
-    color: 'transparent',
-    backgroundColor: theme.palette.shadows.main,
-    opacity: 0.7,
-    transition: '.3s ease',
-    '&:hover': {
-      color: theme.palette.baseBlue.main,
-    },
-  }));
-
-  const AvatarUpload = styled(PhotoCamera)(({ theme }) => ({
-    width: 50,
-    height: 50,
-    color: 'transparent',
-    position: 'absolute',
-    top: '-600%',
-    backgroundColor: 'transparent',
-    transition: '.3s ease',
-    '&:hover': {
-      color: theme.palette.baseBlue.main,
-    },
-  }));
-
   return (
     <>
       <Header />
@@ -131,13 +138,9 @@ const UserProfile = () => {
             onChange={compareUserData}
           >
             <Stack>
-              <TextField
-                label="Имя"
-                {...register('firstName')}
-                sx={{ bgcolor: 'paper.main' }}
-              />
-              <TextField label="Фамилия" {...register('lastName')} />
-              <TextField label="Никнейм" {...register('nickName')} />
+              <FormField label="Имя" {...register('firstName')} />
+              <FormField label="Фамилия" {...register('lastName')} />
+              <FormField label="Никнейм" {...register('nickName')} />
               <Controller
                 name={'birthDate'}
                 control={control}
@@ -148,12 +151,12 @@ const UserProfile = () => {
                       onChange={onChangeDate}
                       label="Дата рождения"
                       inputFormat="DD.MM.YYYY"
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => <FormField {...params} />}
                     />
                   </LocalizationProvider>
                 )}
               />
-              <TextField
+              <FormField
                 {...register('email')}
                 disabled={emailDisabled}
                 // defaultValue="usermail@mail.ru"
