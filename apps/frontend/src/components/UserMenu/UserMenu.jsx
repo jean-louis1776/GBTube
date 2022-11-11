@@ -74,9 +74,12 @@ const UserMenu = (props) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <Avatar /> Мой профиль
-        </MenuItem>
+        <Link to="/userProfile">
+          <MenuItem>
+            <Avatar /> Мой профиль
+          </MenuItem>
+        </Link>
+
         <Divider />
 
         {userMenu.map((userMenu) => (

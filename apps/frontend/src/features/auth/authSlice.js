@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import AuthController from '../../controllers/AuthController';
+import { setUser } from '../userProfile/userProfileSlice';
 
 const initialState = {
   // user: {
@@ -31,6 +32,7 @@ export const loginHandler = createAsyncThunk(
     try {
       const { email, password } = loginData;
       const { data } = await AuthController.login(email, password);
+      dispatch(setUser(data));
       localStorage.setItem('token', data.accessToken);
       console.log(localStorage);
       dispatch(setAuth(true));

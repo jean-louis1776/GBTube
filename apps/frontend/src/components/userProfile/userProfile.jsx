@@ -60,6 +60,7 @@ const UserProfile = () => {
   }));
 
   const user = useSelector(getSelector('userProfile', 'user'));
+  console.log(user);
 
   const {
     handleSubmit,
@@ -95,8 +96,6 @@ const UserProfile = () => {
   });
 
   useEffect(() => {
-    dispatch(getUserData());
-
     return () => {
       dispatch(clearUser());
     };
