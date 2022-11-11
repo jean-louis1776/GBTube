@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
@@ -12,12 +12,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const schema = yup.object({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
+    email: yup.string().email('Введённый E-mail некорректен').required('Поле E-mail обязательно к заполнению'),
+    password: yup.string().required('Поле Пароль обязательно к заполнению'),
   }).required();
 
   const { register, handleSubmit, formState:{ errors, isValid }, reset } = useForm({
@@ -34,8 +35,10 @@ const LoginForm = () => {
       // await AuthController.login(email, password);
 
       dispatch(loginHandler({email, password}));
+      setLoginError('');
       navigate('/', { replace: true });
     } catch {
+      setLoginError('Ошибка авторизации. Неверен логин или пароль');
       console.log('Login failed');
     }
     reset();
@@ -95,6 +98,7 @@ const LoginForm = () => {
 
             <div className={styles.copyright}>{errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}</div>
             <div className={styles.copyright}>{errors?.password && <p>{errors?.password?.message || 'Err!!!!!'}</p>}</div>
+            <div className={styles.copyright}>{loginError !== '' ? <p>{loginError}</p> : ''}</div>
 
             <Button type="submit" color="baseBlue" variant="contained" disabled={!isValid}>
               Войти
