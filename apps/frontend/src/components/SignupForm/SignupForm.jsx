@@ -1,46 +1,61 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
 import styles from './SignupForm.module.scss';
-import AuthController from '../../controllers/AuthController';
+// import AuthController from '../../controllers/AuthController';
 import { useDispatch } from 'react-redux';
 import { registrationHandler } from '../../features/auth/authSlice';
 import { nanoid } from 'nanoid';
+import { useForm } from 'react-hook-form';
+import PasswordValidator from 'password-validator';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 const SignupForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [password2, setPassword2] = useState('');
   const navigate = useNavigate();
 
+  const schemaPsw = new PasswordValidator();
+  schemaPsw
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits(2)                                // Must have at least 2 digits
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']);
+
+  const schema = yup.object({
+    email: yup.string().email('Введённый E-mail некорректен').required('Поле E-mail обязательно к заполнению'),
+    password: yup
+      .string()
+      .min(8, 'Требуется не менее 8 символов в поле Пароль')
+      .test('checkPass', 'Пароль не соответствует требованиям сложности', (psw) => schemaPsw.validate(psw))
+      .required('Поле Пароль обязательно к заполнению'),
+    password2: yup.string().oneOf([yup.ref('password')], 'Пароли не совпадают').required('Поле Пароль обязательно к заполнению'),
+  });
+
+  const { register, handleSubmit, formState:{ errors, isValid }, reset } = useForm({
+    mode: 'onBlur',
+    defaultValues: { email: '', password: '', password2: '' },
+    resolver: yupResolver(schema),
+  });
+
   const dispatch = useDispatch();
-  const handleEmailChange = (evt) => {
-    setEmail(evt.target.value);
-  };
-  const handlePassChange = (evt) => {
-    setPassword(evt.target.value);
-  };
-  const handlePassChange2 = (evt) => {
-    setPassword2(evt.target.value);
-  };
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-    if (password === password2 && password.length > 0) {
-      const username = email.split('@')[0] + nanoid(10);
-      try {
-        // await AuthController.registration(username, email, password);
-        dispatch(registrationHandler({ username, email, password }));
-        navigate('/');
-      } catch {
-        console.log('Registration failed');
-      }
-      setPassword('');
-      setPassword2('');
-      setEmail('');
-    } else {
-      console.log('Passwords not equal');
+
+  const onSubmit = async (evt) => {
+    const formData = new FormData(evt.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const username = email.split('@')[0] + nanoid(10);
+    try {
+      // await AuthController.registration(username, email, password);
+      dispatch(registrationHandler({ username, email, password }));
+      navigate('/', { replace: true });
+    } catch {
+      console.log('Registration failed');
     }
+    reset();
   };
 
   return (
@@ -70,7 +85,7 @@ const SignupForm = () => {
           </Typography>
         </Link>
 
-        <form onSubmit={handleSubmit} className={styles.signupForm}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.signupForm}>
           <Typography variant="h6" sx={{ mb: 1 }}>
             Войдите в свой аккаунт
           </Typography>
@@ -79,40 +94,52 @@ const SignupForm = () => {
             sx={{ backgroundColor: 'shadows.main' }}
           >
             <input
+              {...register("email", {
+                required: 'Поле E-mail обязательно к заполнению',
+                minLength: {
+                  value: 1,
+                  message: 'Требуется не менее 1 символа в поле E-mail'
+                }
+              })}
               placeholder="E-mail"
-              name="email"
               type="email"
-              onChange={handleEmailChange}
-              value={email}
               className={styles.signupInput}
             />
 
             <input
+              {...register("password", {
+                required: 'Поле Пароль обязательно к заполнению',
+                minLength: {
+                  value: 8,
+                  message: 'Требуется не менее 8 символов в поле Пароль'
+                }
+              })}
               placeholder="Придумайте пароль"
-              name="password"
               type="password"
-              onChange={handlePassChange}
-              value={password}
               className={styles.signupInput}
             />
 
             <input
+              {...register("password2", {
+                required: 'Поле Пароль обязательно к заполнению',
+                minLength: {
+                  value: 8,
+                  message: 'Требуется не менее 8 символов в поле Пароль'
+                }
+              })}
               placeholder="Повторите пароль"
-              name="password2"
               type="password"
-              onChange={handlePassChange2}
-              value={password2}
               className={styles.signupInput}
             />
           </Stack>
 
           <div>
-            {/* {error && (
-              <p className={classes.error}>
-                Ошибка: такого аккаунта не существует
-              </p>
-            )} */}
-            <Button type="submit" color="baseBlue" variant="contained">
+
+            <div className={styles.copyright}>{errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}</div>
+            <div className={styles.copyright}>{errors?.password && <p>{errors?.password?.message || 'Err!!!!!'}</p>}</div>
+            <div className={styles.copyright}>{errors?.password2 && <p>{errors?.password2?.message || 'Err!!!!!'}</p>}</div>
+
+            <Button type="submit" color="baseBlue" variant="contained" disabled={!isValid}>
               Зарегистрироваться
             </Button>
           </div>
