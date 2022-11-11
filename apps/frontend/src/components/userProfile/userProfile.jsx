@@ -17,7 +17,6 @@ import styles from './userProfile.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearUser,
-  getUserData,
   userDataUpdate,
 } from '../../features/userProfile/userProfileSlice';
 import { useForm, Controller } from 'react-hook-form';
@@ -25,6 +24,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { userProfileFormSchema } from './validation';
 import { getSelector } from '../../store/getSelector';
 import { PhotoCamera } from '@mui/icons-material';
+import store from '../../store/store';
 
 const UserProfile = () => {
   const theme = useTheme();
@@ -72,12 +72,16 @@ const UserProfile = () => {
     defaultValues: user,
     resolver: yupResolver(userProfileFormSchema),
   });
+
   const [emailDisabled, setEmailDisabled] = useState(true);
+
+  const currentUserState = store.getState().userProfile;
+  const [currentState, setCurrentState] = useState(currentUserState);
+  console.log('currentUserState:', currentUserState);
+
   const resolveMailEdit = () => {
     setEmailDisabled((prevDisabled) => !prevDisabled);
   };
-
-  const { userData, setUserData } = useState({});
 
   const [isEqualUserData, setIsEqualUserData] = useState(true);
   const compareUserData = () => {
@@ -95,11 +99,11 @@ const UserProfile = () => {
     console.log(updatingUser);
   });
 
-  useEffect(() => {
-    return () => {
-      dispatch(clearUser());
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   return () => {
+  //     dispatch(clearUser());
+  //   };
+  // }, [dispatch]);
 
   useEffect(() => {
     console.log('errors', errors);

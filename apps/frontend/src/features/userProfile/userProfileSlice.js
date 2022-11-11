@@ -20,21 +20,17 @@ export const getUserData = createAsyncThunk(
 export const userDataUpdate = createAsyncThunk(
   'userProfile/userDataUpdate',
   async (updatingUser, { dispatch }) => {
-    console.log('updatingUser: ', updatingUser);
+    const { firstName, lastName, nickName, birthDate, email } = updatingUser;
     try {
-      const { id, firstName, lastName, nickName, birthDate, email } =
-        updatingUser;
-      console.log('ДАТА', birthDate.toISOString());
       const response = await UserController.updateUser({
-        id,
         firstName,
         lastName,
         nickName,
         birthDate,
         email,
       });
+      console.log('UPDATING USER RESPONSE', response);
       dispatch(setUser(updatingUser));
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
