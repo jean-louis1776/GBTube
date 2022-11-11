@@ -1,89 +1,138 @@
 import styles from './edit-item-info.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import { logo } from '@constants/frontend';
+import { CHANNEL, logo } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
+import { useForm } from 'react-hook-form';
 
-export function EditItemInfo({ elemType, oldTitle = '', oldDescription = '' }) {
-  let [title, setTitle] = useState(oldTitle);
-  let [description, setDescription] = useState(oldDescription);
+/**
+ * Универсальный компонент для создания и редактирования канала и плейлиста
+ * @param {'channel' | 'playlist'} elemType
+ * @param {string[]} idList
+ * @param { EditItemController.addItem | EditItemController.updateItem } sendData
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function EditItemInfo({ elemType, idList, sendData }) {
+  let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
+  let [title, setTitle] = useState('');
+  let [description, setDescription] = useState('');
   const navigate = useNavigate();
 
   const handleTitleChange = (evt) => {
+    console.log(evt.target.value);
     setTitle(evt.target.value);
   }
+
   const handleDescriptionChange = (evt) => {
+    console.log(evt.target.value);
     setDescription(evt.target.value);
   }
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
+
+  const onSubmit = async (evt) => {
+    const formData = new FormData(evt.target);
+    formData.append('idList', idList.join(';'));
     try {
-      await EditItemController.addItem(elemType, {title, description});
-      navigate(-1);
+      await sendData(elemType, formData);
+      reset();
+      navigate(-1, { replace: true });
     } catch {
       console.log(`Create ${elemType} failed`);
     }
-    setTitle('');
-    setDescription('');
   }
 
+  useEffect(() => {
+    const elemId = idList.at(-1);
+    const fetchData = async () => {
+      const {/*id ,*/ title, description} = await EditItemController.getItemById(elemType, elemId);
+      setTitle(title);
+      setDescription(description);
+    }
+    fetchData().catch(() => {
+      setTitle('');
+      setDescription('');
+      console.log(`${elemType} ID: ${elemId} not found`);
+    });
+  },[]);
+
+  const { register, handleSubmit, formState:{ errors, isValid, isDirty }, reset } = useForm({mode: 'onBlur'});
+
   return (
-    <Stack className={styles.editElementSection}>
-      <Paper elevation={3} className={styles.signupPaper}>
-        <Link to="/" className={styles.signupLogo}>
-          <img src={logo} alt="Logo" height={45} />
-
-          <Typography
-            className={styles.logoName}
-            variant="h4"
-            fontWeight="bold"
-            sx={{ color: '#000', ml: 1 }}
-          >
-            Geek<span style={{ color: '#fc1503' }}>Tube</span>
-          </Typography>
-        </Link>
-
-        <form
-          onSubmit={handleSubmit}
-          className={styles.signupForm}
+  <Stack className={styles.loginSection}>
+    <Paper elevation={3} className={styles.loginPaper}>
+      <Link to="/" className={styles.loginLogo}>
+        <img src={logo} alt="Logo" height={45} />
+        <Typography
+          className={styles.logoName}
+          // variant="h4"
+          fontWeight="bold"
+          sx={{ ml: 1 }}
         >
-          <h3>Создайте свой {elemType}</h3>
-          <Stack className={styles.inputStuck}>
+          Geek
+          <Typography
+            // variant="h4"
+            fontWeight="bold"
+            sx={{
+              color: 'baseBlue.main',
+              display: 'inline',
+              fontSize: '1.5rem',
+            }}
+          >
+            Tube
+          </Typography>
+        </Typography>
+      </Link>
+
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
+        <Typography variant="h6" sx={{ mb: 1 }}>
+          Изменение {elemName}
+        </Typography>
+        <Stack
+          className={styles.inputStuck}
+          sx={{ backgroundColor: 'shadows.main' }}
+        >
+          <label className={styles.copyright}> Название {elemName}<br/>
             <input
-              placeholder="Введите название"
-              name="title"
-              onChange={handleTitleChange}
+              {...register("title", {
+                      required: 'Поле Название обязательно к заполнению',
+                      minLength: {
+                        value: 1,
+                        message: 'Требуется не менее 1 символа в поле Название'
+                        }
+                      })}
               value={title}
-              className={styles.signupInput}
+              onChange={handleTitleChange}
+              type="text"
+              className={styles.loginInput}
+              autoFocus
             />
-
+          </label>
+          <label className={styles.copyright}>Описание {elemName}<br/>
             <textarea
-              placeholder="Введите описание"
-              name="description"
-              onChange={handleDescriptionChange}
+              {...register("description")}
               value={description}
-              className={styles.signupInput}
+              onChange={handleDescriptionChange}
+              className={styles.loginInput}
             />
-          </Stack>
+          </label>
+        </Stack>
 
-          <div>
-            {/* {error && (
-              <p className={classes.error}>
-                Ошибка: такого аккаунта не существует
-              </p>
-            )} */}
-            <Button type="submit" color="red" variant="contained">
-              Создать {elemType}
+        <div>
+          <div className={styles.copyright}>{errors.title && <p>{errors.title.message || 'Err!!!!!'}</p>}</div>
+          <div className={styles.btn}>
+            <Button  type="submit" color="baseBlue" variant="contained" disabled={!(isValid&&isDirty)}>
+              Сохранить
             </Button>
           </div>
-        </form>
+        </div>
+      </form>
 
-        <p className={styles.copyright}>
-          &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
-        </p>
-      </Paper>
-    </Stack>
+      <p className={styles.copyright}>
+        &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
+      </p>
+    </Paper>
+  </Stack>
   );
 }
 export default EditItemInfo;

@@ -5,7 +5,7 @@ import { ApiError } from "../errors/apiError";
 
 class UserQueries {
   parsingQueryModel(modelFromQuery) {
-    modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
+    modelFromQuery = modelFromQuery.toJSON();
     const user = {
       ...modelFromQuery.UserInfo,
       id: modelFromQuery.id,

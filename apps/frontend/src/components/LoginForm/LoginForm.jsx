@@ -4,35 +4,44 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
 import { useDispatch } from 'react-redux';
 import { loginHandler } from '../../features/auth/authSlice';
-import AuthController from '../../controllers/AuthController';
+// import AuthController from '../../controllers/AuthController';
 
 import styles from './LoginForm.module.scss';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
-  const handleEmailChange = (evt) => {
-    setEmail(evt.target.value);
-  };
-  const handlePassChange = (evt) => {
-    setPassword(evt.target.value);
-  };
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
+  const schema = yup.object({
+    email: yup.string().email('Введённый E-mail некорректен').required('Поле E-mail обязательно к заполнению'),
+    password: yup.string().required('Поле Пароль обязательно к заполнению'),
+  }).required();
+
+  const { register, handleSubmit, formState:{ errors, isValid }, reset } = useForm({
+    mode: 'onBlur',
+    defaultValues: { email: '', password: '' },
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (evt) => {
+    const formData = new FormData(evt.target);
+    const email = formData.get('email');
+    const password = formData.get('password');
     try {
       // await AuthController.login(email, password);
 
       dispatch(loginHandler({email, password}));
-      navigate('/');
+      setLoginError('');
+      navigate('/', { replace: true });
     } catch {
+      setLoginError('Ошибка авторизации. Неверен логин или пароль');
       console.log('Login failed');
     }
-    setPassword('');
-    setEmail('');
+    reset();
   };
 
   return (
@@ -62,7 +71,7 @@ const LoginForm = () => {
           </Typography>
         </Link>
 
-        <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
           <Typography variant="h6" sx={{ mb: 1 }}>
             Войдите в свой аккаунт
           </Typography>
@@ -71,31 +80,27 @@ const LoginForm = () => {
             sx={{ backgroundColor: 'shadows.main' }}
           >
             <input
+              {...register("email")}
               placeholder="E-mail"
-              name="email"
               type="email"
-              onChange={handleEmailChange}
-              value={email}
               className={styles.loginInput}
             />
 
             <input
+              {...register("password")}
               placeholder="Пароль"
-              name="password"
               type="password"
-              onChange={handlePassChange}
-              value={password}
               className={styles.loginInput}
             />
           </Stack>
 
           <div>
-            {/* {error && (
-              <p className={classes.error}>
-                Ошибка: такого аккаунта не существует
-              </p>
-            )} */}
-            <Button type="submit" color="baseBlue" variant="contained">
+
+            <div className={styles.copyright}>{errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}</div>
+            <div className={styles.copyright}>{errors?.password && <p>{errors?.password?.message || 'Err!!!!!'}</p>}</div>
+            <div className={styles.copyright}>{loginError !== '' ? <p>{loginError}</p> : ''}</div>
+
+            <Button type="submit" color="baseBlue" variant="contained" disabled={!isValid}>
               Войти
             </Button>
           </div>
