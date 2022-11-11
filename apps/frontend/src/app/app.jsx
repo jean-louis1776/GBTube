@@ -24,6 +24,8 @@ import {
   UserProfile,
 } from '../components';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
+import EditItemController from '../controllers/EditItemController';
+import { CHANNEL } from '@constants/frontend';
 
 export function App() {
   const dispatch = useDispatch();
@@ -52,9 +54,9 @@ export function App() {
           path="/edit-item"
           element={
             <EditItemInfo
-              elemType="channel"
-              oldTitle="some title"
-              oldDescription="desc"
+              elemType={CHANNEL}
+              idList={['123']}
+              sendData={EditItemController.addItem}
             />
           }
         />
