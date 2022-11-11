@@ -14,7 +14,7 @@ class ChannelQueries {
       ...modelFromQuery.ChannelInfos,
       id: modelFromQuery.id,
       title: modelFromQuery.title,
-      userId: modelFromQuery.UserId
+      userId: modelFromQuery.userId
     };
   }
 
