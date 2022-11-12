@@ -122,12 +122,14 @@ class ChannelQueries {
     }
   }
 
-   * @returns {boolean}
-   * @param {Object} data - данные о канале
-   * @param {number} userId - id пользователя
-   * @param {number} id - id канала
-   * Обновление канала
   /**
+   * Обновление канала
+   * @param {number} id - id канала
+   * @param {number} userId - id пользователя
+   * @param {Object} data - данные о канале
+   * @returns {boolean}
+   */
+  async updateChannel(id, userId, data) {
     let isUpdate = 0;
     try {
       const uChannel = (await Channel.findOne({where: id})).toJSON();
