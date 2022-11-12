@@ -4,7 +4,7 @@ import channelController from '../controllers/channel.controller';
 const router = new Router();
 
 router.post('/create', channelController.create);
-router.patch('/edit', );
+router.patch('/edit', channelController.edit);
 router.patch('/subscribe', );
 router.patch('/unsubscribe', );
 router.delete('/:id', /*removeById*/)

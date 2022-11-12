@@ -16,7 +16,6 @@ class UserController {
 
   async create(req, res, next) {
     try {
-      console.log(req.body);
       const { nickName, email, password } = req.body;
       const userResponse = await userService.registration(nickName, email, password);
       this.createCookies(res, userResponse);
