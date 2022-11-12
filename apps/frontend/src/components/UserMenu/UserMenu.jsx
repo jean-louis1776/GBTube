@@ -36,7 +36,7 @@ const UserMenu = (props) => {
   };
 
   const handleUserMenuClick = (link) => () => {
-    if (user.id) {
+    if (isAuth && user.id) {
       navigate(`${link}`, { state: { idList: [`${user.id}`] } });
     }
   }
