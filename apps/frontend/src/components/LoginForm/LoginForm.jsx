@@ -39,12 +39,8 @@ const LoginForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (evt) => {
-    // const formData = new FormData(evt.target);
-    // const email = formData.get('email');
-    // const password = formData.get('password');
-
-    try {
+  const onSubmit = async ({email, password}) => {
+     try {
       // await AuthController.login(email, password);
       dispatch(loginHandler({ email, password }));
       setLoginError('');

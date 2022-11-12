@@ -69,11 +69,7 @@ const SignupForm = () => {
 
   const dispatch = useDispatch();
 
-  const onSubmit = async (evt) => {
-    // const formData = new FormData(evt.target);
-    // const email = formData.get('email');
-    // const password = formData.get('password');
-    console.log(email, password);
+  const onSubmit = async ({email, password}) => {
     const nickName = email.split('@')[0] + nanoid(10);
     try {
       // await AuthController.registration(username, email, password);
