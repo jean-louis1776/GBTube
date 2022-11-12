@@ -222,9 +222,10 @@ export const runDB = async function () {
     // await UserInfo.sync({ alter: true });
     // await PlayList.sync({ alter: true });
     // await Channel.sync({ alter: true });
-
+    // const subscribers = (await ChannelInfo.findOne({where: {channelId: 16}}));
+    // await subscribers.increment('subscribersCount', {by: 1});
+    // console.log(subscribers);
     // await Channel.create({title: 'MyChannel', userId: 1})
-
     // channelQueries.createChannel(1,"MyChannel2", 'lalalala');
     // const cUser = await User.create({
     //   nickName: 'Jenya9',

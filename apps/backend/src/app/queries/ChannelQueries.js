@@ -2,7 +2,6 @@ import { Channel } from "../models/Channel";
 import { ChannelInfo } from "../models/ChannelInfo";
 import { ChannelSubscriber } from "../models/ChannelSubscribers";
 import { ApiError } from "../errors/apiError";
-import { User } from "../models/Users";
 import { PlayList } from "../models/PlayList";
 import { Video } from "../models/Video";
 
@@ -94,8 +93,8 @@ class ChannelQueries {
    */
   async subscriber(channelId, userId) {
     try {
-      const subscribers = await ChannelInfo.findOne({where: {channelId}}).toJSON();
-      if (await User.findOne({where: {channelId, userId}})) {
+      const subscribers = await ChannelInfo.findOne({where: {channelId}});
+      if (await Channel.findOne({where: {channelId, userId}})) {
         await ChannelSubscriber.destroy({where: {channelId, userId}});
         await subscribers.decrement('subscribersCount ', {by: 1});
         return false;
