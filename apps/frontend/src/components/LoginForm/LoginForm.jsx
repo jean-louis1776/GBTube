@@ -37,8 +37,8 @@ const LoginForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({email, password}) => {
-     try {
+  const onSubmit = async ({ email, password }) => {
+    try {
       // await AuthController.login(email, password);
       dispatch(loginHandler({ email, password }));
       setLoginError('');
@@ -93,26 +93,32 @@ const LoginForm = () => {
               className={styles.loginInput}
             />
 
+            {errors?.email && (
+              <p className={styles.error}>
+                {errors?.email?.message || 'Err!!!!!'}
+              </p>
+            )}
+
             <input
               {...register('password')}
               placeholder="Пароль"
               type="password"
               className={styles.loginInput}
             />
+
+            {errors?.password && (
+              <p className={styles.error}>
+                {errors?.password?.message || 'Err!!!!!'}
+              </p>
+            )}
           </Stack>
 
-          <div>
-            <div className={styles.copyright}>
-              {errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}
-            </div>
-            <div className={styles.copyright}>
-              {errors?.password && (
-                <p>{errors?.password?.message || 'Err!!!!!'}</p>
-              )}
-            </div>
-            <div className={styles.copyright}>
-              {loginError !== '' ? <p>{loginError}</p> : ''}
-            </div>
+          <div className={styles.buttonWrap}>
+            {loginError !== '' ? (
+              <p className={styles.error}>{loginError}</p>
+            ) : (
+              ''
+            )}
 
             <Button
               type="submit"
@@ -123,6 +129,7 @@ const LoginForm = () => {
               Войти
             </Button>
           </div>
+
           <Typography className={styles.redirectText}>
             Ещё нет аккаунта?
           </Typography>

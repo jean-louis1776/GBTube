@@ -43,7 +43,7 @@ const SignupForm = () => {
       .required('Поле E-mail обязательно к заполнению'),
     password: yup
       .string()
-      .min(8, 'Требуется не менее 8 символов в поле Пароль')
+      .min(8, 'Пароль должен содержать не менее 8 символов')
       .test(
         'checkPass',
         'Пароль не соответствует требованиям сложности',
@@ -53,7 +53,7 @@ const SignupForm = () => {
     password2: yup
       .string()
       .oneOf([yup.ref('password')], 'Пароли не совпадают')
-      .required('Поле Пароль обязательно к заполнению'),
+      .required('Повторить Пароль обязательно'),
   });
 
   const {
@@ -69,7 +69,7 @@ const SignupForm = () => {
 
   const dispatch = useDispatch();
 
-  const onSubmit = async ({email, password}) => {
+  const onSubmit = async ({ email, password }) => {
     const nickName = email.split('@')[0] + nanoid(10);
     try {
       // await AuthController.registration(username, email, password);
@@ -134,6 +134,12 @@ const SignupForm = () => {
               onChange={handleChangeEmail}
             />
 
+            {errors?.email && (
+              <p className={styles.error}>
+                {errors?.email?.message || 'Err!!!!!'}
+              </p>
+            )}
+
             <input
               {...register('password')}
               placeholder="Придумайте пароль"
@@ -143,38 +149,35 @@ const SignupForm = () => {
               onChange={handleChangePassword}
             />
 
+            {errors?.password && (
+              <p className={styles.error}>
+                {errors?.password?.message || 'Err!!!!!'}
+              </p>
+            )}
+
             <input
               {...register('password2')}
               placeholder="Повторите пароль"
               type="password"
               className={styles.signupInput}
             />
+
+            {errors?.password2 && (
+              <p className={styles.error}>
+                {errors?.password2?.message || 'Err!!!!!'}
+              </p>
+            )}
           </Stack>
 
-          <div>
-            <div className={styles.copyright}>
-              {errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}
-            </div>
-            <div className={styles.copyright}>
-              {errors?.password && (
-                <p>{errors?.password?.message || 'Err!!!!!'}</p>
-              )}
-            </div>
-            <div className={styles.copyright}>
-              {errors?.password2 && (
-                <p>{errors?.password2?.message || 'Err!!!!!'}</p>
-              )}
-            </div>
+          <Button
+            type="submit"
+            color="baseBlue"
+            variant="contained"
+            disabled={!isValid}
+          >
+            Зарегистрироваться
+          </Button>
 
-            <Button
-              type="submit"
-              color="baseBlue"
-              variant="contained"
-              disabled={!isValid}
-            >
-              Зарегистрироваться
-            </Button>
-          </div>
           <Typography className={styles.redirectText}>
             Уже есть аккаунт?
           </Typography>
