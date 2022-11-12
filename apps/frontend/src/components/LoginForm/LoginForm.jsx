@@ -12,8 +12,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,14 +48,6 @@ const LoginForm = () => {
       console.log('Login failed');
     }
     reset();
-  };
-
-  const handleChangeEmail = (evt) => {
-    setEmail(evt.target.value);
-  };
-
-  const handleChangePassword = (evt) => {
-    setPassword(evt.target.value);
   };
 
   return (
@@ -101,8 +91,6 @@ const LoginForm = () => {
               placeholder="E-mail"
               type="email"
               className={styles.loginInput}
-              value={email}
-              onChange={handleChangeEmail}
             />
 
             <input
@@ -110,8 +98,6 @@ const LoginForm = () => {
               placeholder="Пароль"
               type="password"
               className={styles.loginInput}
-              value={password}
-              onChange={handleChangePassword}
             />
           </Stack>
 
