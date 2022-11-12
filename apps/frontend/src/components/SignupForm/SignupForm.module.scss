@@ -29,6 +29,7 @@
       .inputStuck {
         width: 100%;
         margin-bottom: 20px;
+        align-items: center;
 
         .signupInput {
           border-radius: 20px;
@@ -38,8 +39,15 @@
           color: #474747;
           font-size: 1rem;
           padding: 10px;
-          margin-bottom: 10px;
+          margin: 5px 0;
         }
+      }
+
+      .error {
+        margin: 3px 0;
+        color: #fd5757;
+        user-select: none;
+        font-size: 0.8rem;
       }
 
       .redirectText {
