@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
@@ -14,6 +14,8 @@ import * as yup from 'yup';
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const schemaPsw = new PasswordValidator();
   schemaPsw
@@ -68,18 +70,27 @@ const SignupForm = () => {
   const dispatch = useDispatch();
 
   const onSubmit = async (evt) => {
-    const formData = new FormData(evt.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
-    const username = email.split('@')[0] + nanoid(10);
+    // const formData = new FormData(evt.target);
+    // const email = formData.get('email');
+    // const password = formData.get('password');
+    console.log(email, password);
+    const nickName = email.split('@')[0] + nanoid(10);
     try {
       // await AuthController.registration(username, email, password);
-      dispatch(registrationHandler({ username, email, password }));
+      dispatch(registrationHandler({ nickName, email, password }));
       navigate('/', { replace: true });
     } catch {
       console.log('Registration failed');
     }
     reset();
+  };
+
+  const handleChangeEmail = (evt) => {
+    setEmail(evt.target.value);
+  };
+
+  const handleChangePassword = (evt) => {
+    setPassword(evt.target.value);
   };
 
   return (
@@ -119,39 +130,25 @@ const SignupForm = () => {
             sx={{ backgroundColor: 'shadows.main' }}
           >
             <input
-              {...register('email', {
-                required: 'Поле E-mail обязательно к заполнению',
-                minLength: {
-                  value: 1,
-                  message: 'Требуется не менее 1 символа в поле E-mail',
-                },
-              })}
+              {...register('email')}
               placeholder="E-mail"
               type="email"
               className={styles.signupInput}
+              value={email}
+              onChange={handleChangeEmail}
             />
 
             <input
-              {...register('password', {
-                required: 'Поле Пароль обязательно к заполнению',
-                minLength: {
-                  value: 8,
-                  message: 'Требуется не менее 8 символов в поле Пароль',
-                },
-              })}
+              {...register('password')}
               placeholder="Придумайте пароль"
               type="password"
               className={styles.signupInput}
+              value={password}
+              onChange={handleChangePassword}
             />
 
             <input
-              {...register('password2', {
-                required: 'Поле Пароль обязательно к заполнению',
-                minLength: {
-                  value: 8,
-                  message: 'Требуется не менее 8 символов в поле Пароль',
-                },
-              })}
+              {...register('password2')}
               placeholder="Повторите пароль"
               type="password"
               className={styles.signupInput}
