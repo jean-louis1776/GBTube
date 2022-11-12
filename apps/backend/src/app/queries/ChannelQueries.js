@@ -14,7 +14,7 @@ class ChannelQueries {
       ...modelFromQuery.ChannelInfos,
       id: modelFromQuery.id,
       title: modelFromQuery.title,
-      userId: modelFromQuery.userId
+      userId: modelFromQuery.userId,
     };
   }
 
@@ -27,7 +27,7 @@ class ChannelQueries {
    */
   async createChannel(userId, title, description) {
     try {
-      if (await User.findOne({where: {userId, title}})) {
+      if (await Channel.findOne({where: {userId, title}})) {
         throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
       }
       const cChannel = (await Channel.create({title, userId})).toJSON();
@@ -122,16 +122,25 @@ class ChannelQueries {
     }
   }
 
-  async updateChannel(id, data) {
+  /**
+   * Обновление канала
+   * @param {number} id - id канала
+   * @param {number} userId - id пользователя
+   * @param {Object} data - данные о канале
+   * @returns {boolean}
+   */
+  async updateChannel(id, userId, data) {
     let isUpdate = 0;
     try {
-      if (await User.findOne({where: {userId: data.userId, title: data.title}})) {
-        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
-      }
-      if (data.title) {
-        isUpdate += await Channel.update({title: data.title}, {where: {id}});
-        delete data.title;
-        delete data.userId;
+      const uChannel = (await Channel.findOne({where: id})).toJSON();
+      if (uChannel.title !== data.title) {
+        if (data.title) {
+          if (await Channel.findOne({where: {userId, title: data.title}})) {
+            throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);
+          }
+          isUpdate += await Channel.update({title: data.title}, {where: {id}});
+          delete data.title;
+        }
       }
       if (Object.keys(data).length) {
         isUpdate += await ChannelInfo.update({...data}, {where: {channelId: id}});

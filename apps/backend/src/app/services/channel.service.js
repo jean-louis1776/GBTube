@@ -10,7 +10,16 @@ class ChannelService {
       if(!title) {
         throw ApiError.BadRequest('Не указано название канала');
       }
-      return await channelQueries.createChannel(userId, title, description);
+      return channelQueries.createChannel(userId, title, description);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async edit(channelId, userId, updatingChannel) {
+    try {
+      return (channelQueries.updateChannel(channelId, userId, updatingChannel));
     } catch (e) {
       console.log(e.message);
       throw(e);

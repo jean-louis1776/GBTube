@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar, Box,
   Divider,
@@ -14,12 +14,19 @@ import { userMenu } from '@constants/frontend';
 
 import styles from './UserMenu.module.scss';
 import { getSelector } from '../../store/getSelector';
+import { blueGrey, deepOrange } from '@mui/material/colors';
 
 const UserMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
+  const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    console.log('user');
+    console.log(user);
+  },[]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -29,7 +36,9 @@ const UserMenu = (props) => {
   };
 
   const handleUserMenuClick = (link) => () => {
-    navigate(`${link}`, { state: { idList: [`${user.id}`] } });
+    if (isAuth && user.id) {
+      navigate(`${link}`, { state: { idList: [`${user.id}`] } });
+    }
   }
 
   return (
@@ -42,7 +51,7 @@ const UserMenu = (props) => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 40, height: 40 }} />
+          <Avatar sx={{ width: 40, height: 40, bgcolor: isAuth ? deepOrange[500] : blueGrey[500] }} />
         </IconButton>
       </Tooltip>
 
@@ -82,6 +91,7 @@ const UserMenu = (props) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
+        {isAuth ? <MenuItem sx={{color: deepOrange[500]}}>{user.nickName || 'Мой ник'}</MenuItem> : ''}
         <Link to="/userProfile">
           <MenuItem>
             <Avatar /> Мой профиль
