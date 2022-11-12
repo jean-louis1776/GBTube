@@ -21,11 +21,11 @@ import {
   Subscriptions,
   UploadVideo,
   VideoCard,
-  UserProfile,
+  UserProfile, VideoGrid
 } from '../components';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
 import EditItemController from '../controllers/EditItemController';
-import { CHANNEL } from '@constants/frontend';
+import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 
 export function App() {
   const dispatch = useDispatch();
@@ -50,6 +50,15 @@ export function App() {
         <Route path="/likes" element={<Likes />} />
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
+        <Route path={`/${CHANNEL}s`} element={<VideoGrid childrenType={CHANNEL} />} />
+        <Route path={`/${PLAYLIST}/get_all/:parent_id`} element={<VideoGrid childrenType={PLAYLIST} />} />
+        <Route path={`/${VIDEO}/get_all/:parent_id`} element={<VideoGrid childrenType={VIDEO} />} />
+        <Route path={`/${CHANNEL}/get_one/:id`} element={<VideoGrid childrenType={PLAYLIST} />} />
+        <Route path={`/${PLAYLIST}/get_one/:id`} element={<VideoGrid childrenType={VIDEO} />} />
+        <Route path={`/${VIDEO}/get_one/:id`} element={<VideoCard />} />
+        <Route path={`/${CHANNEL}/create`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
+        <Route path={`/${PLAYLIST}/create`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
+        <Route path={`/${VIDEO}/create`} element={<UploadVideo />} />
         <Route
           path="/edit-item"
           element={
