@@ -1,5 +1,5 @@
 import styles from './edit-item-info.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { CHANNEL, logo } from '@constants/frontend';
@@ -9,16 +9,17 @@ import { useForm } from 'react-hook-form';
 /**
  * Универсальный компонент для создания и редактирования канала и плейлиста
  * @param {'channel' | 'playlist'} elemType
- * @param {string[]} idList
  * @param { EditItemController.addItem | EditItemController.updateItem } sendData
  * @returns {JSX.Element}
  * @constructor
  */
-export function EditItemInfo({ elemType, idList, sendData }) {
+export function EditItemInfo({ elemType, sendData }) {
   let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
   let [title, setTitle] = useState('');
   let [description, setDescription] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  let [idList, setIdList] = useState(location.state.idList);
 
   const handleTitleChange = (evt) => {
     console.log(evt.target.value);
