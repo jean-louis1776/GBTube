@@ -27,7 +27,7 @@ class ChannelQueries {
    */
   async createChannel(userId, title, description) {
     try {
-      if (await User.findOne({where: {userId, title}})) {
+      if (await Channel.findOne({where: {userId, title}})) {
         throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
       }
       const cChannel = (await Channel.create({title, userId})).toJSON();
@@ -126,7 +126,7 @@ class ChannelQueries {
     let isUpdate = 0;
     try {
       if (await User.findOne({where: {userId: data.userId, title: data.title}})) {
-        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
+        throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);
       }
       if (data.title) {
         isUpdate += await Channel.update({title: data.title}, {where: {id}});
