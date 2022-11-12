@@ -225,7 +225,7 @@ export const runDB = async function () {
 
     // await Channel.create({title: 'MyChannel', userId: 1})
 
-    // channelQueries.createChannel(1,"MyChannel", 'lalalala');
+    // channelQueries.createChannel(1,"MyChannel2", 'lalalala');
     // const cUser = await User.create({
     //   nickName: 'Jenya9',
     // })

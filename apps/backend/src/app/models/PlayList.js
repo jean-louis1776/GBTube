@@ -5,15 +5,18 @@ export const PlayList = sequelize.define('PlayList', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
-    textInfo: {
-      type: DataTypes.INTEGER,
+    title: {
+      type: DataTypes.TEXT,
       allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
     },
   }, {
     timestamps: true,
     createdAt: false,
     updatedAt: 'updateTimestamp',
-  }
+  },
 );
