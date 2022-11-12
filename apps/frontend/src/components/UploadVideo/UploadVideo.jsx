@@ -18,6 +18,7 @@ import {
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useForm, Controller } from 'react-hook-form';
+import { Helmet } from 'react-helmet';
 
 import { Header } from '../';
 
@@ -88,6 +89,10 @@ const UploadVideo = (props) => {
 
   return (
     <>
+      <Helmet>
+        <title>GeekTube | Загрузка видео</title>
+      </Helmet>
+
       <Header />
 
       <Stack className={styles.uploadWrapper}>
