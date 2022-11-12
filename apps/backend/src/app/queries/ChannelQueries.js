@@ -98,7 +98,7 @@ class ChannelQueries {
       if (await User.findOne({where: {channelId, userId}})) {
         await ChannelSubscriber.destroy({where: {channelId, userId}});
         await subscribers.decrement('subscribersCount ', {by: 1});
-        return true;
+        return false;
       }
       await ChannelSubscriber.create({channelId, userId})
       await subscribers.increment('subscribersCount ', {by: 1});
