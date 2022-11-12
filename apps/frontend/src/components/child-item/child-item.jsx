@@ -1,12 +1,13 @@
 import styles from './child-item.module.scss';
 import { Box, Typography } from '@mui/material';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
+import { Loader } from '../index';
 
 export const ChildItem = ({ childType }) => {
   const { id } = useParams();
-  let [title, setTitle] = useState('');
+  let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
   const location = useLocation();
   let [idList, setIdList] = useState(location.state.idList);
@@ -14,11 +15,19 @@ export const ChildItem = ({ childType }) => {
   useEffect(() => {
     const fetchData = async () => {
       const { id, title } = await GetChildrenController.getItemById(childType, id);
-      setTitle(title);
+      setContent(
+        <Typography className={styles.title}>
+          { title }
+        </Typography>
+      );
       setIdList([...idList, id]);
     }
     fetchData().catch(() => {
-      setTitle('');
+      setContent(
+        <Typography className={styles.title}>
+          No data
+        </Typography>
+      );
       console.log(`${childType} ID: ${id} not found`);
     });
   },[]);
@@ -30,9 +39,7 @@ export const ChildItem = ({ childType }) => {
   return (
     // <Link to={`/${childType}/get_one/:${id}`}></Link>
       <Box onClick={handleClick} className={styles.child}>
-        <Typography className={styles.title}>
-          { title }
-        </Typography>
+        {content}
       </Box>
   );
 }
