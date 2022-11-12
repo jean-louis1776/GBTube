@@ -12,6 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 
 const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,12 +30,12 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (evt) => {
-    const formData = new FormData(evt.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
+    // const formData = new FormData(evt.target);
+    // const email = formData.get('email');
+    // const password = formData.get('password');
+
     try {
       // await AuthController.login(email, password);
-
       dispatch(loginHandler({email, password}));
       setLoginError('');
       navigate('/', { replace: true });
@@ -43,6 +45,14 @@ const LoginForm = () => {
     }
     reset();
   };
+
+  const handleChangeEmail = (evt) => {
+    setEmail(evt.target.value);
+  }
+
+  const handleChangePassword = (evt) => {
+    setPassword(evt.target.value);
+  }
 
   return (
     <Stack className={styles.loginSection}>
@@ -84,6 +94,8 @@ const LoginForm = () => {
               placeholder="E-mail"
               type="email"
               className={styles.loginInput}
+              value={email}
+              onChange={handleChangeEmail}
             />
 
             <input
@@ -91,6 +103,8 @@ const LoginForm = () => {
               placeholder="Пароль"
               type="password"
               className={styles.loginInput}
+              value={password}
+              onChange={handleChangePassword}
             />
           </Stack>
 
