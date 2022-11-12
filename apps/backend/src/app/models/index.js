@@ -19,6 +19,8 @@ import { VideoLike } from "./VideoLike";
 import { includes } from "core-js/internals/array-includes";
 import excludeVariablesFromRoot from "@mui/material/styles/excludeVariablesFromRoot";
 
+
+
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
   foreignKey: {
@@ -181,21 +183,21 @@ VideoLike.belongsTo(Video, {
 //Связи для таблицы Коментариев
 Comment.hasMany(CommentLike, {
   foreignKey: {
-    name: 'сommentId',
+    name: 'commentId',
     allowNull: false,
   },
 });
 CommentLike.belongsTo(Comment, {
-  foreignKey: 'сommentId',
+  foreignKey: 'commentId',
 });
 Comment.hasMany(Answer, {
   foreignKey: {
-    name: 'сommentId',
+    name: 'commentId',
     allowNull: false,
   },
 });
 Answer.belongsTo(Comment, {
-  foreignKey: 'сommentId',
+  foreignKey: 'commentId',
 });
 //Связи для таблицы Ответов
 Answer.hasMany(AnswerLike, {
@@ -208,6 +210,9 @@ AnswerLike.belongsTo(Answer, {
   foreignKey: 'answerId',
 });
 
+// import {channelQueries} from '../queries/ChannelQueries'
+
+
 export const runDB = async function () {
   try {
     await sequelize.authenticate();
@@ -218,6 +223,9 @@ export const runDB = async function () {
     // await PlayList.sync({ alter: true });
     // await Channel.sync({ alter: true });
 
+    // await Channel.create({title: 'MyChannel', userId: 1})
+
+    // channelQueries.createChannel(1,"MyChannel", 'lalalala');
     // const cUser = await User.create({
     //   nickName: 'Jenya9',
     // })
