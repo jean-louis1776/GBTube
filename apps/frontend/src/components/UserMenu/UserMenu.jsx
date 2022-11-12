@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import {
-  Avatar,
+  Avatar, Box,
   Divider,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { shallowEqual, useSelector } from 'react-redux'
 import { userMenu } from '@constants/frontend';
 
 import styles from './UserMenu.module.scss';
+import { getSelector } from '../../store/getSelector';
 
 const UserMenu = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -23,6 +27,10 @@ const UserMenu = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleUserMenuClick = (link) => () => {
+    navigate(`${link}`, { state: { idList: [`${user.id}`] } });
+  }
 
   return (
     <>
@@ -83,12 +91,18 @@ const UserMenu = (props) => {
         <Divider />
 
         {userMenu.map((userMenu) => (
-          <Link to={userMenu.link}>
+          <Box onClick={handleUserMenuClick(userMenu.link)}>
             <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
               <ListItemIcon>{userMenu.icon}</ListItemIcon>
               {userMenu.name}
             </MenuItem>
-          </Link>
+          </Box>
+/*          <Link to={userMenu.link}>
+            <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+              <ListItemIcon>{userMenu.icon}</ListItemIcon>
+              {userMenu.name}
+            </MenuItem>
+          </Link>*/
         ))}
       </Menu>
     </>

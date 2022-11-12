@@ -10,7 +10,7 @@ export default class UserController {
   }
 
   static async updateUser(user) {
-    return $authApi.patch(`/user/edit/${user.id}`, { ...user });
+    return $authApi.patch(`/user/edit/${user.id}`, { updatingUser: user });
   }
 
   static async deleteUser(id) {

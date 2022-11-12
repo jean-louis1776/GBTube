@@ -17,7 +17,7 @@ export const UserInfo = sequelize.define('UserInfo', {
       type: DataTypes.CHAR,
       allowNull: true,
     },
-    birthDay: {
+    birthDate: {
       type: DataTypes.DATE,
     },
     avatar: {
