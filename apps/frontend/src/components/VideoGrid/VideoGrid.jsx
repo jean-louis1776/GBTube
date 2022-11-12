@@ -1,28 +1,54 @@
-import React from 'react';
-import { Box, Stack } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Stack } from '@mui/material';
 
-import { ChannelCard, Loader, VideoCard } from '../';
+import { Loader } from '../';
 
 import styles from './VideoGrid.module.scss';
+import GetChildrenController from '../../controllers/GetChildrenController';
+import ChildItem from '../child-item/child-item';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-const VideoGrid = ({ videos, direction }) => {
-  if (!videos?.length) return <Loader />;
+const VideoGrid = ({childrenType}) => {
+  const { parent_id } = useParams();
+  let [content, setContent] = useState(<Loader />);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const children = await GetChildrenController.getAllItemsById(childrenType, parent_id);
+      setContent(
+        <Stack
+          direction={/*direction ||*/ 'row'}
+          flexWrap="wrap"
+          justifyContent="start"
+          alignItems="start"
+          gap={2}
+        >
+          {children.map((item, idx) => (
+            <Box key={idx}>
+              <ChildItem props={item} childType={childrenType} />
+            </Box>
+          ))}
+        </Stack>
+      );
+    }
+    fetchData().catch(() => {
+      setContent('');
+      console.log(`Load ${childrenType} fail`);
+    });
+  },[]);
+
+  const handleCreateChild = () => {
+    navigate(`/${childrenType}/create`, { state: { idList: location.state.idList } });
+  }
 
   return (
-    <Stack
-      direction={direction || 'row'}
-      flexWrap="wrap"
-      justifyContent="start"
-      alignItems="start"
-      gap={2}
-    >
-      {videos.map((item, idx) => (
-        <Box key={idx}>
-          {item.id.videoId && <VideoCard video={item} />}
-          {item.id.channelId && <ChannelCard channelDetail={item} />}
-        </Box>
-      ))}
-    </Stack>
+    <>
+      {content}
+      <Button onClick={handleCreateChild}>Создать {childrenType}</Button>
+      {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
+    </>
   );
 };
 
