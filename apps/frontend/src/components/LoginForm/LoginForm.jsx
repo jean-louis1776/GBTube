@@ -18,25 +18,31 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const schema = yup.object({
-    email: yup.string().email('Введённый E-mail некорректен').required('Поле E-mail обязательно к заполнению'),
-    password: yup.string().required('Поле Пароль обязательно к заполнению'),
-  }).required();
+  const schema = yup
+    .object({
+      email: yup
+        .string()
+        .email('Введённый E-mail некорректен')
+        .required('Поле E-mail обязательно к заполнению'),
+      password: yup.string().required('Поле Пароль обязательно к заполнению'),
+    })
+    .required();
 
-  const { register, handleSubmit, formState:{ errors, isValid }, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
     mode: 'onBlur',
     defaultValues: { email: '', password: '' },
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (evt) => {
-    // const formData = new FormData(evt.target);
-    // const email = formData.get('email');
-    // const password = formData.get('password');
-
-    try {
+  const onSubmit = async ({email, password}) => {
+     try {
       // await AuthController.login(email, password);
-      dispatch(loginHandler({email, password}));
+      dispatch(loginHandler({ email, password }));
       setLoginError('');
       navigate('/', { replace: true });
     } catch {
@@ -48,11 +54,11 @@ const LoginForm = () => {
 
   const handleChangeEmail = (evt) => {
     setEmail(evt.target.value);
-  }
+  };
 
   const handleChangePassword = (evt) => {
     setPassword(evt.target.value);
-  }
+  };
 
   return (
     <Stack className={styles.loginSection}>
@@ -64,7 +70,7 @@ const LoginForm = () => {
             className={styles.logoName}
             variant="h4"
             fontWeight="bold"
-            sx={{ ml: 1 }}
+            sx={{ ml: 1, fontFamily: "'Titillium Web', sans-serif" }}
           >
             Geek
             <Typography
@@ -74,6 +80,7 @@ const LoginForm = () => {
                 color: 'baseBlue.main',
                 display: 'inline',
                 fontSize: '1.5rem',
+                fontFamily: "'Titillium Web', sans-serif",
               }}
             >
               Tube
@@ -90,7 +97,7 @@ const LoginForm = () => {
             sx={{ backgroundColor: 'shadows.main' }}
           >
             <input
-              {...register("email")}
+              {...register('email')}
               placeholder="E-mail"
               type="email"
               className={styles.loginInput}
@@ -99,7 +106,7 @@ const LoginForm = () => {
             />
 
             <input
-              {...register("password")}
+              {...register('password')}
               placeholder="Пароль"
               type="password"
               className={styles.loginInput}
@@ -109,12 +116,24 @@ const LoginForm = () => {
           </Stack>
 
           <div>
+            <div className={styles.copyright}>
+              {errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}
+            </div>
+            <div className={styles.copyright}>
+              {errors?.password && (
+                <p>{errors?.password?.message || 'Err!!!!!'}</p>
+              )}
+            </div>
+            <div className={styles.copyright}>
+              {loginError !== '' ? <p>{loginError}</p> : ''}
+            </div>
 
-            <div className={styles.copyright}>{errors?.email && <p>{errors?.email?.message || 'Err!!!!!'}</p>}</div>
-            <div className={styles.copyright}>{errors?.password && <p>{errors?.password?.message || 'Err!!!!!'}</p>}</div>
-            <div className={styles.copyright}>{loginError !== '' ? <p>{loginError}</p> : ''}</div>
-
-            <Button type="submit" color="baseBlue" variant="contained" disabled={!isValid}>
+            <Button
+              type="submit"
+              color="baseBlue"
+              variant="contained"
+              disabled={!isValid}
+            >
               Войти
             </Button>
           </div>
