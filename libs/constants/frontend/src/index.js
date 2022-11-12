@@ -9,7 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-export const logo = 'https://i.ibb.co/wdmBFMK/logo.png';
+export const logo = 'https://i.ibb.co/JdpDSxK/logo.png';
 export const RedirectLogo = 'https://i.ibb.co/JCB64v6/bar-chart.png';
 export const notFoundLogo = 'https://i.ibb.co/HNHX2dx/404Logo.png';
 
