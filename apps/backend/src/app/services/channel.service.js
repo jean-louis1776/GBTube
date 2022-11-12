@@ -19,7 +19,25 @@ class ChannelService {
 
   async edit(channelId, userId, updatingChannel) {
     try {
-      return (channelQueries.updateChannel(channelId, userId, updatingChannel));
+      return channelQueries.updateChannel(channelId, userId, updatingChannel);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async subscribe(id, userId) {
+    try {
+      return channelQueries.subscriber(id, userId);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async remove(id) {
+    try {
+      return channelQueries.deleteChannel(id);
     } catch (e) {
       console.log(e.message);
       throw(e);

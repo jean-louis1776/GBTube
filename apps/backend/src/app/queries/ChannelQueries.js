@@ -94,17 +94,20 @@ class ChannelQueries {
    */
   async subscriber(channelId, userId) {
     try {
-      if (await User.findOne({where: {channelId, userId}})) {
-        return !!(await ChannelSubscriber.destroy({where: {channelId, userId}}));
+      const subscribers = (await ChannelInfo.findOne({where: {channelId}}));
+      if (await ChannelSubscriber.findOne({where: {channelId, userId}})) {
+        await ChannelSubscriber.destroy({where: {channelId, userId}});
+        await subscribers.decrement('subscribersCount', {by: 1});
+        return false;
       }
-      if (!(await User.findOne({where: {channelId, userId}}))) {
-        return !!(await ChannelSubscriber.create({channelId, userId}));
-      }
+      await ChannelSubscriber.create({channelId, userId})
+      await subscribers.increment('subscribersCount', {by: 1});
+
+      return true;
     } catch (e) {
-      return false;
+      throw ApiError.InternalServerError(e.message);
     }
   }
-
 
   /**
    * Удаление канала
@@ -132,9 +135,9 @@ class ChannelQueries {
   async updateChannel(id, userId, data) {
     let isUpdate = 0;
     try {
-      const uChannel = (await Channel.findOne({where: id})).toJSON();
-      if (uChannel.title !== data.title) {
-        if (data.title) {
+      if (data.title) {
+        const uChannel = (await Channel.findOne({where: id})).toJSON();
+        if (uChannel.title !== data.title) {
           if (await Channel.findOne({where: {userId, title: data.title}})) {
             throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);
           }

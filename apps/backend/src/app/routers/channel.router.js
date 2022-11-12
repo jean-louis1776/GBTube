@@ -5,9 +5,8 @@ const router = new Router();
 
 router.post('/create', channelController.create);
 router.patch('/edit', channelController.edit);
-router.patch('/subscribe', );
-router.patch('/unsubscribe', );
-router.delete('/:id', /*removeById*/)
+router.patch('/subscribe', channelController.subscribe);
+router.delete('/:id', channelController.remove)
 router.get('/get_one/:id', /*getById*/ );
 router.get('/get_all/:user_id', /*getAll*/ );
 

@@ -15,14 +15,29 @@ class ChannelController {
     try {
       const { updatingChannel, idList } = req.body;
       const [userId, channelId] = idList.split(';');
-      console.log('userId = ', userId);
-      console.log('channelId = ', channelId);
       return res.json(await channelService.edit(+channelId, +userId, updatingChannel));
     } catch (e) {
       next(e);
     }
   }
 
+  async subscribe(req, res, next) {
+    try {
+      const { id, userId } = req.body;
+      const isSubscribe = await channelService.subscribe(id, userId);
+      return res.json({ isSubscribe });
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async remove(req, res, next) {
+    try {
+      return res.json(await channelService.remove(req.params.id));
+    } catch(e) {
+      next(e)
+    }
+  }
 }
 
 export default new ChannelController();
