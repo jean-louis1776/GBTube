@@ -96,13 +96,15 @@ class ChannelQueries {
     try {
       const subscribers = await ChannelInfo.findOne({where: {channelId}}).toJSON();
       if (await User.findOne({where: {channelId, userId}})) {
+        await ChannelSubscriber.destroy({where: {channelId, userId}});
         await subscribers.decrement('subscribersCount ', {by: 1});
-        return !!(await ChannelSubscriber.destroy({where: {channelId, userId}}));
+        return true;
       }
+      await ChannelSubscriber.create({channelId, userId})
       await subscribers.increment('subscribersCount ', {by: 1});
-      return !!(await ChannelSubscriber.create({channelId, userId}));
+      return true;
     } catch (e) {
-      return false;
+      throw ApiError.InternalServerError(e.message);
     }
   }
 
