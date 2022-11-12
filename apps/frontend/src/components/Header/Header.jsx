@@ -149,7 +149,7 @@ const Header = ({ withNavbar }) => {
                   className={styles.logoName}
                   variant="h4"
                   fontWeight="bold"
-                  sx={{ ml: 1 }}
+                  sx={{ ml: 1, fontFamily: "'Titillium Web', sans-serif" }}
                 >
                   Geek
                   <Typography
@@ -159,6 +159,7 @@ const Header = ({ withNavbar }) => {
                       color: 'baseBlue.main',
                       display: 'inline',
                       fontSize: '1.5rem',
+                      fontFamily: "'Titillium Web', sans-serif",
                     }}
                   >
                     Tube
