@@ -222,6 +222,7 @@ export const runDB = async function () {
     // await UserInfo.sync({ alter: true });
     // await PlayList.sync({ alter: true });
     // await Channel.sync({ alter: true });
+    // await ChannelInfo.sync({ alter: true });
 
     // await Channel.create({title: 'MyChannel', userId: 1})
 
