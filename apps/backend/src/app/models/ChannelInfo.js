@@ -17,7 +17,7 @@ export const ChannelInfo = sequelize.define('ChannelInfo', {
     },
   }, {
     timestamps: true,
-    createdAt: false,
-    updatedAt: 'updateTimestamp',
+    createdAt: 'createTimestamp',
+    updatedAt: false,
   }
 );

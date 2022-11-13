@@ -38,6 +38,22 @@ class ChannelController {
       next(e)
     }
   }
+
+  async getOne(req, res, next) {
+    try {
+      return res.json(await channelService.getOne(+req.params.id));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getAllChannelsOfUser(req, res, next) {
+    try {
+      return res.json(await channelService.getAllOfUser(+req.params.user_id));
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new ChannelController();

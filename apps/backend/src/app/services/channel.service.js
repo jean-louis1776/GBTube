@@ -43,6 +43,36 @@ class ChannelService {
       throw(e);
     }
   }
+
+  async getOne(id) {
+    try {
+      const channel = await channelQueries.findChannelById(id);
+      const idList = `${channel.userId.toString()};${channel.id.toString()};`;
+      delete channel.id;
+      delete channel.userId;
+      return { idList, ...channel };
+    } catch(e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async getAllOfUser(userId) {
+    try {
+      const channels = await channelQueries.findAllChannelByUserId(userId);
+      let result = [];
+      for (const channel of channels) {
+        const idList = `${channel.userId.toString()};${channel.id.toString()};`;
+        delete channel.id;
+        delete channel.userId;
+        result.push({ idList, ...channel });
+      }
+      return result;
+    } catch(e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
 }
 
 export default new ChannelService();
