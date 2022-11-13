@@ -210,7 +210,7 @@ AnswerLike.belongsTo(Answer, {
 });
 
 // import {channelQueries} from '../queries/ChannelQueries'
-import { playListQueries } from '../queries/PlayListQueries';
+// import { playListQueries } from '../queries/PlayListQueries';
 
 
 export const runDB = async function () {
@@ -228,7 +228,7 @@ export const runDB = async function () {
     // await subscribers.increment('subscribersCount', {by: 1});
     // console.log(subscribers);
 
-    playListQueries.createPlayList(18, 'что то тут будет', 'и тут что то будет');
+    // playListQueries.createPlayList(18, 'что то тут будет', 'и тут что то будет');
     // const playList3 = playListQueries.findAllPlayList(18);
     // // const playList3 = (await PlayList.findAll({where: {channelId: 18}})).map((value, index, array) => {
     // //   return value.toJSON();
