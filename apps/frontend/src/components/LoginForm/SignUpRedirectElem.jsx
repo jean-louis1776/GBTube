@@ -6,9 +6,7 @@ import React from 'react';
 export const SignUpRedirectElem = () => {
   return (
     <>
-      <Typography className={styles.redirectText}>
-        Ещё нет аккаунта?
-      </Typography>
+      <Typography className={styles.redirectText}>Ещё нет аккаунта?</Typography>
       <Link to="/signup">
         <Typography
           sx={{ color: 'baseBlue.main' }}
@@ -19,4 +17,4 @@ export const SignUpRedirectElem = () => {
       </Link>
     </>
   );
-}
+};
