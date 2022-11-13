@@ -1,7 +1,5 @@
 import React from 'react';
 import { Paper, Stack } from '@mui/material';
-
-
 import styles from './LoginForm.module.scss';
 import { LogoElem } from './LogoElem';
 import { SignUpRedirectElem } from './SignUpRedirectElem';
