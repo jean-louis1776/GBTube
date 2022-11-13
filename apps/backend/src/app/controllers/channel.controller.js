@@ -50,6 +50,7 @@ class ChannelController {
 
   async getAllChannelsOfUser(req, res, next) {
     try {
+      console.log(req.params);
       return res.json(await channelService.getAllOfUser(+req.params.user_id));
     } catch (e) {
       next(e);
