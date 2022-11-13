@@ -30,16 +30,12 @@ export default class EditItemController {
   /**
    * @param {'post' | 'patch'} method
    * @param {'channel' | 'playlist'} elemType
-   * @param {FormData} formData
+   * @param {{idList: string, title: string, description: string}} dto
    * @returns {Promise<AxiosResponse<any>>}
    */
-  static async #abstractEditItem(method, elemType, formData) {
+  static async #abstractEditItem(method, elemType, dto) {
     const action = method === METHOD_POST ? 'create' : 'edit';
-    const dto = {
-      idList: formData.get('idList'),
-      title: formData.get('title'),
-      description: formData.get('description')
-    };
+console.log(dto);
     return await $authApi[method](`/${elemType}/${action}`, dto, {
       headers: {
         'Content-Type': 'application/json',

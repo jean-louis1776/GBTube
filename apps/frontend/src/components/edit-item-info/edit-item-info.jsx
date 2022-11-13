@@ -31,11 +31,10 @@ export function EditItemInfo({ elemType, sendData }) {
     setDescription(evt.target.value);
   }
 
-  const onSubmit = async (evt) => {
-    const formData = new FormData(evt.target);
-    formData.append('idList', idList.join(';'));
+  const onSubmit = async ({title, description}) => {
+    const dto = {title, description, idList: idList.join(';')};
     try {
-      await sendData(elemType, formData);
+      await sendData(elemType, dto);
       reset();
       navigate(-1, { replace: true });
     } catch {
