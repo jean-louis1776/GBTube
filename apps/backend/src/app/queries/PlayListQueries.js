@@ -68,7 +68,7 @@ class PlayListQueries {
    */
   async findPlayListById(id) {
     try {
-      return (await PlayList.findOne({where: id})).toJSON();
+      return (await PlayList.findOne({where: {id}})).toJSON();
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -82,7 +82,10 @@ class PlayListQueries {
    */
   async findAllPlayList(channelId) {
     try {
-      return (await PlayList.findAll({where: channelId}));
+      return ((await PlayList.findAll({where: {channelId}}))
+        .map((value, index, array) => {
+          return value.toJSON();
+        }));
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -90,4 +93,4 @@ class PlayListQueries {
   }
 }
 
-export const playList = new PlayList();
+export const playListQueries = new PlayListQueries();

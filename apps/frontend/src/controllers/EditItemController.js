@@ -2,7 +2,7 @@ import $authApi from '../api/AuthClient';
 
 export default class EditItemController {
   /**
-   * @param {'channel' | 'playList'} type
+   * @param {'channel' | 'playListQueries'} type
    * @param {{title: string, description: string}} item
    * @returns {Promise<AxiosResponse<any>>}
    */
