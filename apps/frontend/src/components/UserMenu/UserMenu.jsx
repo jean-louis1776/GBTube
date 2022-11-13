@@ -37,7 +37,7 @@ const UserMenu = (props) => {
 
   const handleUserMenuClick = (link) => () => {
     if (isAuth && user.id) {
-      navigate(`${link}`, { state: { idList: [`${user.id}`] } });
+      navigate(`${link}/get_all/:${user.id}`, { state: { idList: [`${user.id}`] } });
     }
   }
 
@@ -91,7 +91,7 @@ const UserMenu = (props) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {isAuth ? <MenuItem sx={{color: deepOrange[500]}}>{user.nickName || 'Мой ник'}</MenuItem> : ''}
+        {isAuth ? <MenuItem sx={{color: deepOrange[500]}}>{user.nickName || 'Где ник?'}</MenuItem> : ''}
         <Link to="/userProfile">
           <MenuItem>
             <Avatar /> Мой профиль

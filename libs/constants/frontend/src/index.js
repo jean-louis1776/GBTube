@@ -42,7 +42,7 @@ export const userMenu = [
   {
     name: 'Мои каналы',
     icon: <LiveTvIcon color="baseBlue" />,
-    link: '/channels',
+    link: '/channel',
   },
   {
     name: 'Настройки',

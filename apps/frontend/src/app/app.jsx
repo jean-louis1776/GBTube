@@ -50,7 +50,7 @@ export function App() {
         <Route path="/likes" element={<Likes />} />
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
-        <Route path={`/${CHANNEL}s`} element={<VideoGrid childrenType={CHANNEL} />} />
+        <Route path={`/${CHANNEL}/get_all/:parent_id`} element={<VideoGrid childrenType={CHANNEL} />} />
         <Route path={`/${PLAYLIST}/get_all/:parent_id`} element={<VideoGrid childrenType={PLAYLIST} />} />
         <Route path={`/${VIDEO}/get_all/:parent_id`} element={<VideoGrid childrenType={VIDEO} />} />
         <Route path={`/${CHANNEL}/get_one/:id`} element={<VideoGrid childrenType={PLAYLIST} />} />
