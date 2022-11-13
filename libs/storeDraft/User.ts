@@ -71,8 +71,8 @@ export class User {
 /*    getVideosViewCount(userChannelGroupList: UserChannelGroupList): Map<string, number> {
         const videoViewCount: Map<string, number> = new Map();
         userChannelGroupList.getChild(this.id).forEach((channel) => {
-            channel.getChildren().forEach((playList) => {
-                playList.getChildren().forEach((video) => {
+            channel.getChildren().forEach((playListQueries) => {
+                playListQueries.getChildren().forEach((video) => {
                     videoViewCount.set(video.getId(), video.getViewingCount());
                 });
             })
@@ -83,8 +83,8 @@ export class User {
         const commentCount: Map<string, number> = new Map();
         let counter = 0;
         userChannelGroupList.getChild(this.id).forEach((channel) => {
-            channel.getChildren().forEach((playList) => {
-                playList.getChildren().forEach((video) => {
+            channel.getChildren().forEach((playListQueries) => {
+                playListQueries.getChildren().forEach((video) => {
                     const videoId = video.getId();
                     video.getChildren().forEach((masterComment) => {
                         counter += 1;
@@ -102,8 +102,8 @@ export class User {
 /*    getGradedOwnVideosCount(userChannelGroupList: UserChannelGroupList): Map<string, {like: number, dislike: number}> {
         const videoGradeCount: Map<string, {like: number, dislike: number}> = new Map();
         userChannelGroupList.getUserChannelGroup(this.id).forEach((channel) => {
-            channel.getChildren().forEach((playList) => {
-                playList.getChildren().forEach((video) => {
+            channel.getChildren().forEach((playListQueries) => {
+                playListQueries.getChildren().forEach((video) => {
                     videoGradeCount.set(video.getId(), video.getGrades());
                 });
             })
