@@ -5,11 +5,19 @@ export default class UserController {
     return $authApi.get('/user');
   }
 
+  static async getUserById(user) {
+    return $authApi.get(`user/find/${user.id}`);
+  }
+
   static async updateUser(user) {
-    return $authApi.put(`/user/${user.id}`, { ...user });
+    return $authApi.patch(`/user/edit/${user.id}`, { updatingUser: user });
   }
 
   static async deleteUser(id) {
     return $authApi.delete(`/user/${id}`);
+  }
+
+  static async changePassword(pass) {
+    return $authApi.post(`/user/edit/${pass.id}`, { ...pass });
   }
 }

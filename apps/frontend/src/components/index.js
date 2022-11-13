@@ -5,7 +5,7 @@ export { default as History } from './History/History';
 export { default as Library } from './Library/Library';
 export { default as Likes } from './Likes/Likes';
 export { default as Loader } from './Loader/Loader';
-export { default as LoginForm } from './LoginForm/LoginForm';
+export { default as LoginForm } from './LoginForm';
 export { default as MainPage } from './MainPage/MainPage';
 export { default as Navbar } from './Navbar/Navbar';
 export { default as NotFound } from './NotFound/NotFound';

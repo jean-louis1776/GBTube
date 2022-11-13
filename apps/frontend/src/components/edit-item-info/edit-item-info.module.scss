@@ -1,16 +1,16 @@
-.editElementSection {
+.loginSection {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  .signupPaper {
+  .loginPaper {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 50px;
 
-    .signupLogo {
+    .loginLogo {
       display: flex;
       align-items: center;
       margin-bottom: 30px;
@@ -21,7 +21,7 @@
       }
     }
 
-    .signupForm {
+    .loginForm {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -30,7 +30,8 @@
         width: 100%;
         margin-bottom: 20px;
 
-        .signupInput {
+        .loginInput {
+          width: 100%;
           border-radius: 20px;
           border: 1px solid #cecece;
           outline: none;
@@ -42,16 +43,21 @@
         }
       }
 
-      .redirect {
-        margin: 40px auto 0;
+      .redirectText {
+        margin: 25px 0 0;
+      }
 
-        span:hover {
-          text-decoration: underline;
-        }
+      .redirectUrl:hover {
+        text-decoration: underline;
+      }
+
+      .btn button {
+        margin: 0 auto;
       }
     }
 
     .copyright {
+      width: 100%;
       color: #999999;
       margin: 30px auto 0;
       user-select: none;

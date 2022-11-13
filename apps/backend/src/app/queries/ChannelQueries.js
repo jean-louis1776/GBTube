@@ -10,7 +10,7 @@ class ChannelQueries {
     // modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
     modelFromQuery = modelFromQuery.toJSON();
     return {
-      ...modelFromQuery.ChannelInfos,
+      ...modelFromQuery.ChannelInfo,
       id: modelFromQuery.id,
       title: modelFromQuery.title,
       userId: modelFromQuery.userId,
@@ -48,13 +48,14 @@ class ChannelQueries {
    */
   async findChannelById(Id) {
     try {
-      const channel = Channel.findOne({
+      const channel = await Channel.findOne({
         where: {Id},
-        include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
+        include: [{model: ChannelInfo, attributes: {exclude: ['channelId']}}],
       });
-      if (channel) {
-        return this.parsingQueryModel(channel);
+      if (!channel) {
+        throw ApiError.BadRequest('Канал с заданным id не найден');
       }
+      return this.parsingQueryModel(channel);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -70,7 +71,7 @@ class ChannelQueries {
       const channels = await Channel.findAll(
         {
           where: {UserId},
-          include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
+          include: [{model: ChannelInfo, attributes: {exclude: ['channelId']}}],
         },
       );
       if (!channels) return null;
@@ -133,8 +134,8 @@ class ChannelQueries {
   async updateChannel(id, userId, data) {
     let isUpdate = 0;
     try {
-      const uChannel = (await Channel.findOne({where: id})).toJSON();
       if (data.title) {
+        const uChannel = (await Channel.findOne({where: id})).toJSON();
         if (uChannel.title !== data.title) {
           if (await Channel.findOne({where: {userId, title: data.title}})) {
             throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);

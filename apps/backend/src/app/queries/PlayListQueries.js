@@ -86,6 +86,7 @@ class PlayListQueries {
         .map((value, index, array) => {
           return value.toJSON();
         }));
+
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -94,3 +95,4 @@ class PlayListQueries {
 }
 
 export const playListQueries = new PlayListQueries();
+

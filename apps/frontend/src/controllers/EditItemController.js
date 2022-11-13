@@ -1,33 +1,45 @@
 import $authApi from '../api/AuthClient';
+import { METHOD_PATCH, METHOD_POST } from '@constants/frontend';
 
 export default class EditItemController {
+  static async getItemById(elemType, id) {
+    return await $authApi.get(`/${elemType}/${id}`);
+  }
+
+  static async deleteItem(elemType, id) {
+    return await $authApi.delete(`/${elemType}/${id}`);
+  }
+
   /**
-   * @param {'channel' | 'playListQueries'} type
-   * @param {{title: string, description: string}} item
+   * @param {'channel' | 'playlist'} elemType
+   * @param {FormData} formData
    * @returns {Promise<AxiosResponse<any>>}
    */
-  static async addItem(type, item) {
-    const formData = new FormData();
+  static async addItem(elemType, formData) {
+    return await this.#abstractEditItem(METHOD_POST, elemType, formData);
+  }
+  /**
+   * @param {'channel' | 'playlist'} elemType
+   * @param {FormData} formData
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  static async updateItem(elemType, formData) {
+    return await this.#abstractEditItem(METHOD_PATCH, elemType, formData);
+  }
 
-    formData.append('description', item.description);
-    formData.append('title', item.title);
-
-    return $authApi.post(`/${type}`, formData, {
+  /**
+   * @param {'post' | 'patch'} method
+   * @param {'channel' | 'playlist'} elemType
+   * @param {{idList: string, title: string, description: string}} dto
+   * @returns {Promise<AxiosResponse<any>>}
+   */
+  static async #abstractEditItem(method, elemType, dto) {
+    const action = method === METHOD_POST ? 'create' : 'edit';
+console.log(dto);
+    return await $authApi[method](`/${elemType}/${action}`, dto, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
       },
     });
-  }
-
-  static async getItemById(type, id) {
-    return $authApi.get(`/${type}/${id}`);
-  }
-
-  static async updateItem(type, item) {
-    return $authApi.patch(`/${type}/${item.id}`, { ...item });
-  }
-
-  static async deleteItem(type, id) {
-    return $authApi.delete(`/${type}/${id}`);
   }
 }

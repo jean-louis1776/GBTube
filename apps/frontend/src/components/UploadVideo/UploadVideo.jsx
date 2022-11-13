@@ -18,6 +18,7 @@ import {
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useForm, Controller } from 'react-hook-form';
+import { Helmet } from 'react-helmet';
 
 import { Header } from '../';
 
@@ -88,12 +89,23 @@ const UploadVideo = (props) => {
 
   return (
     <>
+      <Helmet>
+        <title>GeekTube | Загрузка видео</title>
+      </Helmet>
+
       <Header />
 
       <Stack className={styles.uploadWrapper}>
         <Paper
           elevation={3}
-          sx={{ width: '1100px', height: '400px', padding: '50px' }}
+          sx={{
+            width: '1100px',
+            height: '400px',
+            pt: '40px',
+            pl: '50px',
+            pr: '50px',
+            pb: '20px',
+          }}
         >
           <Box
             sx={{
@@ -176,17 +188,30 @@ const UploadVideo = (props) => {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                style={
+                  activeStep !== 2
+                    ? {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'stretch',
+                        height: '100%',
+                        marginTop: '6rem',
+                      }
+                    : {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'stretch',
+                        height: '100%',
+                        marginTop: '3rem',
+                      }
+                }
               >
                 <div
                   style={
                     activeStep === 0
-                      ? { display: 'block' }
+                      ? { display: 'flex', justifyContent: 'center' }
                       : { display: 'none' }
                   }
                 >
@@ -199,6 +224,7 @@ const UploadVideo = (props) => {
                       <div style={{ width: '500px' }}>
                         <InputLabel id="select-channel">Каналы</InputLabel>
                         <Select
+                          sx={{ width: '100%' }}
                           labelId="select-channel"
                           id="channel-select"
                           value={channelId}
@@ -218,7 +244,7 @@ const UploadVideo = (props) => {
                 <div
                   style={
                     activeStep === 1
-                      ? { display: 'block' }
+                      ? { display: 'flex', justifyContent: 'center' }
                       : { display: 'none' }
                   }
                 >
@@ -227,7 +253,13 @@ const UploadVideo = (props) => {
                     control={control}
                     rules={{ required: true }}
                     render={() => (
-                      <div>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                        }}
+                      >
                         <Button
                           variant="contained"
                           color="baseBlue"
@@ -252,7 +284,7 @@ const UploadVideo = (props) => {
                           Допускаются файлы формата: <br /> .3gp, .avi, .flv,
                           .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
                         </Typography>
-                      </div>
+                      </Box>
                     )}
                   />
                 </div>
@@ -260,7 +292,12 @@ const UploadVideo = (props) => {
                 <div
                   style={
                     activeStep === 2
-                      ? { display: 'block' }
+                      ? {
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'column',
+                        }
                       : { display: 'none' }
                   }
                 >
@@ -271,7 +308,6 @@ const UploadVideo = (props) => {
                     render={() => (
                       <TextField
                         sx={{ width: '500px', mb: 1.5 }}
-                        required
                         label="Название видео"
                       />
                     )}
@@ -302,9 +338,15 @@ const UploadVideo = (props) => {
                   </Button>
                   <Box sx={{ flex: '1 1 auto' }} />
 
-                  <Button onClick={handleNext} color="baseBlue">
-                    {activeStep === steps.length - 1 ? 'Готово' : 'Далее'}
-                  </Button>
+                  {activeStep === steps.length - 1 ? (
+                    <Button type="submit" onClick={handleNext} color="baseBlue">
+                      Готово
+                    </Button>
+                  ) : (
+                    <Button onClick={handleNext} color="baseBlue">
+                      Далее
+                    </Button>
+                  )}
                 </Box>
               </form>
             )}

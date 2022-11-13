@@ -9,7 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-export const logo = 'https://i.ibb.co/wdmBFMK/logo.png';
+export const logo = 'https://i.ibb.co/JdpDSxK/logo.png';
 export const RedirectLogo = 'https://i.ibb.co/JCB64v6/bar-chart.png';
 export const notFoundLogo = 'https://i.ibb.co/HNHX2dx/404Logo.png';
 
@@ -42,7 +42,7 @@ export const userMenu = [
   {
     name: 'Мои каналы',
     icon: <LiveTvIcon color="baseBlue" />,
-    link: '/myChannels',
+    link: '/channels',
   },
   {
     name: 'Настройки',
@@ -64,3 +64,9 @@ export const demoVideoTitle =
   'Build and Deploy 5 JavaScript & React API Projects in 10 Hours - Full Course | RapidAPI';
 export const demoProfilePicture =
   'http://dergipark.org.tr/assets/app/images/buddy_sample.png';
+
+export const CHANNEL = 'channel';
+export const PLAYLIST = 'playlist';
+export const VIDEO = 'video';
+export const METHOD_POST = 'post';
+export const METHOD_PATCH = 'patch';
