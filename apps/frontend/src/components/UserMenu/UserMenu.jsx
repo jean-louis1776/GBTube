@@ -12,11 +12,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useSelector } from 'react-redux'
 import { userMenu } from '@constants/frontend';
 
-import styles from './UserMenu.module.scss';
+// import styles from './UserMenu.module.scss';
 import { getSelector } from '../../store/getSelector';
 import { blueGrey, deepOrange } from '@mui/material/colors';
 
-const UserMenu = (props) => {
+const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
@@ -37,7 +37,7 @@ const UserMenu = (props) => {
 
   const handleUserMenuClick = (link) => () => {
     if (isAuth && user.id) {
-      navigate(`${link}/get_all/:${user.id}`, { state: { idList: [`${user.id}`] } });
+      navigate(`${link}/get_all/${user.id}`, { state: { idList: [`${user.id}`] } });
     }
   }
 
