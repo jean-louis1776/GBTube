@@ -57,6 +57,15 @@ class UserController {
     }
   }
 
+  async changePassword(req, res, next) {
+    try {
+      const { id, oldPassword, newPassword } = req.body;
+      return res.json(await userService.changePassword(id, oldPassword, newPassword, +req.cookies.refreshTokenId));
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async remove(req, res, next) {
     try {
       await userService.remove(+req.params.id);

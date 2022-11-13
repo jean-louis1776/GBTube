@@ -3,6 +3,7 @@ import channelService from '../services/channel.service';
 class ChannelController {
   async create(req, res, next) {
     try {
+      console.log(req.body);
       const { title, description, idList } = req.body;
       const userId = idList.split(';')[0];
       return res.json(await channelService.create(userId, title, description));

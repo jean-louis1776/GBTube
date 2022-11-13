@@ -2,6 +2,13 @@ import { ApiError } from '../errors/apiError';
 import { channelQueries } from '../queries/ChannelQueries';
 
 class ChannelService {
+  makeResultObject(channel) {
+    const idList = `${channel.userId.toString()};${channel.id.toString()};`;
+    delete channel.id;
+    delete channel.userId;
+    return { idList, ...channel };
+  }
+
   async create(userId, title, description) {
     try {
       if (!userId) {
@@ -47,10 +54,7 @@ class ChannelService {
   async getOne(id) {
     try {
       const channel = await channelQueries.findChannelById(id);
-      const idList = `${channel.userId.toString()};${channel.id.toString()};`;
-      delete channel.id;
-      delete channel.userId;
-      return { idList, ...channel };
+      return this.makeResultObject(channel);
     } catch(e) {
       console.log(e.message);
       throw(e);
@@ -62,10 +66,7 @@ class ChannelService {
       const channels = await channelQueries.findAllChannelByUserId(userId);
       let result = [];
       for (const channel of channels) {
-        const idList = `${channel.userId.toString()};${channel.id.toString()};`;
-        delete channel.id;
-        delete channel.userId;
-        result.push({ idList, ...channel });
+        result.push(this.makeResultObject(channel));
       }
       return result;
     } catch(e) {

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
 import { Token } from "../models/Tokens";
@@ -65,6 +66,22 @@ class UserQueries {
       throw ApiError.InternalServerError(e);
     }
   }
+
+  async getPasswordByUserId(id) {
+    try {
+      const password = await UserInfo.findOne({
+        attributes: ['password'],
+        where: {userId: id}
+      });
+      if (!password) {
+        throw ApiError.BadRequest(`Пользователь с id ${id} не найден.`)
+      }
+      return password.toJSON().password;
+    } catch (e) {
+      throw(e);
+    }
+  }
+
   /**
    * Поиск пользователя по nickName
    * @param nickName - nickName пользователя
@@ -91,7 +108,6 @@ class UserQueries {
       if (result) result = this.parsingQueryModel(result);
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -102,7 +118,6 @@ class UserQueries {
       if (result) result = result.dataValues;
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -129,7 +144,6 @@ class UserQueries {
       }
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -184,9 +198,8 @@ class UserQueries {
         }
       );
       if (!result) return null;
-      return JSON.parse(JSON.stringify(result)).avatar;
+      return result.toJSON().avatar;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
