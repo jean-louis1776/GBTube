@@ -71,6 +71,7 @@ export function App() {
         />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Box>
   );
