@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import { PlayList } from '../models/PlayList';
 import { ApiError } from "../errors/apiError";
 import { Video } from "../models/Video";
+import { Op } from "sequelize";
 
 
 class PlayListQueries {
@@ -41,10 +42,10 @@ class PlayListQueries {
             [Op.and]: [
               {channelId},
               {title: data.title},
-              {id: {[Op.ne]: id}}
-            ]
-          }
-        }
+              {id: {[Op.ne]: id}},
+            ],
+          },
+        },
       )) {
         throw ApiError.BadRequest(`Плэйлист с именем ${data.title} уже существует!`);
       }
@@ -53,7 +54,8 @@ class PlayListQueries {
       }
       return false;
     } catch (e) {
-      return ApiError.InternalServerError(e.message);
+      console.log(e.message);
+      throw(e);
     }
   }
 
