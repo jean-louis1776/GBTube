@@ -10,6 +10,7 @@ import { Stack, Typography } from '@mui/material';
 import { LoginFormElemButton } from './LoginFormElemButton';
 import { LoginFormElemInputError } from './LoginFormElemInputError';
 import { LoginFormStatusError } from './LoginFormStatusError';
+import { EMAIL, PASSWORD } from '@constants/frontend';
 
 export const LoginFormElem = () => {
   const [loginError, setLoginError] = useState('');
@@ -28,7 +29,7 @@ export const LoginFormElem = () => {
 
   const { register, handleSubmit, formState: { errors, isValid }, reset,} = useForm({
     mode: 'onBlur',
-    defaultValues: { email: '', password: '' },
+    defaultValues: { [EMAIL]: '', [PASSWORD]: '' },
     resolver: yupResolver(schema),
   });
 
@@ -55,20 +56,20 @@ export const LoginFormElem = () => {
           sx={{ backgroundColor: 'shadows.main' }}
         >
           <input
-            {...register('email')}
+            {...register(EMAIL)}
             placeholder="E-mail"
             type="email"
             className={styles.loginInput}
           />
-          <LoginFormElemInputError errors={errors} type='email'/>
+          <LoginFormElemInputError errors={errors} type={EMAIL}/>
 
           <input
-            {...register('password')}
+            {...register(PASSWORD)}
             placeholder="Пароль"
             type="password"
             className={styles.loginInput}
           />
-          <LoginFormElemInputError errors={errors} type='password'/>
+          <LoginFormElemInputError errors={errors} type={PASSWORD}/>
 
         </Stack>
 

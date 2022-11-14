@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import { PlayList } from '../models/PlayList';
 import { ApiError } from "../errors/apiError";
 import { Video } from "../models/Video";

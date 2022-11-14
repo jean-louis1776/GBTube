@@ -32,7 +32,8 @@ class MailService {
           `
       })
     } catch (e) {
-      console.log(e);
+      console.log(e.message);
+      throw(e);
     }
   }
 }

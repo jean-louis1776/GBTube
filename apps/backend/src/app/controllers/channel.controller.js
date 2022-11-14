@@ -6,7 +6,7 @@ class ChannelController {
       console.log(req.body);
       const { title, description, idList } = req.body;
       const userId = idList.split(';')[0];
-      return res.json(await channelService.create(userId, title, description));
+      return res.json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
     }
@@ -50,6 +50,7 @@ class ChannelController {
 
   async getAllChannelsOfUser(req, res, next) {
     try {
+      console.log(req.params);
       return res.json(await channelService.getAllOfUser(+req.params.user_id));
     } catch (e) {
       next(e);

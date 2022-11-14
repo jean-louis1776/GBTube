@@ -1,0 +1,25 @@
+.comment {
+  display: flex;
+  justify-content: flex-start;
+  &_answer {
+    background: transparent;
+  }
+  &_inputField {
+    font-size: 1rem;
+    width: 40%;
+    height: 2rem;
+    outline: none;
+    border: none;
+  }
+}
+
+.avatar {
+  flex-direction: row;
+  align-items: center;
+  margin: 0 15px 0 0;
+}
+
+.truncateText {
+  color: #fff;
+  opacity: 0.8;
+}
