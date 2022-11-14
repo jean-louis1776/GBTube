@@ -23,7 +23,7 @@ class PlaylistController {
 
   async remove(req, res, next) {
     try {
-
+      return res.json(await playlistService.remove(+req.params.id));
     } catch (e) {
       next(e);
     }
@@ -39,7 +39,7 @@ class PlaylistController {
 
   async getAllOfChannel(req, res, next) {
     try {
-
+      return res.json(await playlistService.getAllOfChannel(+req.params.channel_id))
     } catch (e) {
       next(e);
     }

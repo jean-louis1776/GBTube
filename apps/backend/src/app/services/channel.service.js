@@ -64,11 +64,7 @@ class ChannelService {
   async getAllOfUser(userId) {
     try {
       const channels = await channelQueries.findAllChannelByUserId(userId);
-      let result = [];
-      for (const channel of channels) {
-        result.push(this.makeResultObject(channel));
-      }
-      return result;
+      return channels.map(channel => this.makeResultObject(channel));
     } catch(e) {
       console.log(e.message);
       throw(e);
