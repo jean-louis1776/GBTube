@@ -9,7 +9,7 @@ export const VideoInfo = sequelize.define('VideoInfo', {
     },
     path: {
       type: DataTypes.CHAR,
-      allowNull: false,
+      allowNull: true,
     },
     hashName: {
       type: DataTypes.CHAR,
