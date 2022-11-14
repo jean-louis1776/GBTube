@@ -33,6 +33,9 @@ import styles from './Header.module.scss';
 
 import { Navbar, SearchForm, UserMenu } from '../';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { getSelector } from '../../store/getSelector';
+import { logoutHandler } from '../../features/auth/authSlice';
 
 const drawerWidth = 240;
 
@@ -102,6 +105,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Header = ({ withNavbar }) => {
+  const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
+  const dispatch = useDispatch();
   const theme = useTheme();
   const [openMenu, setOpenMenu] = useState(false);
   const [openColl, setOpenColl] = useState(true);
@@ -117,6 +122,10 @@ const Header = ({ withNavbar }) => {
   const handleCollClick = () => {
     setOpenColl(!openColl);
   };
+
+  const handleLogoutClick = () => {
+    dispatch(logoutHandler());
+  }
 
   return (
     <>
@@ -149,7 +158,7 @@ const Header = ({ withNavbar }) => {
                   className={styles.logoName}
                   variant="h4"
                   fontWeight="bold"
-                  sx={{ ml: 1 }}
+                  sx={{ ml: 1, fontFamily: "'Titillium Web', sans-serif" }}
                 >
                   Geek
                   <Typography
@@ -159,6 +168,7 @@ const Header = ({ withNavbar }) => {
                       color: 'baseBlue.main',
                       display: 'inline',
                       fontSize: '1.5rem',
+                      fontFamily: "'Titillium Web', sans-serif",
                     }}
                   >
                     Tube
@@ -171,13 +181,11 @@ const Header = ({ withNavbar }) => {
           <Stack direction="row" alignItems="center" sx={{ gap: '1rem' }}>
             <SearchForm />
 
-            <Link to="/login">
-              <Button variant="outlined" color="baseBlue">
-                Войти
-              </Button>
-            </Link>
+            { isAuth ? <Button variant="outlined" color="baseBlue" onClick={handleLogoutClick}>Выйти</Button>
+              : <Link to="/login"><Button variant="outlined" color="baseBlue">Войти</Button></Link> }
 
             <UserMenu />
+
           </Stack>
         </Toolbar>
       </AppBar>

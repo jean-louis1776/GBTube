@@ -9,7 +9,8 @@ export const removeDeadTokens = async() => {
   while (tokensCount > 0) {
     if (limit > tokensCount) limit = tokensCount;
     const tokens = await Token.findAll({ limit, offset });
-    for (const token of tokens) {
+    for (let token of tokens) {
+      token = token.toJSON();
       if (!tokenService.validateToken(token.token, true)) {
         await Token.destroy({ where: { id: token.id } });
       }

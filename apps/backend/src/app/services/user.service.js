@@ -85,12 +85,41 @@ class UserService {
 
     const user = tokenService.validateToken(refreshToken, true);
     const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
-    if (!user || !refreshTokenFromDB) {
+    const userFromDB = await userQueries.findOneById(user.id);
+    if (!user || !refreshTokenFromDB || !userFromDB) {
       throw ApiError.UnAuthorization();
     }
-    delete user.iat;
-    delete user.exp;
-    return await tokenService.createNewTokens(user, refreshTokenFromDB.id);
+    console.log(userFromDB);
+
+    return await tokenService.createNewTokens(
+      {
+        id: userFromDB.id,
+        nickName: userFromDB.nickName,
+        email: userFromDB.email,
+        role: userFromDB.role
+      },
+      refreshTokenFromDB.id
+    );
+  }
+
+  async changePassword(id, oldPassword, newPassword, refreshTokenId) {
+    try {
+      const DBPassword = await userQueries.getPasswordByUserId(id);
+      if (!(await bcrypt.compare(oldPassword, DBPassword))) {
+        throw ApiError.BadRequest('Неправильный пароль');
+      }
+      newPassword = await bcrypt.hash(newPassword, 5);
+      if (!(await userQueries.updateUser(id, { password: newPassword }))) {
+        throw ApiError.InternalServerError('Не удалось сменить пароль');
+      }
+      // Далее разлогиниваем текущего User на других устройствах
+      await tokenQueries.removeOtherDevicesTokens(id, refreshTokenId);
+      return { message: 'Замена пароля прошла успешно' };
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+
   }
 
   async edit(id, updatingUser) {

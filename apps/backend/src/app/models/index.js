@@ -19,6 +19,7 @@ import { VideoLike } from "./VideoLike";
 import { includes } from "core-js/internals/array-includes";
 import excludeVariablesFromRoot from "@mui/material/styles/excludeVariablesFromRoot";
 
+
 // //Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
   foreignKey: {
@@ -142,14 +143,14 @@ PlayList.belongsTo(Channel, {
 PlayList.hasMany(Video, {
   foreignKey: {
     name: 'playListId',
-    allowNull:false,
-  }
+    allowNull: false,
+  },
 });
 Video.belongsTo(PlayList, {
   foreignKey: {
     name: 'playListId',
-  }
-})
+  },
+});
 //Связи для таблицы Видео
 Video.hasMany(Comment, {
   foreignKey: {
@@ -181,21 +182,21 @@ VideoLike.belongsTo(Video, {
 //Связи для таблицы Коментариев
 Comment.hasMany(CommentLike, {
   foreignKey: {
-    name: 'сommentId',
+    name: 'commentId',
     allowNull: false,
   },
 });
 CommentLike.belongsTo(Comment, {
-  foreignKey: 'сommentId',
+  foreignKey: 'commentId',
 });
 Comment.hasMany(Answer, {
   foreignKey: {
-    name: 'сommentId',
+    name: 'commentId',
     allowNull: false,
   },
 });
 Answer.belongsTo(Comment, {
-  foreignKey: 'сommentId',
+  foreignKey: 'commentId',
 });
 //Связи для таблицы Ответов
 Answer.hasMany(AnswerLike, {
@@ -208,6 +209,10 @@ AnswerLike.belongsTo(Answer, {
   foreignKey: 'answerId',
 });
 
+// import {channelQueries} from '../queries/ChannelQueries'
+// import { playListQueries } from '../queries/PlayListQueries';
+
+
 export const runDB = async function () {
   try {
     await sequelize.authenticate();
@@ -217,7 +222,25 @@ export const runDB = async function () {
     // await UserInfo.sync({ alter: true });
     // await PlayList.sync({ alter: true });
     // await Channel.sync({ alter: true });
+    // await ChannelInfo.sync({ alter: true });
 
+    // const subscribers = (await ChannelInfo.findOne({where: {channelId: 16}}));
+    // await subscribers.increment('subscribersCount', {by: 1});
+    // console.log(subscribers);
+
+    // playListQueries.createPlayList(18, 'что то тут будет', 'и тут что то будет');
+    // const playList3 = playListQueries.findAllPlayList(18);
+    // // const playList3 = (await PlayList.findAll({where: {channelId: 18}})).map((value, index, array) => {
+    // //   return value.toJSON();
+    // // })
+    // //
+    // // playList3.then(res => {
+    // //   console.log(res)})
+    // console.log(playList3);
+
+    // channelQueries.subscriber(17, 1)
+    // await Channel.create({title: 'MyChannel', userId: 1})
+    // channelQueries.createChannel(1,"MyChannel2", 'lalalala');
     // const cUser = await User.create({
     //   nickName: 'Jenya9',
     // })
@@ -260,7 +283,6 @@ export const runDB = async function () {
     // // console.log(JSON.stringify(allUsers, null, 1));
     // const allUser = allUsers.toJSON()
     // console.log(allUser);
-
 
 
     // const uUser2 = function test(data) {

@@ -4,11 +4,10 @@ import channelController from '../controllers/channel.controller';
 const router = new Router();
 
 router.post('/create', channelController.create);
-router.patch('/edit', );
-router.patch('/subscribe', );
-router.patch('/unsubscribe', );
-router.delete('/:id', /*removeById*/)
-router.get('/get_one:id', /*getById*/ );
-router.get('/get_all', /*getAll*/ );
+router.patch('/edit', channelController.edit);
+router.patch('/subscribe', channelController.subscribe);
+router.delete('/:id', channelController.remove)
+router.get('/get_one/:id', channelController.getOne);
+router.get('/get_all/:user_id', channelController.getAllChannelsOfUser);
 
 export default router;

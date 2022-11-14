@@ -16,8 +16,8 @@ class UserController {
 
   async create(req, res, next) {
     try {
-      const { username, email, password } = req.body;
-      const userResponse = await userService.registration(username, email, password);
+      const { nickName, email, password } = req.body;
+      const userResponse = await userService.registration(nickName, email, password);
       this.createCookies(res, userResponse);
       return res.json({id: userResponse.id, accessToken: userResponse.accessToken});
     } catch(e) {
@@ -52,6 +52,15 @@ class UserController {
       const tokenObject = await userService.refresh(req.cookies.refreshToken);
       this.createCookies(res, tokenObject);
       return res.json(tokenObject.accessToken);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async changePassword(req, res, next) {
+    try {
+      const { id, oldPassword, newPassword } = req.body;
+      return res.json(await userService.changePassword(id, oldPassword, newPassword, +req.cookies.refreshTokenId));
     } catch (e) {
       next(e);
     }

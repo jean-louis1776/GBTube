@@ -2,7 +2,6 @@ import { Channel } from "../models/Channel";
 import { ChannelInfo } from "../models/ChannelInfo";
 import { ChannelSubscriber } from "../models/ChannelSubscribers";
 import { ApiError } from "../errors/apiError";
-import { User } from "../models/Users";
 import { PlayList } from "../models/PlayList";
 import { Video } from "../models/Video";
 
@@ -11,10 +10,10 @@ class ChannelQueries {
     // modelFromQuery = JSON.parse(JSON.stringify(modelFromQuery));
     modelFromQuery = modelFromQuery.toJSON();
     return {
-      ...modelFromQuery.ChannelInfos,
+      ...modelFromQuery.ChannelInfo,
       id: modelFromQuery.id,
       title: modelFromQuery.title,
-      userId: modelFromQuery.userId
+      userId: modelFromQuery.userId,
     };
   }
 
@@ -27,7 +26,7 @@ class ChannelQueries {
    */
   async createChannel(userId, title, description) {
     try {
-      if (await User.findOne({where: {userId, title}})) {
+      if (await Channel.findOne({where: {userId, title}})) {
         throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
       }
       const cChannel = (await Channel.create({title, userId})).toJSON();
@@ -49,13 +48,14 @@ class ChannelQueries {
    */
   async findChannelById(Id) {
     try {
-      const channel = Channel.findOne({
+      const channel = await Channel.findOne({
         where: {Id},
-        include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
+        include: [{model: ChannelInfo, attributes: {exclude: ['channelId']}}],
       });
-      if (channel) {
-        return this.parsingQueryModel(channel);
+      if (!channel) {
+        throw ApiError.BadRequest('Канал с заданным id не найден');
       }
+      return this.parsingQueryModel(channel);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -71,7 +71,7 @@ class ChannelQueries {
       const channels = await Channel.findAll(
         {
           where: {UserId},
-          include: [{model: ChannelInfo, attributes: {exclude: ['channelId', 'updateTimestamp']}}],
+          include: [{model: ChannelInfo, attributes: {exclude: ['channelId']}}],
         },
       );
       if (!channels) return null;
@@ -94,17 +94,19 @@ class ChannelQueries {
    */
   async subscriber(channelId, userId) {
     try {
-      if (await User.findOne({where: {channelId, userId}})) {
-        return !!(await ChannelSubscriber.destroy({where: {channelId, userId}}));
+      const subscribers = await ChannelInfo.findOne({where: {channelId}});
+      if (await ChannelSubscriber.findOne({where: {channelId, userId}})) {
+        await ChannelSubscriber.destroy({where: {channelId, userId}});
+        await subscribers.decrement('subscribersCount', {by: 1});
+        return false;
       }
-      if (!(await User.findOne({where: {channelId, userId}}))) {
-        return !!(await ChannelSubscriber.create({channelId, userId}));
-      }
+      await ChannelSubscriber.create({channelId, userId})
+      await subscribers.increment('subscribersCount', {by: 1});
+      return true;
     } catch (e) {
-      return false;
+      throw ApiError.InternalServerError(e.message);
     }
   }
-
 
   /**
    * Удаление канала
@@ -122,16 +124,25 @@ class ChannelQueries {
     }
   }
 
-  async updateChannel(id, data) {
+  /**
+   * Обновление канала
+   * @param {number} id - id канала
+   * @param {number} userId - id пользователя
+   * @param {Object} data - данные о канале
+   * @returns {boolean}
+   */
+  async updateChannel(id, userId, data) {
     let isUpdate = 0;
     try {
-      if (await User.findOne({where: {userId: data.userId, title: data.title}})) {
-        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
-      }
       if (data.title) {
-        isUpdate += await Channel.update({title: data.title}, {where: {id}});
-        delete data.title;
-        delete data.userId;
+        const uChannel = (await Channel.findOne({where: id})).toJSON();
+        if (uChannel.title !== data.title) {
+          if (await Channel.findOne({where: {userId, title: data.title}})) {
+            throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);
+          }
+          isUpdate += await Channel.update({title: data.title}, {where: {id}});
+          delete data.title;
+        }
       }
       if (Object.keys(data).length) {
         isUpdate += await ChannelInfo.update({...data}, {where: {channelId: id}});

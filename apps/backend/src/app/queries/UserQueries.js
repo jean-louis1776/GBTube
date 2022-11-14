@@ -1,6 +1,9 @@
+/* eslint-disable no-useless-catch */
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
 import { Token } from "../models/Tokens";
+import { Channel } from "../models/Channel";
+import { ChannelInfo } from "../models/ChannelInfo";
 import { ApiError } from "../errors/apiError";
 
 class UserQueries {
@@ -65,6 +68,22 @@ class UserQueries {
       throw ApiError.InternalServerError(e);
     }
   }
+
+  async getPasswordByUserId(id) {
+    try {
+      const password = await UserInfo.findOne({
+        attributes: ['password'],
+        where: {userId: id}
+      });
+      if (!password) {
+        throw ApiError.BadRequest(`Пользователь с id ${id} не найден.`)
+      }
+      return password.toJSON().password;
+    } catch (e) {
+      throw(e);
+    }
+  }
+
   /**
    * Поиск пользователя по nickName
    * @param nickName - nickName пользователя
@@ -91,7 +110,6 @@ class UserQueries {
       if (result) result = this.parsingQueryModel(result);
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -102,7 +120,6 @@ class UserQueries {
       if (result) result = result.dataValues;
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -129,7 +146,6 @@ class UserQueries {
       }
       return result;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }
@@ -160,7 +176,7 @@ class UserQueries {
     try {
       return !!(await User.destroy({
         where: {id},
-        include: [{model: UserInfo}, {model: Token}]
+        include: [{model: UserInfo}, {model: Token}, {model: Channel}, {model: ChannelInfo}]
       }));
     } catch {
       return false;
@@ -184,9 +200,8 @@ class UserQueries {
         }
       );
       if (!result) return null;
-      return JSON.parse(JSON.stringify(result)).avatar;
+      return result.toJSON().avatar;
     } catch (e) {
-      console.log(e.message);
       throw(e);
     }
   }

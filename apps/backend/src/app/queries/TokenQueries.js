@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 import { ApiError } from '../errors/apiError';
 import { Token } from '../models/Tokens';
 
@@ -36,6 +38,17 @@ class TokenQueries {
       console.log(e.message);
       throw e;
     }
+  }
+
+  async removeOtherDevicesTokens(userId, refreshTokenId) {
+    await Token.destroy({
+      where: {
+        [Op.and]: [
+          { userId },
+          { id: { [Op.ne]: refreshTokenId } }
+        ]
+      }
+    })
   }
 }
 

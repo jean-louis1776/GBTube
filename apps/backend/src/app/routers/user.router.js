@@ -10,6 +10,7 @@ router.post('/login', (...args) => userController.login(...args));
 router.post('/logout', userController.logout);
 router.post('/avatar/:id', userController.uploadAvatar);
 router.patch('/edit/:id', userController.edit);
+router.patch('/change_password', userController.changePassword)
 router.get('/activate/:link', userController.activate);
 router.get('/refresh', (...args) =>userController.refresh(...args));
 router.get('/avatar/:id', userController.downloadAvatar);

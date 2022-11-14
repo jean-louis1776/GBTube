@@ -6,8 +6,8 @@ export default class AuthController {
     return $authApi.post('/user/login', { email, password });
   }
 
-  static async registration(username, email, password) {
-    return $authApi.post('/user/registration', { username, email, password });
+  static async registration(nickName, email, password) {
+    return $authApi.post('/user/registration', { nickName, email, password });
   }
 
   static async logout() {
