@@ -7,7 +7,7 @@ export const Video = sequelize.define('Video', {
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    title: {
       type: DataTypes.CHAR,
       allowNull: false,
     },

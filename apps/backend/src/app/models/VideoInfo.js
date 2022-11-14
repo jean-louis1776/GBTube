@@ -34,9 +34,12 @@ export const VideoInfo = sequelize.define('VideoInfo', {
       allowNull: false,
       defaultValue: 0,
     },
+    idList: {
+      type: DataTypes.TEXT,
+    },
   }, {
     timestamps: true,
-    createdAt: false,
-    updatedAt: 'updateTimestamp',
+    createdAt: 'createTimestamp',
+    updatedAt: false,
   },
 );

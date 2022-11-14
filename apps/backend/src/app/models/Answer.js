@@ -5,7 +5,7 @@ export const Answer = sequelize.define('Answer', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     textInfo: {
       type: DataTypes.CHAR,
@@ -21,9 +21,12 @@ export const Answer = sequelize.define('Answer', {
       allowNull: false,
       defaultValue: 0,
     },
+    idList: {
+      type: DataTypes.TEXT,
+    },
   }, {
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',
-  }
+  },
 );
