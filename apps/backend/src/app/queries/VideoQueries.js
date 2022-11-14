@@ -1,28 +1,66 @@
 import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
+import { Op } from "sequelize";
+import { ApiError } from "../errors/apiError";
 
 class VideoQueries {
-  //TODO реализовать обновление информации о видео, добавление плэйлиста, удаление плюйлиста, видеолайки.
+  //вот тут я не совсем понял тебе что возвращать ошибку через try/catch или все таки true/false
+  async isVideo(playListId, channelId) {
+    return !!(await Video.findOne({
+      where: {
+        [Op.and]:
+          [{playListId}, {channelId}],
+      },
+    }));
+  }
+
   /**
-   * Добавление видео
-   * @param {number} userId - id пользователя
-   * @param {string} videoName - название видео
-   * @param {Object} videoInfo - информация о видео
-   * @returns {boolean}
+   * Загрузка видео
+   * @param {number} playListId - id плэйлиста
+   * @param {number} channelId - id канала
+   * @param {string} hashName - зашифроное имя файла
+   * @param {string} title - информация о видео
+   * @param {string} category - категория видео
+   * @param {string} description - подробная информация о видео
+   * @returns {number}
    */
-  async createVideo(userId, videoName, videoInfo) {
-    const cVideo = await Video.create({
-      name: videoName,
-      userId: userId,
-    });
-    const cVideoInfo = await VideoInfo.create({
-      path: videoInfo.path,
-      hashName: videoInfo.hashName,
-      category: videoInfo.category,
-      description: videoInfo.description,
-      videoId: cVideo.id,
-    });
-    return !!(cVideoInfo);
+  async downloadVideo(playListId, channelId, hashName, title, category, description) {
+    try {
+      const dVideo = await Video.create({
+        playListId,
+        title,
+        channelId,
+      });
+      if (dVideo) {
+        await VideoInfo.create({
+          hashName,
+          category,
+          description,
+          videoId: dVideo.id,
+        });
+        return dVideo.id;
+      }
+      throw ApiError.BadRequest(`Не удалось загрузить видео!`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  /**
+   * Выгрузка видео
+   * @param {number} id - id видео
+   * @returns {string}
+   */
+  async uploadVideo(id) {
+    try {
+      const videoHash = await VideoInfo.findOne({where: {[Op.eq]: {videoId: id}}});
+      if (videoHash) return videoHash.toJSON().hashName;
+      throw ApiError.BadRequest(`Данное виде отсутствует на сервере`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
   /**
