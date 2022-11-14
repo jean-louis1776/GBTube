@@ -1,2 +1,49 @@
 .wrapper {
+  max-width: 1600px;
+  margin: 90px auto 0;
+}
+
+.stack {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  justify-content: center;
+}
+
+.playerWrapper {
+  //height: auto;
+}
+
+.channel {
+  &_info {
+    display: flex;
+    align-items: center;
+  }
+  &_sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+  }
+}
+
+.channelSub {
+
+}
+
+.commentSection {
+  padding: 1.25rem;
+  margin: 1rem 0 0 0;
+  flex-direction: column;
+  //height: 1000px;
+  width: 100%;
+}
+
+.comment {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.truncateText {
+  color: #fff;
+  opacity: 0.8;
 }
