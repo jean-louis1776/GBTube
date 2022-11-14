@@ -6,7 +6,7 @@ class ChannelController {
       console.log(req.body);
       const { title, description, idList } = req.body;
       const userId = idList.split(';')[0];
-      return res.json(await channelService.create(userId, title, description));
+      return res.json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
     }

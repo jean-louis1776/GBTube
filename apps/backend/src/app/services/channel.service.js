@@ -3,7 +3,7 @@ import { channelQueries } from '../queries/ChannelQueries';
 
 class ChannelService {
   makeResultObject(channel) {
-    const idList = `${channel.userId.toString()};${channel.id.toString()};`;
+    const idList = [channel.userId, channel.id].join(';');
     delete channel.id;
     delete channel.userId;
     return { idList, ...channel };
