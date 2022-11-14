@@ -1,6 +1,7 @@
 import { PlayList } from '../models/PlayList';
 import { ApiError } from "../errors/apiError";
 import { Video } from "../models/Video";
+import { Op } from "sequelize";
 
 
 class PlayListQueries {
@@ -33,7 +34,17 @@ class PlayListQueries {
    */
   async updatePlayList(id, channelId, data) {
     try {
-      if (await PlayList.findOne({where: {channelId, title: data.title}})) {
+      if (data.title && await PlayList.findOne(
+        {
+          where: {
+            [Op.and]: [
+              {channelId},
+              {title: data.title},
+              {id: {[Op.ne]: id}},
+            ],
+          },
+        },
+      )) {
         throw ApiError.BadRequest(`Плэйлист с именем ${data.title} уже существует!`);
       }
       if (Object.keys(data).length) {
@@ -41,7 +52,8 @@ class PlayListQueries {
       }
       return false;
     } catch (e) {
-      return ApiError.InternalServerError(e.message);
+      console.log(e.message);
+      throw(e);
     }
   }
 
