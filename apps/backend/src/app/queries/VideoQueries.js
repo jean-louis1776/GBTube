@@ -2,14 +2,27 @@ import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
+import { PlayList } from "../models/PlayList";
+import { Channel } from "../models/Channel";
+import { ChannelInfo } from "../models/ChannelInfo";
 
 class VideoQueries {
-  //вот тут я не совсем понял тебе что возвращать ошибку через try/catch или все таки true/false
-  async isVideo(playListId, channelId) {
+
+  parsingQueryModel(modelFromQuery) {
+    modelFromQuery = modelFromQuery.toJSON();
+    return {
+      ...modelFromQuery.VideoInfo,
+      id: modelFromQuery.id,
+      title: modelFromQuery.title,
+    };
+  }
+
+
+  async isVideo(title, channelId) {
     return !!(await Video.findOne({
       where: {
         [Op.and]:
-          [{playListId}, {channelId}],
+          [{title}, {channelId}],
       },
     }));
   }
@@ -24,21 +37,21 @@ class VideoQueries {
    * @param {string} description - подробная информация о видео
    * @returns {number}
    */
-  async downloadVideo(playListId, channelId, hashName, title, category, description) {
+  async uploadVideo(playListId, channelId, hashName, title, category, description) {
     try {
-      const dVideo = await Video.create({
+      const uVideo = await Video.create({
         playListId,
         title,
         channelId,
       });
-      if (dVideo) {
+      if (uVideo) {
         await VideoInfo.create({
           hashName,
           category,
           description,
-          videoId: dVideo.id,
+          videoId: uVideo.id,
         });
-        return dVideo.id;
+        return uVideo.id;
       }
       throw ApiError.BadRequest(`Не удалось загрузить видео!`);
     } catch (e) {
@@ -52,68 +65,88 @@ class VideoQueries {
    * @param {number} id - id видео
    * @returns {string}
    */
-  async uploadVideo(id) {
+  async downloadVideo(id) {
     try {
-      const videoHash = await VideoInfo.findOne({where: {[Op.eq]: {videoId: id}}});
+      const videoHash = await VideoInfo.findOne({where: {id}});
       if (videoHash) return videoHash.toJSON().hashName;
-      throw ApiError.BadRequest(`Данное виде отсутствует на сервере`);
+      throw ApiError.BadRequest(`Данное видео отсутствует на сервере`);
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
 
-  /**
-   * Поиск видео по имени видео
-   * @param {string} videoName - имя канала
-   * @returns {Object}
-   */
-  async findChannelByName(videoName) {
-    return Video.findOne(
-      {
-        where: {
-          name: videoName,
-        },
-        include: [
+  async updateVideoInfo(id, title, category, description) {
+    try {
+      const fVideo = await Video.findOne({where: id});
+      if (title) {
+        if (await Video.findOne(
           {
-            model: VideoInfo,
+            where: {
+              [Op.and]: [
+                {channelId: fVideo.toJSON().channelId},
+                {title},
+                // {id: {[Op.ne]: id}}, // Что то вообще не понимаю для чего нам эта строчка для проверки уникальности
+              ],
+            },
           },
-        ],
-      },
-    );
+        )) {
+          throw ApiError.BadRequest(`Видео с именем ${title} уже существует канале!`);
+        }
+        await Video.update({title}, {where: {id}});
+      }
+      return !!(await VideoInfo.update({category, description}, {where: {videoId: id}}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
 
-  /**
-   * Поиск видео принадлежащих каналу
-   * @param {number} videoId  - имя канала
-   * @returns {Object}
-   */
-  async findChannelByChannel(videoId) {
-    return Video.findOne(
-      {
-        where: {
-          videoId: videoId,
-        },
-        include: [
-          {
-            model: VideoInfo,
-          },
-        ],
-      },
-    );
+  async findVideoById(id) {
+    try {
+      const videoById = Video.findOne({
+        where: {id},
+        include: [{model: VideoInfo, attributes: {exclude: ['videoId']}}],
+      });
+      if (videoById) return this.parsingQueryModel(videoById);
+      throw ApiError.BadRequest(`Виде с id: ${id} не найдено`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
   }
+
+  async findAllVideoByPlayList(playListId) {
+    try {
+      const videoByPlayListId = await Video.findAll({
+        where: {playListId},
+        include: [{model: VideoInfo, attributes: {exclude: ['videoId']}}],
+      });
+      if (!videoByPlayListId) return null;
+      const result = [];
+      for (const videoByList of videoByPlayListId) {
+        result.push(this.parsingQueryModel(videoByList));
+      }
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+
 
   /**
    * Удаление видео
    * @param {number} channelId - id канала с видео
    * @returns {Object}
    */
-  async deleteChannel(channelId) {
-    return await Video.destroy({
-      where: {
-        channelId: channelId,
-      },
-    });
+  async deleteChannel(id) {
+    try {
+      return !!(await Video.destroy({where: {id}}));
+    } catch (e) {
+      return false;
+    }
   }
 }
 
