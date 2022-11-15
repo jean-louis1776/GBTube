@@ -121,15 +121,15 @@ Channel.hasMany(ChannelSubscriber, {
 ChannelSubscriber.belongsTo(Channel, {
   foreignKey: 'channelId',
 });
-// Channel.hasMany(Video, {
-//   foreignKey: {
-//     name: 'channelId',
-//     allowNull: false,
-//   },
-// });
-// Video.belongsTo(Channel, {
-//   foreignKey: 'channelId',
-// });
+Channel.hasMany(Video, {
+  foreignKey: {
+    name: 'channelId',
+    allowNull: false,
+  },
+});
+Video.belongsTo(Channel, {
+  foreignKey: 'channelId',
+});
 Channel.hasMany(PlayList, {
   foreignKey: {
     name: 'channelId',
