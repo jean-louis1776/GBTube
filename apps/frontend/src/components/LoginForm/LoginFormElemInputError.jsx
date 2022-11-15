@@ -4,7 +4,7 @@ import React from 'react';
 export const LoginFormElemInputError = ({errors, type}) => {
   return (
     errors[type] && (<p className={styles.error}>
-      {errors[type]?.message || 'Err!!!!!'}
+      {errors[type]?.message || `Ошибка в ${type}` }
     </p>)
   );
 }

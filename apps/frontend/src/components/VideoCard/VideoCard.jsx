@@ -6,11 +6,12 @@ import {
   demoVideoUrl,
   // demoVideoTitle,
   demoChannelTitle,
-  demoChannelUrl, VIDEO
+  demoChannelUrl,
+  VIDEO,
 } from '@constants/frontend';
+import GetChildrenController from '../../controllers/GetChildrenController';
 
 import styles from './VideoCard.module.scss';
-import GetChildrenController from '../../controllers/GetChildrenController';
 
 const VideoCard = (/*{
   video: {
@@ -25,17 +26,17 @@ const VideoCard = (/*{
     const fetchData = async () => {
       const { title } = await GetChildrenController.getItemById(VIDEO, id);
       setTitle(title);
-    }
+    };
     fetchData().catch(() => {
       setTitle('');
       console.log(`Video ID: ${id} not found`);
     });
-  },[]);
+  }, []);
 
   return (
     <Card
       sx={{
-        width: { xs: '100%', sm: '358px', md: '320px' },
+        // width: { xs: '100%', sm: '358px', md: '320px' },
         boxShadow: 'none',
         borderRadius: 0,
       }}
@@ -50,7 +51,8 @@ const VideoCard = (/*{
       <CardContent sx={{ backgroundColor: '#1e1e1e', height: '106px' }}>
         <Link to={demoVideoUrl}>
           <Typography variant="subtitle1" fontWeight="bold" color="#fff">
-            {//snippet?.title.slice(0, 60) ||
+            {
+              //snippet?.title.slice(0, 60) ||
               title.slice(0, 60)
             }
           </Typography>

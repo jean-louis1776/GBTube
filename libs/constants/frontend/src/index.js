@@ -42,7 +42,7 @@ export const userMenu = [
   {
     name: 'Мои каналы',
     icon: <LiveTvIcon color="baseBlue" />,
-    link: '/channels',
+    link: '/channel',
   },
   {
     name: 'Настройки',
@@ -70,3 +70,9 @@ export const PLAYLIST = 'playlist';
 export const VIDEO = 'video';
 export const METHOD_POST = 'post';
 export const METHOD_PATCH = 'patch';
+export const TITLE = 'title';
+export const DESCRIPTION = 'description';
+export const ID_LIST = 'idList';
+export const EMAIL = 'email';
+export const PASSWORD = 'password';
+export const PASSWORD_2 = 'password2';

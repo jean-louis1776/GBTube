@@ -44,16 +44,19 @@ class VideoQueries {
         title,
         channelId,
       });
-      if (uVideo) {
+      if (dVideo) {
+        const videoId = dVideo.toJSON().id;
+
         await VideoInfo.create({
           hashName,
           category,
           description,
-          videoId: uVideo.id,
+          videoId,
         });
-        return uVideo.id;
+        return videoId;
+
       }
-      throw ApiError.BadRequest(`Не удалось загрузить видео!`);
+      throw ApiError.InternalServerError(`Не удалось сохранить видео!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
