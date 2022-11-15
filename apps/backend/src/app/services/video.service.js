@@ -7,11 +7,20 @@ import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
 import { ftpServer } from '../../main.js';
 import { Video } from '../models/Video.js';
+import { videoQueries } from '../queries/VideoQueries.js';
 
 
 /* eslint-disable no-useless-catch */
 class VideoService {
-  async upload(files) {
+  async isNameUnique(channelId, title) {
+    try {
+      return !(await Video.findOne({ where: { channelId, title }}));
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async upload(res, files, playlistId, channelId, title, category, description) {
     try {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
@@ -40,7 +49,8 @@ class VideoService {
             await ftpServer.put(files[0], frameHashName);
           }
           await fs.remove(path.resolve(path.resolve(), 'tmp'));
-          return videoHashName;
+          console.log(videoHashName);
+          return res.json(await videoQueries.uploadVideo(playlistId, channelId, videoHashName, title, category, description));
         }
       );
     } catch (e) {
@@ -48,9 +58,9 @@ class VideoService {
     }
   }
 
-  async create(playlistId, channelId, title, category, description, hashName) {
+  async create (playlistId, channelId, hashName, title, category, description) {
     try {
-      await Video.create({})
+      return videoQueries.uploadVideo(playlistId, channelId, hashName, title, category, description);
     } catch (e) {
       throw e;
     }

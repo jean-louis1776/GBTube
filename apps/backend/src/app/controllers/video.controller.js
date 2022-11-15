@@ -1,75 +1,33 @@
-import path from 'path';
-import { v4 as uuidV4 } from 'uuid';
-import ffmpeg from 'ffmpeg';
-import fs from 'fs-extra';
-
 import { ApiError } from '../errors/apiError.js';
-import { videoExtensions } from '../util/videoImageExtensions.js';
 import { ftpServer } from '../../main.js';
 import videoService from '../services/video.service.js';
 
 class VideoController {
-  // Принять видео с фронта, сделать frameShot и сохранить
   async create(req, res, next) {
     try {
-      
-      const hashName = await videoService.upload(req.files);
-
+      const { idList, title, category, description } = req.body;
+      const [, channelId, playlistId] = idList.split(';');
+      if (!await videoService.isNameUnique(+channelId, title)) {
+        return next(ApiError.BadRequest(`Видео с названием ${title} уже существует`))
+      }
+      return await videoService.upload(res, req.files, +playlistId, +channelId, title, category, description);
     } catch (e) {
       next(e);
     }
   }
 
-  async upload(req, res, next) {
-    try {
-      if (!req.files) {
-        next(ApiError.BadRequest('Отсутствует видеофайл для загрузки'));
-      }
-
-      const file = req.files.videoFile;
-      const extension = path.extname(file.name);
-      const hashName = uuidV4();
-      const videoHashName = hashName + extension;
-      const frameHashName = hashName + '.jpg';
-      if (!videoExtensions.includes(extension)) {
-        next(ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату'));
-      }
-
-      await ftpServer.put(file.tempFilePath, videoHashName);
-
-      const video = await new ffmpeg(file.tempFilePath);
-      await video.fnExtractFrameToJPG(
-        'tmp',
-        {
-          number: 1,
-          every_n_percentage: 50
-        },
-        async (err, files) => {
-          if (err) {
-            console.log('error = ', err);                     //TODO   Задать вопрос на созвоне
-          } else {
-            await ftpServer.put(files[0], frameHashName);
-            await fs.remove(path.resolve(path.resolve(), 'tmp'), err => { if (err) console.log(err); });
-            return res.json({videoHashName});
-          }
-        }
-      );
-    } catch (e) {
-      next(e);
-    }
-  }
 
   async download(req, res, next) {
     // Найти видео на бэке и отправить на фронт
     try {
-      if (!req.params?.videoName) {
-        next(ApiError.BadRequest('Отсутствует название видеофайла'));
+      if (!req.params.id) {
+        return next(ApiError.BadRequest('Отсутствует идентификатор видеофайла'));
       }
+      const { id } = req.params;
 
-      const { videoName } = req.params;
       const hashName = videoName;  // TODO Получить hashName из базы
       if (!hashName) {
-        next(ApiError.BadRequest(`Видеофайл ${videoName} не найден`));
+        return next(ApiError.BadRequest(`Видеофайл ${videoName} не найден`));
       }
 
       const stream = await ftpServer.get(hashName);

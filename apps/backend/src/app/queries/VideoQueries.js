@@ -24,7 +24,7 @@ class VideoQueries {
    * @param {string} description - подробная информация о видео
    * @returns {number}
    */
-  async downloadVideo(playListId, channelId, hashName, title, category, description) {
+  async uploadVideo(playListId, channelId, hashName, title, category, description) {
     try {
       const dVideo = await Video.create({
         playListId,
@@ -32,15 +32,16 @@ class VideoQueries {
         channelId,
       });
       if (dVideo) {
+        const videoId = dVideo.toJSON().id;
         await VideoInfo.create({
           hashName,
           category,
           description,
-          videoId: dVideo.id,
+          videoId,
         });
-        return dVideo.id;
+        return videoId;
       }
-      throw ApiError.BadRequest(`Не удалось загрузить видео!`);
+      throw ApiError.InternalServerError(`Не удалось сохранить видео!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -52,7 +53,7 @@ class VideoQueries {
    * @param {number} id - id видео
    * @returns {string}
    */
-  async uploadVideo(id) {
+  async downloadVideo(id) {
     try {
       const videoHash = await VideoInfo.findOne({where: {[Op.eq]: {videoId: id}}});
       if (videoHash) return videoHash.toJSON().hashName;
