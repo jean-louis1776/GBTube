@@ -55,7 +55,7 @@ class VideoQueries {
    */
   async downloadVideo(id) {
     try {
-      const videoHash = await VideoInfo.findOne({where: {[Op.eq]: {videoId: id}}});
+      const videoHash = await VideoInfo.findOne({where: {id}});
       if (videoHash) return videoHash.toJSON().hashName;
       throw ApiError.BadRequest(`Данное виде отсутствует на сервере`);
     } catch (e) {

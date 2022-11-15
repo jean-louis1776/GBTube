@@ -39,17 +39,16 @@ class VideoService {
 
       const video = await new ffmpeg(file.tempFilePath);
       await video.fnExtractFrameToJPG(
-        'tmp',
+        'tmp/jpg',
         {
-          number: 1,
+          number: 2,
           every_n_percentage: 50
         },
         async (err, files) => {
           if (!err) {
-            await ftpServer.put(files[0], frameHashName);
+            await ftpServer.put(files[1], frameHashName);
           }
           await fs.remove(path.resolve(path.resolve(), 'tmp'));
-          console.log(videoHashName);
           return res.json(await videoQueries.uploadVideo(playlistId, channelId, videoHashName, title, category, description));
         }
       );
@@ -58,9 +57,20 @@ class VideoService {
     }
   }
 
-  async create (playlistId, channelId, hashName, title, category, description) {
+  async download(id) {
     try {
-      return videoQueries.uploadVideo(playlistId, channelId, hashName, title, category, description);
+      const hashName = await videoQueries.downloadVideo(id);
+      return await ftpServer.get(hashName);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getFrameShot(id) {
+    try {
+      const hashName = await videoQueries.downloadVideo(id);
+      const frameName = path.parse(hashName).name + ".jpg";
+      return await ftpServer.get(frameName);
     } catch (e) {
       throw e;
     }
