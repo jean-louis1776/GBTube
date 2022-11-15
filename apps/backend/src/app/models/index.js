@@ -121,15 +121,15 @@ Channel.hasMany(ChannelSubscriber, {
 ChannelSubscriber.belongsTo(Channel, {
   foreignKey: 'channelId',
 });
-// Channel.hasMany(Video, {
-//   foreignKey: {
-//     name: 'channelId',
-//     allowNull: false,
-//   },
-// });
-// Video.belongsTo(Channel, {
-//   foreignKey: 'channelId',
-// });
+Channel.hasMany(Video, {
+  foreignKey: {
+    name: 'channelId',
+    allowNull: false,
+  },
+});
+Video.belongsTo(Channel, {
+  foreignKey: 'channelId',
+});
 Channel.hasMany(PlayList, {
   foreignKey: {
     name: 'channelId',
@@ -221,6 +221,10 @@ export const runDB = async function () {
     // await sequelize.sync({force: true});
     // await UserInfo.sync({ alter: true });
     // await PlayList.sync({ alter: true });
+    // await Answer.sync({ alter: true });
+    // await Comment.sync({ alter: true });
+    // await Video.sync({ alter: true });
+    // await VideoInfo.sync({ alter: true });
     // await Channel.sync({ alter: true });
     // await ChannelInfo.sync({ alter: true });
 

@@ -14,6 +14,9 @@ export const PlayList = sequelize.define('PlayList', {
     description: {
       type: DataTypes.TEXT,
     },
+    idList: {
+      type: DataTypes.TEXT,
+    },
   }, {
     timestamps: true,
     createdAt: false,

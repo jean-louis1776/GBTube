@@ -6,10 +6,20 @@ import fs from 'fs-extra';
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
 import { ftpServer } from '../../main.js';
-import userService from '../services/user.service.js';
+import videoService from '../services/video.service.js';
 
 class VideoController {
   // Принять видео с фронта, сделать frameShot и сохранить
+  async create(req, res, next) {
+    try {
+      
+      const hashName = await videoService.upload(req.files);
+
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async upload(req, res, next) {
     try {
       if (!req.files) {
@@ -45,7 +55,6 @@ class VideoController {
         }
       );
     } catch (e) {
-      console.log('e = ', e);
       next(e);
     }
   }
