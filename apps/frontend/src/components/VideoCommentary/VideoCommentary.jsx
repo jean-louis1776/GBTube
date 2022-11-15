@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
@@ -56,12 +56,16 @@ const VideoCommentary = () => {
             quo sit unde voluptas voluptates?
           </ShowMoreText>
           <Box>
-            <Button>
-              <ThumbUpOutlined />
-            </Button>
-            <Button>
-              <ThumbDownOutlined />
-            </Button>
+            <Tooltip title="Нравится">
+              <Button>
+                <ThumbUpOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Не нравится">
+              <Button>
+                <ThumbDownOutlined />
+              </Button>
+            </Tooltip>
             <Button onClick={() => setAnswer((prevState) => !prevState)}>
               Ответить
             </Button>

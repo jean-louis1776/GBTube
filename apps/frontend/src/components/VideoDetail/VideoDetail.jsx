@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
 import ReactPlayer from 'react-player';
-import { Typography, Box, Stack, Button, Avatar } from '@mui/material';
+import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
 import {
   AnnouncementOutlined,
   CheckCircle,
@@ -11,7 +11,8 @@ import {
   ThumbDownOutlined,
   ThumbUpOutlined,
 } from '@mui/icons-material';
-import { Loader, VideoCard } from '../';
+import Loader from '../Loader/Loader';
+import VideoCard from '../VideoCard/VideoCard';
 // import { fetchFromAPI } from '../utils/fetchFromAPI';
 import ShowMoreText from 'react-show-more-text';
 
@@ -22,9 +23,9 @@ import VideoCommentary from '../VideoCommentary/VideoCommentary';
 const VideoDetail = () => {
   const theme = useTheme();
 
-  const [videoDetail, setVideoDetail] = useState(null);
+  // const [videoDetail, setVideoDetail] = useState(null);
   const [videos, setVideos] = useState(null);
-  const { id } = useParams();
+  // const { id } = useParams();
 
   //   useEffect(() => {
   //     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
@@ -42,33 +43,33 @@ const VideoDetail = () => {
   //   snippet: { title, channelId, channelTitle, publishedAt },
   //   statistics: { viewCount, likeCount },
   // } = videoDetail;
+  const [likesCount, setLikesCount] = useState(1337);
+  const [dislikesCount, setDislikesCount] = useState(42);
+
+  const [like, setLike] = useState(['Nothing']);
+  const likeOrDislikeHandler = (like) =>
+    like.reduce((prev, cont) => (cont === prev ? 'Nothing' : cont), 'Nothing');
+
+  const pushReactionBtn = (reaction) => {
+    setLike(...like, reaction);
+    likeOrDislikeHandler(like);
+    console.log('LIKES STATE', like);
+  };
 
   return (
-    <Box
-      className={styles.wrapper}
-      // minHeight="95vh"
-    >
+    <Box className={styles.wrapper}>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
-          <Box
-            sx={{
-              width: '100%',
-              // position: 'sticky',
-              // top: '86px'
-              // flex: 1,
-            }}
-          >
+          <Box>
             {
               <div className={styles.playerWrapper}>
                 <ReactPlayer
                   // url={`https://www.youtube.com/watch?v=${id}`}
                   url={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
-                  pip={true}
+                  pip
                   className={styles.reactPlayer}
                   controls={true}
-                  width="1200px"
-                  height="678px"
                 />
               </div>
             }
@@ -83,7 +84,7 @@ const VideoDetail = () => {
                 {/*{title}*/}
                 Нева гона гив ю ап
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.85 }}>
+              <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
                 {parseInt(
                   '740'
                   // viewCount
@@ -122,42 +123,56 @@ const VideoDetail = () => {
                   gap="10px"
                   className={styles.reactionsBtn}
                 >
-                  <Button>
-                    <ThumbUpOutlined />
-                    <Typography
-                      variant="body1"
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
-                    >
-                      {parseInt(
-                        '1000'
-                        // likeCount
-                      ).toLocaleString()}{' '}
-                    </Typography>
-                  </Button>
-                  <Button>
-                    <ThumbDownOutlined />
-                    <Typography
-                      variant="body1"
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
-                    >
-                      {parseInt(
-                        '0'
-                        // dislikeCount
-                      ).toLocaleString()}{' '}
-                    </Typography>
-                  </Button>
+                  <Tooltip title="Нравится">
+                    <Button>
+                      <ThumbUpOutlined
+                        onClick={() => pushReactionBtn('Like')}
+                      />
+                      <Typography
+                        variant={'body1'}
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {parseInt(
+                          likesCount
+                          // likeCount
+                        ).toLocaleString()}{' '}
+                      </Typography>
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Не нравится">
+                    <Button>
+                      <ThumbDownOutlined
+                        onClick={() => pushReactionBtn('Dislike')}
+                      />
+                      <Typography
+                        variant="body1"
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {parseInt(
+                          dislikesCount
+                          // dislikeCount
+                        ).toLocaleString()}{' '}
+                      </Typography>
+                    </Button>
+                  </Tooltip>
                 </Stack>
-                <Button>
-                  <ReplyAllOutlined />
-                </Button>
-                <Button>
-                  <PlaylistAdd />
-                </Button>
-                <Button>
-                  <AnnouncementOutlined />
-                </Button>
+                <Tooltip title="Поделиться">
+                  <Button>
+                    <ReplyAllOutlined />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Добавить в плейлист">
+                  <Button>
+                    <PlaylistAdd />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Поддержка">
+                  <Button>
+                    <AnnouncementOutlined />
+                  </Button>
+                </Tooltip>
               </Stack>
             </Stack>
 
@@ -168,7 +183,7 @@ const VideoDetail = () => {
               backgroundColor={theme.palette.shadows.main}
             >
               <Box variant="body1" sx={{ opacity: 0.85 }}>
-                <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
                   Дата публикации:
                   {/*{publishedAt.substring(0, 10)}*/}
                 </Typography>
@@ -185,11 +200,13 @@ const VideoDetail = () => {
                 truncatedEndingComponent={'... '}
               >
                 <h4>Video Description</h4>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
-                aspernatur atque autem cum deleniti dolorem et facere impedit in
-                laboriosam maiores mollitia nobis nostrum obcaecati odit officia
-                omnis pariatur quam quia reiciendis sapiente similique tempore
-                totam unde velit, voluptas.
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
+                  aspernatur atque autem cum deleniti dolorem et facere impedit
+                  in laboriosam maiores mollitia nobis nostrum obcaecati odit
+                  officia omnis pariatur quam quia reiciendis sapiente similique
+                  tempore totam unde velit, voluptas.
+                </p>
                 <p>
                   Деньги денежки монетки бабосики копейки кэш лавешечку капусту
                   лавандосик золотишко слать мне на пальтишко:
@@ -215,7 +232,6 @@ const VideoDetail = () => {
           </Box>
         </Box>
         <Box
-          px={5}
           // py={{ md: 1, xs: 5 }}
           justifyContent="center"
           alignItems="center"
