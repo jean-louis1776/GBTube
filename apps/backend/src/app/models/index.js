@@ -211,7 +211,7 @@ AnswerLike.belongsTo(Answer, {
 
 // import {channelQueries} from '../queries/ChannelQueries'
 // import { playListQueries } from '../queries/PlayListQueries';
-
+// import {videoQueries} from '../queries/VideoQueries';
 
 export const runDB = async function () {
   try {
@@ -232,6 +232,8 @@ export const runDB = async function () {
     // await subscribers.increment('subscribersCount', {by: 1});
     // console.log(subscribers);
 
+    // const uVideo = await videoQueries.uploadVideo(6,29, 'sfsadццук12342343asdf', '12sfsцук123234adfsdf12', 'video', 'qweqweцук23411221233344');
+    // console.log(uVideo);
     // playListQueries.createPlayList(18, 'что то тут будет', 'и тут что то будет');
     // const playList3 = playListQueries.findAllPlayList(18);
     // // const playList3 = (await PlayList.findAll({where: {channelId: 18}})).map((value, index, array) => {
