@@ -1,5 +1,5 @@
 import styles from './edit-item-info.module.scss';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
 import React/*,{ useEffect, useState }*/ from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { CHANNEL, DESCRIPTION, ID_LIST, logo, TITLE } from '@constants/frontend';
@@ -14,11 +14,12 @@ import { useForm } from 'react-hook-form';
  * @constructor
  */
 export function EditItemInfo({ elemType, sendData }) {
+  const { id } = useParams();
   let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
   // let [title, setTitle] = useState('');
   // let [description, setDescription] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   // let [idList, setIdList] = useState(location.state.idList);
   const { register, handleSubmit, formState:{ errors, isValid, isDirty }, reset } = useForm({mode: 'onBlur'});
   // const handleTitleChange = (evt) => {
@@ -32,7 +33,9 @@ export function EditItemInfo({ elemType, sendData }) {
   // }
 
   const onSubmit = async ({title, description}) => {
-    const dto = {title, description, [ID_LIST]: location.state[ID_LIST].join(';')};
+    console.log(id);
+    const prepId = id.split('_').join(';')
+    const dto = {title, description, [ID_LIST]: prepId};
     try {
       await sendData(elemType, dto);
       reset();
