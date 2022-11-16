@@ -7,9 +7,9 @@ class VideoController {
       const { idList, title, category, description } = req.body;
       const [, channelId, playlistId] = idList.split(';');
       if (!await videoService.isNameUnique(+channelId, title)) {
-        return next(ApiError.BadRequest(`Видео с названием ${title} уже существует`))
+        return next(ApiError.BadRequest(`Видео с названием "${title}" уже существует`))
       }
-      return await videoService.upload(res, req.files, +playlistId, +channelId, title, category, description);
+      return await videoService.upload(res, req.files, idList, title, category, description);
     } catch (e) {
       next(e);
     }
@@ -42,6 +42,21 @@ class VideoController {
     }
   }
 
+  async getVideoInfoById(req, res, next) {
+    try {
+      return res.json(await videoService.getVideoInfoById(+req.params.id));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getVideosInfoByPlaylistId(req, res, next) {
+    try {
+      return res.json(await videoService.getVideosInfoByPlaylistId(+req.params.playlist_id));
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new VideoController();

@@ -2,9 +2,6 @@ import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
-import { PlayList } from "../models/PlayList";
-import { Channel } from "../models/Channel";
-import { ChannelInfo } from "../models/ChannelInfo";
 
 class VideoQueries {
 
@@ -12,14 +9,13 @@ class VideoQueries {
     modelFromQuery = modelFromQuery.toJSON();
     return {
       ...modelFromQuery.VideoInfo,
-      id: modelFromQuery.id,
       title: modelFromQuery.title,
     };
   }
 
 
-  async isVideo(title, channelId) {
-    return !!(await Video.findOne({
+  async isVideoNameUnique(title, channelId) {
+    return !(await Video.findOne({
       where: {
         [Op.and]:
           [{title}, {channelId}],
@@ -37,24 +33,26 @@ class VideoQueries {
    * @param {string} description - подробная информация о видео
    * @returns {number}
    */
-  async uploadVideo(playListId, channelId, hashName, title, category, description) {
+  async uploadVideo(idList, hashName, title, category, description) {
     try {
+      const [, channelId, playListId] = idList.split(';');
       const uVideo = await Video.create({
-        playListId,
+        playListId: +playListId,
         title,
-        channelId,
+        channelId: +channelId,
       });
-      if (dVideo) {
-        const videoId = dVideo.toJSON().id;
+      if (uVideo) {
+        const videoId = uVideo.toJSON().id;
+        idList += `;${videoId.toString()}`;
 
         await VideoInfo.create({
           hashName,
           category,
           description,
+          idList,
           videoId,
         });
         return videoId;
-
       }
       throw ApiError.InternalServerError(`Не удалось сохранить видео!`);
     } catch (e) {
@@ -89,7 +87,7 @@ class VideoQueries {
               [Op.and]: [
                 {channelId: fVideo.toJSON().channelId},
                 {title},
-                // {id: {[Op.ne]: id}}, // Что то вообще не понимаю для чего нам эта строчка для проверки уникальности
+                {id: {[Op.ne]: id}},
               ],
             },
           },
@@ -107,12 +105,12 @@ class VideoQueries {
 
   async findVideoById(id) {
     try {
-      const videoById = Video.findOne({
+      const videoById = await Video.findOne({
         where: {id},
-        include: [{model: VideoInfo, attributes: {exclude: ['videoId']}}],
+        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
       });
       if (videoById) return this.parsingQueryModel(videoById);
-      throw ApiError.BadRequest(`Виде с id: ${id} не найдено`);
+      throw ApiError.BadRequest(`Видео с id: ${id} не найдено`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -123,7 +121,7 @@ class VideoQueries {
     try {
       const videoByPlayListId = await Video.findAll({
         where: {playListId},
-        include: [{model: VideoInfo, attributes: {exclude: ['videoId']}}],
+        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
       });
       if (!videoByPlayListId) return null;
       const result = [];
@@ -136,8 +134,6 @@ class VideoQueries {
       throw(e);
     }
   }
-
-
 
   /**
    * Удаление видео
