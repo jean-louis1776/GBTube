@@ -60,9 +60,9 @@ export function App() {
         <Route path={`/${CHANNEL}/get_one/:id`} element={<VideoGrid childrenType={PLAYLIST} />} />
         <Route path={`/${PLAYLIST}/get_one/:id`} element={<VideoGrid childrenType={VIDEO} />} />
         <Route path={`/${VIDEO}/get_one/:id`} element={<VideoCard />} />
-        <Route path={`/${CHANNEL}/create/:id`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
-        <Route path={`/${PLAYLIST}/create/:id`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
-        <Route path={`/${VIDEO}/create/:id`} element={<UploadVideo />} />
+        <Route path={`/${CHANNEL}/create/:idList`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
+        <Route path={`/${PLAYLIST}/create/:idList`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
+        <Route path={`/${VIDEO}/create/:idList`} element={<UploadVideo />} />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
