@@ -91,6 +91,7 @@ class VideoService {
   async getVideoInfoById(id) {
     try {
       const video = await videoQueries.findVideoById(id);
+      if (!video) return {};
       const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
       return { ...video, ...nickChannelNames };
     } catch (e) {
@@ -101,6 +102,7 @@ class VideoService {
   async getVideosInfoByPlaylistId(playlistId) {
     try {
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
+      if (!videos?.length) return [];
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
       return videos.map(video => {
         return { ...video, ...nickChannelNames }
