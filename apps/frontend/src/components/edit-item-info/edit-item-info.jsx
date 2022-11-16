@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
  * @constructor
  */
 export function EditItemInfo({ elemType, sendData }) {
-  const { id } = useParams();
+  const { idList } = useParams();
   let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
   // let [title, setTitle] = useState('');
   // let [description, setDescription] = useState('');
@@ -33,8 +33,8 @@ export function EditItemInfo({ elemType, sendData }) {
   // }
 
   const onSubmit = async ({title, description}) => {
-    console.log(id);
-    const prepId = id.split('_').join(';')
+    console.log(idList);
+    const prepId = idList.split('_').join(';')
     const dto = {title, description, [ID_LIST]: prepId};
     try {
       await sendData(elemType, dto);
@@ -48,7 +48,7 @@ export function EditItemInfo({ elemType, sendData }) {
   // useEffect(() => {
   //   const elemId = location.state[ID_LIST].at(-1);
   //   const fetchData = async () => {
-  //     const {/*id ,*/ title, description} = await EditItemController.getItemById(elemType, elemId);
+  //     const {/*idList ,*/ title, description} = await EditItemController.getItemById(elemType, elemId);
   //     // setTitle(title);
   //     // setDescription(description);
   //   }
