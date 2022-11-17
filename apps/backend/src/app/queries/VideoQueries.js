@@ -35,7 +35,7 @@ class VideoQueries {
    */
   async uploadVideo(idList, hashName, title, category, description) {
     try {
-      const [, channelId, playListId] = idList.split(';');
+      const [, channelId, playListId] = idList.split('_');  //!
       const uVideo = await Video.create({
         playListId: +playListId,
         title,
@@ -43,7 +43,7 @@ class VideoQueries {
       });
       if (uVideo) {
         const videoId = uVideo.toJSON().id;
-        idList += `;${videoId.toString()}`;
+        idList += `_${videoId.toString()}`;                 //!
 
         await VideoInfo.create({
           hashName,
