@@ -23,11 +23,13 @@ import {
   VideoCard,
   UserProfile,
   VideoGrid,
+  PlayListGrid,
+  ChannelGrid
 } from '../components';
+import VideoDetail from '../components/VideoDetail/VideoDetail';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
 import EditItemController from '../controllers/EditItemController';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
-import VideoDetail from '../components/VideoDetail/VideoDetail';
 
 export function App() {
   const dispatch = useDispatch();
@@ -52,44 +54,18 @@ export function App() {
         <Route path="/likes" element={<Likes />} />
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
-        <Route path={`/${CHANNEL}/get_all/:parent_id`} element={<VideoGrid childrenType={CHANNEL} />} />
-        <Route path={`/${PLAYLIST}/get_all/:parent_id`} element={<VideoGrid childrenType={PLAYLIST} />} />
-        <Route path={`/${VIDEO}/get_all/:parent_id`} element={<VideoGrid childrenType={VIDEO} />} />
+        <Route path={`/${CHANNEL}/get_all/:user_id`} element={<ChannelGrid />} />
+        <Route path={`/${PLAYLIST}/get_all/:idList`} element={<PlayListGrid />} />
+        <Route path={`/${VIDEO}/get_all/:idList`} element={<VideoGrid childrenType={VIDEO} />} />
         <Route path={`/${CHANNEL}/get_one/:id`} element={<VideoGrid childrenType={PLAYLIST} />} />
         <Route path={`/${PLAYLIST}/get_one/:id`} element={<VideoGrid childrenType={VIDEO} />} />
         <Route path={`/${VIDEO}/get_one/:id`} element={<VideoCard />} />
-        <Route
-          path={`/${CHANNEL}/create`}
-          element={
-            <EditItemInfo
-              elemType={CHANNEL}
-              sendData={EditItemController.addItem}
-            />
-          }
-        />
-        <Route
-          path={`/${PLAYLIST}/create`}
-          element={
-            <EditItemInfo
-              elemType={PLAYLIST}
-              sendData={EditItemController.addItem}
-            />
-          }
-        />
-        <Route path={`/${VIDEO}/create`} element={<UploadVideo />} />
-        <Route path="videoDetail" element={<VideoDetail />} />
-        <Route
-          path="/edit-item"
-          element={
-            <EditItemInfo
-              elemType={CHANNEL}
-              idList={['123']}
-              sendData={EditItemController.addItem}
-            />
-          }
-        />
+        <Route path={`/${CHANNEL}/create/:idList`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
+        <Route path={`/${PLAYLIST}/create/:idList`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
+        <Route path={`/${VIDEO}/create/:idList`} element={<UploadVideo />} />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />
+        <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Box>

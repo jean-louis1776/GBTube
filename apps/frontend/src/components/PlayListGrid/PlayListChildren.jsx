@@ -1,12 +1,12 @@
-import styles from './child-item.module.scss';
+import styles from './PlayListChildren.module.scss';
 import { Button, Typography } from '@mui/material';
 import { /*useLocation,*/ useNavigate/*, useParams*/ } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { Loader } from '../index';
-import { CHANNEL, PLAYLIST } from '@constants/frontend';
+import { VIDEO } from '@constants/frontend';
 
-export const ChildItem = ({ childType, itemId }) => {
+export const PlayListChildren = ({ childType, itemId }) => {
   // const { channel_id } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
@@ -30,8 +30,7 @@ export const ChildItem = ({ childType, itemId }) => {
   },[]);
 
   const handleClick = () => {
-    const type = childType === CHANNEL ? PLAYLIST : CHANNEL;
-    const url = `/${type}/get_all/${idListState.join('_')}`
+    const url = `/${VIDEO}/get_all/${idListState.join('_')}`
     console.log(url);
     console.log(idListState, 'idListState');
     navigate(url, { state:  [...idListState]  });
@@ -39,10 +38,10 @@ export const ChildItem = ({ childType, itemId }) => {
 
   return (
     // <Link to={`/${childType}/get_one/:${id}`}></Link>
-      <Button onClick={handleClick} className={styles.child}>
-        {/*Title: {props.title}*/}
-        {content}
-      </Button>
+    <Button onClick={handleClick} className={styles.child}>
+      {/*Title: {props.title}*/}
+      {content}
+    </Button>
   );
 }
-export default ChildItem;
+export default PlayListChildren;

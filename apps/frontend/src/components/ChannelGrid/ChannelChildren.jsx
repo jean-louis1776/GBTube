@@ -1,12 +1,12 @@
-import styles from './child-item.module.scss';
+import styles from './ChannelChildren.module.scss';
 import { Button, Typography } from '@mui/material';
 import { /*useLocation,*/ useNavigate/*, useParams*/ } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { Loader } from '../index';
-import { CHANNEL, PLAYLIST } from '@constants/frontend';
+import { PLAYLIST } from '@constants/frontend';
 
-export const ChildItem = ({ childType, itemId }) => {
+export const ChannelChildren = ({ childType, itemId }) => {
   // const { channel_id } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
@@ -25,13 +25,13 @@ export const ChildItem = ({ childType, itemId }) => {
     }
     fetchData().catch(() => {
       setContent(<Typography className={styles.title}>No data</Typography>);
-      console.log(`${childType} ID: ${itemId} not found in ChildItem`);
+      console.log(`${PLAYLIST} ID: ${itemId} not found in ChildItem`);
     });
   },[]);
 
   const handleClick = () => {
-    const type = childType === CHANNEL ? PLAYLIST : CHANNEL;
-    const url = `/${type}/get_all/${idListState.join('_')}`
+
+    const url = `/${PLAYLIST}/get_all/${idListState.join('_')}`
     console.log(url);
     console.log(idListState, 'idListState');
     navigate(url, { state:  [...idListState]  });
@@ -39,10 +39,10 @@ export const ChildItem = ({ childType, itemId }) => {
 
   return (
     // <Link to={`/${childType}/get_one/:${id}`}></Link>
-      <Button onClick={handleClick} className={styles.child}>
-        {/*Title: {props.title}*/}
-        {content}
-      </Button>
+    <Button onClick={handleClick} className={styles.child}>
+      {/*Title: {props.title}*/}
+      {content}
+    </Button>
   );
 }
-export default ChildItem;
+export default ChannelChildren;

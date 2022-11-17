@@ -205,6 +205,21 @@ class UserQueries {
       throw(e);
     }
   }
+
+  async getNickNameById(id) {
+    try {
+      const result = await User.findOne(
+        {
+          attributes: ['nickName'],
+          where: {id}
+        }
+      );
+      if (!result) return null;
+      return result.toJSON().nickName;
+    } catch (e) {
+      throw(e);
+    }
+  }
 }
 
 export const userQueries = new UserQueries();
