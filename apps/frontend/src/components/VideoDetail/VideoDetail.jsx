@@ -10,6 +10,8 @@ import {
   ReplyAllOutlined,
   ThumbDownOutlined,
   ThumbUpOutlined,
+  ThumbUp,
+  ThumbDown,
 } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import VideoCard from '../VideoCard/VideoCard';
@@ -17,11 +19,52 @@ import VideoCard from '../VideoCard/VideoCard';
 import ShowMoreText from 'react-show-more-text';
 
 import styles from './VideoDetail.module.scss';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSelector } from '../../store/getSelector';
+import { Helmet } from 'react-helmet';
+import {
+  setReaction,
+  reactionHandler,
+} from '../../features/video/reactionsSlice';
 
 const VideoDetail = () => {
   const theme = useTheme();
+
+  const ReactionButton = styled(Button)(({ theme }) => ({
+    borderRadius: '40px',
+    transition: '.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.shadows.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
+
+  const SubscribeButton = styled(Button)(({ theme }) => ({
+    borderRadius: '40px',
+    padding: '7px 15px',
+    transition: '.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.shadows.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
+
+  const dispatch = useDispatch();
+
+  const reaction = useSelector(getSelector('reactions', 'like'));
+  const reactionLikeCount = useSelector(getSelector('reactions', 'likesCount'));
+  const reactionDislikeCount = useSelector(
+    getSelector('reactions', 'dislikesCount')
+  );
+
+  const likeOrDislikeHandler = (likes) =>
+    likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
+
+  const currentReaction = likeOrDislikeHandler(reaction);
+
+  const [subscribe, setSubscribe] = useState(true);
 
   // const [videoDetail, setVideoDetail] = useState(null);
   const [videos, setVideos] = useState(null);
@@ -43,21 +86,15 @@ const VideoDetail = () => {
   //   snippet: { title, channelId, channelTitle, publishedAt },
   //   statistics: { viewCount, likeCount },
   // } = videoDetail;
-  const [likesCount, setLikesCount] = useState(1337);
-  const [dislikesCount, setDislikesCount] = useState(42);
-
-  const [like, setLike] = useState(['Nothing']);
-  const likeOrDislikeHandler = (like) =>
-    like.reduce((prev, cont) => (cont === prev ? 'Nothing' : cont), 'Nothing');
-
-  const pushReactionBtn = (reaction) => {
-    setLike(...like, reaction);
-    likeOrDislikeHandler(like);
-    console.log('LIKES STATE', like);
-  };
 
   return (
     <Box className={styles.wrapper}>
+      <Helmet>
+        <title>
+          {/*{title}*/}
+          VideoTitle | GeekTube
+        </title>
+      </Helmet>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
@@ -115,63 +152,93 @@ const VideoDetail = () => {
                     />
                   </Box>
                 </Link>
-                <Button>Подписаться</Button>
+                {subscribe ? (
+                  <SubscribeButton
+                    onClick={() => setSubscribe((prevState) => !prevState)}
+                    sx={{
+                      marginLeft: '1rem',
+                      backgroundColor: theme.palette.coplimentPink.main,
+                      color: theme.palette.coplimentPink.contrastText,
+                    }}
+                  >
+                    Подписаться
+                  </SubscribeButton>
+                ) : (
+                  <SubscribeButton
+                    onClick={() => setSubscribe((prevState) => !prevState)}
+                    sx={{
+                      marginLeft: '1rem',
+                    }}
+                  >
+                    Отписаться
+                  </SubscribeButton>
+                )}
               </Stack>
-              <Stack direction="row" gap="20px" className={styles.reactions}>
+              <Stack direction="row" gap="10px">
                 <Stack
                   direction="row"
                   gap="10px"
                   className={styles.reactionsBtn}
                 >
                   <Tooltip title="Нравится">
-                    <Button>
-                      <ThumbUpOutlined
-                        onClick={() => pushReactionBtn('Like')}
-                      />
+                    <ReactionButton
+                      onClick={() => dispatch(setReaction('Like'))}
+                    >
+                      {currentReaction === 'Like' ? (
+                        <ThumbUp
+                          sx={{
+                            color: theme.palette.coplimentPink.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbUpOutlined />
+                      )}
                       <Typography
                         variant={'body1'}
                         sx={{ opacity: 0.7 }}
                         marginLeft={2}
                       >
-                        {parseInt(
-                          likesCount
-                          // likeCount
-                        ).toLocaleString()}{' '}
+                        {+reactionLikeCount}{' '}
                       </Typography>
-                    </Button>
+                    </ReactionButton>
                   </Tooltip>
                   <Tooltip title="Не нравится">
-                    <Button>
-                      <ThumbDownOutlined
-                        onClick={() => pushReactionBtn('Dislike')}
-                      />
+                    <ReactionButton
+                      onClick={() => dispatch(setReaction('Dislike'))}
+                    >
+                      {currentReaction === 'Dislike' ? (
+                        <ThumbDown
+                          sx={{
+                            color: theme.palette.coplimentPink.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbDownOutlined />
+                      )}
                       <Typography
                         variant="body1"
                         sx={{ opacity: 0.7 }}
                         marginLeft={2}
                       >
-                        {parseInt(
-                          dislikesCount
-                          // dislikeCount
-                        ).toLocaleString()}{' '}
+                        {+reactionDislikeCount}{' '}
                       </Typography>
-                    </Button>
+                    </ReactionButton>
                   </Tooltip>
                 </Stack>
                 <Tooltip title="Поделиться">
-                  <Button>
+                  <ReactionButton>
                     <ReplyAllOutlined />
-                  </Button>
+                  </ReactionButton>
                 </Tooltip>
                 <Tooltip title="Добавить в плейлист">
-                  <Button>
+                  <ReactionButton>
                     <PlaylistAdd />
-                  </Button>
+                  </ReactionButton>
                 </Tooltip>
                 <Tooltip title="Поддержка">
-                  <Button>
+                  <ReactionButton>
                     <AnnouncementOutlined />
-                  </Button>
+                  </ReactionButton>
                 </Tooltip>
               </Stack>
             </Stack>
@@ -199,7 +266,6 @@ const VideoDetail = () => {
                 // width={800}
                 truncatedEndingComponent={'... '}
               >
-                <h4>Video Description</h4>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
                   aspernatur atque autem cum deleniti dolorem et facere impedit
@@ -216,18 +282,35 @@ const VideoDetail = () => {
             </Box>
 
             <Typography paddingLeft="1rem" marginTop="2rem">
-              CommentSection
+              Комментарии
             </Typography>
 
             <Box
               className={styles.commentSection}
               backgroundColor={theme.palette.shadows.main}
             >
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
+              {
+                <Box className={styles.userCommentary}>
+                  <Avatar />
+                  <input
+                    type="text"
+                    className={styles.commentaryInput}
+                    placeholder="Оставьте комментарий"
+                  />
+                </Box>
+              }
+
+              {/*<Typography variant={'body1'}>*/}
+              {/*  Пока нет комментариев...*/}
+              {/*</Typography>*/}
+
+              <div>
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+              </div>
             </Box>
           </Box>
         </Box>

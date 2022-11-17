@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import {
   TextField,
@@ -12,8 +12,6 @@ import {
 import { styled, useTheme } from '@mui/material/styles';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
-import styles from './userProfile.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearUser,
@@ -25,6 +23,9 @@ import { userProfileFormSchema } from './validation';
 import { getSelector } from '../../store/getSelector';
 import { PhotoCamera } from '@mui/icons-material';
 import store from '../../store/store';
+
+import styles from './userProfile.module.scss';
+import { Helmet } from 'react-helmet';
 
 const UserProfile = () => {
   const theme = useTheme();
@@ -111,6 +112,10 @@ const UserProfile = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Мой профиль | GeekTube</title>
+      </Helmet>
+      ;
       <Header />
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
         <Paper className={styles.userForm_container}>

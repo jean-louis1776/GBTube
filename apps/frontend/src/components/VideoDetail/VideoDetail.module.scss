@@ -46,6 +46,27 @@
   width: 100%;
 }
 
+.userCommentary {
+  display: flex;
+  margin: 0 0 20px 0;
+}
+
+.commentaryInput {
+  font-size: 1rem;
+  width: 30vw;
+  outline: none;
+  color: white;
+  margin: 0 0 0 20px;
+  border: 0;
+  background: transparent;
+  &:focus {
+    border-bottom: 2px solid steelblue;
+  }
+  &::placeholder {
+    color: white;
+  }
+}
+
 .comment {
   display: flex;
   justify-content: flex-start;

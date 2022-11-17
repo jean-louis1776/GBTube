@@ -17,9 +17,12 @@ export const uploadVideo = createAsyncThunk(
   }
 );
 
-export const getServerVideo = createAsyncThunk(
+export const getVideoById = createAsyncThunk(
   'video/getServerVideo',
-  async (videoId, { rejectWithValue, dispatch }) => {}
+  async (videoId, { rejectWithValue, dispatch }) => {
+    const video = await VideoController.getVideobyId(videoId);
+    dispatch(getVideo(video));
+  }
 );
 
 export const videoSlice = createSlice({
@@ -29,7 +32,9 @@ export const videoSlice = createSlice({
     setVideo: (state, { payload }) => {
       state.video = payload;
     },
-    getVideo: () => {},
+    getVideo: (state, { payload }) => {
+      state.video = payload;
+    },
   },
 });
 
