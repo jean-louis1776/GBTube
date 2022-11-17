@@ -5,7 +5,7 @@ class VideoController {
   async create(req, res, next) {
     try {
       const { idList, title, category, description } = req.body;
-      const [, channelId] = idList.split(';');
+      const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
         return next(ApiError.BadRequest(`Видео с названием "${title}" уже существует`))
       }

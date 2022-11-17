@@ -15,7 +15,7 @@ import { Channel } from '../models/Channel.js';
 class VideoService {
   async getNickAndPlaylistNames(idList) {
     try {
-      const [userId, channelId] = idList.split(';');
+      const [userId, channelId] = idList.split('_');
       const nickName = await userQueries.getNickNameById(+userId);
       const channelName = (await Channel.findOne({attributes: ['title'], where: { id: +channelId }})).toJSON().title;
       return { nickName, channelName };

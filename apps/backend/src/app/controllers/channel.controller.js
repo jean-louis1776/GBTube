@@ -5,7 +5,7 @@ class ChannelController {
     try {
       console.log(req.body);
       const { title, description, idList } = req.body;
-      const userId = idList.split(';')[0];
+      const userId = idList.split('_')[0];
       return res.json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
@@ -15,7 +15,7 @@ class ChannelController {
   async edit(req, res, next) {
     try {
       const { updatingChannel, idList } = req.body;
-      const [userId, channelId] = idList.split(';');
+      const [userId, channelId] = idList.split('_');
       return res.json(await channelService.edit(+channelId, +userId, updatingChannel));
     } catch (e) {
       next(e);
