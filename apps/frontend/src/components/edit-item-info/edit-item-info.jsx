@@ -2,7 +2,7 @@ import styles from './edit-item-info.module.scss';
 import { Link, /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
 import React/*,{ useEffect, useState }*/ from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
-import { CHANNEL, DESCRIPTION, ID_LIST, logo, TITLE } from '@constants/frontend';
+import { CHANNEL, DESCRIPTION, logo, TITLE } from '@constants/frontend';
 // import EditItemController from '../../controllers/EditItemController';
 import { useForm } from 'react-hook-form';
 
@@ -34,8 +34,8 @@ export function EditItemInfo({ elemType, sendData }) {
 
   const onSubmit = async ({title, description}) => {
     console.log(idList);
-    const prepId = idList.split('_').join(';')
-    const dto = {title, description, [ID_LIST]: prepId};
+    // const prepId = idList.split('_').join(';')
+    const dto = {title, description, idList};
     try {
       await sendData(elemType, dto);
       reset();
