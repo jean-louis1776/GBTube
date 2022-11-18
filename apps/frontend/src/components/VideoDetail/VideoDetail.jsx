@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
 import ReactPlayer from 'react-player';
-import { Typography, Box, Stack, Button, Avatar } from '@mui/material';
+import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
 import {
   AnnouncementOutlined,
   CheckCircle,
@@ -10,21 +10,65 @@ import {
   ReplyAllOutlined,
   ThumbDownOutlined,
   ThumbUpOutlined,
+  ThumbUp,
+  ThumbDown,
 } from '@mui/icons-material';
-import { Loader, VideoCard } from '../';
+import Loader from '../Loader/Loader';
+import VideoCard from '../VideoCard/VideoCard';
 // import { fetchFromAPI } from '../utils/fetchFromAPI';
 import ShowMoreText from 'react-show-more-text';
 
 import styles from './VideoDetail.module.scss';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSelector } from '../../store/getSelector';
+import { Helmet } from 'react-helmet';
+import {
+  setReaction,
+  reactionHandler,
+} from '../../features/video/reactionsSlice';
 
 const VideoDetail = () => {
   const theme = useTheme();
 
-  const [videoDetail, setVideoDetail] = useState(null);
+  const ReactionButton = styled(Button)(({ theme }) => ({
+    borderRadius: '40px',
+    transition: '.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.shadows.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
+
+  const SubscribeButton = styled(Button)(({ theme }) => ({
+    borderRadius: '40px',
+    padding: '7px 15px',
+    transition: '.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.shadows.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
+
+  const dispatch = useDispatch();
+
+  const reaction = useSelector(getSelector('reactions', 'like'));
+  const reactionLikeCount = useSelector(getSelector('reactions', 'likesCount'));
+  const reactionDislikeCount = useSelector(
+    getSelector('reactions', 'dislikesCount')
+  );
+
+  const likeOrDislikeHandler = (likes) =>
+    likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
+
+  const currentReaction = likeOrDislikeHandler(reaction);
+
+  const [subscribe, setSubscribe] = useState(true);
+
+  // const [videoDetail, setVideoDetail] = useState(null);
   const [videos, setVideos] = useState(null);
-  const { id } = useParams();
+  // const { id } = useParams();
 
   //   useEffect(() => {
   //     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
@@ -44,31 +88,25 @@ const VideoDetail = () => {
   // } = videoDetail;
 
   return (
-    <Box
-      className={styles.wrapper}
-      // minHeight="95vh"
-    >
+    <Box className={styles.wrapper}>
+      <Helmet>
+        <title>
+          {/*{title}*/}
+          VideoTitle | GeekTube
+        </title>
+      </Helmet>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
-          <Box
-            sx={{
-              width: '100%',
-              // position: 'sticky',
-              // top: '86px'
-              // flex: 1,
-            }}
-          >
+          <Box>
             {
               <div className={styles.playerWrapper}>
                 <ReactPlayer
                   // url={`https://www.youtube.com/watch?v=${id}`}
                   url={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
-                  pip={true}
+                  pip
                   className={styles.reactPlayer}
                   controls={true}
-                  width="1200px"
-                  height="678px"
                 />
               </div>
             }
@@ -83,7 +121,7 @@ const VideoDetail = () => {
                 {/*{title}*/}
                 Нева гона гив ю ап
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.85 }}>
+              <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
                 {parseInt(
                   '740'
                   // viewCount
@@ -114,50 +152,94 @@ const VideoDetail = () => {
                     />
                   </Box>
                 </Link>
-                <Button>Подписаться</Button>
+                {subscribe ? (
+                  <SubscribeButton
+                    onClick={() => setSubscribe((prevState) => !prevState)}
+                    sx={{
+                      marginLeft: '1rem',
+                      backgroundColor: theme.palette.coplimentPink.main,
+                      color: theme.palette.coplimentPink.contrastText,
+                    }}
+                  >
+                    Подписаться
+                  </SubscribeButton>
+                ) : (
+                  <SubscribeButton
+                    onClick={() => setSubscribe((prevState) => !prevState)}
+                    sx={{
+                      marginLeft: '1rem',
+                    }}
+                  >
+                    Отписаться
+                  </SubscribeButton>
+                )}
               </Stack>
-              <Stack direction="row" gap="20px" className={styles.reactions}>
+              <Stack direction="row" gap="10px">
                 <Stack
                   direction="row"
                   gap="10px"
                   className={styles.reactionsBtn}
                 >
-                  <Button>
-                    <ThumbUpOutlined />
-                    <Typography
-                      variant="body1"
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
+                  <Tooltip title="Нравится">
+                    <ReactionButton
+                      onClick={() => dispatch(setReaction('Like'))}
                     >
-                      {parseInt(
-                        '1000'
-                        // likeCount
-                      ).toLocaleString()}{' '}
-                    </Typography>
-                  </Button>
-                  <Button>
-                    <ThumbDownOutlined />
-                    <Typography
-                      variant="body1"
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
+                      {currentReaction === 'Like' ? (
+                        <ThumbUp
+                          sx={{
+                            color: theme.palette.coplimentPink.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbUpOutlined />
+                      )}
+                      <Typography
+                        variant={'body1'}
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {+reactionLikeCount}{' '}
+                      </Typography>
+                    </ReactionButton>
+                  </Tooltip>
+                  <Tooltip title="Не нравится">
+                    <ReactionButton
+                      onClick={() => dispatch(setReaction('Dislike'))}
                     >
-                      {parseInt(
-                        '0'
-                        // dislikeCount
-                      ).toLocaleString()}{' '}
-                    </Typography>
-                  </Button>
+                      {currentReaction === 'Dislike' ? (
+                        <ThumbDown
+                          sx={{
+                            color: theme.palette.coplimentPink.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbDownOutlined />
+                      )}
+                      <Typography
+                        variant="body1"
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {+reactionDislikeCount}{' '}
+                      </Typography>
+                    </ReactionButton>
+                  </Tooltip>
                 </Stack>
-                <Button>
-                  <ReplyAllOutlined />
-                </Button>
-                <Button>
-                  <PlaylistAdd />
-                </Button>
-                <Button>
-                  <AnnouncementOutlined />
-                </Button>
+                <Tooltip title="Поделиться">
+                  <ReactionButton>
+                    <ReplyAllOutlined />
+                  </ReactionButton>
+                </Tooltip>
+                <Tooltip title="Добавить в плейлист">
+                  <ReactionButton>
+                    <PlaylistAdd />
+                  </ReactionButton>
+                </Tooltip>
+                <Tooltip title="Поддержка">
+                  <ReactionButton>
+                    <AnnouncementOutlined />
+                  </ReactionButton>
+                </Tooltip>
               </Stack>
             </Stack>
 
@@ -168,7 +250,7 @@ const VideoDetail = () => {
               backgroundColor={theme.palette.shadows.main}
             >
               <Box variant="body1" sx={{ opacity: 0.85 }}>
-                <Typography variant="body1" sx={{ opacity: 0.7 }}>
+                <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
                   Дата публикации:
                   {/*{publishedAt.substring(0, 10)}*/}
                 </Typography>
@@ -184,12 +266,13 @@ const VideoDetail = () => {
                 // width={800}
                 truncatedEndingComponent={'... '}
               >
-                <h4>Video Description</h4>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
-                aspernatur atque autem cum deleniti dolorem et facere impedit in
-                laboriosam maiores mollitia nobis nostrum obcaecati odit officia
-                omnis pariatur quam quia reiciendis sapiente similique tempore
-                totam unde velit, voluptas.
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
+                  aspernatur atque autem cum deleniti dolorem et facere impedit
+                  in laboriosam maiores mollitia nobis nostrum obcaecati odit
+                  officia omnis pariatur quam quia reiciendis sapiente similique
+                  tempore totam unde velit, voluptas.
+                </p>
                 <p>
                   Деньги денежки монетки бабосики копейки кэш лавешечку капусту
                   лавандосик золотишко слать мне на пальтишко:
@@ -199,23 +282,39 @@ const VideoDetail = () => {
             </Box>
 
             <Typography paddingLeft="1rem" marginTop="2rem">
-              CommentSection
+              Комментарии
             </Typography>
 
             <Box
               className={styles.commentSection}
               backgroundColor={theme.palette.shadows.main}
             >
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
-              <VideoCommentary />
+              {
+                <Box className={styles.userCommentary}>
+                  <Avatar />
+                  <input
+                    type="text"
+                    className={styles.commentaryInput}
+                    placeholder="Оставьте комментарий"
+                  />
+                </Box>
+              }
+
+              {/*<Typography variant={'body1'}>*/}
+              {/*  Пока нет комментариев...*/}
+              {/*</Typography>*/}
+
+              <div>
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+                <VideoCommentary />
+              </div>
             </Box>
           </Box>
         </Box>
         <Box
-          px={5}
           // py={{ md: 1, xs: 5 }}
           justifyContent="center"
           alignItems="center"

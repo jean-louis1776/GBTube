@@ -7,6 +7,8 @@ import userProfileSlice from '../features/userProfile/userProfileSlice';
 import userPasswordSlice from '../features/userPassword/userPasswordSlice';
 import authSlice from '../features/auth/authSlice';
 import AvatarUpdateSlice from '../features/AvatarUpdate/AvatarUpdateSlice';
+import videoSlice from '../features/video/videoSlice';
+import reactionSlice from '../features/video/reactionsSlice';
 
 export default configureStore({
   reducer: {
@@ -18,5 +20,7 @@ export default configureStore({
     userPassword: userPasswordSlice,
     userAvatar: AvatarUpdateSlice,
     auth: authSlice,
+    video: videoSlice,
+    reactions: reactionSlice,
   },
 });

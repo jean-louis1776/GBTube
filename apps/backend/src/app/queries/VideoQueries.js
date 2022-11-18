@@ -4,12 +4,21 @@ import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
 
 class VideoQueries {
-  //вот тут я не совсем понял тебе что возвращать ошибку через try/catch или все таки true/false
-  async isVideo(playListId, channelId) {
-    return !!(await Video.findOne({
+
+  parsingQueryModel(modelFromQuery) {
+    modelFromQuery = modelFromQuery.toJSON();
+    return {
+      ...modelFromQuery.VideoInfo,
+      title: modelFromQuery.title,
+    };
+  }
+
+
+  async isVideoNameUnique(title, channelId) {
+    return !(await Video.findOne({
       where: {
         [Op.and]:
-          [{playListId}, {channelId}],
+          [{title}, {channelId}],
       },
     }));
   }
@@ -24,23 +33,28 @@ class VideoQueries {
    * @param {string} description - подробная информация о видео
    * @returns {number}
    */
-  async downloadVideo(playListId, channelId, hashName, title, category, description) {
+  async uploadVideo(idList, hashName, title, category, description) {
     try {
-      const dVideo = await Video.create({
-        playListId,
+      const [, channelId, playListId] = idList.split('_');  //!
+      const uVideo = await Video.create({
+        playListId: +playListId,
         title,
-        channelId,
+        channelId: +channelId,
       });
-      if (dVideo) {
+      if (uVideo) {
+        const videoId = uVideo.toJSON().id;
+        idList += `_${videoId.toString()}`;                 //!
+
         await VideoInfo.create({
           hashName,
           category,
           description,
-          videoId: dVideo.id,
+          idList,
+          videoId,
         });
-        return dVideo.id;
+        return videoId;
       }
-      throw ApiError.BadRequest(`Не удалось загрузить видео!`);
+      throw ApiError.InternalServerError(`Не удалось сохранить видео!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -52,11 +66,69 @@ class VideoQueries {
    * @param {number} id - id видео
    * @returns {string}
    */
-  async uploadVideo(id) {
+  async downloadVideo(id) {
     try {
-      const videoHash = await VideoInfo.findOne({where: {[Op.eq]: {videoId: id}}});
+      const videoHash = await VideoInfo.findOne({where: {id}});
       if (videoHash) return videoHash.toJSON().hashName;
-      throw ApiError.BadRequest(`Данное виде отсутствует на сервере`);
+      throw ApiError.BadRequest(`Данное видео отсутствует на сервере`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async updateVideoInfo(id, title, category, description) {
+    try {
+      const fVideo = await Video.findOne({where: id});
+      if (title) {
+        if (await Video.findOne(
+          {
+            where: {
+              [Op.and]: [
+                {channelId: fVideo.toJSON().channelId},
+                {title},
+                {id: {[Op.ne]: id}},
+              ],
+            },
+          },
+        )) {
+          throw ApiError.BadRequest(`Видео с именем ${title} уже существует канале!`);
+        }
+        await Video.update({title}, {where: {id}});
+      }
+      return !!(await VideoInfo.update({category, description}, {where: {videoId: id}}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async findVideoById(id) {
+    try {
+      const videoById = await Video.findOne({
+        where: {id},
+        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+      });
+      if (videoById) return this.parsingQueryModel(videoById);
+      throw ApiError.BadRequest(`Видео с id: ${id} не найдено`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async findAllVideoByPlayList(playListId) {
+    try {
+      const videoByPlayListId = await Video.findAll({
+        where: {playListId},
+        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+      });
+      if (!videoByPlayListId) return null;
+      const result = [];
+      for (const videoByList of videoByPlayListId) {
+        result.push(this.parsingQueryModel(videoByList));
+      }
+      return result;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -64,56 +136,16 @@ class VideoQueries {
   }
 
   /**
-   * Поиск видео по имени видео
-   * @param {string} videoName - имя канала
-   * @returns {Object}
-   */
-  async findChannelByName(videoName) {
-    return Video.findOne(
-      {
-        where: {
-          name: videoName,
-        },
-        include: [
-          {
-            model: VideoInfo,
-          },
-        ],
-      },
-    );
-  }
-
-  /**
-   * Поиск видео принадлежащих каналу
-   * @param {number} videoId  - имя канала
-   * @returns {Object}
-   */
-  async findChannelByChannel(videoId) {
-    return Video.findOne(
-      {
-        where: {
-          videoId: videoId,
-        },
-        include: [
-          {
-            model: VideoInfo,
-          },
-        ],
-      },
-    );
-  }
-
-  /**
    * Удаление видео
    * @param {number} channelId - id канала с видео
    * @returns {Object}
    */
-  async deleteChannel(channelId) {
-    return await Video.destroy({
-      where: {
-        channelId: channelId,
-      },
-    });
+  async deleteChannel(id) {
+    try {
+      return !!(await Video.destroy({where: {id}}));
+    } catch (e) {
+      return false;
+    }
   }
 }
 

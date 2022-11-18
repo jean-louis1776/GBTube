@@ -1,13 +1,45 @@
-import { Avatar, Box, Button, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
 import React, { useState } from 'react';
 
 import styles from './VideoCommentary.module.scss';
+import { styled } from '@mui/material/styles';
 
 const VideoCommentary = () => {
   const [answer, setAnswer] = useState(false);
+
+  const CommentButton = styled(Button)(({ theme }) => ({
+    padding: '7px 15px',
+    borderRadius: '40px',
+    backgroundColor: theme.palette.shadows.main,
+    transition: '.4s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.coplimentPink.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
+
+  const CancelButton = styled(Button)(({ theme }) => ({
+    padding: '7px 15px',
+    borderRadius: '40px',
+    backgroundColor: theme.palette.shadows.main,
+    transition: '.4s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.baseBlue.main,
+      color: theme.palette.baseBlue.contrastText,
+    },
+  }));
+
+  const ReactionButton = styled(Button)(({ theme }) => ({
+    borderRadius: '40px',
+    transition: '.3s ease',
+    '&:hover': {
+      backgroundColor: theme.palette.shadows.main,
+      color: theme.palette.coplimentPink.contrastText,
+    },
+  }));
 
   return (
     <Stack direction="column" marginBottom={3}>
@@ -56,23 +88,31 @@ const VideoCommentary = () => {
             quo sit unde voluptas voluptates?
           </ShowMoreText>
           <Box>
-            <Button>
-              <ThumbUpOutlined />
-            </Button>
-            <Button>
-              <ThumbDownOutlined />
-            </Button>
-            <Button onClick={() => setAnswer((prevState) => !prevState)}>
+            <Tooltip title="Нравится">
+              <ReactionButton>
+                <ThumbUpOutlined />
+              </ReactionButton>
+            </Tooltip>
+            <Tooltip title="Не нравится">
+              <ReactionButton>
+                <ThumbDownOutlined />
+              </ReactionButton>
+            </Tooltip>
+            <CommentButton onClick={() => setAnswer((prevState) => !prevState)}>
               Ответить
-            </Button>
+            </CommentButton>
           </Box>
           <Box
-            sx={{ display: answer ? 'block' : 'none' }}
+            sx={{ display: answer ? 'flex' : 'none' }}
             className={styles.comment_answer}
           >
             <input className={styles.comment_inputField} />
-            <Button>Отправить</Button>
-            <Button>Отмена</Button>
+            <Box gap="30px" className={styles.comment_btn}>
+              <CommentButton>Отправить</CommentButton>
+              <CancelButton onClick={() => setAnswer(false)}>
+                Отмена
+              </CancelButton>
+            </Box>
           </Box>
         </Box>
       </Box>

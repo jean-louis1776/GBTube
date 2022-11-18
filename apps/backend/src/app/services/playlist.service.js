@@ -13,7 +13,7 @@ class PlaylistService {
     const idList = [userId, playlist.channelId, playlist.id].join(';');
     delete playlist.channelId;
     delete playlist.id;
-    return { idList, ...playlist };
+    return { ...playlist, idList };
   }
   async create(channelId, title, description) {
     try {

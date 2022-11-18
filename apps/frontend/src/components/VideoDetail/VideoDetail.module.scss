@@ -1,16 +1,24 @@
 .wrapper {
-  max-width: 1600px;
+  max-width: 1540px;
+  padding: 0 10px;
   margin: 90px auto 0;
 }
 
 .stack {
   display: grid;
+  gap: 40px;
   grid-template-columns: 1fr 400px;
   justify-content: center;
 }
 
 .playerWrapper {
-  //height: auto;
+}
+
+.reactPlayer {
+  width: auto !important;
+  height: min-content !important;
+  aspect-ratio: 16/9;
+  object-fit: cover;
 }
 
 .channel {
@@ -36,6 +44,27 @@
   flex-direction: column;
   //height: 1000px;
   width: 100%;
+}
+
+.userCommentary {
+  display: flex;
+  margin: 0 0 20px 0;
+}
+
+.commentaryInput {
+  font-size: 1rem;
+  width: 30vw;
+  outline: none;
+  color: white;
+  margin: 0 0 0 20px;
+  border: 0;
+  background: transparent;
+  &:focus {
+    border-bottom: 2px solid steelblue;
+  }
+  &::placeholder {
+    color: white;
+  }
 }
 
 .comment {
