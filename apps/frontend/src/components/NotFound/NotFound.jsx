@@ -41,8 +41,10 @@ const NotFound = (props) => {
             alignItems: 'center',
           }}
         >
-          <Typography sx={{ fontSize: '4rem', lineHeight: 1, fontWeight: 600 }}>
-            Oops!
+          <Typography
+            sx={{ fontSize: '3.5rem', lineHeight: 1, fontWeight: 600, mb: 1.5 }}
+          >
+            Какая неожиданность!
           </Typography>
           <Typography sx={{ fontWeight: 300, fontSize: '2rem', mb: 4 }}>
             Страница не найдена

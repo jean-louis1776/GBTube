@@ -41,8 +41,10 @@ const EmailConfirm = (props) => {
             alignItems: 'center',
           }}
         >
-          <Typography sx={{ fontSize: '4rem', lineHeight: 1, fontWeight: 600 }}>
-            Congratulations!
+          <Typography
+            sx={{ fontSize: '3.5rem', lineHeight: 1, fontWeight: 600 }}
+          >
+            Наши поздравления!
           </Typography>
           <Typography
             sx={{

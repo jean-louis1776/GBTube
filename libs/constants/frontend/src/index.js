@@ -8,10 +8,13 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
+import appLogo from './assets/logo.png';
+import emailConfirmLogo from './assets/bar-chart.png';
+import logoNotFound from './assets/404Logo.png';
 
-export const logo = 'https://i.ibb.co/JdpDSxK/logo.png';
-export const RedirectLogo = 'https://i.ibb.co/JCB64v6/bar-chart.png';
-export const notFoundLogo = 'https://i.ibb.co/HNHX2dx/404Logo.png';
+export const logo = appLogo;
+export const RedirectLogo = emailConfirmLogo;
+export const notFoundLogo = logoNotFound;
 
 export const categories = [
   { name: 'Домой', icon: <HomeIcon color="baseBlue" />, link: '/' },
