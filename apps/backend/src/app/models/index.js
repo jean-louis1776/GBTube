@@ -161,7 +161,7 @@ Video.hasMany(Comment, {
 Comment.belongsTo(Video, {
   foreignKey: 'videoId',
 });
-Video.hasMany(VideoInfo, {
+Video.hasOne(VideoInfo, {
   foreignKey: {
     name: 'videoId',
     allowNull: false,
