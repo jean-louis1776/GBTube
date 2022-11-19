@@ -15,6 +15,7 @@ class VideoQueries {
 
 
   async isVideoNameUnique(title, channelId) {
+
     return !(await Video.findOne({
       where: {
         [Op.and]:
@@ -43,6 +44,7 @@ class VideoQueries {
       });
       if (uVideo) {
         const videoId = uVideo.toJSON().id;
+
         idList += `_${videoId.toString()}`;                 //!
 
         await VideoInfo.create({
@@ -107,7 +109,9 @@ class VideoQueries {
     try {
       const videoById = await Video.findOne({
         where: {id},
+
         include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+
       });
       if (videoById) return this.parsingQueryModel(videoById);
       throw ApiError.BadRequest(`Видео с id: ${id} не найдено`);
@@ -121,7 +125,9 @@ class VideoQueries {
     try {
       const videoByPlayListId = await Video.findAll({
         where: {playListId},
+
         include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+
       });
       if (!videoByPlayListId) return null;
       const result = [];
