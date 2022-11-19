@@ -125,7 +125,7 @@ const Header = ({ withNavbar }) => {
 
   const handleLogoutClick = () => {
     dispatch(logoutHandler());
-  }
+  };
 
   return (
     <>
@@ -181,11 +181,23 @@ const Header = ({ withNavbar }) => {
           <Stack direction="row" alignItems="center" sx={{ gap: '1rem' }}>
             <SearchForm />
 
-            { isAuth ? <Button variant="outlined" color="baseBlue" onClick={handleLogoutClick}>Выйти</Button>
-              : <Link to="/login"><Button variant="outlined" color="baseBlue">Войти</Button></Link> }
+            {isAuth ? (
+              <Button
+                variant="outlined"
+                color="baseBlue"
+                onClick={handleLogoutClick}
+              >
+                Выйти
+              </Button>
+            ) : (
+              <Link to="/login">
+                <Button variant="outlined" color="baseBlue">
+                  Войти
+                </Button>
+              </Link>
+            )}
 
             <UserMenu />
-
           </Stack>
         </Toolbar>
       </AppBar>
@@ -236,43 +248,45 @@ const Header = ({ withNavbar }) => {
 
           <Divider />
 
-          <ListItemButton onClick={handleCollClick}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {openColl ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={openColl} timeout="auto" unmountOnExit>
-            <List>
-              {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: openColl ? 'initial' : 'center',
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
+          <List>
+            <ListItemButton onClick={handleCollClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary="Inbox" />
+              {openColl ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={openColl} timeout="auto" unmountOnExit>
+              <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                  <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: openColl ? 3 : 'auto',
-                        justifyContent: 'center',
-                        color: 'baseBlue.main',
+                        minHeight: 48,
+                        justifyContent: openColl ? 'initial' : 'center',
+                        px: 2.5,
                       }}
                     >
-                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={text}
-                      sx={{ opacity: openColl ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: openColl ? 3 : 'auto',
+                          justifyContent: 'center',
+                          color: 'baseBlue.main',
+                        }}
+                      >
+                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={text}
+                        sx={{ opacity: openColl ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+          </List>
         </Drawer>
       )}
     </>

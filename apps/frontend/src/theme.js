@@ -30,6 +30,16 @@ export const theme = createTheme({
       },
     },
 
+    MuiListItemButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&:hover': {
+            backgroundColor: theme.palette.shadows.main,
+          },
+        }),
+      },
+    },
+
     // MuiStack: {
     //   styleOverrides: {
     //     // Name of the slot

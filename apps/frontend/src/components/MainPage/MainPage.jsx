@@ -80,7 +80,7 @@ const MainPage = (props) => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Header />
+      <Header withNavbar />
 
       <Box
         component="main"

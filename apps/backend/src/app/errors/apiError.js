@@ -22,4 +22,8 @@ export class ApiError extends Error {
   static InternalServerError(message) {
     return new ApiError(500, message);
   }
+
+  static NotFound(message) {
+    return new ApiError(404, message);
+  }
 }

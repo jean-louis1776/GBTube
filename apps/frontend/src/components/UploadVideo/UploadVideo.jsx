@@ -127,23 +127,24 @@ const UploadVideo = (props) => {
                     {...stepProps}
                     sx={{
                       '& .MuiStepLabel-root .Mui-completed': {
-                        color: 'baseBlue', // circle color (COMPLETED)
+                        color: 'coplimentPink', // circle color (COMPLETED)
                       },
                       '& .MuiStepLabel-label.Mui-completed.MuiStepLabel-alternativeLabel':
                         {
-                          color: 'grey.500', // Just text label (COMPLETED)
+                          color: 'white', // Just text label (COMPLETED)
                         },
                       '& .MuiStepLabel-root .Mui-active': {
                         color: 'baseBlue', // circle color (ACTIVE)
                       },
                       '& .MuiStepLabel-label.Mui-active.MuiStepLabel-alternativeLabel':
                         {
-                          color: 'common.white', // Just text label (ACTIVE)
+                          color: 'white', // Just text label (ACTIVE)
                         },
                       '& .MuiStepLabel-root .Mui-active .MuiStepIcon-text': {
                         fill: 'white', // circle's number (ACTIVE)
                       },
                       userSelect: 'none',
+                      color: 'white',
                     }}
                   >
                     <StepLabel {...labelProps}>{label}</StepLabel>

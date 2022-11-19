@@ -4,7 +4,7 @@ class PlaylistController {
   async create(req, res, next) {
     try {
       const { idList, title, description } = req.body;
-      const channelId = idList.split(';')[1];
+      const channelId = idList.split('_')[1];
       return res.json(await playlistService.create(+channelId, title, description));
     } catch (e) {
       next(e);
@@ -14,7 +14,7 @@ class PlaylistController {
   async edit(req, res, next) {
     try {
       const { idList, updatingPlaylist} = req.body;
-      const [, channelId, playlistId] = idList.split(';');
+      const [, channelId, playlistId] = idList.split('_');
       return res.json(await playlistService.edit(+playlistId, +channelId, updatingPlaylist));
     } catch (e) {
       next(e);
