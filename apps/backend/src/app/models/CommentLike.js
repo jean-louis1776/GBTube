@@ -8,7 +8,7 @@ export const CommentLike = sequelize.define('CommentLikes', {
       autoIncrement: true
     },
     liked: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   }, {

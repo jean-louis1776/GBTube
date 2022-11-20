@@ -221,8 +221,8 @@ export const runDB = async function () {
     // await sequelize.sync({force: true});
     // await UserInfo.sync({ alter: true });
     // await PlayList.sync({ alter: true });
-    // await Answer.sync({ alter: true });
-    // await Comment.sync({ alter: true });
+    // await AnswerLike.sync({ alter: true });
+    // await CommentLike.sync({ alter: true });
     // await Video.sync({ alter: true });
     // await VideoInfo.sync({ alter: true });
     // await Channel.sync({ alter: true });
