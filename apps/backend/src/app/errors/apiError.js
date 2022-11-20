@@ -11,8 +11,12 @@ export class ApiError extends Error {
     return new ApiError(400, message);
   }
 
-  static UnAuthorization() {
-    return new ApiError(401, 'Пользователь не авторизован');
+  static UnAuthorization(message) {
+    return new ApiError(401, 'Пользователь не авторизован. ' + !!message ? message : '');
+  }
+
+  static httpForbidden() {
+    return new ApiError(403, 'У пользователя недостаточно прав');
   }
 
   static UnProcessableEntity(message) {
@@ -25,5 +29,9 @@ export class ApiError extends Error {
 
   static NotFound(message) {
     return new ApiError(404, message);
+  }
+
+  static Conflict(message) {
+    return new ApiError(409, message);
   }
 }

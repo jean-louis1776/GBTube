@@ -1,4 +1,6 @@
 /* eslint-disable no-useless-catch */
+import { Op } from 'sequelize';
+
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
 import { Token } from "../models/Tokens";
@@ -22,10 +24,10 @@ class UserQueries {
   async createUser(nickName, email, password, activateLink) {
     try {
       if (await User.findOne({where: {nickName}})) {
-        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует!`);
+        throw ApiError.Conflict(`Пользователь с именем ${nickName} уже существует!`);
       }
       if (await UserInfo.findOne({where: {email}})) {
-        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует!`);
+        throw ApiError.Conflict(`Пользователь с email ${email} уже существует!`);
       }
       const userId = (await User.create({nickName})).dataValues.id;
       await UserInfo.create({email, password, activateLink, userId: userId});
@@ -154,6 +156,18 @@ class UserQueries {
     let updateCount = 0;
     try {
       if (data.nickName) {
+        if (await User.findOne(
+          {
+            where: {
+              [Op.and]: [
+                {nickName: data.nickName},
+                {id: {[Op.ne]: id}},
+              ],
+            },
+          },
+        )) {
+          throw ApiError.Conflict(`Пользователь с именем ${data.nickName} уже существует!`)
+        }
         updateCount += await User.update({nickName: data.nickName}, {where: {id}});
         delete data.nickName;
       }
@@ -163,7 +177,7 @@ class UserQueries {
       }
       return !!updateCount;
     } catch (e) {
-      throw ApiError.InternalServerError(e.message);
+      throw e;
     }
   }
 
