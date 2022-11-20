@@ -89,7 +89,6 @@ class UserService {
     if (!user || !refreshTokenFromDB || !userFromDB) {
       throw ApiError.UnAuthorization();
     }
-    console.log(userFromDB);
 
     return await tokenService.createNewTokens(
       {

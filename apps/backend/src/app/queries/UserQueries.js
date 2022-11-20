@@ -22,10 +22,10 @@ class UserQueries {
   async createUser(nickName, email, password, activateLink) {
     try {
       if (await User.findOne({where: {nickName}})) {
-        throw ApiError.BadRequest(`Пользователь с именем ${nickName} уже существует!`);
+        throw ApiError.Conflict(`Пользователь с именем ${nickName} уже существует!`);
       }
       if (await UserInfo.findOne({where: {email}})) {
-        throw ApiError.BadRequest(`Пользователь с email ${email} уже существует!`);
+        throw ApiError.Conflict(`Пользователь с email ${email} уже существует!`);
       }
       const userId = (await User.create({nickName})).dataValues.id;
       await UserInfo.create({email, password, activateLink, userId: userId});
