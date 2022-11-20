@@ -22,9 +22,14 @@ class TokenService {
   }
 
   async saveRefreshTokenToDB (userId, refreshToken, refreshTokenId) {
-    if (refreshTokenId === undefined) refreshTokenId = (await tokenQueries.createToken(refreshToken, userId)).id;
-    else tokenQueries.updateToken(refreshTokenId, refreshToken);
-    return refreshTokenId;
+    try {
+      if (refreshTokenId === undefined) refreshTokenId = (await tokenQueries.createToken(refreshToken, userId)).id;
+      else tokenQueries.updateToken(refreshTokenId, refreshToken);
+      return refreshTokenId;
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
   }
 
   validateToken (token, isRefresh) {

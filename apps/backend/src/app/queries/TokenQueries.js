@@ -34,9 +34,8 @@ class TokenQueries {
     try {
       const result = await Token.findOne({where: {token}});
       return result?.dataValues;
-    } catch (e) {
-      console.log(e.message);
-      throw e;
+    } catch {
+      return null;
     }
   }
 

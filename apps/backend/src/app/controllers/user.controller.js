@@ -77,7 +77,7 @@ class UserController {
     try {
       validateError(req);
       await userService.remove(+req.params.id);
-      return res.json({ message: 'User has been removed' });
+      return res.status(204).json({ message: 'User has been removed' });
     } catch (e) {
       next(e);
     }
@@ -128,6 +128,7 @@ class UserController {
     try {
       validateError(req);
       const stream = await userService.downloadAvatar(+req.params.id);
+      if (!stream) return res.status(204).json({ message: 'У данного пользователя нет аватара' });
       stream.pipe(res);
     } catch (e) {
       next(e);
@@ -138,7 +139,7 @@ class UserController {
     try {
       validateError(req);
       await userService.removeAvatar(+req.params.id);
-      return res.json({ message: 'Avatar has been removed'});
+      return res.status(204).json({ message: 'Avatar has been removed'});
     } catch (e) {
       next(e);
     }
@@ -152,13 +153,24 @@ class UserController {
         next(ApiError.BadRequest('Отсутствует объект проверки на уникальность!!!'));
       }
       let uniqueNickName = true, uniqueEmail = true;
-      if (nickName) {
-        uniqueNickName = await userService.isNickNameUnique(nickName);
+      const message = [];
+      if (nickName) uniqueNickName = await userService.isNickNameUnique(nickName);
+      if (email) uniqueEmail = await userService.isEmailUnique(email);
+      if (!uniqueNickName) message.push('nickName не является уникальным');
+      if (!uniqueEmail) message.push('email не является уникальным');
+      if (!uniqueNickName || !uniqueEmail) {
+        throw ApiError.Conflict(message);
       }
-      if (email) {
-        uniqueEmail = await userService.isEmailUnique(email);
-      }
-      res.json({unique: !!(uniqueNickName && uniqueEmail)});
+      res.status(204).json({unique: true});
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getNickNameById(req, res, next) {
+    try {
+      validateError(req);
+      return res.json(await userService.getNickNameById(+req.params.id));
     } catch (e) {
       next(e);
     }

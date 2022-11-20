@@ -17,6 +17,7 @@ router.get('/refresh', userValidation.refresh, (...args) =>userController.refres
 router.get('/avatar/:id', userValidation.checkId, userController.downloadAvatar);
 router.get('/', userController.getAll);
 router.get('/find/:id', userValidation.checkId, userController.getOneById);
+router.get('/find_min/:id', userValidation.checkId, )
 router.get('/check', userValidation.checkUnique, userController.checkUnique);
 router.delete('/:id', userValidation.checkId, userController.remove);
 router.delete('/avatar/:id', userValidation.checkId, userController.removeAvatar);

@@ -19,7 +19,7 @@ class UserService {
   async getOneById(id) {
     const user = await userQueries.findOneById(id);
     if (!user) {
-      throw ApiError.BadRequest(`Пользователь с id ${id} не найден`);
+      throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
     }
     delete user.activateLink;
     delete user.password;
@@ -45,11 +45,11 @@ class UserService {
     try {
       const newUser = await userQueries.findOneByEmail(email);
       if (!newUser) {
-        throw ApiError.BadRequest(`Пользователя с email ${email} не существует`);
+        throw ApiError.UnAuthorization(`Пользователя с email ${email} не существует`);
       }
       const isEqual = await bcrypt.compare(password, newUser.password);
       if (!isEqual) {
-        throw ApiError.BadRequest('Неправильный пароль');
+        throw ApiError.UnAuthorization('Неправильный пароль');
       }
       delete newUser.password;
       delete newUser.activateLink;
@@ -79,33 +79,36 @@ class UserService {
   }
 
   async refresh(refreshToken) {
-    if (!refreshToken) {
-      throw ApiError.UnAuthorization();
-    }
+    try {
+      const user = tokenService.validateToken(refreshToken, true);
+      if (!user) throw ApiError.UnAuthorization('RefreshToken не валиден. Возможно он просрочен');
 
-    const user = tokenService.validateToken(refreshToken, true);
-    const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
-    const userFromDB = await userQueries.findOneById(user.id);
-    if (!user || !refreshTokenFromDB || !userFromDB) {
-      throw ApiError.UnAuthorization();
-    }
+      const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
+      if (refreshTokenFromDB) throw ApiError.UnAuthorization('RefreshToken не найден в базе');
 
-    return await tokenService.createNewTokens(
-      {
-        id: userFromDB.id,
-        nickName: userFromDB.nickName,
-        email: userFromDB.email,
-        role: userFromDB.role
-      },
-      refreshTokenFromDB.id
-    );
+      const userFromDB = await userQueries.findOneById(user.id);
+      if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');
+
+      return await tokenService.createNewTokens(
+        {
+          id: userFromDB.id,
+          nickName: userFromDB.nickName,
+          email: userFromDB.email,
+          role: userFromDB.role
+        },
+        refreshTokenFromDB.id
+      );
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
   }
 
   async changePassword(id, oldPassword, newPassword, refreshTokenId) {
     try {
       const DBPassword = await userQueries.getPasswordByUserId(id);
       if (!(await bcrypt.compare(oldPassword, DBPassword))) {
-        throw ApiError.BadRequest('Неправильный пароль');
+        throw ApiError.Conflict('Неправильный пароль');
       }
       newPassword = await bcrypt.hash(newPassword, 5);
       if (!(await userQueries.updateUser(id, { password: newPassword }))) {
@@ -118,7 +121,6 @@ class UserService {
       console.log(e.message);
       throw(e);
     }
-
   }
 
   async edit(id, updatingUser) {
@@ -129,7 +131,7 @@ class UserService {
     try {
       const user = await userQueries.findOneByActivateLink(link);
       if (!user) {
-        throw ApiError.BadRequest('Пользователь не найден');
+        throw ApiError.BadRequest('Пользователь по ссылке не найден. Возможно ссылка устарела.');
       }
       await userQueries.updateUser(user.userId, { isActivate: true });
     } catch (e) {
@@ -139,16 +141,6 @@ class UserService {
   }
 
   async remove(id) {
-    //TODO Удалить все Answers написанные User'ом
-    // Удалить все Comments написанные User'ом
-    // Удалить все подписки сделанные User'ом
-    // Удалить таблицу лайков-дизлайков для каждого Answers, относящиеся к Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
-    // Удалить все Answers, относящиеся к Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
-    // Удалить таблицу лайков-дизлайков для каждого Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
-    // Удалить все Comments, относящиеся к Videos, относящиеся к Channels, относящиеся к Users
-    // Удалить все Videos, относящиеся к Channels, относящиеся к Users
-    // Удалить все подписки, относящиеся к Channels, относящиеся к Users
-    // Удалить все Channels, относящиеся к Users
     if (!userQueries.deleteUser(id)) {                  // удаляет Users, UserInfos, Tokens
       throw ApiError.InternalServerError('Can\'t remove user');
     }
@@ -164,7 +156,7 @@ class UserService {
       const extension = path.extname(file.name);
 
       if (!imageExtensions.includes(extension)) {
-        throw ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату');
+        throw ApiError.BadRequest('Формат файла не соответствует формату фотографии');
       }
 
       const oldAvatar = await userQueries.getUserAvatarById(id);              // Проверяем нет ли у юзера аватарки
@@ -187,12 +179,11 @@ class UserService {
     try {
       const avatarName = await userQueries.getUserAvatarById(id);
       if (!avatarName) {
-        throw ApiError.InternalServerError('У данного пользователя нет аватара');
+        return null;
       }
       return await ftpServer.get(avatarName);
-    } catch (e) {
-      console.log(e.message);
-      throw e;
+    } catch {
+      return null;
     }
   }
 
@@ -200,7 +191,7 @@ class UserService {
     try {
       const avatarName = await userQueries.getUserAvatarById(id);
       if (!avatarName) {
-        throw ApiError.InternalServerError('У данного пользователя нет аватара');
+        throw ApiError.NotFound('У данного пользователя нет аватара');
       }
       await ftpServer.delete(avatarName);
       return await userQueries.updateUser(id, {avatar: null});
@@ -208,7 +199,6 @@ class UserService {
       console.log(e.message);
       throw e;
     }
-
   }
 
   async isNickNameUnique(nickName) {
@@ -219,6 +209,17 @@ class UserService {
     return await userQueries.isEmailUnique(email);
   }
 
+  async getNickNameById(id) {
+    try {
+      const nickName = await userQueries.getNickNameById(id);
+      if (!nickName) {
+        throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
+      }
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
+  }
 }
 
 export default new UserService();
