@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import channelController from '../controllers/channel.controller';
+import channelValidation from '../validation/channel.validation';
 
 const router = new Router();
 
-router.post('/create', channelController.create);
+router.post('/create', channelValidation.create, channelController.create);
 router.patch('/edit', channelController.edit);
 router.patch('/subscribe', channelController.subscribe);
 router.delete('/:id', channelController.remove)

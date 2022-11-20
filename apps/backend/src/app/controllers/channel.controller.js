@@ -1,12 +1,13 @@
+import { validateError } from '../errors/validateError';
 import channelService from '../services/channel.service';
 
 class ChannelController {
   async create(req, res, next) {
     try {
-      console.log(req.body);
-      const { title, description, idList } = req.body;
-      const userId = idList.split('_')[0];
-      return res.json(await channelService.create(+userId, title, description));
+      validateError(req);
+//      const { title, description, idList } = req.body;
+//      const userId = idList.split('_')[0];
+//      return res.status(201).json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
     }
