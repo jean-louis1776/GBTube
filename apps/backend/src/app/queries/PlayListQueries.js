@@ -96,8 +96,7 @@ class PlayListQueries {
   async findAllPlayList(channelId) {
     try {
       return ((await PlayList.findAll({where: {channelId}}))
-        .map((value) => {value.toJSON();
-        }));
+        .map(value => value.toJSON()));
 
     } catch (e) {
       console.log(e.message);

@@ -6,8 +6,10 @@ import { tokenQueries } from '../queries/TokenQueries.js';
 dotenv.config();
 
 class TokenService {
+  constructor()
   async createNewTokens (user, refreshTokenId) {
     const tokens = this.generateTokens(user);
+    console.log('tokens = ', tokens);
     refreshTokenId = await this.saveRefreshTokenToDB(user.id, tokens.refreshToken, refreshTokenId);
     return { ...tokens, refreshTokenId };
   }
@@ -20,9 +22,14 @@ class TokenService {
   }
 
   async saveRefreshTokenToDB (userId, refreshToken, refreshTokenId) {
-    if (refreshTokenId === undefined) refreshTokenId = (await tokenQueries.createToken(refreshToken, userId)).id;
-    else tokenQueries.updateToken(refreshTokenId, refreshToken);
-    return refreshTokenId;
+    try {
+      if (refreshTokenId === undefined) refreshTokenId = (await tokenQueries.createToken(refreshToken, userId)).id;
+      else tokenQueries.updateToken(refreshTokenId, refreshToken);
+      return refreshTokenId;
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
   }
 
   validateToken (token, isRefresh) {
