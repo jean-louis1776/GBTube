@@ -28,7 +28,7 @@ class UserValidator {
     ];
 
     this.login = [
-      body('nickName').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING),
+      body('email').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isEmail().withMessage(NOT_EMAIL),
       body('password').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING)
     ];
 
