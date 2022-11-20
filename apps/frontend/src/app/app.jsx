@@ -34,11 +34,30 @@ import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 export function App() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const runOnceBuild = () => {
+    let runOnceFlag = true;
+    const setFlagToTrue = () => {
+      runOnceFlag = true;
+      console.log('Auth flag dropped');
+    }
+    return () => {
+      console.log('useEffect run');
+      if (runOnceFlag && localStorage.getItem('token')) {
+        console.log('Auth running');
+        dispatch(checkAuthHandler());
+        runOnceFlag = false;
+        setTimeout(setFlagToTrue, 3000 );
+      }
+    }
+  }
+
+  useEffect(
+    runOnceBuild()
+    /*() => {
     if (localStorage.getItem('token')) {
       dispatch(checkAuthHandler());
     }
-  }, []);
+  }*/, []);
   return (
     <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
