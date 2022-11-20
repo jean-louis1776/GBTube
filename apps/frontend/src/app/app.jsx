@@ -51,8 +51,10 @@ export function App() {
     }
   }
 
+  const runOnceInstance = runOnceBuild();
+
   useEffect(
-    runOnceBuild()
+    runOnceInstance
     /*() => {
     if (localStorage.getItem('token')) {
       dispatch(checkAuthHandler());
