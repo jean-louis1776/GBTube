@@ -16,7 +16,7 @@ class PlayListQueries {
   async createPlayList(channelId, title, description) {
     try {
       if (await PlayList.findOne({where: {channelId, title}})) {
-        throw ApiError.BadRequest(`Плэйлист с именем ${title} уже существует!`);
+        throw ApiError.Conflict(`Плэйлист с именем ${title} уже существует!`);
       }
       const cPlayList = (await PlayList.create({title, channelId, description})).toJSON();
       return cPlayList.id;
@@ -46,7 +46,7 @@ class PlayListQueries {
           },
         },
       )) {
-        throw ApiError.BadRequest(`Плэйлист с именем ${data.title} уже существует!`);
+        throw ApiError.Conflict(`Плэйлист с именем ${data.title} уже существует!`);
       }
       if (Object.keys(data).length) {
         return !!(await PlayList.update({...data}, {where: {id}}));

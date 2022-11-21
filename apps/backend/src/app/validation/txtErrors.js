@@ -7,3 +7,4 @@ export const NOT_EMAIL = `${NOT_FORMAT} адреса электронной по
 export const NOT_DATE = `${NOT_FORMAT} даты`;
 export const NOT_INT = `${NOT_FORMAT} целого числа`;
 export const NOT_ID_LIST = `${NOT_FORMAT} idList`;
+export const REG_EXP_FOR_ID_LIST = /^((\d+_)*\d+)$/;

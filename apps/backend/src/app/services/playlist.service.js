@@ -1,3 +1,4 @@
+import { ApiError } from '../errors/apiError';
 import { Channel } from '../models/Channel';
 import { playListQueries } from '../queries/PlayListQueries';
 
@@ -33,7 +34,10 @@ class PlaylistService {
 
   async remove(id) {
     try {
-      return await playListQueries.deletePlayList(id);
+      const result = await playListQueries.deletePlayList(id);
+      if (!result) {
+        throw ApiError.NotFound(`Плейлиста с id ${id} не существует`);
+      }
     } catch (e) {
       throw(e);
     }

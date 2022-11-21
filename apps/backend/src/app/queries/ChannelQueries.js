@@ -27,7 +27,7 @@ class ChannelQueries {
   async createChannel(userId, title, description) {
     try {
       if (await Channel.findOne({where: {userId, title}})) {
-        throw ApiError.BadRequest(`Канал с именем ${title} уже существует!`);
+        throw ApiError.Conflict(`Канал с именем "${title}" уже существует!`);
       }
       const cChannel = (await Channel.create({title, userId})).toJSON();
       await ChannelInfo.create({
@@ -53,7 +53,7 @@ class ChannelQueries {
         include: [{model: ChannelInfo, attributes: {exclude: ['channelId']}}],
       });
       if (!channel) {
-        throw ApiError.BadRequest('Канал с заданным id не найден');
+        throw ApiError.Conflict('Канал с заданным id не найден');
       }
       return this.parsingQueryModel(channel);
     } catch (e) {
@@ -138,7 +138,7 @@ class ChannelQueries {
         const uChannel = (await Channel.findOne({where: id})).toJSON();
         if (uChannel.title !== data.title) {
           if (await Channel.findOne({where: {userId, title: data.title}})) {
-            throw ApiError.BadRequest(`Канал с именем ${data.title} уже существует!`);
+            throw ApiError.Conflict(`Канал с именем ${data.title} уже существует!`);
           }
           isUpdate += await Channel.update({title: data.title}, {where: {id}});
           delete data.title;
@@ -149,7 +149,8 @@ class ChannelQueries {
       }
       return !!isUpdate;
     } catch (e) {
-      return ApiError.InternalServerError(e.message);
+      console.log(e);
+      throw e;
     }
   }
 }

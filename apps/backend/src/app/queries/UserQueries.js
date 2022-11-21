@@ -234,6 +234,14 @@ class UserQueries {
       throw(e);
     }
   }
+
+  async checkUserById(id) {
+    try {
+      return !!(await User.findOne({where: {id}}));
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 export const userQueries = new UserQueries();
