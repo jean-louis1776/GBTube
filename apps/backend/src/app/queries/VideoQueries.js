@@ -147,7 +147,7 @@ class VideoQueries {
    * @param {number} channelId - id канала с видео
    * @returns {Object}
    */
-  async deleteChannel(id) {
+  async deleteVideo(id) {
     try {
       return !!(await Video.destroy({where: {id}}));
     } catch (e) {
@@ -243,6 +243,14 @@ class VideoQueries {
     }
   }
 
+  async checkVideoById(id) {
+    try {
+      return !!(await Video.findOne({where: {id}}))
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
 
 }
 
