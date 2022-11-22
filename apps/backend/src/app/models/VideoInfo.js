@@ -24,6 +24,10 @@ export const VideoInfo = sequelize.define('VideoInfo', {
       type: DataTypes.CHAR,
       allowNull: true,
     },
+    viewsCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     likesCount: {
       type: DataTypes.INTEGER,
       allowNull: false,

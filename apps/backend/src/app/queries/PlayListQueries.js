@@ -4,7 +4,6 @@ import { ApiError } from "../errors/apiError";
 import { Video } from "../models/Video";
 
 
-
 class PlayListQueries {
   /**
    * Создание плэйлиста
@@ -81,7 +80,9 @@ class PlayListQueries {
    */
   async findPlayListById(id) {
     try {
-      return (await PlayList.findOne({where: {id}})).toJSON();
+      const fPlayListById = await PlayList.findOne({where: {id}});
+      if (fPlayListById) return fPlayListById.toJSON();
+      throw ApiError.NotFound(`Плэйлист с ${id} не найден!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -95,14 +96,15 @@ class PlayListQueries {
    */
   async findAllPlayList(channelId) {
     try {
-      return ((await PlayList.findAll({where: {channelId}}))
-        .map(value => value.toJSON()));
-
+      const playList = (await PlayList.findAll({where: {channelId}}));
+      if (playList) return await (playList.map(value => value.toJSON()))
+      throw ApiError.NotFound(`Указанного id канала не существует!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
+
 }
 
 export const playListQueries = new PlayListQueries();

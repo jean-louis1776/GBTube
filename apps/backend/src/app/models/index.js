@@ -225,6 +225,7 @@ export const runDB = async function () {
     // await CommentLike.sync({ alter: true });
     // await Video.sync({ alter: true });
     // await VideoInfo.sync({ alter: true });
+    // await VideoLike.sync({ alter: true });
     // await Channel.sync({ alter: true });
     // await ChannelInfo.sync({ alter: true });
 
