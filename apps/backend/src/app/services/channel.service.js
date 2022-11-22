@@ -4,7 +4,7 @@ import { userQueries } from '../queries/UserQueries';
 
 class ChannelService {
   makeResultObject(channel) {
-    const idList = [channel.userId, channel.id].join(';');
+    const idList = [channel.userId, channel.id].join('_');
     delete channel.id;
     delete channel.userId;
     return { idList, ...channel };

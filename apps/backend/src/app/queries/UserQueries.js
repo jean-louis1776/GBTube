@@ -78,7 +78,7 @@ class UserQueries {
         where: {userId: id},
       });
       if (!password) {
-        throw ApiError.BadRequest(`Пользователь с id ${id} не найден.`);
+        throw ApiError.NotFound(`Пользователь с id ${id} не найден.`);
       }
       return password.toJSON().password;
     } catch (e) {

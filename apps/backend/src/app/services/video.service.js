@@ -9,6 +9,8 @@ import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
+import { PlayList } from '../models/PlayList.js';
+import { playListQueries } from '../queries/PlayListQueries.js';
 
 
 /* eslint-disable no-useless-catch */
@@ -40,7 +42,7 @@ class VideoService {
       const file = files.videoFile;
       const extension = path.extname(file.name);
       if (!videoExtensions.includes(extension)) {
-        throw ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату');
+        throw ApiError.BadRequest('Формат файла не соответствует видеоформату');
       }
 
       const hashName = uuidV4();
@@ -61,7 +63,7 @@ class VideoService {
             await ftpServer.put(files[1], frameHashName);
           }
           await fs.remove(path.resolve(path.resolve(), 'tmp'));
-          return res.json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+          return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
         }
       );
     } catch (e) {
@@ -71,6 +73,10 @@ class VideoService {
 
   async download(id) {
     try {
+      const video = await videoQueries.checkVideoById(id);
+      if (!video) {
+        throw ApiError.NotFound(`Видео с id ${id} не существует`);
+      }
       const hashName = await videoQueries.downloadVideo(id);
       return await ftpServer.get(hashName);
     } catch (e) {
@@ -91,7 +97,6 @@ class VideoService {
   async getVideoInfoById(id) {
     try {
       const video = await videoQueries.findVideoById(id);
-      if (!video) return {};
       const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
       return { ...video, ...nickChannelNames };
     } catch (e) {
@@ -101,8 +106,12 @@ class VideoService {
 
   async getVideosInfoByPlaylistId(playlistId) {
     try {
+      const playlist = !!(await playListQueries.findPlayListById(playlistId));
+      if (!playlist) {
+        throw ApiError.NotFound(`Плайлист с id ${playlistId} не найден`);
+      }
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
-      if (!videos?.length) return [];
+      if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
       return videos.map(video => {
         return { ...video, ...nickChannelNames }

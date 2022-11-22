@@ -82,7 +82,7 @@ class PlayListQueries {
     try {
       const fPlayListById = await PlayList.findOne({where: {id}});
       if (fPlayListById) return fPlayListById.toJSON();
-      throw ApiError.NotFound(`Плэйлист с ${id} не найден!`);
+      throw ApiError.NotFound(`Плейлист с id ${id} не найден!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -97,8 +97,8 @@ class PlayListQueries {
   async findAllPlayList(channelId) {
     try {
       const playList = (await PlayList.findAll({where: {channelId}}));
-      if (playList) return await (playList.map(value => value.toJSON()))
-      throw ApiError.NotFound(`Указанного id канала не существует!`);
+      if (playList) return playList.map(value => value.toJSON());
+      return null;
     } catch (e) {
       console.log(e.message);
       throw(e);

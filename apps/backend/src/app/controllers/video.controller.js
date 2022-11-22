@@ -1,13 +1,15 @@
 import { ApiError } from '../errors/apiError.js';
+import { validateError } from '../errors/validateError.js';
 import videoService from '../services/video.service.js';
 
 class VideoController {
   async create(req, res, next) {
     try {
+      validateError(req);
       const { idList, title, category, description } = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
-        return next(ApiError.BadRequest(`Видео с названием "${title}" уже существует`))
+        return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`))
       }
       return await videoService.upload(res, req.files, idList, title, category, description);
     } catch (e) {
@@ -18,11 +20,8 @@ class VideoController {
   // Находит видео на бэке и отправляет его на фронт
   async download(req, res, next) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        return next(ApiError.BadRequest('Отсутствует идентификатор видеофайла'));
-      }
-      const stream = await videoService.download(+id);
+      validateError(req);
+      const stream = await videoService.download(+req.params.id);
       stream.pipe(res);
     } catch (e) {
       next(e);
@@ -31,11 +30,8 @@ class VideoController {
 
   async getFrameShot(req, res, next) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        return next(ApiError.BadRequest('Отсутствует идентификатор видеофайла'));
-      }
-      const stream = await videoService.getFrameShot(+id);
+      validateError(req);
+      const stream = await videoService.getFrameShot(+req.params.id);
       stream.pipe(res);
     } catch (e) {
       next(e);
@@ -44,6 +40,7 @@ class VideoController {
 
   async getVideoInfoById(req, res, next) {
     try {
+      validateError(req);
       return res.json(await videoService.getVideoInfoById(+req.params.id));
     } catch (e) {
       next(e);
@@ -52,7 +49,10 @@ class VideoController {
 
   async getVideosInfoByPlaylistId(req, res, next) {
     try {
-      return res.json(await videoService.getVideosInfoByPlaylistId(+req.params.playlist_id));
+      validateError(req);
+      const videos = await videoService.getVideosInfoByPlaylistId(+req.params.playlist_id);
+      if (!videos) return res.status(204).json([]);
+      return res.json(videos);
     } catch (e) {
       next(e);
     }

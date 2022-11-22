@@ -1,5 +1,6 @@
 import { ApiError } from '../errors/apiError';
 import { Channel } from '../models/Channel';
+import { channelQueries } from '../queries/ChannelQueries';
 import { playListQueries } from '../queries/PlayListQueries';
 
 /* eslint-disable no-useless-catch */
@@ -55,7 +56,12 @@ class PlaylistService {
 
   async getAllOfChannel(channelId) {
     try {
+      const channel = await channelQueries.isChannel(channelId);
+      if (!channel) {
+        throw ApiError.NotFound(`Канал с id ${channelId} не найден`);
+      }
       const playlists = await playListQueries.findAllPlayList(channelId);
+      if (!playlists) return null;
       const userId = await this.getUserIdByChannelId(channelId);
       return playlists.map(playlist => this.makeResultObject(userId, playlist));
     } catch (e) {

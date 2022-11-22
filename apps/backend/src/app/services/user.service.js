@@ -106,6 +106,9 @@ class UserService {
 
   async changePassword(id, oldPassword, newPassword, refreshTokenId) {
     try {
+      const user = await userQueries.checkUserById(id);
+      if (!user) throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
+
       const DBPassword = await userQueries.getPasswordByUserId(id);
       if (!(await bcrypt.compare(oldPassword, DBPassword))) {
         throw ApiError.Conflict('Неправильный пароль');
@@ -158,6 +161,9 @@ class UserService {
       if (!imageExtensions.includes(extension)) {
         throw ApiError.BadRequest('Формат файла не соответствует формату фотографии');
       }
+
+      const user = userQueries.checkUserById(id);
+      if (!user) throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
 
       const oldAvatar = await userQueries.getUserAvatarById(id);              // Проверяем нет ли у юзера аватарки
       if (oldAvatar) {

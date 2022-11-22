@@ -73,7 +73,7 @@ class VideoQueries {
     try {
       const videoHash = await VideoInfo.findOne({where: {id}});
       if (videoHash) return videoHash.toJSON().hashName;
-      throw ApiError.BadRequest(`Данное видео отсутствует на сервере`);
+      throw ApiError.NotFound(`Видео с id ${id} не найдено`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -115,7 +115,7 @@ class VideoQueries {
 
       });
       if (videoById) return this.parsingQueryModel(videoById);
-      throw ApiError.BadRequest(`Видео с id: ${id} не найдено`);
+      throw ApiError.NotFound(`Видео с id: ${id} не найдено`);
     } catch (e) {
       console.log(e.message);
       throw(e);

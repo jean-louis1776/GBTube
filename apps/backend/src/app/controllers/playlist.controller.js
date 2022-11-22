@@ -45,7 +45,9 @@ class PlaylistController {
   async getAllOfChannel(req, res, next) {
     try {
       validateError(req);
-      return res.json(await playlistService.getAllOfChannel(+req.params.channel_id))
+      const playlists = await playlistService.getAllOfChannel(+req.params.channel_id);
+      if (!playlists) return res.status(204).json([]);
+      return res.json(playlists);
     } catch (e) {
       next(e);
     }
