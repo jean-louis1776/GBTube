@@ -94,15 +94,18 @@ class ChannelQueries {
    */
   async subscriber(channelId, userId) {
     try {
-      const subscribers = await ChannelInfo.findOne({where: {channelId}});
-      if (await ChannelSubscriber.findOne({where: {channelId, userId}})) {
-        await ChannelSubscriber.destroy({where: {channelId, userId}});
-        await subscribers.decrement('subscribersCount', {by: 1});
-        return false;
+      if (await this.isChannel(channelId)) {
+        const subscribers = await ChannelInfo.findOne({where: {channelId}});
+        if (await ChannelSubscriber.findOne({where: {channelId, userId}})) {
+          await ChannelSubscriber.destroy({where: {channelId, userId}});
+          await subscribers.decrement('subscribersCount', {by: 1});
+          return false;
+        }
+        await ChannelSubscriber.create({channelId, userId});
+        await subscribers.increment('subscribersCount', {by: 1});
+        return true;
       }
-      await ChannelSubscriber.create({channelId, userId})
-      await subscribers.increment('subscribersCount', {by: 1});
-      return true;
+      throw ApiError.NotFound(`Канал с id: ${channelId} отсутствует!`);
     } catch (e) {
       throw ApiError.InternalServerError(e.message);
     }
@@ -152,6 +155,10 @@ class ChannelQueries {
       console.log(e);
       throw e;
     }
+  }
+
+  async isChannel(id) {
+    return !!(await Channel.findOne({where: {id}}));
   }
 }
 

@@ -2,6 +2,7 @@ import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
+import { VideoLike } from "../models/VideoLike";
 
 class VideoQueries {
 
@@ -153,6 +154,96 @@ class VideoQueries {
       return false;
     }
   }
+
+  async countViews(id) {
+    try {
+      const vCount = await VideoInfo.findOne({where: {id}});
+      if (vCount !== 0) return vCount.toJSON().viewsCount();
+      throw ApiError.NotFound(`У данного видео 0(ноль) просмотров`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async viewsIncrement(id) {
+    try {
+      const vIncrement = await VideoInfo.findOne({attributes: ['viewsCount'], where: {id}});
+      if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
+      throw ApiError.NotFound(`Ошибка добавления посмота!`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async like(videoId, userId) {
+    try {
+      const lVideo = await Video.findOne({where: {videoId}});
+      if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
+        await VideoLike.update({liked: true}, {where: {videoId, userId, liked: false}});
+        await lVideo.increment('likesCount', {by: 1});
+        return true;
+      }
+      if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
+        await VideoLike.destroy({where: {videoId, userId, liked: true}});
+        await lVideo.decrement('likesCount', {by: 1});
+        return false;
+      }
+      await VideoLike.create({where: {videoId, userId, liked: true}});
+      await lVideo.increment('likesCount', {by: 1});
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async dislike(videoId, userId) {
+    try {
+      const dlVideo = await Video.findOne({where: {videoId}});
+      if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
+        await VideoLike.update({liked: false}, {where: {videoId, userId, liked: true}});
+        await dlVideo.increment('dislikesCount', {by: 1});
+        return true;
+      }
+      if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
+        await VideoLike.destroy({where: {videoId, userId, liked: false}});
+        await dlVideo.decrement('dislikesCount', {by: 1});
+        return false;
+      }
+      await VideoLike.create({where: {videoId, userId, liked: false}});
+      await dlVideo.increment('dislikesCount', {by: 1});
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async likesCount(videoId) {
+    try {
+      const lCount = await VideoLike.count({where: {videoId, liked: true}});
+      if (lCount) return lCount;
+      throw ApiError.BadRequest(`Лайки отсутствуют`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async dislikesCount(videoId) {
+    try {
+      const dislikesCount = await VideoLike.count({where: {videoId, liked: false}});
+      if (dislikesCount) return dislikesCount;
+      throw ApiError.BadRequest(`Дизайки отсутствуют`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+
 }
 
 export const videoQueries = new VideoQueries();

@@ -14,7 +14,7 @@ class UserQueries {
     const user = {
       ...modelFromQuery.UserInfo,
       id: modelFromQuery.id,
-      nickName: modelFromQuery.nickName
+      nickName: modelFromQuery.nickName,
     };
     delete user.userId;
     delete user.updateTimestamp;
@@ -66,7 +66,7 @@ class UserQueries {
       );
       if (result) result = this.parsingQueryModel(result);
       return result;
-    } catch(e) {
+    } catch (e) {
       throw ApiError.InternalServerError(e);
     }
   }
@@ -75,10 +75,10 @@ class UserQueries {
     try {
       const password = await UserInfo.findOne({
         attributes: ['password'],
-        where: {userId: id}
+        where: {userId: id},
       });
       if (!password) {
-        throw ApiError.BadRequest(`Пользователь с id ${id} не найден.`)
+        throw ApiError.BadRequest(`Пользователь с id ${id} не найден.`);
       }
       return password.toJSON().password;
     } catch (e) {
@@ -126,7 +126,7 @@ class UserQueries {
     }
   }
 
-/**
+  /**
    * Поиск всех пользователей
    * @returns {Object[]}
    */
@@ -166,7 +166,7 @@ class UserQueries {
             },
           },
         )) {
-          throw ApiError.Conflict(`Пользователь с именем ${data.nickName} уже существует!`)
+          throw ApiError.Conflict(`Пользователь с именем ${data.nickName} уже существует!`);
         }
         updateCount += await User.update({nickName: data.nickName}, {where: {id}});
         delete data.nickName;
@@ -188,10 +188,8 @@ class UserQueries {
    */
   async deleteUser(id) {
     try {
-      return !!(await User.destroy({
-        where: {id},
-        include: [{model: UserInfo}, {model: Token}, {model: Channel}, {model: ChannelInfo}]
-      }));
+      if (await this.isUserById(id)) return !!(await User.destroy({where: {id}}))
+      throw ApiError.NotFound('Указанного id пользователя не существует');
     } catch {
       return false;
     }
@@ -205,16 +203,23 @@ class UserQueries {
     return !(await UserInfo.findOne({where: {email}}));
   }
 
+  async isUserById(id) {
+    return !!(await User.findOne({where: {id}}))
+  }
+
   async getUserAvatarById(id) {
     try {
-      const result = await UserInfo.findOne(
-        {
-          attributes: ['avatar'],
-          where: {userId: id}
-        }
-      );
-      if (!result) return null;
-      return result.toJSON().avatar;
+      if (await this.isUserById(id)) {
+        const result = await UserInfo.findOne(
+          {
+            attributes: ['avatar'],
+            where: {userId: id},
+          },
+        );
+        if (!result) return null;
+        return result.toJSON().avatar;
+      }
+      throw ApiError.NotFound('Указанного id пользователя не существует');
     } catch (e) {
       throw(e);
     }
@@ -225,8 +230,8 @@ class UserQueries {
       const result = await User.findOne(
         {
           attributes: ['nickName'],
-          where: {id}
-        }
+          where: {id},
+        },
       );
       if (!result) return null;
       return result.toJSON().nickName;
