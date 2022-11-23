@@ -170,7 +170,7 @@ class VideoQueries {
     try {
       const vIncrement = await VideoInfo.findOne({attributes: ['viewsCount'], where: {id}});
       if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
-      throw ApiError.NotFound(`Ошибка добавления посмота!`);
+      throw ApiError.NotFound(`Ошибка добавления просмотра!`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -252,6 +252,16 @@ class VideoQueries {
     }
   }
 
+  async getIdOfAllVideo() {
+    try {
+      const videoIdList = await Video.findAll({attributes: ['id']});
+      if (!videoIdList) return [];
+      return videoIdList.map(videoId => videoId.toJSON().id);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
 }
 
 export const videoQueries = new VideoQueries();

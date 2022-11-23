@@ -84,7 +84,7 @@ class UserService {
       if (!user) throw ApiError.UnAuthorization('RefreshToken не валиден. Возможно он просрочен');
 
       const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
-      if (refreshTokenFromDB) throw ApiError.UnAuthorization('RefreshToken не найден в базе');
+      if (!refreshTokenFromDB) throw ApiError.UnAuthorization('RefreshToken не найден в базе');
 
       const userFromDB = await userQueries.findOneById(user.id);
       if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');

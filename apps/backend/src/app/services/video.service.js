@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import path from 'path';
 import { v4 as uuidV4} from 'uuid';
 import ffmpeg from 'ffmpeg';
@@ -9,11 +10,11 @@ import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
-import { PlayList } from '../models/PlayList.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
 
-
 /* eslint-disable no-useless-catch */
+dotenv.config();
+
 class VideoService {
   async getNickAndPlaylistNames(idList) {
     try {
@@ -110,6 +111,7 @@ class VideoService {
       if (!playlist) {
         throw ApiError.NotFound(`Плайлист с id ${playlistId} не найден`);
       }
+      console.log('playlistId = ', playlistId);
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
       if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
@@ -119,6 +121,36 @@ class VideoService {
     } catch (e) {
       throw e;
     }
+  }
+
+  async like(userId, videoId, isLike) {
+    try {
+      const user = await userQueries.checkUserById(userId);
+      if (!user) {
+        throw ApiError.NotFound(`Пользователь с id ${userId} не найден`);
+      }
+      const video = await videoQueries.checkVideoById(videoId);
+      if (!video) {
+        throw ApiError.NotFound(`Видео с id ${videoId} не найдено`);
+      }
+      if (isLike) return await videoQueries.like(videoId, userId);
+      return await videoQueries.dislike(videoId, userId);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getFavoriteIdList() {
+    const fullVideoIdList = await videoQueries.getIdOfAllVideo();
+    let portion = Math.min(process.env.VIDEO_PORTION, fullVideoIdList.length);
+    const favoriteIdList = [];
+
+    for (; portion; portion--) {
+      const index = Math.floor(Math.random() * portion);
+      favoriteIdList.push(fullVideoIdList[index].toString());
+      fullVideoIdList.splice(index, 1);
+    }
+    return favoriteIdList;
   }
 }
 

@@ -5,7 +5,6 @@ import { Validation } from './validation';
 
 class VideoValidation extends Validation {
   checkPlaylistId;
-  like;
   constructor() {
     super();
 

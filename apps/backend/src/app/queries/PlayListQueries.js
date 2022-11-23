@@ -7,18 +7,25 @@ import { Video } from "../models/Video";
 class PlayListQueries {
   /**
    * Создание плэйлиста
-   * @param {number} channelId - номер канала для которого создается плэйлист
+   * @param {string} idList - Список идентификаторов родителей плэйлиста
    * @param {string} title - Название плэйлиста
    * @param {string} description - Описание плэйлиста
    * @returns {number} - id созданого плэйлиста
    */
-  async createPlayList(channelId, title, description) {
+  async createPlayList(idList, title, description) {
     try {
+      const [, channelId] = idList.split('_');
       if (await PlayList.findOne({where: {channelId, title}})) {
-        throw ApiError.Conflict(`Плэйлист с именем ${title} уже существует!`);
+        throw ApiError.Conflict(`Плэйлист с именем "${title}" уже существует!`);
       }
       const cPlayList = (await PlayList.create({title, channelId, description})).toJSON();
-      return cPlayList.id;
+      if (!cPlayList) {
+        throw ApiError.InternalServerError('Не удалось создать плэйлист');
+      }
+      const id = cPlayList.id;
+      idList += `_${id.toString()}`;
+      await this.updatePlayList(id, channelId, {idList});
+      return id;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -82,7 +89,7 @@ class PlayListQueries {
     try {
       const fPlayListById = await PlayList.findOne({where: {id}});
       if (fPlayListById) return fPlayListById.toJSON();
-      throw ApiError.NotFound(`Плейлист с id ${id} не найден!`);
+      throw ApiError.NotFound(`Плэйлист с id ${id} не найден!`);
     } catch (e) {
       console.log(e.message);
       throw(e);

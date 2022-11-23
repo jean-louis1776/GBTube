@@ -6,8 +6,7 @@ class PlaylistController {
     try {
       validateError(req);
       const { idList, title, description } = req.body;
-      const channelId = idList.split('_')[1];
-      return res.status(201).json(await playlistService.create(+channelId, title, description));
+      return res.status(201).json(await playlistService.create(idList, title, description));
     } catch (e) {
       next(e);
     }
@@ -16,9 +15,9 @@ class PlaylistController {
   async edit(req, res, next) {
     try {
       validateError(req);
-      const { idList, updatingPlaylist} = req.body;
+      const { idList, updatingObject } = req.body;
       const [, channelId, playlistId] = idList.split('_');
-      return res.json(await playlistService.edit(+playlistId, +channelId, updatingPlaylist));
+      return res.json(await playlistService.edit(+playlistId, +channelId, updatingObject));
     } catch (e) {
       next(e);
     }
