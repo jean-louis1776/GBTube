@@ -11,7 +11,7 @@ class TokenService {
     const tokens = this.generateTokens(user);
     console.log('tokens = ', tokens);
     refreshTokenId = await this.saveRefreshTokenToDB(user.id, tokens.refreshToken, refreshTokenId);
-    return { ...tokens, refreshTokenId };
+    return { ...tokens, refreshTokenId, id: user.id };
   }
 
   generateTokens(payload) {
