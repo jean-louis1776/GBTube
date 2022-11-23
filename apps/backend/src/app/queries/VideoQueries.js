@@ -16,13 +16,12 @@ class VideoQueries {
 
 
   async isVideoNameUnique(title, channelId) {
-
-    return !(await Video.findOne({
-      where: {
-        [Op.and]:
-          [{title}, {channelId}],
-      },
-    }));
+    try {
+      return !(await Video.findOne({where: {title, channelId}}));
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   }
 
   /**

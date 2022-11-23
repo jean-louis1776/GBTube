@@ -29,7 +29,9 @@ class VideoService {
 
   async isNameUnique(channelId, title) {
     try {
-      return await videoQueries.isVideoNameUnique(title, channelId);
+      const result = await videoQueries.isVideoNameUnique(title, channelId);
+      console.log(result);
+      return result;
     } catch (e) {
       throw e;
     }
@@ -40,7 +42,7 @@ class VideoService {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
       }
-      const file = files.videoFile;
+      const file = files.videoName;
       const extension = path.extname(file.name);
       if (!videoExtensions.includes(extension)) {
         throw ApiError.BadRequest('Формат файла не соответствует видеоформату');
@@ -68,6 +70,7 @@ class VideoService {
         }
       );
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
