@@ -30,6 +30,7 @@ import VideoDetail from '../components/VideoDetail/VideoDetail';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
 import EditItemController from '../controllers/EditItemController';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
+import UploadVideoDraft from '../components/UploadVideo/UploadVideoDraft';
 
 export function App() {
   const dispatch = useDispatch();
@@ -83,7 +84,7 @@ export function App() {
         <Route path={`/${VIDEO}/get_one/:id`} element={<VideoCard />} />
         <Route path={`/${CHANNEL}/create/:idList`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
         <Route path={`/${PLAYLIST}/create/:idList`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
-        <Route path={`/${VIDEO}/create/:idList`} element={<UploadVideo />} />
+        <Route path={`/${VIDEO}/create/:idList`} element={<UploadVideoDraft />} />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
