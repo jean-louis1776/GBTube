@@ -20,7 +20,7 @@ export default configureStore({
     userPassword: userPasswordSlice,
     userAvatar: AvatarUpdateSlice,
     auth: authSlice,
-    video: videoSlice,
+    videoDetail: videoSlice,
     reactions: reactionSlice,
   },
 });

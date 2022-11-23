@@ -79,3 +79,4 @@ export const ID_LIST = 'idList';
 export const EMAIL = 'email';
 export const PASSWORD = 'password';
 export const PASSWORD_2 = 'password2';
+export const VIDEO_FILE = 'file';
