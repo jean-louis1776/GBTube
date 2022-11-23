@@ -109,7 +109,7 @@ class UserController {
   async edit(req, res, next) {
     try {
       validateError(req);
-      return res.json(await userService.edit(req.params.id, req.body.updatingUser));
+      return res.json(await userService.edit(req.params.id, req.body.updatingObject));
     } catch (e) {
       next(e);
     }

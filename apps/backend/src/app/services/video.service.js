@@ -11,7 +11,6 @@ import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
-import { filledInputClasses } from '@mui/material';
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -112,6 +111,7 @@ class VideoService {
       if (!playlist) {
         throw ApiError.NotFound(`Плайлист с id ${playlistId} не найден`);
       }
+      console.log('playlistId = ', playlistId);
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
       if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);

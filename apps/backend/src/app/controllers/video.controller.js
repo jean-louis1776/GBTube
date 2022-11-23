@@ -50,6 +50,7 @@ class VideoController {
   async getVideosInfoByPlaylistId(req, res, next) {
     try {
       validateError(req);
+      console.log(req.params.playlist_id);
       const videos = await videoService.getVideosInfoByPlaylistId(+req.params.playlist_id);
       if (!videos) return res.status(204).json([]);
       return res.json(videos);

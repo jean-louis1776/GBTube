@@ -1,25 +1,12 @@
 import { ApiError } from '../errors/apiError';
-import { Channel } from '../models/Channel';
 import { channelQueries } from '../queries/ChannelQueries';
 import { playListQueries } from '../queries/PlayListQueries';
 
 /* eslint-disable no-useless-catch */
 class PlaylistService {
-  async getUserIdByChannelId (channelId) {
-    return (await Channel.findOne({
-      where: {id: channelId},
-      attributes: ['userId']
-    })).toJSON().userId;
-  }
-  makeResultObject(userId, playlist) {
-    const idList = [userId, playlist.channelId, playlist.id].join(';');
-    delete playlist.channelId;
-    delete playlist.id;
-    return { ...playlist, idList };
-  }
-  async create(channelId, title, description) {
+  async create(idList, title, description) {
     try {
-      return await playListQueries.createPlayList(channelId, title, description);
+      return await playListQueries.createPlayList(idList, title, description);
     } catch (e) {
       throw(e);
     }
@@ -47,8 +34,9 @@ class PlaylistService {
   async getOne(id) {
     try {
       const playlist = await playListQueries.findPlayListById(id);
-      const userId = await this.getUserIdByChannelId(playlist.channelId);
-      return this.makeResultObject(userId, playlist);
+      delete playlist.channelId;
+      delete playlist.id;
+      return playlist;
     } catch (e) {
       throw(e);
     }
@@ -62,8 +50,11 @@ class PlaylistService {
       }
       const playlists = await playListQueries.findAllPlayList(channelId);
       if (!playlists) return null;
-      const userId = await this.getUserIdByChannelId(channelId);
-      return playlists.map(playlist => this.makeResultObject(userId, playlist));
+      return playlists.map(playlist => {
+        delete playlist.channelId;
+        delete playlist.id;
+        return playlist;
+      });
     } catch (e) {
       throw(e);
     }

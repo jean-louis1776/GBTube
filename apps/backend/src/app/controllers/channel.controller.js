@@ -16,9 +16,9 @@ class ChannelController {
   async edit(req, res, next) {
     try {
       validateError(req);
-      const { updatingChannel, idList } = req.body;
+      const { updatingObject, idList } = req.body;
       const [userId, channelId] = idList.split('_');
-      return res.json(await channelService.edit(+channelId, +userId, updatingChannel));
+      return res.json(await channelService.edit(+channelId, +userId, updatingObject));
     } catch (e) {
       next(e);
     }
