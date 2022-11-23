@@ -57,6 +57,37 @@ class VideoController {
       next(e);
     }
   }
+
+  async like(req, res, next) {
+    try {
+      validateError(req);
+      const { id, userId } = req.body;
+      return res.json(await videoService.like(userId, id, true));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async dislike(req, res, next) {
+    try {
+      validateError(req);
+      const { id, userId } = req.body;
+      return res.json(await videoService.like(userId, id, false));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async getFavoriteIdList(req, res, next) {
+    try {
+      const videoIdList = await videoService.getFavoriteIdList();
+      let statusCode = 200;
+      if (videoIdList.length === 0) statusCode = 204;
+      return res.status(statusCode).json(videoIdList);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new VideoController();
