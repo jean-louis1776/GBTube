@@ -19,8 +19,8 @@ export const ChildItem = ({ childType, itemId }) => {
   // })
   useEffect(() => {
     const fetchData = async () => {
-      const {title, idList} = await GetChildrenController.getItemById(childType, itemId);
-      setIdList([...idList.split(';')]);
+      const {title, idList} = await GetChildrenController.getItemById(childType, itemId.split('_').at(-1));
+      setIdList([...idList.split('_')]);
       setContent(<Typography className={styles.title}>{ title }</Typography>);
     }
     fetchData().catch(() => {
