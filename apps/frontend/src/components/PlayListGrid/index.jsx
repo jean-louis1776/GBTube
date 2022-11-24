@@ -48,7 +48,7 @@ const PlayListGrid = () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
       await EditItemController.deleteItem(CHANNEL, idList.split('_').at(-1));
-      navigate(`/${CHANNEL}/get_all/${idList.split('_').slice(0, -1).join('_')}`);
+      navigate(`/${CHANNEL}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
     } catch(err) {
       console.log('delete channel fail', err);
     }
