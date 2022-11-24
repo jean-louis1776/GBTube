@@ -79,26 +79,36 @@ class VideoQueries {
     }
   }
 
-  async updateVideoInfo(id, title, category, description) {
+  //async updateVideoInfo(id, title, category, description) {
+  async updateVideoInfo(id, data) {
     try {
+      let isUpdate = 0;
       const fVideo = await Video.findOne({where: id});
-      if (title) {
+      const updObj = {};
+      if (data.title) {
         if (await Video.findOne(
           {
             where: {
               [Op.and]: [
                 {channelId: fVideo.toJSON().channelId},
-                {title},
+                {title: data.title},
                 {id: {[Op.ne]: id}},
               ],
             },
           },
         )) {
-          throw ApiError.BadRequest(`Видео с именем ${title} уже существует канале!`);
+          throw ApiError.BadRequest(`Видео с именем ${data.title} уже существует канале!`);
         }
-        await Video.update({title}, {where: {id}});
+        updObj.title = data.title;
+        delete data.title;
       }
-      return !!(await VideoInfo.update({category, description}, {where: {videoId: id}}));
+      if (data.playlistId) {
+        updObj.playlistId = data.playlistId;
+        delete data.playlistId;
+      }
+      if (Object.keys(updObj).length) isUpdate += await Video.update({title: data.title}, {where: {id}});
+      if (Object.keys(data).length) isUpdate += await VideoInfo.update(data, {where: {videoId: id}});
+      return !!isUpdate;
     } catch (e) {
       console.log(e.message);
       throw(e);

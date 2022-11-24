@@ -38,6 +38,25 @@ class VideoController {
     }
   }
 
+  async edit(req, res, next) {
+    try {
+      validateError(req);
+      const { idList, updatingObject } = req.body;
+      return res.json(await videoService.edit(idList, updatingObject));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async remove(req, res, next) {
+    try {
+      validateError(req);
+      return res.status(204).json(await videoService.remove(+req.params.id));
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getVideoInfoById(req, res, next) {
     try {
       validateError(req);

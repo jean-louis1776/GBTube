@@ -13,8 +13,7 @@ router.get('/get_all/:playlist_id', videoValidation.checkPlaylistId, videoContro
 router.get('get_favorite', videoController.getFavoriteIdList);
 router.patch('/like', videoValidation.subscribeOrLike, videoController.like);
 router.patch('/dislike', videoValidation.subscribeOrLike, videoController.dislike);
-router.patch('/', /*edit*/);
-router.get('/', /*getAll*/ );
-router.delete('/:id', /*removeById*/)
+router.patch('/edit', videoValidation.edit, videoController.edit);
+router.delete('/:id', videoValidation.checkId, videoController.remove);
 
 export default router;

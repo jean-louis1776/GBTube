@@ -98,6 +98,19 @@ class VideoService {
     }
   }
 
+  async edit(idList, data) {
+    try {
+      const idArray = idList.split('_');
+      if (data.playlistId) {
+        idArray[2] = data.playlistId.toString();
+        data.idList = idArray.join('_');
+      }
+      return await videoQueries.updateVideoInfo(+idArray[3], data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getVideoInfoById(id) {
     try {
       const video = await videoQueries.findVideoById(id);
@@ -148,12 +161,26 @@ class VideoService {
     let portion = Math.min(process.env.VIDEO_PORTION, fullVideoIdList.length);
     const favoriteIdList = [];
 
-    for (; portion; portion--) {
+    while (portion) {
       const index = Math.floor(Math.random() * portion);
       favoriteIdList.push(fullVideoIdList[index].toString());
       fullVideoIdList.splice(index, 1);
+      portion--;
     }
     return favoriteIdList;
+  }
+
+  async remove(id) {
+    try {
+      const hashName = await videoQueries.downloadVideo(id);
+      const frameName = path.parse(hashName).name + ".jpg";
+      await ftpServer.delete(hashName);
+      await ftpServer.delete(frameName);
+      return videoQueries.deleteVideo(id);
+    }
+    catch (e) {
+      throw e;
+    }
   }
 }
 
