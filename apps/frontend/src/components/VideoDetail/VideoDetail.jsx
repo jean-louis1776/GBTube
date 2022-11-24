@@ -28,9 +28,12 @@ import {
   setReaction,
   reactionHandler,
 } from '../../features/video/reactionsSlice';
+import VideoController from '../../controllers/VideoController';
 
 const VideoDetail = () => {
   const theme = useTheme();
+  let [videoContent, setVideoContent] = useState(<Loader />);
+  const { idList } = useParams();
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -67,18 +70,28 @@ const VideoDetail = () => {
   const [subscribe, setSubscribe] = useState(true);
 
   // const [videoDetail, setVideoDetail] = useState(null);
-  const [videos, setVideos] = useState(null);
-  // const { id } = useParams();
+  // const [videos, setVideos] = useState(null);
 
-  //   useEffect(() => {
-  //     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
-  //       setVideoDetail(data.items[0])
-  //     );
 
-  //     fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then(
-  //       (data) => setVideos(data.items)
-  //     );
-  //   }, [id]);
+    // useEffect(() => {
+    //   setVideoContent(<Loader />);
+    //   const fetchData = async () => {
+    //     // const video = await VideoController.loadVideo(idList.split('_').at(-1));
+    //     setVideoContent(
+    //       // <ReactPlayer url={video.data} pip className={styles.reactPlayer} controls={true} />
+    //       <video controls className={styles.reactPlayer}>
+    //         <source src={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`} type="video/mp4" />
+    //       </video>
+    //     );
+    //     console.log('videoFile', video.data);
+    //   }
+    //
+    //   fetchData().catch((err) => {
+    //     setVideoContent('');
+    //     console.log('Fail load video');
+    //   });
+    //
+    // }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -101,9 +114,9 @@ const VideoDetail = () => {
           <Box>
             {
               <div className={styles.playerWrapper}>
+                {/*{videoContent}*/}
                 <ReactPlayer
-                  // url={`https://www.youtube.com/watch?v=${id}`}
-                  url={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+                  url={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`}
                   pip
                   className={styles.reactPlayer}
                   controls={true}
@@ -119,7 +132,7 @@ const VideoDetail = () => {
             >
               <Typography color="#fff" variant="h5" fontWeight="bold">
                 {/*{title}*/}
-                Нева гона гив ю ап
+                Title tile title
               </Typography>
               <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
                 {parseInt(
@@ -319,11 +332,11 @@ const VideoDetail = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
         </Box>
       </Stack>
     </Box>
