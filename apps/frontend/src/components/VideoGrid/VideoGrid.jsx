@@ -16,6 +16,7 @@ const VideoGrid = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setContent(<Loader />);
       const {title, description} = await GetChildrenController.getItemById(PLAYLIST, idList.split('_').at(-1));
       console.log(VIDEO, idList);
       const children = await GetChildrenController.getAllItemsById(VIDEO, idList.split('_').at(-1));
@@ -60,7 +61,7 @@ const VideoGrid = () => {
       await EditItemController.deleteItem(PLAYLIST, idList.split('_').at(-1));
       navigate(`/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`);
     } catch(err) {
-      console.log('delete playlist fail',err);
+      console.log('delete playlist fail', err);
     }
   }
 
