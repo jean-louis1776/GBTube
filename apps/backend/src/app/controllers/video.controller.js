@@ -22,6 +22,7 @@ class VideoController {
     try {
       validateError(req);
       const stream = await videoService.download(+req.params.id);
+      res.set('Content-Type', 'video/mp4');
       stream.pipe(res);
     } catch (e) {
       next(e);
