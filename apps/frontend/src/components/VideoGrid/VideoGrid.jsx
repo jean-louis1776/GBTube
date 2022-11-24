@@ -31,7 +31,7 @@ const VideoGrid = () => {
           >
             {children.map((item, idx) => (
               <Box key={idx}>
-                <p>Видео {idx}</p>
+                <p style={{color: 'white'}}>Видео {item.title}</p>
               </Box>
             ))}
           </Stack>
