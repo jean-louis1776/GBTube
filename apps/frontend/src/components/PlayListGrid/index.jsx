@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { Loader } from '../index';
 import GetChildrenController from '../../controllers/GetChildrenController';
@@ -11,15 +11,16 @@ const PlayListGrid = () => {
   const { idList } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
   useEffect(() => {
     console.log(idList.split('_') , 'PlayListGrid');
     const fetchData = async () => {
       setContent(<Loader />);
-      const {title, description} = await GetChildrenController.getItemById(PLAYLIST, idList.split('_').at(-1));
+      // console.log(idList.split('_').at(-1), 'playlist ID');
+      const {title, description} = await GetChildrenController.getItemById(CHANNEL, idList.split('_').at(-1));
       const children = await GetChildrenController.getAllItemsById(PLAYLIST, idList.split('_').at(-1));
-      console.log(children);
+      console.log(children, 'children');
       if (children.length === 0) {
         setContent(<p style={{color: 'white'}}>Не создано ни одного Плейлиста </p>);
       } else {
@@ -40,7 +41,7 @@ const PlayListGrid = () => {
 
   const handleCreateChild = () => {
     // console.log(location.state.idList);
-    navigate(`/${PLAYLIST}/create/${idList}`, { state: { idList: location.state.idList } });
+    navigate(`/${PLAYLIST}/create/${idList}`/*, { state: { idList: location.state.idList } }*/);
   }
 
   const handleDeleteChannel = async () => {
