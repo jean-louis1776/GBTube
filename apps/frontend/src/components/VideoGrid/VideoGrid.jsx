@@ -4,7 +4,7 @@ import { Loader } from '../';
 // import styles from './VideoGrid.module.scss';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
-import { /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
+import { Link, /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 
@@ -37,7 +37,7 @@ const VideoGrid = () => {
             >
               {children.map((item, idx) => (
                 <Box key={idx}>
-                  <p style={{color: 'white'}}>Видео {item.title}</p>
+                  <Link to={`/${VIDEO}/get_one/${item.idList}`} style={{color: 'white'}}>Видео {item.title}</Link>
                 </Box>
               ))}
             </Stack>
