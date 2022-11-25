@@ -1,3 +1,6 @@
+import { pipeline } from 'stream';
+
+import { ftpServer } from '../../main.js';
 import { ApiError } from '../errors/apiError.js';
 import { validateError } from '../errors/validateError.js';
 import videoService from '../services/video.service.js';
@@ -21,9 +24,14 @@ class VideoController {
   async download(req, res, next) {
     try {
       validateError(req);
-      const stream = await videoService.download(+req.params.id);
       res.set('Content-Type', 'video/mp4');
-      stream.pipe(res);
+      console.log(res.getHeaders());
+      const hashName = await videoService.download(+req.params.id);
+      
+      ftpServer.get(hashName).pipe(res);
+
+      // pipeline(stream, res, err => {if (err) console.log(err)});
+      // stream.pipe();
     } catch (e) {
       next(e);
     }

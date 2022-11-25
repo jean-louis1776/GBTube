@@ -81,8 +81,7 @@ class VideoService {
       if (!video) {
         throw ApiError.NotFound(`Видео с id ${id} не существует`);
       }
-      const hashName = await videoQueries.downloadVideo(id);
-      return await ftpServer.get(hashName);
+      return await videoQueries.downloadVideo(id);
     } catch (e) {
       throw e;
     }

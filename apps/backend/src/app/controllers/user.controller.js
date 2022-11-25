@@ -57,7 +57,7 @@ class UserController {
       validateError(req);
       const tokenObject = await userService.refresh(req.cookies.refreshToken);
       this.createCookies(res, tokenObject);
-      return res.json({ accessToken: tokenObject.accessToken, id: tokenObject.id });
+      return res.json({ accessToken: tokenObject.accessToken, id: tokenObject.id, nickName: tokenObject.nickName });
     } catch (e) {
       next(e);
     }
