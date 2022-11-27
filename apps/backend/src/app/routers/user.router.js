@@ -12,7 +12,7 @@ router.post('/logout', userValidation.logout, userController.logout);
 router.post('/avatar/:id', userValidation.checkId, userController.uploadAvatar);
 router.patch('/edit/:id', userValidation.edit, userController.edit);
 router.patch('/change_password', userValidation.changePassword, userController.changePassword)
-router.get('/activate/:link', userValidation.chechLink, userController.activate);
+router.get('/activate/:link', userValidation.checkLink, userController.activate);
 router.get('/refresh', userValidation.refresh, (...args) =>userController.refresh(...args));
 router.get('/avatar/:id', userValidation.checkId, userController.downloadAvatar);
 router.get('/', userController.getAll);

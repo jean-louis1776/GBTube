@@ -17,7 +17,7 @@ class UserValidation extends Validation {
   logout;
   edit;
   changePassword;
-  chechLink;
+  checkLink;
   refresh;
   checkUnique;
   constructor() {
@@ -51,7 +51,7 @@ class UserValidation extends Validation {
       body('newPassword').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING)
     ];
 
-    this.chechLink = [ param('link').exists().withMessage(NOT_EXISTS) ];
+    this.checkLink = [ param('link').exists().withMessage(NOT_EXISTS) ];
 
     this.refresh = [
       cookie('refreshTokenId').exists({ checkFalsy: true }).withMessage(`в cookie ${NOT_EXISTS_OR_EMPTY}`),

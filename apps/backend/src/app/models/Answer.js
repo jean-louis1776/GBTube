@@ -7,8 +7,8 @@ export const Answer = sequelize.define('Answer', {
       primaryKey: true,
       autoIncrement: true,
     },
-    textInfo: {
-      type: DataTypes.CHAR,
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     likesCount: {

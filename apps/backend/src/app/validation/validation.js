@@ -26,7 +26,7 @@ export class Validation {
 
     this.edit = [
       body('updatingObject.title').optional().isString().withMessage(NOT_STRING),
-      body('uodatingObject.description').optional().isString().withMessage(NOT_STRING),
+      body('updatingObject.description').optional().isString().withMessage(NOT_STRING),
       body('idList').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING)
         .matches(REG_EXP_FOR_ID_LIST).withMessage(NOT_ID_LIST)
     ];
