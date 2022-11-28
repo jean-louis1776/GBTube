@@ -5,9 +5,9 @@ import { AnswerLike } from "../models/AnswerLike";
 class AnswerQueries {
 
 
-  async createAnswer(userId, commentId, textInfo) {
+  async createAnswer(userId, commentId, description) {
     try {
-      const cAnswer = (await Answer.create({userId, commentId, textInfo})).toJSON();
+      const cAnswer = (await Answer.create({userId, commentId, textInfo: description})).toJSON();
       if (cAnswer) return cAnswer.id;
       throw ApiError.BadRequest(`Ответ не создан`);
     } catch (e) {
@@ -16,9 +16,9 @@ class AnswerQueries {
     }
   }
 
-  async updateAnswer(id, textInfo) {
+  async updateAnswer(id, description) {
     try {
-      return !!(await Answer.update({textInfo}, {where: {id}}));
+      return !!(await Answer.update({description}, {where: {id}}));
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -27,7 +27,9 @@ class AnswerQueries {
 
   async deleteAnswer(id) {
     try {
-      return !!(await Answer.destroy({where: {id}}));
+      const dAnswer = await Answer.destroy({where: {id}});
+      if (!dAnswer) throw ApiError.NotFound(`Ответа с id ${id} не существует`);
+      return !!(dAnswer);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -51,7 +53,7 @@ class AnswerQueries {
       if (gAllAnswerComment) {
         return (await gAllAnswerComment).map(value => value.toJSON());
       }
-      throw ApiError.BadRequest(`Атвет к коментарию не найдены`);
+      throw ApiError.NotFound(`Ответа с id ${commentId} не существует`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -61,6 +63,7 @@ class AnswerQueries {
   async like(answerId, userId) {
     try {
       const lAnswer = await Answer.findOne({where: {answerId}});
+      if (!lAnswer) throw ApiError.NotFound(`Ответ с id ${answerId} не найден`);
       if (await AnswerLike.findOne({where: {answerId, userId, liked: false}})) {
         await AnswerLike.update({liked: true}, {where: {answerId, userId, liked: false}});
         await lAnswer.increment('likesCount', {by: 1});
