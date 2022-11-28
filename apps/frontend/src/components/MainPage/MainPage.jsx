@@ -80,104 +80,6 @@ const Drawer = styled(MuiDrawer, {
 
 const MainPage = (props) => {
   const [selectedCategory, setSelectedCategory] = useState('Домой');
-  const [videos, setVideos] = useState([
-    {
-      id: 1,
-      title: 'someTitle1',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 2,
-      title: 'someTitle2',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 3,
-      title: 'someTitle3',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 4,
-      title: 'someTitle4',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 5,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 6,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 7,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 8,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 1,
-      title: 'someTitle1',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 2,
-      title: 'someTitle2',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 3,
-      title: 'someTitle3',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 4,
-      title: 'someTitle4',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 5,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 6,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 7,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-    {
-      id: 8,
-      title: 'someTitle5',
-      channelName: 'videoOwner',
-      frameShot: '',
-    },
-  ]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -214,7 +116,7 @@ const MainPage = (props) => {
         <div style={{ color: 'white' }}>Home</div>
 
         <Box p={2} sx={{ maxHeight: '93vh', flex: 2 }}>
-          <VideoGrid videos={videos} />
+          <VideoGrid />
         </Box>
 
         <DrawerHeader />

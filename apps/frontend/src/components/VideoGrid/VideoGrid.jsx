@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { Loader } from '../';
-// import styles from './VideoGrid.module.scss';
 import GetChildrenController from '../../controllers/GetChildrenController';
-
-import { Link, /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
+import {
+  Link,
+  /*useLocation,*/ useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
+import VideoCard from '../VideoCard/VideoCard';
 
 const VideoGrid = () => {
   const { idList } = useParams();
@@ -17,17 +20,29 @@ const VideoGrid = () => {
   useEffect(() => {
     const fetchData = async () => {
       setContent(<Loader />);
-      const {title, description} = await GetChildrenController.getItemById(PLAYLIST, idList.split('_').at(-1));
+      const { title, description } = await GetChildrenController.getItemById(
+        PLAYLIST,
+        idList.split('_').at(-1)
+      );
       console.log(VIDEO, idList);
-      const children = await GetChildrenController.getAllItemsById(VIDEO, idList.split('_').at(-1));
+      const children = await GetChildrenController.getAllItemsById(
+        VIDEO,
+        idList.split('_').at(-1)
+      );
       console.log(children);
       if (children.length === 0) {
-        setContent(<p style={{color: 'white'}}>Не создано ни одного видео </p>);
+        setContent(
+          <p style={{ color: 'white' }}>Не создано ни одного видео </p>
+        );
       } else {
         setContent(
           <Box>
-            <p style={{color: 'white'}}>Название текущего плейлиста: {title}</p>
-            <p style={{color: 'white'}}>Описание текущего плейлиста: {description}</p>
+            <p style={{ color: 'white' }}>
+              Название текущего плейлиста: {title}
+            </p>
+            <p style={{ color: 'white' }}>
+              Описание текущего плейлиста: {description}
+            </p>
             <Stack
               direction={/*direction ||*/ 'row'}
               flexWrap="wrap"
@@ -37,36 +52,68 @@ const VideoGrid = () => {
             >
               {children.map((item, idx) => (
                 <Box key={idx}>
-                  <Link to={`/${VIDEO}/get_one/${item.idList}`} style={{color: 'white'}}>Видео {item.title}</Link>
+                  <Link
+                    to={`/${VIDEO}/get_one/${item.idList}`}
+                    style={{ color: 'white' }}
+                  >
+                    Видео {item.title}
+                  </Link>
                 </Box>
               ))}
             </Stack>
           </Box>
         );
       }
-    }
+    };
     fetchData().catch(() => {
       setContent('');
       console.log(`Load ${VIDEO} fail`);
     });
-  },[]);
+  }, []);
 
   const handleCreateChild = () => {
-    navigate(`/${VIDEO}/create/${idList}`/*, { state: { idList: location.state.idList } }*/);
-  }
+    navigate(
+      `/${VIDEO}/create/${idList}` /*, { state: { idList: location.state.idList } }*/
+    );
+  };
 
   const handleDeletePlaylist = async () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
       await EditItemController.deleteItem(PLAYLIST, idList.split('_').at(-1));
-      navigate(`/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
-    } catch(err) {
+      navigate(
+        `/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
+        { replace: true }
+      );
+    } catch (err) {
       console.log('delete playlist fail', err);
     }
-  }
+  };
 
   return (
     <>
+      {/*<Box*/}
+      {/*  sx={{*/}
+      {/*    // display: 'flex',*/}
+      {/*    // flexFlow: 'row wrap',*/}
+      {/*    // gap: 1,*/}
+      {/*    margin: '20px',*/}
+      {/*    display: 'grid',*/}
+      {/*    columnGap: 3,*/}
+      {/*    rowGap: 2,*/}
+      {/*    gridTemplateColumns: {*/}
+      {/*      xs: 'repeat(1, 1fr)',*/}
+      {/*      sm: 'repeat(2, 1fr)',*/}
+      {/*      md: 'repeat(3, 1fr)',*/}
+      {/*      lg: 'repeat(4, 1fr)',*/}
+      {/*      xl: 'repeat(5, 1fr)',*/}
+      {/*    },*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  {videos.map(() => (*/}
+      {/*    <VideoCard />*/}
+      {/*  ))}*/}
+      {/*</Box>*/}
       {content}
       <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
       <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button>
