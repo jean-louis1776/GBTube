@@ -4,6 +4,7 @@ export const theme = createTheme({
   palette: {
     darkBackground: {
       main: '#1F1F1F',
+      second: 'rgba(31, 31, 31, .36)',
       contrastText: '#fff',
     },
     shadows: {
@@ -12,6 +13,8 @@ export const theme = createTheme({
     },
     baseBlue: {
       main: '#0089EB',
+      second: 'rgba(25,118,210,.25)',
+      third: 'rgba(25,118,210,.35)',
       contrastText: '#F2F9FF',
     },
     coplimentPink: {
@@ -23,7 +26,6 @@ export const theme = createTheme({
   components: {
     MuiPaper: {
       styleOverrides: {
-        // Name of the slot
         root: ({ theme }) => ({
           backgroundColor: theme.palette.shadows.main,
         }),
@@ -36,18 +38,42 @@ export const theme = createTheme({
           '&:hover': {
             backgroundColor: theme.palette.shadows.main,
           },
+          '&:focus-visible': {
+            backgroundColor: theme.palette.shadows.main,
+          },
+          '&.Mui-selected': {
+            backgroundColor: theme.palette.baseBlue.second,
+            '&:hover': {
+              backgroundColor: theme.palette.baseBlue.third,
+            },
+          },
         }),
       },
     },
 
-    // MuiStack: {
-    //   styleOverrides: {
-    //     // Name of the slot
-    //     root: ({ theme }) => ({
-    //       backgroundColor: theme.palette.darkBackground.main,
-    //     }),
-    //   },
-    // },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&:hover': {
+            backgroundColor: theme.palette.baseBlue.second,
+          },
+          '&:focus-visible': {
+            backgroundColor: theme.palette.baseBlue.second,
+          },
+        }),
+      },
+    },
+
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&:hover': {
+            backgroundColor: theme.palette.shadows.main,
+          },
+          color: theme.palette.darkBackground.contrastText,
+        }),
+      },
+    },
 
     MuiTypography: {
       styleOverrides: {
