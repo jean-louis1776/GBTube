@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Avatar, Box,
+  Avatar,
+  Box,
   Divider,
   IconButton,
   ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
-  Tooltip
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { shallowEqual, useSelector } from 'react-redux'
-import { userMenu } from '@constants/frontend';
+import { shallowEqual, useSelector } from 'react-redux';
 
 // import styles from './UserMenu.module.scss';
+import { userMenu } from '@constants/frontend';
 import { getSelector } from '../../store/getSelector';
 import { blueGrey, deepOrange } from '@mui/material/colors';
 
@@ -26,7 +29,7 @@ const UserMenu = () => {
   useEffect(() => {
     console.log('user');
     console.log(user);
-  },[]);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,9 +40,11 @@ const UserMenu = () => {
 
   const handleUserMenuClick = (link) => () => {
     if (isAuth && user.id) {
-      navigate(`${link}/get_all/${user.id}`, { state: { idList: [`${user.id}`] } });
+      navigate(`${link}/get_all/${user.id}`, {
+        state: { idList: [`${user.id}`] },
+      });
     }
-  }
+  };
 
   return (
     <>
@@ -51,7 +56,13 @@ const UserMenu = () => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 40, height: 40, bgcolor: isAuth ? deepOrange[500] : blueGrey[500] }} />
+          <Avatar
+            sx={{
+              width: 40,
+              height: 40,
+              bgcolor: isAuth ? deepOrange[500] : blueGrey[500],
+            }}
+          />
         </IconButton>
       </Tooltip>
 
@@ -82,7 +93,7 @@ const UserMenu = () => {
               right: 19,
               width: 10,
               height: 10,
-              bgcolor: 'background.paper',
+              bgcolor: 'shadows.main',
               transform: 'translateY(-50%) rotate(45deg)',
               zIndex: 0,
             },
@@ -91,28 +102,29 @@ const UserMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {isAuth ? <MenuItem sx={{color: deepOrange[500]}}>{user.nickName || 'Где ник?'}</MenuItem> : ''}
+        {isAuth ? (
+          <MenuItem sx={{ color: deepOrange[500] }}>
+            {user.nickName || 'Где ник?'}
+          </MenuItem>
+        ) : (
+          ''
+        )}
         <Link to="/userProfile">
           <MenuItem>
-            <Avatar /> Мой профиль
+            <Avatar />
+            <Typography>Мой профиль</Typography>
           </MenuItem>
         </Link>
 
         <Divider />
 
-        {userMenu.map((userMenu) => (
+        {userMenu.map((userMenu, index) => (
           <Box onClick={handleUserMenuClick(userMenu.link)}>
-            <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+            <MenuItem key={index} sx={{ pt: 1.25, pb: 1.25 }}>
               <ListItemIcon>{userMenu.icon}</ListItemIcon>
-              {userMenu.name}
+              <ListItemText>{userMenu.name}</ListItemText>
             </MenuItem>
           </Box>
-/*          <Link to={userMenu.link}>
-            <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
-              <ListItemIcon>{userMenu.icon}</ListItemIcon>
-              {userMenu.name}
-            </MenuItem>
-          </Link>*/
         ))}
       </Menu>
     </>

@@ -8,6 +8,7 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SettingsIcon from '@mui/icons-material/Settings';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import appLogo from './assets/logo.png';
 import emailConfirmLogo from './assets/bar-chart.png';
 import logoNotFound from './assets/404Logo.png';
@@ -18,11 +19,6 @@ export const notFoundLogo = logoNotFound;
 
 export const categories = [
   { name: 'Домой', icon: <HomeIcon color="baseBlue" />, link: '/' },
-  {
-    name: 'Подписки',
-    icon: <SubscriptionsIcon color="baseBlue" />,
-    link: '/subscriptions',
-  },
   { name: 'История', icon: <HistoryIcon color="baseBlue" />, link: '/history' },
   {
     name: 'Понравившиеся',
@@ -30,9 +26,21 @@ export const categories = [
     link: '/likes',
   },
   {
-    name: 'Библиотека',
+    name: 'Мои подписки',
+    icon: <SubscriptionsIcon color="baseBlue" />,
+    link: '/subscriptions',
+  },
+  {
+    name: 'Моя библиотека',
     icon: <VideoLibraryIcon color="baseBlue" />,
     link: '/library',
+  },
+];
+
+export const nestedCategories = [
+  {
+    name: 'Мои подборки',
+    icon: <PlaylistPlayIcon color="baseBlue" />,
   },
 ];
 

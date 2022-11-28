@@ -1,58 +1,42 @@
 import React, { useState } from 'react';
 import {
-  Avatar,
   Button,
-  Collapse,
-  Divider,
+  Drawer,
   IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
   Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { Link } from 'react-router-dom';
-import { logo, userMenu } from '@constants/frontend';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+
+import { logo } from '@constants/frontend';
+import { Navbar, SearchForm, UserMenu } from '../';
+import { getSelector } from '../../store/getSelector';
+import { logoutHandler } from '../../features/auth/authSlice';
+import { AppBar, DrawerHeader } from './HeaderComponents';
 
 import styles from './Header.module.scss';
 
-import { Navbar, SearchForm, UserMenu } from '../';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getSelector } from '../../store/getSelector';
-import { logoutHandler } from '../../features/auth/authSlice';
-import { AppBar, Drawer, DrawerHeader } from './HeaderComponents';
-
-const Header = ({ withNavbar }) => {
+const Header = ({ selectedCategory }) => {
   const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
   const dispatch = useDispatch();
-  const theme = useTheme();
+
   const [openMenu, setOpenMenu] = useState(false);
-  const [openColl, setOpenColl] = useState(true);
 
-  const handleDrawerOpen = () => {
-    setOpenMenu(true);
-  };
+  const toggleDrawer = (toggleOpen) => (event) => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
 
-  const handleDrawerClose = () => {
-    setOpenMenu(false);
-  };
-
-  const handleCollClick = () => {
-    setOpenColl(!openColl);
+    setOpenMenu(toggleOpen);
   };
 
   const handleLogoutClick = () => {
@@ -62,27 +46,24 @@ const Header = ({ withNavbar }) => {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" open={openMenu}>
+      <AppBar position="fixed">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
           <Stack direction="row" alignItems="center" className={styles.header}>
-            {withNavbar && (
-              <Tooltip title="Меню">
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  sx={{
-                    marginRight: 3,
-                    ...(openMenu && { display: 'none' }),
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+            <Tooltip title="Меню">
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={toggleDrawer(true)}
+                edge="start"
+                sx={{
+                  marginRight: 3,
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Tooltip>
 
-            <Tooltip title="Домашняя страница GeekTube">
+            <Tooltip title="Главная страница GeekTube">
               <Link to="/" className={styles.logo}>
                 <img src={logo} alt="Logo" height={45} />
 
@@ -136,91 +117,25 @@ const Header = ({ withNavbar }) => {
 
       {/* NAVBAR MENU */}
 
-      {withNavbar && (
-        <Drawer variant="permanent" open={openMenu}>
-          <DrawerHeader sx={{ justifyContent: 'space-between' }}>
-            <Typography sx={{ pl: '12px' }}>Панель навигации</Typography>
-            <IconButton sx={{ color: '#fff' }} onClick={handleDrawerClose}>
-              {theme.direction === 'rtl' ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
+      <Drawer anchor="left" open={openMenu} onClose={toggleDrawer(false)}>
+        <DrawerHeader sx={{ justifyContent: 'space-between' }}>
+          <Typography
+            sx={{
+              pl: '12px',
+              userSelect: 'none',
+              fontWeight: 600,
+              fontSize: '1.2rem',
+            }}
+          >
+            Меню GeekTube
+          </Typography>
+          <IconButton onClick={toggleDrawer(false)}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </DrawerHeader>
 
-          <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: openMenu ? 'initial' : 'center',
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: openMenu ? 3 : 'auto',
-                      justifyContent: 'center',
-                      color: 'baseBlue.main',
-                    }}
-                  >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={text}
-                    sx={{ opacity: openMenu ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-
-          <Divider />
-
-          <List>
-            <ListItemButton onClick={handleCollClick}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-              {openColl ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openColl} timeout="auto" unmountOnExit>
-              <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                  <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton
-                      sx={{
-                        minHeight: 48,
-                        justifyContent: openColl ? 'initial' : 'center',
-                        px: 2.5,
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          mr: openColl ? 3 : 'auto',
-                          justifyContent: 'center',
-                          color: 'baseBlue.main',
-                        }}
-                      >
-                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={text}
-                        sx={{ opacity: openColl ? 1 : 0 }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
-          </List>
-        </Drawer>
-      )}
+        <Navbar toggle={toggleDrawer(false)} selectCat={selectedCategory} />
+      </Drawer>
     </>
   );
 };

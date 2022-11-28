@@ -79,47 +79,23 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const MainPage = (props) => {
-  const [selectedCategory, setSelectedCategory] = useState('Домой');
+  const selectedCategory = 'Домой';
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Header withNavbar />
+    <Box sx={{ display: 'flex', pt: 8 }}>
+      <Header selectedCategory={selectedCategory} />
 
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, bgcolor: 'darkBackground.main' }}
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'darkBackground.main',
+          p: 2,
+          maxHeight: '93vh',
+          flex: 2,
+        }}
       >
-        {/* <Box
-          sx={{
-            height: { sx: 'auto', md: '93vh' },
-            boxShadow: '9px 0 6px -6px #ccc',
-            px: { sx: 0, md: 2 },
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Navbar
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-          />
-
-          <Typography
-            className={styles.copy}
-            variant="body2"
-            sx={{ mb: 1.5, color: '#999', userSelect: 'none' }}
-          >
-            &copy; 2022 GeekTube Team
-          </Typography>
-        </Box> */}
-
-        <div style={{ color: 'white' }}>Home</div>
-
-        <Box p={2} sx={{ maxHeight: '93vh', flex: 2 }}>
-          <VideoGrid />
-        </Box>
-
-        <DrawerHeader />
+        <VideoGrid />
       </Box>
     </Box>
   );
