@@ -24,7 +24,7 @@ import {
   UserProfile,
   VideoGrid,
   PlayListGrid,
-  ChannelGrid
+  ChannelGrid,
 } from '../components';
 import VideoDetail from '../components/VideoDetail/VideoDetail';
 import EditItemInfo from '../components/edit-item-info/edit-item-info';
@@ -39,27 +39,28 @@ export function App() {
     const setFlagToTrue = () => {
       runOnceFlag = true;
       console.log('Auth flag dropped');
-    }
+    };
     return () => {
       console.log('useEffect run');
       if (runOnceFlag && localStorage.getItem('token')) {
         console.log('Auth running');
         dispatch(checkAuthHandler());
         runOnceFlag = false;
-        setTimeout(setFlagToTrue, 3000 );
+        setTimeout(setFlagToTrue, 3000);
       }
-    }
-  }
+    };
+  };
 
   const runOnceInstance = runOnceBuild();
 
   useEffect(
-    runOnceInstance
+    runOnceInstance,
     /*() => {
     if (localStorage.getItem('token')) {
       dispatch(checkAuthHandler());
     }
-  }*/, []);
+  }*/ []
+  );
   return (
     <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
@@ -75,14 +76,39 @@ export function App() {
         <Route path="/likes" element={<Likes />} />
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
-        <Route path={`/${CHANNEL}/get_all/:user_id`} element={<ChannelGrid />} />
-        <Route path={`/${PLAYLIST}/get_all/:idList`} element={<PlayListGrid />} />
-        <Route path={`/${VIDEO}/get_all/:idList`} element={<VideoGrid childrenType={VIDEO} />} />
-        <Route path={`/${CHANNEL}/get_one/:id`} element={<VideoGrid childrenType={PLAYLIST} />} />
-        <Route path={`/${PLAYLIST}/get_one/:id`} element={<VideoGrid childrenType={VIDEO} />} />
-        <Route path={`/${VIDEO}/get_one/:id`} element={<VideoCard />} />
-        <Route path={`/${CHANNEL}/create/:idList`} element={<EditItemInfo elemType={CHANNEL} sendData={EditItemController.addItem} />} />
-        <Route path={`/${PLAYLIST}/create/:idList`} element={<EditItemInfo elemType={PLAYLIST} sendData={EditItemController.addItem} />} />
+        <Route
+          path={`/${CHANNEL}/get_all/:user_id`}
+          element={<ChannelGrid />}
+        />
+        <Route
+          path={`/${PLAYLIST}/get_all/:idList`}
+          element={<PlayListGrid />}
+        />
+        <Route
+          path={`/${VIDEO}/get_all/:idList`}
+          element={<VideoGrid childrenType={VIDEO} />}
+        />
+        <Route path={`/${CHANNEL}/get_one/:id`} element={<ChannelGrid />} />
+        <Route path={`/${PLAYLIST}/get_one/:id`} element={<PlayListGrid />} />
+        <Route path={`/${VIDEO}/get_one/:idList`} element={<VideoDetail />} />
+        <Route
+          path={`/${CHANNEL}/create/:idList`}
+          element={
+            <EditItemInfo
+              elemType={CHANNEL}
+              sendData={EditItemController.addItem}
+            />
+          }
+        />
+        <Route
+          path={`/${PLAYLIST}/create/:idList`}
+          element={
+            <EditItemInfo
+              elemType={PLAYLIST}
+              sendData={EditItemController.addItem}
+            />
+          }
+        />
         <Route path={`/${VIDEO}/create/:idList`} element={<UploadVideo />} />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />

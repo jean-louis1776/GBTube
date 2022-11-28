@@ -24,10 +24,8 @@ import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelector } from '../../store/getSelector';
 import { Helmet } from 'react-helmet';
-import {
-  setReaction,
-  reactionHandler,
-} from '../../features/video/reactionsSlice';
+import { setReaction } from '../../features/video/reactionsSlice';
+import VideoGrid from '../VideoGrid/VideoGrid';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -54,6 +52,7 @@ const VideoDetail = () => {
   const dispatch = useDispatch();
 
   const reaction = useSelector(getSelector('reactions', 'like'));
+  const video = useSelector(getSelector('videoDetail', 'video'));
   const reactionLikeCount = useSelector(getSelector('reactions', 'likesCount'));
   const reactionDislikeCount = useSelector(
     getSelector('reactions', 'dislikesCount')
@@ -68,7 +67,7 @@ const VideoDetail = () => {
 
   // const [videoDetail, setVideoDetail] = useState(null);
   const [videos, setVideos] = useState(null);
-  // const { id } = useParams();
+  const { id } = useParams();
 
   //   useEffect(() => {
   //     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
@@ -91,7 +90,7 @@ const VideoDetail = () => {
     <Box className={styles.wrapper}>
       <Helmet>
         <title>
-          {/*{title}*/}
+          {/*{video.title} | GeekTube*/}
           VideoTitle | GeekTube
         </title>
       </Helmet>
@@ -118,15 +117,10 @@ const VideoDetail = () => {
               px={2}
             >
               <Typography color="#fff" variant="h5" fontWeight="bold">
-                {/*{title}*/}
-                Нева гона гив ю ап
+                {video.title}
               </Typography>
               <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
-                {parseInt(
-                  '740'
-                  // viewCount
-                ).toLocaleString()}{' '}
-                просмотров
+                {parseInt(video.viewsCount).toLocaleString()} просмотров
               </Typography>
             </Stack>
             <Stack
@@ -144,8 +138,7 @@ const VideoDetail = () => {
                       variant={{ sm: 'subtitle1', md: 'h6' }}
                       fontWeight="500"
                     >
-                      {/*{channelTitle}*/}
-                      Channel Name
+                      {video.channelName}
                     </Typography>
                     <CheckCircle
                       sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
@@ -249,10 +242,9 @@ const VideoDetail = () => {
               width="100%"
               backgroundColor={theme.palette.shadows.main}
             >
-              <Box variant="body1" sx={{ opacity: 0.85 }}>
+              <Box variant="body1" sx={{ opacity: 0.7 }}>
                 <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
-                  Дата публикации:
-                  {/*{publishedAt.substring(0, 10)}*/}
+                  Дата публикации: {video.createdTimestamp.toLocaleDateString()}
                 </Typography>
               </Box>
               <ShowMoreText
@@ -266,18 +258,7 @@ const VideoDetail = () => {
                 // width={800}
                 truncatedEndingComponent={'... '}
               >
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ab
-                  aspernatur atque autem cum deleniti dolorem et facere impedit
-                  in laboriosam maiores mollitia nobis nostrum obcaecati odit
-                  officia omnis pariatur quam quia reiciendis sapiente similique
-                  tempore totam unde velit, voluptas.
-                </p>
-                <p>
-                  Деньги денежки монетки бабосики копейки кэш лавешечку капусту
-                  лавандосик золотишко слать мне на пальтишко:
-                </p>
-                <p>1234 1234 1234 123</p>
+                {video.description}
               </ShowMoreText>
             </Box>
 
@@ -319,6 +300,7 @@ const VideoDetail = () => {
           justifyContent="center"
           alignItems="center"
         >
+          {/*<VideoGrid />*/}
           <VideoCard videos={videos} direction="column" />
           <VideoCard videos={videos} direction="column" />
           <VideoCard videos={videos} direction="column" />

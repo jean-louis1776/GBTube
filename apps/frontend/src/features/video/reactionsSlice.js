@@ -3,8 +3,8 @@ import VideoController from '../../controllers/VideoController';
 
 const initialState = {
   like: ['Nothing'],
-  likesCount: 0,
-  dislikesCount: 0,
+  likesCount: 1337,
+  dislikesCount: 42,
 };
 
 export const reactionHandler = createAsyncThunk(
@@ -26,12 +26,8 @@ export const reactionSlice = createSlice({
       state.likesCount = payload.likesCount;
       state.dislikesCount = payload.dislikesCount;
     },
-    // setDislikesCount: (state, { payload }) => {
-    //   state.dislikesCount = payload.dislikesCount;
-    // },
   },
 });
 
-export const { setReaction, setLikesCount, setDislikesCount } =
-  reactionSlice.actions;
+export const { setReaction, setLikesCount } = reactionSlice.actions;
 export default reactionSlice.reducer;
