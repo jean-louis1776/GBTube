@@ -1,9 +1,18 @@
 import Header from '../Header/Header';
-import { Avatar, Box, Button, Stack, Typography } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { userChannelPages } from '@constants/frontend';
+import { userChannelTabs } from '@constants/frontend';
+import { Link } from 'react-router-dom';
 
 const UserPage = () => {
   const theme = useTheme();
@@ -28,7 +37,8 @@ const UserPage = () => {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            marginY: 12,
+            marginTop: 12,
+            marginBottom: 4,
             alignItems: 'center',
             gap: 3,
           }}
@@ -65,14 +75,41 @@ const UserPage = () => {
             )}
           </Box>
         </Box>
+        <List
+          sx={{
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {userChannelTabs.map((tab, index) => (
+            <Link to={tab.link}>
+              <ListItem disablePadding>
+                <ListItemButton
+                  key={index}
+                  sx={{
+                    paddingX: 12,
+                  }}
+                  // selected={item.name === selectCat}
+                >
+                  <ListItemText primary={tab.name} sx={{ opacity: 1 }} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List>
         <Box
           sx={{
+            color: 'white',
+            maxWidth: '70vw',
+            margin: '20px auto',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
           }}
         >
-          Shitbox
+          user's various trash content
         </Box>
       </Box>
     </>

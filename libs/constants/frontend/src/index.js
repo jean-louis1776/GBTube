@@ -67,7 +67,7 @@ export const userMenu = [
   },
 ];
 
-export const userChannelPages = [
+export const userChannelTabs = [
   {
     name: 'Видео',
     link: '/user-videos',
