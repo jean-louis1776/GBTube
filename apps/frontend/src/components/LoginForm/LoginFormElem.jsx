@@ -6,14 +6,18 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { loginHandler } from '../../features/auth/authSlice';
 import styles from './LoginForm.module.scss';
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { LoginFormElemButton } from './LoginFormElemButton';
 import { LoginFormElemInputError } from './LoginFormElemInputError';
 import { LoginFormStatusError } from './LoginFormStatusError';
 import { EMAIL, PASSWORD } from '@constants/frontend';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export const LoginFormElem = () => {
   const [loginError, setLoginError] = useState('');
+  const [passwordShown, setPasswordShown] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,7 +31,12 @@ export const LoginFormElem = () => {
     })
     .required();
 
-  const { register, handleSubmit, formState: { errors, isValid }, reset,} = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
     mode: 'onBlur',
     defaultValues: { [EMAIL]: '', [PASSWORD]: '' },
     resolver: yupResolver(schema),
@@ -45,6 +54,12 @@ export const LoginFormElem = () => {
     reset();
   };
 
+  const togglePassword = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShown(!passwordShown);
+  };
+
   return (
     <>
       <Typography variant="h6" sx={{ mb: 1 }}>
@@ -55,29 +70,42 @@ export const LoginFormElem = () => {
           className={styles.inputStuck}
           sx={{ backgroundColor: 'shadows.main' }}
         >
-          <input
-            {...register(EMAIL)}
-            placeholder="E-mail"
-            type="email"
-            className={styles.loginInput}
-          />
-          <LoginFormElemInputError errors={errors} type={EMAIL}/>
+          <Box className={styles.loginInputBox}>
+            <input
+              {...register(EMAIL)}
+              placeholder="E-mail"
+              type="email"
+              className={styles.loginInput}
+            />
+          </Box>
 
-          <input
-            {...register(PASSWORD)}
-            placeholder="Пароль"
-            type="password"
-            className={styles.loginInput}
-          />
-          <LoginFormElemInputError errors={errors} type={PASSWORD}/>
+          <LoginFormElemInputError errors={errors} type={EMAIL} />
 
+          <Box className={`${styles.loginInputBox} ${styles.passwordBox}`}>
+            <input
+              {...register(PASSWORD)}
+              placeholder="Пароль"
+              type={passwordShown ? 'text' : 'password'}
+              className={styles.loginInput}
+            />
+
+            <div className={styles.passToggle} onClick={togglePassword}>
+              {passwordShown === false ? (
+                <VisibilityIcon sx={{ color: 'baseBlue.main' }} />
+              ) : (
+                <VisibilityOffIcon sx={{ color: 'baseBlue.main' }} />
+              )}
+            </div>
+          </Box>
+
+          <LoginFormElemInputError errors={errors} type={PASSWORD} />
         </Stack>
 
         <div className={styles.buttonWrap}>
-          <LoginFormStatusError loginError={loginError}/>
-          <LoginFormElemButton isValid={isValid}/>
+          <LoginFormStatusError loginError={loginError} />
+          <LoginFormElemButton isValid={isValid} />
         </div>
       </form>
     </>
   );
-}
+};

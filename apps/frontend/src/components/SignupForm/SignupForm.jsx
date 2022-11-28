@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
-import styles from './SignupForm.module.scss';
 // import AuthController from '../../controllers/AuthController';
 import { useDispatch } from 'react-redux';
 import { registrationHandler } from '../../features/auth/authSlice';
@@ -11,11 +17,17 @@ import { useForm } from 'react-hook-form';
 import PasswordValidator from 'password-validator';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
+import styles from './SignupForm.module.scss';
 
 const SignupForm = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordShownFirst, setPasswordShownFirst] = useState(false);
+  const [passwordShownSecond, setPasswordShownSecond] = useState(false);
 
   const schemaPsw = new PasswordValidator();
   schemaPsw
@@ -89,6 +101,15 @@ const SignupForm = () => {
     setPassword(evt.target.value);
   };
 
+  const togglePasswordFirst = () => {
+    // When the handler is invoked
+    // inverse the boolean state of passwordShown
+    setPasswordShownFirst(!passwordShownFirst);
+  };
+  const togglePasswordSecond = () => {
+    setPasswordShownSecond(!passwordShownSecond);
+  };
+
   return (
     <Stack className={styles.signupSection}>
       <Paper elevation={3} className={styles.signupPaper}>
@@ -123,14 +144,16 @@ const SignupForm = () => {
             className={styles.inputStuck}
             sx={{ backgroundColor: 'shadows.main' }}
           >
-            <input
-              {...register('email')}
-              placeholder="E-mail"
-              type="email"
-              className={styles.signupInput}
-              value={email}
-              onChange={handleChangeEmail}
-            />
+            <Box className={styles.signupInputBox}>
+              <input
+                {...register('email')}
+                placeholder="E-mail"
+                type="email"
+                className={styles.signupInput}
+                value={email}
+                onChange={handleChangeEmail}
+              />
+            </Box>
 
             {errors?.email && (
               <p className={styles.error}>
@@ -138,14 +161,24 @@ const SignupForm = () => {
               </p>
             )}
 
-            <input
-              {...register('password')}
-              placeholder="Придумайте пароль"
-              type="password"
-              className={styles.signupInput}
-              value={password}
-              onChange={handleChangePassword}
-            />
+            <Box className={`${styles.signupInputBox} ${styles.passwordBox}`}>
+              <input
+                {...register('password')}
+                placeholder="Придумайте пароль"
+                type={passwordShownFirst ? 'text' : 'password'}
+                className={styles.signupInput}
+                value={password}
+                onChange={handleChangePassword}
+              />
+
+              <div className={styles.passToggle} onClick={togglePasswordFirst}>
+                {passwordShownFirst === false ? (
+                  <VisibilityIcon sx={{ color: 'baseBlue.main' }} />
+                ) : (
+                  <VisibilityOffIcon sx={{ color: 'baseBlue.main' }} />
+                )}
+              </div>
+            </Box>
 
             {errors?.password && (
               <p className={styles.error}>
@@ -153,12 +186,22 @@ const SignupForm = () => {
               </p>
             )}
 
-            <input
-              {...register('password2')}
-              placeholder="Повторите пароль"
-              type="password"
-              className={styles.signupInput}
-            />
+            <Box className={`${styles.signupInputBox} ${styles.passwordBox}`}>
+              <input
+                {...register('password2')}
+                placeholder="Повторите пароль"
+                type={passwordShownSecond ? 'text' : 'password'}
+                className={styles.signupInput}
+              />
+
+              <div className={styles.passToggle} onClick={togglePasswordSecond}>
+                {passwordShownSecond === false ? (
+                  <VisibilityIcon sx={{ color: 'baseBlue.main' }} />
+                ) : (
+                  <VisibilityOffIcon sx={{ color: 'baseBlue.main' }} />
+                )}
+              </div>
+            </Box>
 
             {errors?.password2 && (
               <p className={styles.error}>
