@@ -127,8 +127,8 @@ const UserMenu = () => {
         <Divider />
 
         {userMenu.map((userMenu, index) => (
-          <Box onClick={handleUserMenuClick(userMenu.link)}>
-            <MenuItem key={index} sx={{ pt: 1.25, pb: 1.25 }}>
+          <Box onClick={handleUserMenuClick(userMenu.link)} key={index}>
+            <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
               <ListItemIcon>{userMenu.icon}</ListItemIcon>
               <ListItemText>{userMenu.name}</ListItemText>
             </MenuItem>
