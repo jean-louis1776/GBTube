@@ -6,6 +6,7 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
+  makeStyles,
   Menu,
   MenuItem,
   Tooltip,
@@ -15,9 +16,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useSelector } from 'react-redux';
 
 // import styles from './UserMenu.module.scss';
+import { blueGrey, deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
 import { getSelector } from '../../store/getSelector';
-import { blueGrey, deepOrange } from '@mui/material/colors';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -60,7 +61,7 @@ const UserMenu = () => {
             sx={{
               width: 40,
               height: 40,
-              bgcolor: isAuth ? deepOrange[500] : blueGrey[500],
+              bgcolor: isAuth ? deepOrange[500] : 'baseBlue.main',
             }}
           />
         </IconButton>
@@ -84,6 +85,9 @@ const UserMenu = () => {
               height: 32,
               ml: -0.5,
               mr: 1,
+            },
+            '& .MuiMenu-list': {
+              p: 0,
             },
             '&:before': {
               content: '""',
@@ -110,8 +114,12 @@ const UserMenu = () => {
           ''
         )}
         <Link to="/userProfile">
-          <MenuItem>
-            <Avatar />
+          <MenuItem sx={{ py: 2 }}>
+            <Avatar
+              sx={{
+                bgcolor: 'baseBlue.main',
+              }}
+            />
             <Typography>Мой профиль</Typography>
           </MenuItem>
         </Link>
