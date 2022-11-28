@@ -90,7 +90,7 @@ const UserMenu = () => {
               display: 'block',
               position: 'absolute',
               top: 0,
-              right: 19,
+              right: 20,
               width: 10,
               height: 10,
               bgcolor: 'shadows.main',
