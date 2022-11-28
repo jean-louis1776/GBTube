@@ -59,6 +59,25 @@ export const userMenu = [
   },
 ];
 
+export const userChannelPages = [
+  {
+    name: 'Видео',
+    link: '/user-videos',
+  },
+  {
+    name: 'Плейлисты',
+    link: '/user-playlists',
+  },
+  {
+    name: 'Каналы',
+    link: '/user-channels',
+  },
+  {
+    name: 'О канале',
+    link: '/user-about',
+  },
+];
+
 export const demoThumbnailUrl = 'https://i.ibb.co/51YDLfC/API-Course.png';
 export const demoChannelUrl = '/channel/UCmXmlB4-HJytD7wek0Uo97A';
 export const demoProfilePicture =

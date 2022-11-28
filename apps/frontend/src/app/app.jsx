@@ -31,6 +31,7 @@ import EditItemInfo from '../components/edit-item-info/edit-item-info';
 import EditItemController from '../controllers/EditItemController';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import UploadVideoDraft from '../components/UploadVideo/UploadVideoDraft';
+import UserPage from '../components/UserPage/UserPage';
 
 export function App() {
   const dispatch = useDispatch();
@@ -119,6 +120,7 @@ export function App() {
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
         <Route path="miniVideo" element={<VideoCard />} />
+        <Route path="user-channel" element={<UserPage />} />
       </Routes>
     </Box>
   );
