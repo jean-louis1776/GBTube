@@ -97,23 +97,21 @@ const SignupForm = () => {
 
           <Typography
             className={styles.logoName}
-            variant="h4"
             fontWeight="bold"
             sx={{ ml: 1, fontFamily: "'Titillium Web', sans-serif" }}
           >
             Geek
-            <Typography
-              variant="h4"
-              fontWeight="bold"
-              sx={{
-                color: 'baseBlue.main',
-                display: 'inline',
-                fontSize: '1.5rem',
-                fontFamily: "'Titillium Web', sans-serif",
-              }}
-            >
-              Tube
-            </Typography>
+          </Typography>
+          <Typography
+            fontWeight="bold"
+            sx={{
+              color: 'baseBlue.main',
+              display: 'inline',
+              fontSize: '1.5rem',
+              fontFamily: "'Titillium Web', sans-serif",
+            }}
+          >
+            Tube
           </Typography>
         </Link>
 

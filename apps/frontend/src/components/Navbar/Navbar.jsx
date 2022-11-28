@@ -26,11 +26,10 @@ const Navbar = ({ toggle, selectCat }) => {
     <Box sx={{ width: 250, zIndex: 10000 }}>
       <List>
         {categories.map((item, index) => (
-          <Link to={item.link}>
+          <Link to={item.link} key={index}>
             <ListItem
               onClick={toggle}
               onKeyDown={toggle}
-              key={index}
               disablePadding
               sx={{ display: 'block' }}
             >
@@ -61,19 +60,18 @@ const Navbar = ({ toggle, selectCat }) => {
       <Divider />
 
       <List>
-        <ListItemButton onClick={handleCollClick}>
-          {nestedCategories.map((item) => (
-            <>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.name} />
-            </>
-          ))}
-          {openColl ? (
-            <ExpandLess sx={{ color: 'darkBackground.contrastText' }} />
-          ) : (
-            <ExpandMore sx={{ color: 'darkBackground.contrastText' }} />
-          )}
-        </ListItemButton>
+        {nestedCategories.map((item, index) => (
+          <ListItemButton onClick={handleCollClick} key={index}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.name} />
+
+            {openColl ? (
+              <ExpandLess sx={{ color: 'darkBackground.contrastText' }} />
+            ) : (
+              <ExpandMore sx={{ color: 'darkBackground.contrastText' }} />
+            )}
+          </ListItemButton>
+        ))}
         <Collapse in={openColl} timeout={200} unmountOnExit>
           <List>
             {['Collection1', 'Collection2', 'Collection3'].map(
