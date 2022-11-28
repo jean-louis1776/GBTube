@@ -57,7 +57,7 @@ class UserController {
       validateError(req);
       const tokenObject = await userService.refresh(req.cookies.refreshToken);
       this.createCookies(res, tokenObject);
-      return res.json(tokenObject.accessToken);
+      return res.json({ accessToken: tokenObject.accessToken, id: tokenObject.id, nickName: tokenObject.nickName });
     } catch (e) {
       next(e);
     }
@@ -109,7 +109,7 @@ class UserController {
   async edit(req, res, next) {
     try {
       validateError(req);
-      return res.json(await userService.edit(req.params.id, req.body.updatingUser));
+      return res.json(await userService.edit(req.params.id, req.body.updatingObject));
     } catch (e) {
       next(e);
     }

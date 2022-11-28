@@ -5,9 +5,9 @@ class ChannelController {
   async create(req, res, next) {
     try {
       validateError(req);
-//      const { title, description, idList } = req.body;
-//      const userId = idList.split('_')[0];
-//      return res.status(201).json(await channelService.create(+userId, title, description));
+      const { title, description, idList } = req.body;
+      const userId = idList.split('_')[0];
+      return res.status(201).json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
     }
@@ -15,9 +15,10 @@ class ChannelController {
 
   async edit(req, res, next) {
     try {
-      const { updatingChannel, idList } = req.body;
+      validateError(req);
+      const { updatingObject, idList } = req.body;
       const [userId, channelId] = idList.split('_');
-      return res.json(await channelService.edit(+channelId, +userId, updatingChannel));
+      return res.json(await channelService.edit(+channelId, +userId, updatingObject));
     } catch (e) {
       next(e);
     }
@@ -25,6 +26,7 @@ class ChannelController {
 
   async subscribe(req, res, next) {
     try {
+      validateError(req);
       const { id, userId } = req.body;
       const isSubscribe = await channelService.subscribe(id, userId);
       return res.json({ isSubscribe });
@@ -35,7 +37,8 @@ class ChannelController {
 
   async remove(req, res, next) {
     try {
-      return res.json(await channelService.remove(req.params.id));
+      validateError(req);
+      return res.status(204).json(await channelService.remove(+req.params.id));
     } catch(e) {
       next(e)
     }
@@ -43,6 +46,8 @@ class ChannelController {
 
   async getOne(req, res, next) {
     try {
+      validateError(req);
+      console.log('ID FOR GET_ONE = ', req.params.id);
       return res.json(await channelService.getOne(+req.params.id));
     } catch (e) {
       next(e);
@@ -51,7 +56,10 @@ class ChannelController {
 
   async getAllChannelsOfUser(req, res, next) {
     try {
-      console.log(req.params);
+      validateError(req);
+      console.log('USER_ID = ', req.params.user_id);
+      const channels = await channelService.getAllOfUser(+req.params.user_id);
+      if (!channels) return res.status(204).json('У данного пользователя нет каналов');
       return res.json(await channelService.getAllOfUser(+req.params.user_id));
     } catch (e) {
       next(e);

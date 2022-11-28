@@ -1,9 +1,10 @@
 import { ApiError } from '../errors/apiError';
 import { channelQueries } from '../queries/ChannelQueries';
+import { userQueries } from '../queries/UserQueries';
 
 class ChannelService {
   makeResultObject(channel) {
-    const idList = [channel.userId, channel.id].join(';');
+    const idList = [channel.userId, channel.id].join('_');
     delete channel.id;
     delete channel.userId;
     return { idList, ...channel };
@@ -11,12 +12,6 @@ class ChannelService {
 
   async create(userId, title, description) {
     try {
-      if (!userId) {
-        throw ApiError.BadRequest('Не указан владелец канала');
-      }
-      if(!title) {
-        throw ApiError.BadRequest('Не указано название канала');
-      }
       return channelQueries.createChannel(userId, title, description);
     } catch (e) {
       console.log(e.message);
@@ -44,6 +39,10 @@ class ChannelService {
 
   async remove(id) {
     try {
+      const result = channelQueries.deleteChannel(id);
+      if(!result) {
+        throw ApiError.NotFound(`Канала с id ${id} не существует`);
+      }
       return channelQueries.deleteChannel(id);
     } catch (e) {
       console.log(e.message);
@@ -63,7 +62,12 @@ class ChannelService {
 
   async getAllOfUser(userId) {
     try {
+      const isUser = await userQueries.checkUserById(userId);
+      if (!isUser) {
+        throw ApiError.NotFound(`Пользователя с id ${userId} не существует`);
+      }
       const channels = await channelQueries.findAllChannelByUserId(userId);
+      if (!channels) return null;
       return channels.map(channel => this.makeResultObject(channel));
     } catch(e) {
       console.log(e.message);

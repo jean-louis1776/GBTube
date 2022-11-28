@@ -1,5 +1,6 @@
 import { body, cookie, param, query } from 'express-validator';
 
+import { Validation } from './validation';
 import {
   NOT_STRING,
   NOT_EXISTS_OR_EMPTY,
@@ -8,19 +9,19 @@ import {
   EMPTY,
   NOT_DATE,
   NOT_INT
-} from './txtErrors';
+} from '../util/validationMessages';
 
-class UserValidator {
+class UserValidation extends Validation {
   create;
   login;
   logout;
-  checkId;
   edit;
   changePassword;
   chechLink;
   refresh;
   checkUnique;
   constructor() {
+    super();
     this.create = [
       body('nickName').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING),
       body('email').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isEmail().withMessage(NOT_EMAIL),
@@ -34,15 +35,14 @@ class UserValidator {
 
     this.logout = [ cookie('refreshTokenId').exists({ checkFalsy: true }).withMessage(`в cookie ${NOT_EXISTS_OR_EMPTY}`) ];
 
-    this.checkId = [ param('id').exists().withMessage(NOT_EXISTS) ];
 
     this.edit = [
       param('id').exists().withMessage(NOT_EXISTS),
-      body('updatingUser.nickName').optional().notEmpty().withMessage(EMPTY).isString().withMessage(NOT_STRING),
-      body('updatingUser.email').optional().notEmpty().withMessage(EMPTY).isEmail().withMessage(NOT_EMAIL),
-      body('updatingUser.firstName').optional().isString().withMessage(NOT_STRING),
-      body('updatingUser.lastName').optional().isString().withMessage(NOT_STRING),
-      body('updatingUser.birthDate').optional().isISO8601().withMessage(NOT_DATE)
+      body('updatingObject.nickName').optional().notEmpty().withMessage(EMPTY).isString().withMessage(NOT_STRING),
+      body('updatingObject.email').optional().notEmpty().withMessage(EMPTY).isEmail().withMessage(NOT_EMAIL),
+      body('updatingObject.firstName').optional().isString().withMessage(NOT_STRING),
+      body('updatingObject.lastName').optional().isString().withMessage(NOT_STRING),
+      body('updatingObject.birthDate').optional().isISO8601().withMessage(NOT_DATE)
     ];
 
     this.changePassword = [
@@ -65,4 +65,4 @@ class UserValidator {
   }
 }
 
-export default new UserValidator();
+export default new UserValidation();

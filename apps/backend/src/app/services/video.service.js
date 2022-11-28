@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import path from 'path';
 import { v4 as uuidV4} from 'uuid';
 import ffmpeg from 'ffmpeg';
@@ -9,9 +10,11 @@ import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
-
+import { playListQueries } from '../queries/PlayListQueries.js';
 
 /* eslint-disable no-useless-catch */
+dotenv.config();
+
 class VideoService {
   async getNickAndPlaylistNames(idList) {
     try {
@@ -26,7 +29,9 @@ class VideoService {
 
   async isNameUnique(channelId, title) {
     try {
-      return await videoQueries.isVideoNameUnique(title, channelId);
+      const result = await videoQueries.isVideoNameUnique(title, channelId);
+      console.log(result);
+      return result;
     } catch (e) {
       throw e;
     }
@@ -37,10 +42,10 @@ class VideoService {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
       }
-      const file = files.videoFile;
+      const file = files.videoName;
       const extension = path.extname(file.name);
       if (!videoExtensions.includes(extension)) {
-        throw ApiError.UnProcessableEntity('Формат файла не соответствует видеоформату');
+        throw ApiError.BadRequest('Формат файла не соответствует видеоформату');
       }
 
       const hashName = uuidV4();
@@ -61,18 +66,22 @@ class VideoService {
             await ftpServer.put(files[1], frameHashName);
           }
           await fs.remove(path.resolve(path.resolve(), 'tmp'));
-          return res.json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+          return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
         }
       );
     } catch (e) {
+      console.log(e);
       throw e;
     }
   }
 
   async download(id) {
     try {
-      const hashName = await videoQueries.downloadVideo(id);
-      return await ftpServer.get(hashName);
+      const video = await videoQueries.checkVideoById(id);
+      if (!video) {
+        throw ApiError.NotFound(`Видео с id ${id} не существует`);
+      }
+      return await videoQueries.downloadVideo(id);
     } catch (e) {
       throw e;
     }
@@ -88,10 +97,22 @@ class VideoService {
     }
   }
 
+  async edit(idList, data) {
+    try {
+      const idArray = idList.split('_');
+      if (data.playlistId) {
+        idArray[2] = data.playlistId.toString();
+        data.idList = idArray.join('_');
+      }
+      return await videoQueries.updateVideoInfo(+idArray[3], data);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getVideoInfoById(id) {
     try {
       const video = await videoQueries.findVideoById(id);
-      if (!video) return {};
       const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
       return { ...video, ...nickChannelNames };
     } catch (e) {
@@ -101,13 +122,62 @@ class VideoService {
 
   async getVideosInfoByPlaylistId(playlistId) {
     try {
+      const playlist = !!(await playListQueries.findPlayListById(playlistId));
+      if (!playlist) {
+        throw ApiError.NotFound(`Плайлист с id ${playlistId} не найден`);
+      }
+      console.log('playlistId = ', playlistId);
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
-      if (!videos?.length) return [];
+      if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
       return videos.map(video => {
         return { ...video, ...nickChannelNames }
       });
     } catch (e) {
+      throw e;
+    }
+  }
+
+  async like(userId, videoId, isLike) {
+    try {
+      const user = await userQueries.checkUserById(userId);
+      if (!user) {
+        throw ApiError.NotFound(`Пользователь с id ${userId} не найден`);
+      }
+      const video = await videoQueries.checkVideoById(videoId);
+      if (!video) {
+        throw ApiError.NotFound(`Видео с id ${videoId} не найдено`);
+      }
+      if (isLike) return await videoQueries.like(videoId, userId);
+      return await videoQueries.dislike(videoId, userId);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getFavoriteIdList() {
+    const fullVideoIdList = await videoQueries.getIdOfAllVideo();
+    let portion = Math.min(process.env.VIDEO_PORTION, fullVideoIdList.length);
+    const favoriteIdList = [];
+
+    while (portion) {
+      const index = Math.floor(Math.random() * portion);
+      favoriteIdList.push(fullVideoIdList[index].toString());
+      fullVideoIdList.splice(index, 1);
+      portion--;
+    }
+    return favoriteIdList;
+  }
+
+  async remove(id) {
+    try {
+      const hashName = await videoQueries.downloadVideo(id);
+      const frameName = path.parse(hashName).name + ".jpg";
+      await ftpServer.delete(hashName);
+      await ftpServer.delete(frameName);
+      return videoQueries.deleteVideo(id);
+    }
+    catch (e) {
       throw e;
     }
   }

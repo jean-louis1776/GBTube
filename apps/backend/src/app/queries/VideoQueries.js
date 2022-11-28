@@ -2,6 +2,7 @@ import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
+import { VideoLike } from "../models/VideoLike";
 
 class VideoQueries {
 
@@ -15,13 +16,12 @@ class VideoQueries {
 
 
   async isVideoNameUnique(title, channelId) {
-
-    return !(await Video.findOne({
-      where: {
-        [Op.and]:
-          [{title}, {channelId}],
-      },
-    }));
+    try {
+      return !(await Video.findOne({where: {title, channelId}}));
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
   }
 
   /**
@@ -72,33 +72,43 @@ class VideoQueries {
     try {
       const videoHash = await VideoInfo.findOne({where: {id}});
       if (videoHash) return videoHash.toJSON().hashName;
-      throw ApiError.BadRequest(`Данное видео отсутствует на сервере`);
+      throw ApiError.NotFound(`Видео с id ${id} не найдено`);
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
 
-  async updateVideoInfo(id, title, category, description) {
+  //async updateVideoInfo(id, title, category, description) {
+  async updateVideoInfo(id, data) {
     try {
+      let isUpdate = 0;
       const fVideo = await Video.findOne({where: id});
-      if (title) {
+      const updObj = {};
+      if (data.title) {
         if (await Video.findOne(
           {
             where: {
               [Op.and]: [
                 {channelId: fVideo.toJSON().channelId},
-                {title},
+                {title: data.title},
                 {id: {[Op.ne]: id}},
               ],
             },
           },
         )) {
-          throw ApiError.BadRequest(`Видео с именем ${title} уже существует канале!`);
+          throw ApiError.BadRequest(`Видео с именем ${data.title} уже существует канале!`);
         }
-        await Video.update({title}, {where: {id}});
+        updObj.title = data.title;
+        delete data.title;
       }
-      return !!(await VideoInfo.update({category, description}, {where: {videoId: id}}));
+      if (data.playlistId) {
+        updObj.playlistId = data.playlistId;
+        delete data.playlistId;
+      }
+      if (Object.keys(updObj).length) isUpdate += await Video.update({title: data.title}, {where: {id}});
+      if (Object.keys(data).length) isUpdate += await VideoInfo.update(data, {where: {videoId: id}});
+      return !!isUpdate;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -114,7 +124,7 @@ class VideoQueries {
 
       });
       if (videoById) return this.parsingQueryModel(videoById);
-      throw ApiError.BadRequest(`Видео с id: ${id} не найдено`);
+      throw ApiError.NotFound(`Видео с id: ${id} не найдено`);
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -146,11 +156,119 @@ class VideoQueries {
    * @param {number} channelId - id канала с видео
    * @returns {Object}
    */
-  async deleteChannel(id) {
+  async deleteVideo(id) {
     try {
       return !!(await Video.destroy({where: {id}}));
     } catch (e) {
       return false;
+    }
+  }
+
+  async countViews(id) {
+    try {
+      const vCount = await VideoInfo.findOne({where: {id}});
+      if (vCount !== 0) return vCount.toJSON().viewsCount();
+      throw ApiError.NotFound(`У данного видео 0(ноль) просмотров`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async viewsIncrement(id) {
+    try {
+      const vIncrement = await VideoInfo.findOne({attributes: ['viewsCount'], where: {id}});
+      if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
+      throw ApiError.NotFound(`Ошибка добавления просмотра!`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async like(videoId, userId) {
+    try {
+      const lVideo = await Video.findOne({where: {videoId}});
+      if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
+        await VideoLike.update({liked: true}, {where: {videoId, userId, liked: false}});
+        await lVideo.increment('likesCount', {by: 1});
+        return true;
+      }
+      if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
+        await VideoLike.destroy({where: {videoId, userId, liked: true}});
+        await lVideo.decrement('likesCount', {by: 1});
+        return false;
+      }
+      await VideoLike.create({where: {videoId, userId, liked: true}});
+      await lVideo.increment('likesCount', {by: 1});
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async dislike(videoId, userId) {
+    try {
+      const dlVideo = await Video.findOne({where: {videoId}});
+      if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
+        await VideoLike.update({liked: false}, {where: {videoId, userId, liked: true}});
+        await dlVideo.increment('dislikesCount', {by: 1});
+        return true;
+      }
+      if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
+        await VideoLike.destroy({where: {videoId, userId, liked: false}});
+        await dlVideo.decrement('dislikesCount', {by: 1});
+        return false;
+      }
+      await VideoLike.create({where: {videoId, userId, liked: false}});
+      await dlVideo.increment('dislikesCount', {by: 1});
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async likesCount(videoId) {
+    try {
+      const lCount = await VideoLike.count({where: {videoId, liked: true}});
+      if (lCount) return lCount;
+      throw ApiError.BadRequest(`Лайки отсутствуют`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async dislikesCount(videoId) {
+    try {
+      const dislikesCount = await VideoLike.count({where: {videoId, liked: false}});
+      if (dislikesCount) return dislikesCount;
+      throw ApiError.BadRequest(`Дизайки отсутствуют`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async checkVideoById(id) {
+    try {
+      return !!(await Video.findOne({where: {id}}))
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async getIdOfAllVideo() {
+    try {
+      const videoIdList = await Video.findAll({attributes: ['id']});
+      if (!videoIdList) return [];
+      return videoIdList.map(videoId => videoId.toJSON().id);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
     }
   }
 }

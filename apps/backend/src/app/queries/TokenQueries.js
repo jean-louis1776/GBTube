@@ -33,7 +33,8 @@ class TokenQueries {
   async findByToken(token) {
     try {
       const result = await Token.findOne({where: {token}});
-      return result?.dataValues;
+      if (!result) return null;
+      return result.toJSON();
     } catch {
       return null;
     }

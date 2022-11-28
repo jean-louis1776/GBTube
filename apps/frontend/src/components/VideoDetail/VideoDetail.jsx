@@ -24,11 +24,16 @@ import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelector } from '../../store/getSelector';
 import { Helmet } from 'react-helmet';
-import { setReaction } from '../../features/video/reactionsSlice';
-import VideoGrid from '../VideoGrid/VideoGrid';
+import {
+  setReaction,
+  reactionHandler,
+} from '../../features/video/reactionsSlice';
+import VideoController from '../../controllers/VideoController';
 
 const VideoDetail = () => {
   const theme = useTheme();
+  let [videoContent, setVideoContent] = useState(<Loader />);
+  const { idList } = useParams();
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -69,15 +74,26 @@ const VideoDetail = () => {
   const [videos, setVideos] = useState(null);
   const { id } = useParams();
 
-  //   useEffect(() => {
-  //     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
-  //       setVideoDetail(data.items[0])
-  //     );
 
-  //     fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then(
-  //       (data) => setVideos(data.items)
-  //     );
-  //   }, [id]);
+    // useEffect(() => {
+    //   setVideoContent(<Loader />);
+    //   const fetchData = async () => {
+    //     // const video = await VideoController.loadVideo(idList.split('_').at(-1));
+    //     setVideoContent(
+    //       // <ReactPlayer url={video.data} pip className={styles.reactPlayer} controls={true} />
+    //       <video controls className={styles.reactPlayer}>
+    //         <source src={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`} type="video/mp4" />
+    //       </video>
+    //     );
+    //     console.log('videoFile', video.data);
+    //   }
+    //
+    //   fetchData().catch((err) => {
+    //     setVideoContent('');
+    //     console.log('Fail load video');
+    //   });
+    //
+    // }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -100,9 +116,9 @@ const VideoDetail = () => {
           <Box>
             {
               <div className={styles.playerWrapper}>
+                {/*{videoContent}*/}
                 <ReactPlayer
-                  // url={`https://www.youtube.com/watch?v=${id}`}
-                  url={'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+                  url={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`}
                   pip
                   className={styles.reactPlayer}
                   controls={true}
@@ -117,7 +133,8 @@ const VideoDetail = () => {
               px={2}
             >
               <Typography color="#fff" variant="h5" fontWeight="bold">
-                {video.title}
+                {/*{title}*/}
+                Title tile title
               </Typography>
               <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
                 {parseInt(video.viewsCount).toLocaleString()} просмотров

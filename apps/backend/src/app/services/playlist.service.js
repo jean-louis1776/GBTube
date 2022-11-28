@@ -1,23 +1,12 @@
-import { Channel } from '../models/Channel';
+import { ApiError } from '../errors/apiError';
+import { channelQueries } from '../queries/ChannelQueries';
 import { playListQueries } from '../queries/PlayListQueries';
 
 /* eslint-disable no-useless-catch */
 class PlaylistService {
-  async getUserIdByChannelId (channelId) {
-    return (await Channel.findOne({
-      where: {id: channelId},
-      attributes: ['userId']
-    })).toJSON().userId;
-  }
-  makeResultObject(userId, playlist) {
-    const idList = [userId, playlist.channelId, playlist.id].join(';');
-    delete playlist.channelId;
-    delete playlist.id;
-    return { ...playlist, idList };
-  }
-  async create(channelId, title, description) {
+  async create(idList, title, description) {
     try {
-      return await playListQueries.createPlayList(channelId, title, description);
+      return await playListQueries.createPlayList(idList, title, description);
     } catch (e) {
       throw(e);
     }
@@ -33,7 +22,10 @@ class PlaylistService {
 
   async remove(id) {
     try {
-      return await playListQueries.deletePlayList(id);
+      const result = await playListQueries.deletePlayList(id);
+      if (!result) {
+        throw ApiError.NotFound(`Плейлиста с id ${id} не существует`);
+      }
     } catch (e) {
       throw(e);
     }
@@ -42,8 +34,9 @@ class PlaylistService {
   async getOne(id) {
     try {
       const playlist = await playListQueries.findPlayListById(id);
-      const userId = await this.getUserIdByChannelId(playlist.channelId);
-      return this.makeResultObject(userId, playlist);
+      delete playlist.channelId;
+      delete playlist.id;
+      return playlist;
     } catch (e) {
       throw(e);
     }
@@ -51,9 +44,17 @@ class PlaylistService {
 
   async getAllOfChannel(channelId) {
     try {
+      const channel = await channelQueries.isChannel(channelId);
+      if (!channel) {
+        throw ApiError.NotFound(`Канал с id ${channelId} не найден`);
+      }
       const playlists = await playListQueries.findAllPlayList(channelId);
-      const userId = await this.getUserIdByChannelId(channelId);
-      return playlists.map(playlist => this.makeResultObject(userId, playlist));
+      if (!playlists) return null;
+      return playlists.map(playlist => {
+        delete playlist.channelId;
+        delete playlist.id;
+        return playlist;
+      });
     } catch (e) {
       throw(e);
     }

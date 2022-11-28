@@ -1,20 +1,14 @@
-import { body } from 'express-validator';
+import { param } from 'express-validator';
 
-import {
-  NOT_EXISTS_OR_EMPTY,
-  NOT_ID_LIST,
-  NOT_STRING
-} from './txtErrors';
+import { NOT_EXISTS } from '../util/validationMessages';
+import { Validation } from './validation';
 
-class ChannelValidation {
-  create;
+export class ChannelValidation extends Validation {
+  checkUser_id;
   constructor() {
-    this.create = [
-      body('title').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING),
-      body('description').optional().isString().withMessage(NOT_STRING),
-      body('idList').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isString().withMessage(NOT_STRING)
-        .matches(/^((\d+_)*\d+)$/).withMessage(NOT_ID_LIST)
-    ];
+    super();
+
+    this.checkUser_id = [ param('user_id').exists().withMessage(NOT_EXISTS) ];
   }
 }
 

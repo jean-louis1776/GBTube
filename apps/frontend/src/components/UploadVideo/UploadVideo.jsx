@@ -19,8 +19,15 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { useForm, Controller } from 'react-hook-form';
 import { Helmet } from 'react-helmet';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Header } from '../';
+import { DESCRIPTION, TITLE } from '@constants/frontend';
+import { getSelector } from '../../store/getSelector';
+import { uploadVideo } from '../../features/video/videoSlice';
+import { uploadErrorMessage } from './uploadErrorMessage';
 
 import styles from './UploadVideo.module.scss';
 
@@ -34,42 +41,14 @@ const MenuProps = {
   },
 };
 
-const channels = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
-
 const steps = [
-  'Выберите канал, куда будет загружено видео',
   'Выберите видео для загрузки',
   'Придумайте название ролику и описание',
 ];
 
 const UploadVideo = (props) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [channelId, setChannelId] = React.useState('');
-
-  const handleChange = (event) => {
-    setChannelId(event.target.value);
-  };
+  const [uploadError, setUploadError] = useState('');
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -83,9 +62,38 @@ const UploadVideo = (props) => {
     setActiveStep(0);
   };
 
-  const { control, handleSubmit } = useForm();
+  const video = useSelector(getSelector('videoDetail', 'video'));
+  const dispatch = useDispatch();
 
-  const onSubmit = (data) => console.log(JSON.stringify(data));
+  const schema = yup
+    .object({
+      videoFile: yup.mixed().required('Пожалуйста загрузите видео'),
+      title: yup.string().required('Название ролика обязательно'),
+      description: yup.string(),
+    })
+    .required();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
+    mode: 'onBlur',
+    defaultValues: video,
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (userVideo) => {
+    try {
+      dispatch(uploadVideo(userVideo));
+      setUploadError('');
+    } catch {
+      setUploadError('Ошибка загрузки. Повторите попытку');
+      console.log('Upload failed');
+    }
+    reset();
+  };
 
   return (
     <>
@@ -152,7 +160,7 @@ const UploadVideo = (props) => {
                 );
               })}
             </Stepper>
-            {activeStep === steps.length ? (
+            {activeStep === steps.length && onSubmit ? (
               <Fragment>
                 <Box
                   sx={{
@@ -216,83 +224,47 @@ const UploadVideo = (props) => {
                       : { display: 'none' }
                   }
                 >
-                  <Controller
-                    name="chooseChannel"
-                    control={control}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <div style={{ width: '500px' }}>
-                        <InputLabel id="select-channel">Каналы</InputLabel>
-                        <Select
-                          sx={{ width: '100%' }}
-                          labelId="select-channel"
-                          id="channel-select"
-                          value={channelId}
-                          label="Каналы"
-                          onChange={handleChange}
-                          MenuProps={MenuProps}
-                        >
-                          {channels.map((channels) => (
-                            <MenuItem key={channels}>{channels}</MenuItem>
-                          ))}
-                        </Select>
-                      </div>
-                    )}
-                  />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="baseBlue"
+                      component="label"
+                    >
+                      <VideocamIcon sx={{ mr: 1 }} />
+                      Выбрать файл
+                      <input
+                        {...register('videoFile')}
+                        hidden
+                        accept="video/*,.3gp,.avi,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.wmv,.swf,.webm"
+                        type="file"
+                      />
+                    </Button>
+
+                    <uploadErrorMessage errors={errors} type={'videoFile'} />
+
+                    <Typography
+                      sx={{
+                        mt: 2,
+                        color: '#999',
+                        textAlign: 'center',
+                        userSelect: 'none',
+                      }}
+                    >
+                      Допускаются файлы формата: <br /> .3gp, .avi, .flv, .m4v,
+                      .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
+                    </Typography>
+                  </Box>
                 </div>
 
                 <div
                   style={
                     activeStep === 1
-                      ? { display: 'flex', justifyContent: 'center' }
-                      : { display: 'none' }
-                  }
-                >
-                  <Controller
-                    name="chooseFile"
-                    control={control}
-                    rules={{ required: true }}
-                    render={() => (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          color="baseBlue"
-                          component="label"
-                        >
-                          <VideocamIcon sx={{ mr: 1 }} />
-                          Выбрать файл
-                          <input
-                            hidden
-                            accept="video/*,.3gp,.avi,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.wmv,.swf,.webm"
-                            type="file"
-                          />
-                        </Button>
-                        <Typography
-                          sx={{
-                            mt: 2,
-                            color: '#999',
-                            textAlign: 'center',
-                            userSelect: 'none',
-                          }}
-                        >
-                          Допускаются файлы формата: <br /> .3gp, .avi, .flv,
-                          .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
-                        </Typography>
-                      </Box>
-                    )}
-                  />
-                </div>
-
-                <div
-                  style={
-                    activeStep === 2
                       ? {
                           display: 'flex',
                           justifyContent: 'center',
@@ -302,29 +274,20 @@ const UploadVideo = (props) => {
                       : { display: 'none' }
                   }
                 >
-                  <Controller
-                    name="chooseTitle"
-                    control={control}
-                    rules={{ required: true }}
-                    render={() => (
-                      <TextField
-                        sx={{ width: '500px', mb: 1.5 }}
-                        label="Название видео"
-                      />
-                    )}
+                  <TextField
+                    {...register('title')}
+                    sx={{ width: '500px', mb: 1.5 }}
+                    label="Название видео"
                   />
 
-                  <Controller
-                    name="chooseDescription"
-                    control={control}
-                    render={() => (
-                      <TextField
-                        sx={{ width: '500px' }}
-                        label="Описание (опционально)"
-                        multiline
-                        rows={4}
-                      />
-                    )}
+                  <uploadErrorMessage errors={errors} type={'title'} />
+
+                  <TextField
+                    {...register('description')}
+                    sx={{ width: '500px' }}
+                    label="Описание (опционально)"
+                    multiline
+                    rows={4}
                   />
                 </div>
 
@@ -340,7 +303,7 @@ const UploadVideo = (props) => {
                   <Box sx={{ flex: '1 1 auto' }} />
 
                   {activeStep === steps.length - 1 ? (
-                    <Button type="submit" onClick={handleNext} color="baseBlue">
+                    <Button type="submit" color="baseBlue" disabled={!isValid}>
                       Готово
                     </Button>
                   ) : (

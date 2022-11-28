@@ -84,7 +84,7 @@ class UserService {
       if (!user) throw ApiError.UnAuthorization('RefreshToken не валиден. Возможно он просрочен');
 
       const refreshTokenFromDB = await tokenQueries.findByToken(refreshToken);
-      if (refreshTokenFromDB) throw ApiError.UnAuthorization('RefreshToken не найден в базе');
+      if (!refreshTokenFromDB) throw ApiError.UnAuthorization('RefreshToken не найден в базе');
 
       const userFromDB = await userQueries.findOneById(user.id);
       if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');
@@ -106,6 +106,9 @@ class UserService {
 
   async changePassword(id, oldPassword, newPassword, refreshTokenId) {
     try {
+      const user = await userQueries.checkUserById(id);
+      if (!user) throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
+
       const DBPassword = await userQueries.getPasswordByUserId(id);
       if (!(await bcrypt.compare(oldPassword, DBPassword))) {
         throw ApiError.Conflict('Неправильный пароль');
@@ -158,6 +161,9 @@ class UserService {
       if (!imageExtensions.includes(extension)) {
         throw ApiError.BadRequest('Формат файла не соответствует формату фотографии');
       }
+
+      const user = userQueries.checkUserById(id);
+      if (!user) throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
 
       const oldAvatar = await userQueries.getUserAvatarById(id);              // Проверяем нет ли у юзера аватарки
       if (oldAvatar) {

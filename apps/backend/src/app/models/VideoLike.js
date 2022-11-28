@@ -8,7 +8,7 @@ export const VideoLike = sequelize.define('VideoLikes', {
       autoIncrement: true
     },
     liked: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   }, {
