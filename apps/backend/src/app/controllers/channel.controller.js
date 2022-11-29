@@ -7,7 +7,7 @@ class ChannelController {
       validateError(req);
       const { title, description, idList } = req.body;
       const userId = idList.split('_')[0];
-      return res.status(201).json(await channelService.create(+userId, title, description));
+      return res.json(await channelService.create(+userId, title, description));
     } catch (e) {
       next(e);
     }

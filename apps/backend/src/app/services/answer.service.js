@@ -3,9 +3,9 @@ import { answerQueries } from '../queries/AnswerQueries';
 
 class AnswerService {
 
-  async create(userId, title, description) {
+  async create(idList, commentId, userId, description) {
     try {
-      return answerQueries.createAnswer(userId, title, description);
+      return answerQueries.createAnswer(idList, commentId, userId, description);
     } catch (e) {
       console.log(e.message);
       throw(e);

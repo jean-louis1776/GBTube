@@ -5,9 +5,9 @@ import { AnswerLike } from "../models/AnswerLike";
 class AnswerQueries {
 
 
-  async createAnswer(userId, commentId, description) {
+  async createAnswer(idList, commentId, userId, description) {
     try {
-      const cAnswer = (await Answer.create({userId, commentId, textInfo: description})).toJSON();
+      const cAnswer = (await Answer.create({idList, commentId, userId, description})).toJSON();
       if (cAnswer) return cAnswer.id;
       throw ApiError.BadRequest(`Ответ не создан`);
     } catch (e) {

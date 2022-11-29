@@ -25,6 +25,11 @@ export const Answer = sequelize.define('Answer', {
       type: DataTypes.TEXT,
     },
   }, {
+  hooks: {
+    afterCreate: (answer) => {
+      answer.idList += answer.id
+    }
+  },
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',

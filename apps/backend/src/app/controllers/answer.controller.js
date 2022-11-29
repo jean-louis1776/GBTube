@@ -1,12 +1,16 @@
 import { validateError } from "../errors/validateError";
 import AnswerService from "../services/answer.service";
+import channelService from "../services/channel.service";
+import { answerQueries } from "../queries/AnswerQueries";
 
 class AnswerController {
 
   async create(req, res, next) {
     try {
       validateError(req);
-
+      const { userId, description, idList } = req.body;
+      const commentId = idList.split('_')[4]
+      return res.status(201).json(await AnswerService.create(idList, commentId, userId, description));
     } catch (e) {
       next(e);
     }
