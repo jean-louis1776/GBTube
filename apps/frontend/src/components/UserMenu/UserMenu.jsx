@@ -13,12 +13,13 @@ import {
   Typography,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 // import styles from './UserMenu.module.scss';
 import { blueGrey, deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
 import { getSelector } from '../../store/getSelector';
+import { logoutHandler } from '../../features/auth/authSlice';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -26,6 +27,7 @@ const UserMenu = () => {
   const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
   const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
   const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('user');
@@ -45,6 +47,10 @@ const UserMenu = () => {
         state: { idList: [`${user.id}`] },
       });
     }
+  };
+
+  const handleLogoutClick = () => {
+    dispatch(logoutHandler());
   };
 
   return (
@@ -126,14 +132,23 @@ const UserMenu = () => {
 
         <Divider />
 
-        {userMenu.map((userMenu, index) => (
-          <Box onClick={handleUserMenuClick(userMenu.link)} key={index}>
-            <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
-              <ListItemIcon>{userMenu.icon}</ListItemIcon>
-              <ListItemText>{userMenu.name}</ListItemText>
-            </MenuItem>
-          </Box>
-        ))}
+        {userMenu.map((userMenu, index) =>
+          userMenu.name !== 'Выйти' ? (
+            <Box onClick={handleUserMenuClick(userMenu.link)} key={index}>
+              <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+                <ListItemIcon>{userMenu.icon}</ListItemIcon>
+                <ListItemText>{userMenu.name}</ListItemText>
+              </MenuItem>
+            </Box>
+          ) : (
+            <Box onClick={handleLogoutClick} key={index}>
+              <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+                <ListItemIcon>{userMenu.icon}</ListItemIcon>
+                <ListItemText>{userMenu.name}</ListItemText>
+              </MenuItem>
+            </Box>
+          )
+        )}
       </Menu>
     </>
   );
