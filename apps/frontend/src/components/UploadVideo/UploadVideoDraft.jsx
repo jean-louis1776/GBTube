@@ -1,42 +1,40 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import VideoController from '../../controllers/VideoController';
-import { uploadVideoLogo } from '@constants/frontend';
 import Header from '../Header/Header';
+import { uploadVideoLogo } from '@constants/frontend';
 
 import styles from './UploadVideo.module.scss';
 
 const UploadVideoDraft = () => {
   const { idList } = useParams();
 
-  let [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [uploadErrorMsg, setUploadErrorMsg] = useState('');
 
   const navigate = useNavigate();
   const handleChangeFile = (evt) => {
     setSelectedFile(evt.target.files[0]);
-    console.log(evt.target.files);
   };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+
     if (evt.target.title.value === '' || !selectedFile) {
-      console.log('title or file not set');
       setUploadErrorMsg('Файл или название не указаны. Будьте внимательны!');
       return;
     } else {
       setUploadErrorMsg('');
     }
+
     const formData = new FormData(evt.target);
     formData.append('idList', idList);
-    for (const pair of formData.entries()) {
-      console.log(pair);
-    }
+
     try {
       await VideoController.addVideo(formData);
       navigate(-1);
