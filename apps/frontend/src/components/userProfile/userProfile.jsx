@@ -113,10 +113,11 @@ const UserProfile = () => {
   return (
     <>
       <Helmet>
-        <title>Мой профиль | GeekTube</title>
+        <title>GeekTube | Мой профиль</title>
       </Helmet>
-      ;
+
       <Header />
+
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
         <Paper className={styles.userForm_container}>
           <Avatar

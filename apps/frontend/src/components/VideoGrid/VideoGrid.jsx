@@ -10,6 +10,7 @@ import {
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
+import Header from '../Header/Header';
 
 const VideoGrid = () => {
   const { idList } = useParams();
@@ -91,7 +92,8 @@ const VideoGrid = () => {
   };
 
   return (
-    <>
+    <Box sx={{ pt: 8 }}>
+      <Header />
       {/*<Box*/}
       {/*  sx={{*/}
       {/*    // display: 'flex',*/}
@@ -118,7 +120,7 @@ const VideoGrid = () => {
       <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
       <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button>
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
-    </>
+    </Box>
   );
 };
 
