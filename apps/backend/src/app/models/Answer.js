@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 export const Answer = sequelize.define('Answer', {
@@ -27,7 +27,7 @@ export const Answer = sequelize.define('Answer', {
   }, {
   hooks: {
     afterCreate: (answer) => {
-      answer.idList += answer.id
+      Answer.update({idList: `${answer.idList}_${answer.id}`}, {where: {id: answer.id}});
     }
   },
     timestamps: true,

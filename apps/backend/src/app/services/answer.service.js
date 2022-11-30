@@ -56,6 +56,14 @@ class AnswerService {
     }
   }
 
+  async dislike(answerId, userId) {
+    try {
+      return answerQueries.dislike(answerId, userId);
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }
 
 export default new AnswerService();

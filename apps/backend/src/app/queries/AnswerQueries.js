@@ -38,8 +38,8 @@ class AnswerQueries {
 
   async getAnswerById(id) {
     try {
-      const gAnswerById = await Answer.findOne({where: {id}, include: {exclude: ['updateTimestamp']}}).toJSON();
-      if (gAnswerById) return gAnswerById;
+      const gAnswerById = await Answer.findOne({where: {id}, attributes: {exclude: ['updateTimestamp']}});
+      if (gAnswerById) return gAnswerById.toJSON();
       throw ApiError.BadRequest(`Ответ по Id не найден`);
     } catch (e) {
       console.log(e.message);
@@ -49,7 +49,7 @@ class AnswerQueries {
 
   async getAllAnswerComment(commentId) {
     try {
-      const gAllAnswerComment = Answer.findAll({where: {commentId}, include: {exclude: ['updateTimestamp']}});
+      const gAllAnswerComment = Answer.findAll({where: {commentId}, attributes: {exclude: ['updateTimestamp']}});
       if (gAllAnswerComment) {
         return (await gAllAnswerComment).map(value => value.toJSON());
       }
@@ -62,11 +62,12 @@ class AnswerQueries {
 
   async like(answerId, userId) {
     try {
-      const lAnswer = await Answer.findOne({where: {answerId}});
+      const lAnswer = await Answer.findOne({where: {id: answerId}});
       if (!lAnswer) throw ApiError.NotFound(`Ответ с id ${answerId} не найден`);
       if (await AnswerLike.findOne({where: {answerId, userId, liked: false}})) {
         await AnswerLike.update({liked: true}, {where: {answerId, userId, liked: false}});
         await lAnswer.increment('likesCount', {by: 1});
+        await lAnswer.decrement('dislikesCount', {by: 1});
         return true;
       }
       if (await AnswerLike.findOne({where: {answerId, userId, liked: true}})) {
@@ -74,7 +75,7 @@ class AnswerQueries {
         await lAnswer.decrement('likesCount', {by: 1});
         return false;
       }
-      await AnswerLike.create({where: {answerId, userId, liked: true}});
+      await AnswerLike.create({answerId, userId, liked: true});
       await lAnswer.increment('likesCount', {by: 1});
       return true;
     } catch (e) {
@@ -85,10 +86,11 @@ class AnswerQueries {
 
   async dislike(answerId, userId) {
     try {
-      const dlAnswer = await Answer.findOne({where: {answerId}});
+      const dlAnswer = await Answer.findOne({where: {id: answerId}});
       if (await AnswerLike.findOne({where: {answerId, userId, liked: true}})) {
         await AnswerLike.update({liked: false}, {where: {answerId, userId, liked: true}});
         await dlAnswer.increment('dislikesCount', {by: 1});
+        await dlAnswer.decrement('likesCount', {by: 1});
         return true;
       }
       if (await AnswerLike.findOne({where: {answerId, userId, liked: false}})) {
@@ -96,7 +98,7 @@ class AnswerQueries {
         await dlAnswer.decrement('dislikesCount', {by: 1});
         return false;
       }
-      await AnswerLike.create({where: {answerId, userId, liked: false}});
+      await AnswerLike.create({answerId, userId, liked: false});
       await dlAnswer.increment('dislikesCount', {by: 1});
       return true;
     } catch (e) {
