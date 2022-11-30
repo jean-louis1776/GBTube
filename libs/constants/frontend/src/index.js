@@ -70,7 +70,7 @@ export const userMenu = [
 export const userChannelTabs = [
   {
     name: 'Видео',
-    link: '/user-videos',
+    link: '/user-channel',
   },
   {
     name: 'Плейлисты',

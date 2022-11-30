@@ -73,7 +73,10 @@ const VideoCard = () => {
               {video.title}
             </Typography>
           )}
-          <Link to={demoChannelUrl}>
+          <Link
+            to={'/user-channel'}
+            // to={demoChannelUrl}
+          >
             <Typography
               sx={{
                 display: 'inline-block',

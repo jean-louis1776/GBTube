@@ -1,18 +1,13 @@
 import Header from '../Header/Header';
-import {
-  Avatar,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Avatar, Box, Button, Tab, Tabs, Typography } from '@mui/material';
+import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { userChannelTabs } from '@constants/frontend';
 import { Link } from 'react-router-dom';
+import UserAbout from './UserAbout';
+import ChannelGrid from '../ChannelGrid';
+import PlayListGrid from '../PlayListGrid';
+import VideoGrid from '../VideoGrid/VideoGrid';
 
 const UserPage = () => {
   const theme = useTheme();
@@ -28,6 +23,32 @@ const UserPage = () => {
   }));
 
   const [subscribe, setSubscribe] = useState(true);
+
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -75,30 +96,35 @@ const UserPage = () => {
             )}
           </Box>
         </Box>
-        <List
+
+        <Box
           sx={{
+            width: '100%',
             margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          {userChannelTabs.map((tab, index) => (
-            <Link to={tab.link}>
-              <ListItem disablePadding>
-                <ListItemButton
+          <Box
+            sx={{ borderBottom: 1, borderColor: theme.palette.shadows.main }}
+          >
+            <Tabs value={value} onChange={handleChange}>
+              {userChannelTabs.map((tab, index) => (
+                // <Link to={tab.link} key={index}>
+                <Tab
                   key={index}
+                  label={tab.name}
                   sx={{
+                    color: 'white',
                     paddingX: 12,
                   }}
-                  // selected={item.name === selectCat}
-                >
-                  <ListItemText primary={tab.name} sx={{ opacity: 1 }} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
+                />
+                // </Link>
+              ))}
+            </Tabs>
+          </Box>
+        </Box>
         <Box
           sx={{
             color: 'white',
@@ -109,7 +135,21 @@ const UserPage = () => {
             alignItems: 'center',
           }}
         >
-          user's various trash content
+          <TabPanel value={value} index={0}>
+            Видиксы
+            {/*<VideoGrid />*/}
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            Плейлисты
+            {/*{<PlayListGrid />}*/}
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            Каналы
+            {/*<ChannelGrid />*/}
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <UserAbout />
+          </TabPanel>
         </Box>
       </Box>
     </>

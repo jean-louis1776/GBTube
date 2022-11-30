@@ -32,6 +32,7 @@ import EditItemController from '../controllers/EditItemController';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import UploadVideoDraft from '../components/UploadVideo/UploadVideoDraft';
 import UserPage from '../components/UserPage/UserPage';
+import UserAbout from '../components/UserPage/UserAbout';
 
 export function App() {
   const dispatch = useDispatch();
@@ -71,7 +72,7 @@ export function App() {
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
-        <Route path="/userProfile" element={<UserProfile />} />
+        <Route path="/userProfile/:id" element={<UserProfile />} />
         <Route path="/channel/:channelId" element={<ChannelCard />} />
         <Route path="/video/:videoId" element={<VideoCard />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
@@ -119,6 +120,7 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
+
         <Route path="miniVideo" element={<VideoCard />} />
         <Route path="user-channel" element={<UserPage />} />
       </Routes>

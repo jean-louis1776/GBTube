@@ -113,7 +113,7 @@ const UserMenu = () => {
         ) : (
           ''
         )}
-        <Link to="/userProfile">
+        <Link to="/userProfile/:id">
           <MenuItem sx={{ py: 2 }}>
             <Avatar
               sx={{

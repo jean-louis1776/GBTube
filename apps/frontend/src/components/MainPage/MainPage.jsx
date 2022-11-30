@@ -30,7 +30,7 @@ const MainPage = (props) => {
           flex: 2,
         }}
       >
-        <VideoGrid />
+        {/*<VideoGrid />*/}
       </Box>
     </Box>
   );

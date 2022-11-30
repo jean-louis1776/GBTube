@@ -7,17 +7,19 @@ import ChannelChildren from './ChannelChildren';
 export const ContentChannel = ({ children }) => {
   return (
     <Stack
-      direction={/*direction ||*/ 'row'}
+      direction={/*direction ||*/ 'column'}
       flexWrap="wrap"
-      justifyContent="start"
-      alignItems="start"
-      gap={2}
+      justifyContent="center"
+      alignItems="center"
     >
       {children.map((item, idx) => (
         <Box key={idx}>
-          <ChannelChildren itemId={item.idList.split(';').at(-1)} childType={CHANNEL} />
+          <ChannelChildren
+            itemId={item.idList.split(';').at(-1)}
+            childType={CHANNEL}
+          />
         </Box>
       ))}
     </Stack>
   );
-}
+};

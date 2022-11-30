@@ -3,64 +3,148 @@ import React, { useEffect, useState } from 'react';
 import { Loader } from '../index';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { CHANNEL, PLAYLIST } from '@constants/frontend';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { ContentPlayList } from './ContentPlayList';
 import EditItemController from '../../controllers/EditItemController';
+import { useTheme } from '@mui/material/styles';
 
 const PlayListGrid = () => {
+  const theme = useTheme();
   const { idList } = useParams();
   let [content, setContent] = useState(<Loader />);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const navigate = useNavigate();
   // const location = useLocation();
 
   useEffect(() => {
-    console.log(idList.split('_') , 'PlayListGrid');
+    console.log(idList.split('_'), 'PlayListGrid');
     const fetchData = async () => {
       setContent(<Loader />);
       // console.log(idList.split('_').at(-1), 'playlist ID');
-      const {title, description} = await GetChildrenController.getItemById(CHANNEL, idList.split('_').at(-1));
-      const children = await GetChildrenController.getAllItemsById(PLAYLIST, idList.split('_').at(-1));
+      const { title, description } = await GetChildrenController.getItemById(
+        CHANNEL,
+        idList.split('_').at(-1)
+      );
+      setTitle(title);
+      setDescription(description);
+      const children = await GetChildrenController.getAllItemsById(
+        PLAYLIST,
+        idList.split('_').at(-1)
+      );
       console.log(children, 'children');
       if (children.length === 0) {
-        setContent(<p style={{color: 'white'}}>Не создано ни одного Плейлиста </p>);
-      } else {
         setContent(
-          <Box>
-            <p style={{color: 'white'}}>Название текущего канала: {title}</p>
-            <p style={{color: 'white'}}>Описание текущего канала: {description}</p>
-            <ContentPlayList children={children}/>
-          </Box>
+          <Typography
+            variant={'h6'}
+            sx={{ color: 'white', display: 'flex', justifyContent: 'center' }}
+          >
+            Не создано ни одного Плейлиста{' '}
+          </Typography>
         );
+      } else {
+        setContent(<ContentPlayList children={children} />);
       }
-    }
+    };
     fetchData().catch(() => {
       setContent('');
       console.log(`Load ${PLAYLIST} fail in PlayListGrid`);
     });
-  },[]);
+  }, []);
 
   const handleCreateChild = () => {
     // console.log(location.state.idList);
-    navigate(`/${PLAYLIST}/create/${idList}`/*, { state: { idList: location.state.idList } }*/);
-  }
+    navigate(
+      `/${PLAYLIST}/create/${idList}` /*, { state: { idList: location.state.idList } }*/
+    );
+  };
 
   const handleDeleteChannel = async () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
       await EditItemController.deleteItem(CHANNEL, idList.split('_').at(-1));
-      navigate(`/${CHANNEL}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
-    } catch(err) {
+      navigate(
+        `/${CHANNEL}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
+        { replace: true }
+      );
+    } catch (err) {
       console.log('delete channel fail', err);
     }
-  }
+  };
 
   return (
-    <>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          width: '60vw',
+          margin: '20px auto',
+          justifyContent: 'space-around',
+        }}
+      >
+        <Box maxWidth={'25vw'}>
+          {title.length > 60 ? (
+            <Tooltip title={title}>
+              <Typography variant={'h6'} color={'white'} marginBottom={2}>
+                Название текущего канала:
+                <Typography variant={'body1'}>
+                  {title.slice(0, 60) + '...'}
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography variant={'h6'} color={'white'} marginBottom={2}>
+              Название текущего канала:
+              <Typography variant={'body1'}>{title}</Typography>
+            </Typography>
+          )}
+          {description.length > 100 ? (
+            <Tooltip title={description}>
+              <Typography variant={'h6'} style={{ color: 'white' }}>
+                Описание текущего канала:
+                <Typography variant={'body1'}>
+                  {description.slice(0, 100) + '...'}
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography variant={'h6'} style={{ color: 'white' }}>
+              Описание текущего канала:
+              <Typography variant={'body1'}>{description}</Typography>
+            </Typography>
+          )}
+        </Box>
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          gap={2}
+        >
+          <Button
+            variant={'contained'}
+            backgroundColor={theme.palette.baseBlue.main}
+            onClick={handleCreateChild}
+          >
+            Создать {PLAYLIST}
+          </Button>
+          <Button
+            variant={'contained'}
+            backgroundColor={theme.palette.baseBlue.main}
+            onClick={handleDeleteChannel}
+          >
+            Удалить текущий {CHANNEL}
+          </Button>
+        </Box>
+      </Stack>
       {content}
-      <Button onClick={handleCreateChild}>Создать {PLAYLIST}</Button>
-      <Button onClick={handleDeleteChannel}>Удалить текущий {CHANNEL}</Button>
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
-    </>
+    </Box>
   );
 };
 
