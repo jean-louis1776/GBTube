@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
+import { Helmet } from 'react-helmet';
 
 import { Header, Navbar } from '../';
 
@@ -10,8 +11,11 @@ const Subscriptions = (props) => {
 
   return (
     <Box sx={{ display: 'flex', pt: 8 }}>
-      <Header selectedCategory={selectedCategory} />
+      <Helmet>
+        <title>GeekTube | Подписки</title>
+      </Helmet>
 
+      <Header selectedCategory={selectedCategory} />
       <Box
         component="main"
         sx={{

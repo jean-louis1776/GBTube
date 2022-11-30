@@ -7,6 +7,7 @@ import { Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { ContentPlayList } from './ContentPlayList';
 import EditItemController from '../../controllers/EditItemController';
 import { useTheme } from '@mui/material/styles';
+import Header from '../Header/Header';
 
 const PlayListGrid = () => {
   const theme = useTheme();

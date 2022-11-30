@@ -6,6 +6,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { CHANNEL } from '@constants/frontend';
 import { ContentChannel } from './ContentChannel';
 import { useTheme } from '@mui/material/styles';
+import Header from '../Header/Header';
 
 const ChannelGrid = () => {
   const { user_id } = useParams();

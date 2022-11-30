@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
+import { Helmet } from 'react-helmet';
 
 import { Header, Navbar } from '../';
 
@@ -10,6 +11,10 @@ const History = (props) => {
 
   return (
     <Box sx={{ display: 'flex', pt: 8 }}>
+      <Helmet>
+        <title>GeekTube | История</title>
+      </Helmet>
+
       <Header selectedCategory={selectedCategory} />
 
       <Box

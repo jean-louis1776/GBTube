@@ -19,7 +19,6 @@ import {
   SearchFeed,
   SignupForm,
   Subscriptions,
-  UploadVideo,
   VideoCard,
   UserProfile,
   VideoGrid,
@@ -68,7 +67,6 @@ export function App() {
     <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
         <Route path="/" exact element={<MainPage />} />
-        <Route path="/uploadVideo" element={<UploadVideo />} />
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
