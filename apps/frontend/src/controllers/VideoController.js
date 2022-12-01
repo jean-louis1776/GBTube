@@ -2,13 +2,6 @@ import $authApi from '../api/AuthClient';
 
 export default class VideoController {
   static async addVideo(formData) {
-
-    // const formData = new FormData();
-
-    // formData.append('attachment', video.attachment);
-    // formData.append('description', video.description);
-    // formData.append('name', video.name);
-
     return $authApi.post('/video/create', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -18,6 +11,10 @@ export default class VideoController {
 
   static async loadVideo(id) {
     return $authApi.get(`/video/download/${id}`);
+  }
+
+  static async getVideoName(id) {
+    return $authApi.get(`/video/get_name/${id}`);
   }
 
   static async getVideoById(id) {
