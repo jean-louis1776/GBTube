@@ -187,7 +187,7 @@ const UserMenu = () => {
             backgroundColor: theme.palette.shadows.second,
           }}
         >
-          <Typography variant={'h5'}>
+          <Typography variant={'h6'}>
             Функционал доступен зарегистрированным пользователям
           </Typography>
         </Box>

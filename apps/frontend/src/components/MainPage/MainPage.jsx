@@ -14,17 +14,17 @@ import Loader from '../Loader/Loader';
 import styles from './MainPage.module.scss';
 
 const MainPage = (props) => {
-  const selectedCategory = 'Домой';
+  const selectedCategory = 'Главная';
 
   return (
     <>
       <Helmet>
-        <title>GeekTube | Главная</title>
+        <title>GeekTube</title>
       </Helmet>
 
-      <Box sx={{ display: 'flex' }}>
-        <Header selectedCategory={selectedCategory} />
+      <Header selectedCategory={selectedCategory} />
 
+      <Box sx={{ display: 'flex' }}>
         <Box
           component="main"
           sx={{

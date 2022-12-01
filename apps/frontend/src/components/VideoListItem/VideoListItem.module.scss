@@ -1,0 +1,75 @@
+.videoListItem {
+  display: flex;
+  width: 1100px;
+  padding: 24px;
+  border-radius: 24px;
+  position: relative;
+  transition: 0.3s;
+
+  .videoThumbnail {
+    width: 20%;
+    display: flex;
+    overflow: hidden;
+    border-radius: 16px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .videoInfo {
+    width: 80%;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .videoInfoTitle {
+      .title {
+        font-size: 1.7rem;
+      }
+
+      .channelLink {
+        display: block;
+        width: fit-content;
+
+        .channelName {
+          display: flex;
+          opacity: 0.6;
+          transition: 0.3s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .videoInfoView {
+      .viewCount {
+        opacity: 0.6;
+        user-select: none;
+      }
+    }
+  }
+
+  .deleteButton {
+    color: #0089eb;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: none;
+
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.25);
+    }
+  }
+
+  &:hover {
+    background-color: #464646;
+
+    .deleteButton {
+      display: inline-flex;
+    }
+  }
+}

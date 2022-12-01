@@ -12,6 +12,7 @@ import appLogo from './assets/logo.png';
 import emailConfirmLogo from './assets/bar-chart.png';
 import logoNotFound from './assets/404Logo.png';
 import uploadLogo from './assets/uploadLogo.png';
+import demoThumb from './assets/demoThumb.png';
 
 export const logo = appLogo;
 export const RedirectLogo = emailConfirmLogo;
@@ -19,7 +20,7 @@ export const notFoundLogo = logoNotFound;
 export const uploadVideoLogo = uploadLogo;
 
 export const categories = [
-  { name: 'Домой', icon: <HomeIcon color="baseBlue" />, link: '/' },
+  { name: 'Главная', icon: <HomeIcon color="baseBlue" />, link: '/' },
   { name: 'История', icon: <HistoryIcon color="baseBlue" />, link: '/history' },
   {
     name: 'Понравившиеся',
@@ -30,11 +31,6 @@ export const categories = [
     name: 'Мои подписки',
     icon: <SubscriptionsIcon color="baseBlue" />,
     link: '/subscriptions',
-  },
-  {
-    name: 'Моя библиотека',
-    icon: <VideoLibraryIcon color="baseBlue" />,
-    link: '/library',
   },
 ];
 
@@ -83,10 +79,7 @@ export const userChannelTabs = [
   },
 ];
 
-export const demoThumbnailUrl = 'https://i.ibb.co/51YDLfC/API-Course.png';
-export const demoChannelUrl = '/channel/UCmXmlB4-HJytD7wek0Uo97A';
-export const demoProfilePicture =
-  'http://dergipark.org.tr/assets/app/images/buddy_sample.png';
+export const demoThumbnail = demoThumb;
 
 export const CHANNEL = 'channel';
 export const PLAYLIST = 'playlist';

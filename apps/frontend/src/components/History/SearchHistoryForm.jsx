@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Paper, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-import styles from './SearchForm.module.scss';
+import styles from './SearchHistoryForm.module.scss';
 
-const SearchForm = (props) => {
+const SearchHistoryForm = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
-
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (searchTerm) {
-      navigate(`/search/${searchTerm}`);
       setSearchTerm('');
+      console.log(searchTerm);
     }
   };
 
@@ -24,15 +21,10 @@ const SearchForm = (props) => {
       className={styles.searchBar}
       component="form"
       onSubmit={handleSubmit}
-      sx={{
-        borderRadius: 6,
-        pl: 2,
-        boxShadow: 'none',
-      }}
     >
       <input
         className={styles.searchInput}
-        placeholder="Искать на GeekTube..."
+        placeholder="Искать в истории..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -49,4 +41,4 @@ const SearchForm = (props) => {
   );
 };
 
-export default SearchForm;
+export default SearchHistoryForm;
