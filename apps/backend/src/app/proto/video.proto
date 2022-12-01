@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package videoService;
+
+service VideoService {
+  rpc callMediaInfo (MediaReq) returns (MediaInfoRes);
+  rpc callVideoChunk (VideoReq) returns (stream MediaRes);
+  rpc callMediaSimple (MediaReq) returns (stream MediaRes);
+  rpc sendMedia (stream MediaSendReq) returns (Empty);
+  rpc isFileExist (ExistReq) returns (ExistRes);
+}
+
+message MediaReq {
+  string pathToMedia = 1;
+}
+
+message MediaInfoRes {
+  int32 fileSize = 1;
+  string ext = 2;
+  string mime = 3;
+}
+
+message VideoReq {
+  string pathToMedia = 1;
+  int32 start = 2;
+  int32 end = 3;
+}
+
+message MediaRes {
+  bytes mediaStream = 1;
+}
+
+message MediaSendReq {
+  string fileName = 1;
+  bytes chunk = 2;
+}
+
+message Empty {}
+
+message ExistReq {
+  string fileName = 1;
+}
+
+message ExistRes {
+  bool fileExist = 1;
+}

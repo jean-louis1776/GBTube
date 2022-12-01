@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { v4 as uuidV4} from 'uuid';
 import ffmpeg from 'ffmpeg';
-import fs from 'fs-extra';
+import fs from 'fs';
 
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
@@ -11,6 +11,7 @@ import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
+import { sendMediaToBack } from '../gRPC/send-media-to-back.js';
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -52,9 +53,12 @@ class VideoService {
       const videoHashName = hashName + extension;
       const frameHashName = hashName + '.jpg';
 
-      await ftpServer.put(file.tempFilePath, videoHashName);
+      const tempFilePath = path.resolve(path.dirname(file.tempFilePath), videoHashName);
+      fs.renameSync(file.tempFilePath, tempFilePath);
 
-      const video = await new ffmpeg(file.tempFilePath);
+      sendMediaToBack(tempFilePath, videoHashName);
+
+      const video = await new ffmpeg(tempFilePath);
       await video.fnExtractFrameToJPG(
         'tmp/jpg',
         {
@@ -62,11 +66,15 @@ class VideoService {
           every_n_percentage: 50
         },
         async (err, files) => {
-          if (!err) {
-            await ftpServer.put(files[1], frameHashName);
+          try {
+            if (err) console.log('FROM CALLBACK TO fnExtractFrameToJPG: ', err.message);
+
+            sendMediaToBack(files[1], frameHashName);
+
+            return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+          } catch (e) {
+            throw e;
           }
-          await fs.remove(path.resolve(path.resolve(), 'tmp'));
-          return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
         }
       );
     } catch (e) {
