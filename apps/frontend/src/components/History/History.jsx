@@ -49,10 +49,10 @@ const History = (props) => {
 
           {listId.map((index) => (
             <>
-              <Link to={`/${VIDEO}/get_one/:idList`} key={index}>
+              <Link to={`/videoDetail`} key={index}>
                 <VideoListItem />
               </Link>
-              <Divider sx={{ width: '1100px' }} />
+              <Divider sx={{ width: '800px' }} />
             </>
           ))}
         </Box>
