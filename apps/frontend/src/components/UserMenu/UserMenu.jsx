@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Divider,
+  Grow,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -11,6 +12,7 @@ import {
   MenuItem,
   Tooltip,
   Typography,
+  Zoom,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -20,14 +22,17 @@ import { blueGrey, deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
 import { getSelector } from '../../store/getSelector';
 import { logoutHandler } from '../../features/auth/authSlice';
+import { useTheme } from '@mui/material/styles';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [unauthorized, setUnauthorized] = useState(false);
   const navigate = useNavigate();
   const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
   const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     console.log('user');
@@ -46,6 +51,20 @@ const UserMenu = () => {
       navigate(`${link}/get_all/${user.id}`, {
         state: { idList: [`${user.id}`] },
       });
+    } else {
+      setUnauthorized((prev) => !prev);
+      setTimeout(() => setUnauthorized((prev) => !prev), 2000);
+    }
+  };
+
+  const handleUserProfileClick = (link) => () => {
+    if (isAuth && user.id) {
+      navigate(`${link}/${user.id}`, {
+        state: { idList: [`${user.id}`] },
+      });
+    } else {
+      setUnauthorized((prev) => !prev);
+      setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
   };
 
@@ -113,22 +132,26 @@ const UserMenu = () => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {isAuth ? (
-          <MenuItem sx={{ color: deepOrange[500] }}>
+          <MenuItem
+            sx={{ color: deepOrange[500] }}
+            onClick={handleUserProfileClick('/userProfile')}
+          >
             {user.nickName || 'Где ник?'}
           </MenuItem>
         ) : (
           ''
         )}
-        <Link to="/userProfile/:id">
-          <MenuItem sx={{ py: 2 }}>
-            <Avatar
-              sx={{
-                bgcolor: 'baseBlue.main',
-              }}
-            />
-            <Typography>Мой профиль</Typography>
-          </MenuItem>
-        </Link>
+        <MenuItem
+          sx={{ py: 2 }}
+          onClick={handleUserProfileClick('/userProfile')}
+        >
+          <Avatar
+            sx={{
+              bgcolor: 'baseBlue.main',
+            }}
+          />
+          <Typography>Мой профиль</Typography>
+        </MenuItem>
 
         <Divider />
 
@@ -144,12 +167,31 @@ const UserMenu = () => {
             <Box onClick={handleLogoutClick} key={index}>
               <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
                 <ListItemIcon>{userMenu.icon}</ListItemIcon>
-                <ListItemText>{userMenu.name}</ListItemText>
+                <ListItemText>
+                  {isAuth && user.id ? userMenu.name : userMenu.altName}
+                </ListItemText>
               </MenuItem>
             </Box>
           )
         )}
       </Menu>
+      <Grow in={unauthorized} {...(unauthorized ? { timeout: 800 } : {})}>
+        <Box
+          sx={{
+            position: 'fixed',
+            top: '40vh',
+            left: '28vw',
+            borderRadius: 1,
+            boxShadow: `0 1px 2px ${theme.palette.shadows.main}`,
+            padding: '5vh 5vw',
+            backgroundColor: theme.palette.shadows.second,
+          }}
+        >
+          <Typography variant={'h5'}>
+            Функционал доступен зарегистрированным пользователям
+          </Typography>
+        </Box>
+      </Grow>
     </>
   );
 };

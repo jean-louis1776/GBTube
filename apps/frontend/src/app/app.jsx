@@ -70,7 +70,7 @@ export function App() {
         <Route path="/search/:searchTerm" element={<SearchFeed />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
-        <Route path="/userProfile/:id" element={<UserProfile />} />
+        <Route path="/userProfile/:user_id" element={<UserProfile />} />
         <Route path="/channel/:channelId" element={<ChannelCard />} />
         <Route path="/video/:videoId" element={<VideoCard />} />
         <Route path="/subscriptions" element={<Subscriptions />} />

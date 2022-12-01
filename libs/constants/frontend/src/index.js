@@ -58,6 +58,7 @@ export const userMenu = [
   },
   {
     name: 'Выйти',
+    altName: 'Войти',
     icon: <LogoutIcon color="baseBlue" />,
     link: '/',
   },
