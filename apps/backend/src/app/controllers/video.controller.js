@@ -8,7 +8,6 @@ class VideoController {
     try {
       console.log(req.body);
       validateError(req);
-      console.log('Прошли валидацию');
       const { idList, title, category, description } = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
@@ -20,12 +19,19 @@ class VideoController {
     }
   }
 
-  // Находит видео на бэке и отправляет его на фронт
+  async getHashName(req, res, next) {
+    try {
+      validateError(req);
+      return res.json({ hashName: await videoService.download(+req.params.id) });
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async download(req, res, next) {
     try {
       validateError(req);
-      const hashName = await videoService.download(+req.params.id);
-      return sendVideoFile(req, res, hashName);
+      return sendVideoFile(req, res, req.params.hash_name);
     } catch (e) {
       next(e);
     }
