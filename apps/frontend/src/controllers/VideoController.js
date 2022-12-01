@@ -14,7 +14,7 @@ export default class VideoController {
   }
 
   static async getVideoName(id) {
-    return $authApi.get(`/video/get_name/${id}`);
+    return (await $authApi.get(`/video/get_name/${id}`)).data;
   }
 
   static async getVideoById(id) {
