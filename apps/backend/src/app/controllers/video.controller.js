@@ -1,18 +1,17 @@
-import { pipeline } from 'stream';
-
-import { ftpServer } from '../../main.js';
 import { ApiError } from '../errors/apiError.js';
 import { validateError } from '../errors/validateError.js';
+import { sendVideoFile } from '../gRPC/send-video-file.js';
 import videoService from '../services/video.service.js';
 
 class VideoController {
   async create(req, res, next) {
     try {
+      console.log(req.body);
       validateError(req);
       const { idList, title, category, description } = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
-        return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`))
+        return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`));
       }
       return await videoService.upload(res, req.files, idList, title, category, description);
     } catch (e) {
@@ -20,18 +19,19 @@ class VideoController {
     }
   }
 
-  // Находит видео на бэке и отправляет его на фронт
+  async getHashName(req, res, next) {
+    try {
+      validateError(req);
+      return res.json({ hashName: await videoService.download(+req.params.id) });
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async download(req, res, next) {
     try {
       validateError(req);
-      res.set('Content-Type', 'video/mp4');
-      console.log(res.getHeaders());
-      const hashName = await videoService.download(+req.params.id);
-      
-      ftpServer.get(hashName).pipe(res);
-
-      // pipeline(stream, res, err => {if (err) console.log(err)});
-      // stream.pipe();
+      return sendVideoFile(req, res, req.params.hash_name);
     } catch (e) {
       next(e);
     }

@@ -70,7 +70,7 @@ class VideoQueries {
    */
   async downloadVideo(id) {
     try {
-      const videoHash = await VideoInfo.findOne({where: {id}});
+      const videoHash = await VideoInfo.findOne({where: {videoId: id}});
       if (videoHash) return videoHash.toJSON().hashName;
       throw ApiError.NotFound(`Видео с id ${id} не найдено`);
     } catch (e) {

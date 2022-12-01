@@ -7,7 +7,8 @@ import {
   CardMedia,
   Tooltip,
 } from '@mui/material';
-import { CheckCircle, VisibilityOffIcon } from '@mui/icons-material';
+import { CheckCircle } from '@mui/icons-material';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { demoChannelUrl, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
