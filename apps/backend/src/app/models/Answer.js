@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 export const Answer = sequelize.define('Answer', {
@@ -7,8 +7,8 @@ export const Answer = sequelize.define('Answer', {
       primaryKey: true,
       autoIncrement: true,
     },
-    textInfo: {
-      type: DataTypes.CHAR,
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     likesCount: {
@@ -25,6 +25,11 @@ export const Answer = sequelize.define('Answer', {
       type: DataTypes.TEXT,
     },
   }, {
+  hooks: {
+    afterCreate: (answer) => {
+      Answer.update({idList: `${answer.idList}_${answer.id}`}, {where: {id: answer.id}});
+    }
+  },
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',

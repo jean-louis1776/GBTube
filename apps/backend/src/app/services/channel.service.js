@@ -43,7 +43,7 @@ class ChannelService {
       if(!result) {
         throw ApiError.NotFound(`Канала с id ${id} не существует`);
       }
-      return channelQueries.deleteChannel(id);
+      return !!result;
     } catch (e) {
       console.log(e.message);
       throw(e);

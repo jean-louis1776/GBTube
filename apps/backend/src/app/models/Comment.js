@@ -7,8 +7,8 @@ export const Comment = sequelize.define('Comment', {
       primaryKey: true,
       autoIncrement: true,
     },
-    textInfo: {
-      type: DataTypes.CHAR,
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     likesCount: {

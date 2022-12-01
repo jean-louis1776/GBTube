@@ -188,7 +188,7 @@ class VideoQueries {
 
   async like(videoId, userId) {
     try {
-      const lVideo = await Video.findOne({where: {videoId}});
+      const lVideo = await Video.findOne({where: {id: videoId}});
       if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
         await VideoLike.update({liked: true}, {where: {videoId, userId, liked: false}});
         await lVideo.increment('likesCount', {by: 1});
@@ -199,7 +199,7 @@ class VideoQueries {
         await lVideo.decrement('likesCount', {by: 1});
         return false;
       }
-      await VideoLike.create({where: {videoId, userId, liked: true}});
+      await VideoLike.create({videoId, userId, liked: true});
       await lVideo.increment('likesCount', {by: 1});
       return true;
     } catch (e) {
@@ -210,7 +210,7 @@ class VideoQueries {
 
   async dislike(videoId, userId) {
     try {
-      const dlVideo = await Video.findOne({where: {videoId}});
+      const dlVideo = await Video.findOne({where: {id: videoId}});
       if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
         await VideoLike.update({liked: false}, {where: {videoId, userId, liked: true}});
         await dlVideo.increment('dislikesCount', {by: 1});
@@ -221,7 +221,7 @@ class VideoQueries {
         await dlVideo.decrement('dislikesCount', {by: 1});
         return false;
       }
-      await VideoLike.create({where: {videoId, userId, liked: false}});
+      await VideoLike.create({videoId, userId, liked: false});
       await dlVideo.increment('dislikesCount', {by: 1});
       return true;
     } catch (e) {

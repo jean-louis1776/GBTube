@@ -36,8 +36,8 @@ class CommentQueries {
 
   async getCommentById(id) {
     try {
-      const gCommentById = await Comment.findOne({where: {id}, include: {exclude: ['updateTimestamp']}}).toJSON();
-      if (gCommentById) return gCommentById;
+      const gCommentById = await Comment.findOne({where: {id}, attributes: {exclude: ['updateTimestamp']}});
+      if (gCommentById) return gCommentById.toJSON();
       throw ApiError.BadRequest(`Комментарий по Id не найден`);
     } catch (e) {
       console.log(e.message);
@@ -47,7 +47,7 @@ class CommentQueries {
 
   async getAllCommentsVideo(videoId) {
     try {
-      const gAllCommentsVideo = Comment.findAll({where: {videoId}, include: {exclude: ['updateTimestamp']}});
+      const gAllCommentsVideo = Comment.findAll({where: {videoId}, attributes: {exclude: ['updateTimestamp']}});
       if (gAllCommentsVideo) {
         return (await gAllCommentsVideo).map(value => value.toJSON());
       }
