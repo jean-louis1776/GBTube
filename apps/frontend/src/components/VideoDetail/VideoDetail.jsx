@@ -75,25 +75,23 @@ const VideoDetail = () => {
   const { id } = useParams();
 
 
-    // useEffect(() => {
-    //   setVideoContent(<Loader />);
-    //   const fetchData = async () => {
-    //     // const video = await VideoController.loadVideo(idList.split('_').at(-1));
-    //     setVideoContent(
-    //       // <ReactPlayer url={video.data} pip className={styles.reactPlayer} controls={true} />
-    //       <video controls className={styles.reactPlayer}>
-    //         <source src={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`} type="video/mp4" />
-    //       </video>
-    //     );
-    //     console.log('videoFile', video.data);
-    //   }
-    //
-    //   fetchData().catch((err) => {
-    //     setVideoContent('');
-    //     console.log('Fail load video');
-    //   });
-    //
-    // }, []);
+    useEffect(() => {
+      setVideoContent(<Loader />);
+      const fetchData = async () => {
+        const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
+        console.log('hashName', hashName);
+        const url = `http://localhost:3333/api/video/download/${hashName}`;
+        setVideoContent(
+          // <ReactPlayer url={url} pip className={styles.reactPlayer} controls={true} />
+          <video controls className={styles.reactPlayer} src={url} preload="auto"></video>
+        );
+      }
+
+      fetchData().catch((err) => {
+        setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
+        console.log('Fail get hashName video');
+      });
+    }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -116,13 +114,7 @@ const VideoDetail = () => {
           <Box>
             {
               <div className={styles.playerWrapper}>
-                {/*{videoContent}*/}
-                <ReactPlayer
-                  url={`http://localhost:3333/api/video/download/${idList.split('_').at(-1)}`}
-                  pip
-                  className={styles.reactPlayer}
-                  controls={true}
-                />
+                {videoContent}
               </div>
             }
             <Stack
@@ -318,11 +310,11 @@ const VideoDetail = () => {
           alignItems="center"
         >
           {/*<VideoGrid />*/}
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
         </Box>
       </Stack>
     </Box>
