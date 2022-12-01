@@ -24,6 +24,8 @@ import { getSelector } from '../../store/getSelector';
 import { logoutHandler } from '../../features/auth/authSlice';
 import { useTheme } from '@mui/material/styles';
 
+import styles from './UserMenu.module.scss';
+
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -153,7 +155,7 @@ const UserMenu = () => {
           <Typography>Мой профиль</Typography>
         </MenuItem>
 
-        <Divider />
+        <Divider className={styles.divider} />
 
         {userMenu.map((userMenu, index) =>
           userMenu.name !== 'Выйти' ? (

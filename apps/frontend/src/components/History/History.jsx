@@ -47,8 +47,6 @@ const History = (props) => {
 
           <SearchHistoryForm />
 
-          {/* <VideoListItem /> */}
-
           {listId.map((index) => (
             <>
               <Link to={`/${VIDEO}/get_one/:idList`} key={index}>

@@ -102,6 +102,8 @@ export const theme = createTheme({
     MuiDivider: {
       styleOverrides: {
         root: ({ theme }) => ({
+          marginTop: 0,
+          marginBottom: 0,
           backgroundColor: theme.palette.shadows.second,
         }),
       },
