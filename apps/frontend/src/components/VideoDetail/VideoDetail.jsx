@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-import ReactPlayer from 'react-player';
+// import ReactPlayer from 'react-player';
 import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
 import {
   AnnouncementOutlined,
@@ -15,25 +15,27 @@ import {
 } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import VideoCard from '../VideoCard/VideoCard';
-// import { fetchFromAPI } from '../utils/fetchFromAPI';
 import ShowMoreText from 'react-show-more-text';
-
 import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
-import { useDispatch, useSelector } from 'react-redux';
-import { getSelector } from '../../store/getSelector';
 import { Helmet } from 'react-helmet';
-import {
-  setReaction,
-  reactionHandler,
-} from '../../features/video/reactionsSlice';
 import VideoController from '../../controllers/VideoController';
 
 const VideoDetail = () => {
   const theme = useTheme();
-  let [videoContent, setVideoContent] = useState(<Loader />);
   const { idList } = useParams();
+  const [videoContent, setVideoContent] = useState(<Loader />);
+  const [subscribe, setSubscribe] = useState(true);
+  const [category, setCategory] = useState('');
+  const [channelName, setChannelName] = useState('');
+  const [createTimestamp, setCreateTimestamp] = useState('');
+  const [description, setDescription] = useState('');
+  const [dislikesCount, setDislikesCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(0);
+  const [authorNickName, setAuthorNickName] = useState('');
+  const [title, setTitle] = useState('');
+  const [viewsCount, setViewsCount] = useState(0);
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -54,30 +56,25 @@ const VideoDetail = () => {
     },
   }));
 
-  const dispatch = useDispatch();
+  // const likeOrDislikeHandler = (likes) =>
+  //   likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
 
-  const reaction = useSelector(getSelector('reactions', 'like'));
-  const video = useSelector(getSelector('videoDetail', 'video'));
-  const reactionLikeCount = useSelector(getSelector('reactions', 'likesCount'));
-  const reactionDislikeCount = useSelector(
-    getSelector('reactions', 'dislikesCount')
-  );
-
-  const likeOrDislikeHandler = (likes) =>
-    likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
-
-  const currentReaction = likeOrDislikeHandler(reaction);
-
-  const [subscribe, setSubscribe] = useState(true);
-
-  // const [videoDetail, setVideoDetail] = useState(null);
-  const [videos, setVideos] = useState(null);
-  const { id } = useParams();
-
+  // const currentReaction = likeOrDislikeHandler(reaction);
 
     useEffect(() => {
       setVideoContent(<Loader />);
       const fetchData = async () => {
+        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
+        setCategory(videoInfo.category);
+        setChannelName(videoInfo.channelName);
+        setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
+        setDescription(videoInfo.description);
+        setDislikesCount(videoInfo.dislikesCount);
+        setLikesCount(videoInfo.likesCount);
+        setAuthorNickName(videoInfo.nickName);
+        setTitle(videoInfo.title);
+        setViewsCount(videoInfo.viewsCount);
+        console.log(videoInfo, 'VideoDataInfo');
         const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
         console.log('hashName', hashName);
         const url = `http://localhost:3333/api/video/download/${hashName}`;
@@ -87,7 +84,7 @@ const VideoDetail = () => {
         );
       }
 
-      fetchData().catch((err) => {
+      fetchData().catch(() => {
         setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
         console.log('Fail get hashName video');
       });
@@ -104,7 +101,7 @@ const VideoDetail = () => {
     <Box className={styles.wrapper}>
       <Helmet>
         <title>
-          {/*{video.title} | GeekTube*/}
+          {title} | GeekTube
           VideoTitle | GeekTube
         </title>
       </Helmet>
@@ -125,11 +122,10 @@ const VideoDetail = () => {
               px={2}
             >
               <Typography color="#fff" variant="h5" fontWeight="bold">
-                {/*{title}*/}
-                Title tile title
+                {title}
               </Typography>
               <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
-                {parseInt(video.viewsCount).toLocaleString()} просмотров
+                {viewsCount} просмотров
               </Typography>
             </Stack>
             <Stack
@@ -147,7 +143,7 @@ const VideoDetail = () => {
                       variant={{ sm: 'subtitle1', md: 'h6' }}
                       fontWeight="500"
                     >
-                      {video.channelName}
+                      {channelName}
                     </Typography>
                     <CheckCircle
                       sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
@@ -184,9 +180,9 @@ const VideoDetail = () => {
                 >
                   <Tooltip title="Нравится">
                     <ReactionButton
-                      onClick={() => dispatch(setReaction('Like'))}
+                      // onClick={() => dispatch(setReaction('Like'))}
                     >
-                      {currentReaction === 'Like' ? (
+{/*                      {currentReaction === 'Like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -194,21 +190,21 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbUpOutlined />
-                      )}
+                      )}*/}
                       <Typography
                         variant={'body1'}
                         sx={{ opacity: 0.7 }}
                         marginLeft={2}
                       >
-                        {+reactionLikeCount}{' '}
+                        {likesCount}{' '}
                       </Typography>
                     </ReactionButton>
                   </Tooltip>
                   <Tooltip title="Не нравится">
                     <ReactionButton
-                      onClick={() => dispatch(setReaction('Dislike'))}
+                      // onClick={() => dispatch(setReaction('Dislike'))}
                     >
-                      {currentReaction === 'Dislike' ? (
+{/*                      {currentReaction === 'Dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -216,13 +212,13 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbDownOutlined />
-                      )}
+                      )}*/}
                       <Typography
                         variant="body1"
                         sx={{ opacity: 0.7 }}
                         marginLeft={2}
                       >
-                        {+reactionDislikeCount}{' '}
+                        {dislikesCount}{' '}
                       </Typography>
                     </ReactionButton>
                   </Tooltip>
@@ -253,7 +249,7 @@ const VideoDetail = () => {
             >
               <Box variant="body1" sx={{ opacity: 0.7 }}>
                 <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
-                  Дата публикации: {video.createdTimestamp.toLocaleDateString()}
+                  Дата публикации: {createTimestamp}
                 </Typography>
               </Box>
               <ShowMoreText
@@ -267,7 +263,7 @@ const VideoDetail = () => {
                 // width={800}
                 truncatedEndingComponent={'... '}
               >
-                {video.description}
+                {description}
               </ShowMoreText>
             </Box>
 
