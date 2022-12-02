@@ -101,6 +101,7 @@
     "react-router-dom": "6.4.1",
     "react-show-more-text": "^1.6.2",
     "regenerator-runtime": "0.13.7",
+    "remove": "^0.1.5",
     "sequelize": "^6.25.3",
     "tslib": "^2.3.0",
     "uuid": "^9.0.0",

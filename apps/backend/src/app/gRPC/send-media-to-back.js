@@ -1,9 +1,10 @@
+/* eslint-disable no-useless-catch */
 import fs from 'fs';
 
 import { clientVideo } from './grpc-client.js';
 import { ApiError } from '../errors/apiError.js';
 
-export const sendMediaToBack = (fileNameFrom, fileNameTo) => {
+export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {
   try {
     clientVideo.isFileExist({ fileName: fileNameTo }, (err, resGrpc) => {
       if (err) {
@@ -27,6 +28,13 @@ export const sendMediaToBack = (fileNameFrom, fileNameTo) => {
       });
       rdStream.on('end', () => {
         serviceCall.end();
+      });
+      rdStream.on('close', () => {
+        try {
+          if (callback) return callback();
+        } catch (e) {
+          throw e;
+        }
       });
     });
   } catch (e) {

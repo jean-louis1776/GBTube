@@ -167,7 +167,7 @@ class UserService {
 
       const oldAvatar = await userQueries.getUserAvatarById(id);              // Проверяем нет ли у юзера аватарки
       if (oldAvatar) {
-        await ftpServer.delete(oldAvatar);                                       // Если есть - удаляем
+ //TODO       await ftpServer.delete(oldAvatar);                                       // Если есть - удаляем
       }
 
       const hashName = uuidV4() + extension;
