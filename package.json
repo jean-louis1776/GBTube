@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "nx run-many --target=serve",
+    "start": "nx run-many --target=serve --projects=backend,frontend",
     "start:backend": "nx serve backend",
     "start:frontend": "nx serve frontend --open",
     "build": "nx affected:build --all --configuration=production",
