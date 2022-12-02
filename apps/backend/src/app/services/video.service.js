@@ -95,16 +95,6 @@ class VideoService {
     }
   }
 
-  async getFrameShot(id) {
-    try {
-      const hashName = await videoQueries.downloadVideo(id);
-      const frameName = path.parse(hashName).name + ".jpg";
-      return await ftpServer.get(frameName);
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async edit(idList, data) {
     try {
       const idArray = idList.split('_');

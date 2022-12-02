@@ -1,6 +1,6 @@
 import { body, param } from 'express-validator';
 
-import { NOT_EXISTS, NOT_INT, NOT_STRING } from '../util/validationMessages';
+import { NOT_DIGIT, NOT_EXISTS, NOT_INT, NOT_STRING, REG_EXP_FOR_PARAMS_ID } from '../util/validationMessages';
 import { Validation } from './validation';
 
 class VideoValidation extends Validation {
@@ -16,7 +16,7 @@ class VideoValidation extends Validation {
 
     this.checkName = [ param('hash_name').exists().withMessage(NOT_EXISTS) ];
 
-    this.checkPlaylistId = [ param('playlist_id').exists().withMessage(NOT_EXISTS) ];
+    this.checkPlaylistId = [ param('playlist_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
   }
 }
 

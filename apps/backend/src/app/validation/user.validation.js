@@ -37,13 +37,13 @@ class UserValidation extends Validation {
 
 
     this.edit = [
-      param('id').exists().withMessage(NOT_EXISTS),
       body('updatingObject.nickName').optional().notEmpty().withMessage(EMPTY).isString().withMessage(NOT_STRING),
       body('updatingObject.email').optional().notEmpty().withMessage(EMPTY).isEmail().withMessage(NOT_EMAIL),
       body('updatingObject.firstName').optional().isString().withMessage(NOT_STRING),
       body('updatingObject.lastName').optional().isString().withMessage(NOT_STRING),
       body('updatingObject.birthDate').optional().isISO8601().withMessage(NOT_DATE)
     ];
+    this.edit.push(this.checkId);
 
     this.changePassword = [
       body('id').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isNumeric().withMessage(NOT_INT),
