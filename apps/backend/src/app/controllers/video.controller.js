@@ -1,6 +1,8 @@
+import path from 'path';
+
 import { ApiError } from '../errors/apiError.js';
 import { validateError } from '../errors/validateError.js';
-import { sendVideoFile } from '../gRPC/send-video-file.js';
+import { createMediaStream } from '../gRPC/create-media-stream.js';
 import videoService from '../services/video.service.js';
 
 class VideoController {
@@ -31,7 +33,7 @@ class VideoController {
   async download(req, res, next) {
     try {
       validateError(req);
-      return sendVideoFile(req, res, req.params.hash_name);
+      return createMediaStream(req, res, req.params.hash_name);
     } catch (e) {
       next(e);
     }
@@ -40,8 +42,7 @@ class VideoController {
   async getFrameShot(req, res, next) {
     try {
       validateError(req);
-      const stream = await videoService.getFrameShot(+req.params.id);
-      stream.pipe(res);
+      return createMediaStream(req, res, path.parse(req.params.hash_name).name + '.jpg');
     } catch (e) {
       next(e);
     }
