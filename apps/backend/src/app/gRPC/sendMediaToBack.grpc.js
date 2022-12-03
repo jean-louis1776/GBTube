@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 import fs from 'fs';
 
-import { clientVideo } from './grpc-client.js';
+import { clientVideo } from './grpcClient.grpc.js';
 import { ApiError } from '../errors/apiError.js';
 
 export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {

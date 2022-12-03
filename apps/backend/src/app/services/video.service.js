@@ -7,12 +7,12 @@ import fs from 'fs';
 
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
-import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
-import { sendMediaToBack } from '../gRPC/send-media-to-back.js';
+import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
+import { removeFile } from '../gRPC/removeFile.grpc.js';
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -177,8 +177,8 @@ class VideoService {
     try {
       const hashName = await videoQueries.downloadVideo(id);
       const frameName = path.parse(hashName).name + ".jpg";
-      await ftpServer.delete(hashName);
-      await ftpServer.delete(frameName);
+      removeFile(hashName);
+      removeFile(frameName);
       return videoQueries.deleteVideo(id);
     }
     catch (e) {

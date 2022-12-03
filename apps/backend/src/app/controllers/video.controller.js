@@ -2,7 +2,7 @@ import path from 'path';
 
 import { ApiError } from '../errors/apiError.js';
 import { validateError } from '../errors/validateError.js';
-import { createMediaStream } from '../gRPC/create-media-stream.js';
+import { createMediaStream } from '../gRPC/createMediaStream.grpc.js';
 import videoService from '../services/video.service.js';
 
 class VideoController {

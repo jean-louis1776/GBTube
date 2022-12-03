@@ -1,6 +1,6 @@
 import { ApiError } from '../errors/apiError.js';
-import { getChunkData } from './get-chunk-data.js';
-import { clientVideo } from './grpc-client.js';
+import { getChunkData } from './getChunkData.grpc.js';
+import { clientVideo } from './grpcClient.grpc.js';
 
 export const createMediaStream = (req, res, pathToMedia) => {
   try {

@@ -8,6 +8,7 @@ service VideoService {
   rpc callMediaSimple (MediaReq) returns (stream MediaRes);
   rpc sendMedia (stream MediaSendReq) returns (Empty);
   rpc isFileExist (ExistReq) returns (ExistRes);
+  rpc deleteFile (DeleteFileReq) returns (Empty);
 }
 
 message MediaReq {
@@ -43,4 +44,8 @@ message ExistReq {
 
 message ExistRes {
   bool fileExist = 1;
+}
+
+message DeleteFileReq {
+  string fileName = 1;
 }

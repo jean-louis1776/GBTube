@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import userService from '../services/user.service.js';
 import { ApiError } from '../errors/apiError';
 import { validateError } from '../errors/validateError.js';
+import { createMediaStream } from '../gRPC/createMediaStream.grpc.js';
 
 dotenv.config();
 
@@ -127,9 +128,9 @@ class UserController {
   async downloadAvatar(req, res, next) {
     try {
       validateError(req);
-      const stream = await userService.downloadAvatar(+req.params.id);
-      if (!stream) return res.status(204).json({ message: 'У данного пользователя нет аватара' });
-      stream.pipe(res);
+      const avatarName = await userService.getAvatarName(+req.params.id);
+      if (!avatarName) return res.status(204).json({ message: 'У данного пользователя нет аватара' });
+      return createMediaStream(req, res, avatarName);
     } catch (e) {
       next(e);
     }
