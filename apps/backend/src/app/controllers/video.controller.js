@@ -8,7 +8,7 @@ class VideoController {
     try {
       console.log(req.body);
       validateError(req);
-      const { idList, title, category, description } = req.body;
+      const {idList, title, category, description} = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
         return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`));
@@ -22,7 +22,7 @@ class VideoController {
   async getHashName(req, res, next) {
     try {
       validateError(req);
-      return res.json({ hashName: await videoService.download(+req.params.id) });
+      return res.json({hashName: await videoService.download(+req.params.id)});
     } catch (e) {
       next(e);
     }
@@ -50,7 +50,7 @@ class VideoController {
   async edit(req, res, next) {
     try {
       validateError(req);
-      const { idList, updatingObject } = req.body;
+      const {idList, updatingObject} = req.body;
       return res.json(await videoService.edit(idList, updatingObject));
     } catch (e) {
       next(e);
@@ -87,10 +87,21 @@ class VideoController {
     }
   }
 
+  async findVideoByPartName(req, res, next) {
+    try {
+      validateError(req);
+      const videos = await videoService.findVideoByPartName(req.params.title);
+      if (!videos) return res.status(204).json([]);
+      return res.json(videos);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async like(req, res, next) {
     try {
       validateError(req);
-      const { id, userId } = req.body;
+      const {id, userId} = req.body;
       return res.json(await videoService.like(userId, id, true));
     } catch (e) {
       next(e);
@@ -100,7 +111,7 @@ class VideoController {
   async dislike(req, res, next) {
     try {
       validateError(req);
-      const { id, userId } = req.body;
+      const {id, userId} = req.body;
       return res.json(await videoService.like(userId, id, false));
     } catch (e) {
       next(e);
