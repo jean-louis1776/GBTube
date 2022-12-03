@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
 // import ReactPlayer from 'react-player';
 import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
@@ -21,9 +21,11 @@ import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import { Helmet } from 'react-helmet';
 import VideoController from '../../controllers/VideoController';
+import { PLAYLIST } from '@constants/frontend';
 
 const VideoDetail = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { idList } = useParams();
   const [videoContent, setVideoContent] = useState(<Loader />);
   const [subscribe, setSubscribe] = useState(true);
@@ -96,6 +98,15 @@ const VideoDetail = () => {
   //   snippet: { title, channelId, channelTitle, publishedAt },
   //   statistics: { viewCount, likeCount },
   // } = videoDetail;
+
+  const handleDeleteVideo = async () => {
+    try {
+      await VideoController.deleteVideo(idList.split('_').at(-1));
+      navigate(`/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Box className={styles.wrapper}>
@@ -172,6 +183,7 @@ const VideoDetail = () => {
                   </SubscribeButton>
                 )}
               </Stack>
+              <Button onClick={handleDeleteVideo}>Удалить видео</Button>
               <Stack direction="row" gap="10px">
                 <Stack
                   direction="row"
