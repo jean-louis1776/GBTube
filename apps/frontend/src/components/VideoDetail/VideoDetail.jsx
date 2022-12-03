@@ -21,7 +21,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import { Helmet } from 'react-helmet';
 import VideoController from '../../controllers/VideoController';
-import { PLAYLIST } from '@constants/frontend';
+import { VIDEO } from '@constants/frontend';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -102,7 +102,7 @@ const VideoDetail = () => {
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
-      navigate(`/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
+      navigate(`/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
     } catch (err) {
       console.log(err);
     }
