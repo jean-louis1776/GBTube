@@ -7,6 +7,7 @@ import { UserInfo } from "./UserInfo";
 import { Token } from "./Tokens";
 import { Video } from "./Video";
 import { VideoInfo } from "./VideoInfo";
+import { VideoHistory } from "./VideoHistory";
 import { Channel } from "./Channel";
 import { ChannelInfo } from "./ChannelInfo";
 import { ChannelSubscriber } from "./ChannelSubscribers";
@@ -20,7 +21,7 @@ import { includes } from "core-js/internals/array-includes";
 import excludeVariablesFromRoot from "@mui/material/styles/excludeVariablesFromRoot";
 
 
-// //Связи для таблицы Пользователей
+//Связи для таблицы Пользователей
 User.hasOne(UserInfo, {
   foreignKey: {
     name: 'userId',
@@ -102,6 +103,15 @@ User.hasMany(VideoLike, {
 VideoLike.belongsTo(User, {
   foreignKey: 'userId',
 });
+User.hasMany(VideoHistory, {
+  foreignKey: {
+    name: 'userId',
+    allowNull: false,
+  },
+});
+VideoHistory.belongsTo(User, {
+  foreignKey: 'userId',
+});
 //Связи для таблицы Каналов
 Channel.hasOne(ChannelInfo, {
   foreignKey: {
@@ -179,6 +189,15 @@ Video.hasMany(VideoLike, {
 VideoLike.belongsTo(Video, {
   foreignKey: 'videoId',
 });
+Video.hasMany(VideoHistory, {
+  foreignKey: {
+    name: 'videoId',
+    allowNull: false,
+  },
+});
+VideoHistory.belongsTo(Video, {
+  foreignKey: 'videoId',
+});
 //Связи для таблицы Коментариев
 Comment.hasMany(CommentLike, {
   foreignKey: {
@@ -219,23 +238,22 @@ export const runDB = async function () {
 
     // await sequelize.sync();
     // await sequelize.sync({force: true});
-    // await UserInfo.sync({ alter: true });
+    // await VideoHistory.sync({alter: true});
+    // await User.sync({alter: true});
+    // await Video.sync({alter: true});
     // await PlayList.sync({ alter: true });
     // await Answer.sync({ alter: true });
     // await Comment.sync({ alter: true });
-    // await Video.sync({ alter: true });
     // await VideoInfo.sync({ alter: true });
     // await VideoLike.sync({ alter: true });
     // await Channel.sync({ alter: true });
     // await ChannelInfo.sync({ alter: true });
 
     // const videoById = await Video.findAll({
+    //   attributes: ['id'],
     //   where: { title: {
     //       [Op.substring]: 'test'
     //     }},
-    //
-    //   include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
-    //
     // });
     // console.log(videoById);
     // const subscribers = (await ChannelInfo.findOne({where: {channelId: 16}}));
