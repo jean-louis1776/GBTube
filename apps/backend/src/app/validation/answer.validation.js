@@ -3,6 +3,7 @@ import { Validation } from "./validation";
 import { NOT_DIGIT, NOT_EXISTS, NOT_INT, REG_EXP_FOR_PARAMS_ID } from "../util/validationMessages";
 
 export class AnswerValidation extends Validation {
+  getAllAnswerComment;
   constructor() {
     super();
     this.create.shift();

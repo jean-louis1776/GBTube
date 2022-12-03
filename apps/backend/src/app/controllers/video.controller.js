@@ -21,6 +21,26 @@ class VideoController {
     }
   }
 
+
+  async createHistory(req, res, next) {
+    try {
+      validateError(req);
+      const {userId, videoId} = req.body;
+      return res.status(201).json(await videoService.createHistory(userId, videoId));
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async findHistory(req, res, next) {
+    try {
+      validateError(req);
+      return res.json(await videoService.findHistory(req.params.id))
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getHashName(req, res, next) {
     try {
       validateError(req);
@@ -129,6 +149,7 @@ class VideoController {
       next(e);
     }
   }
+
 }
 
 export default new VideoController();

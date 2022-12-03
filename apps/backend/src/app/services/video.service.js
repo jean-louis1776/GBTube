@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import remove from 'remove';
 import path from 'path';
-import { v4 as uuidV4} from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import ffmpeg from 'ffmpeg';
 import fs from 'fs';
 
@@ -22,8 +22,8 @@ class VideoService {
     try {
       const [userId, channelId] = idList.split('_');
       const nickName = await userQueries.getNickNameById(+userId);
-      const channelName = (await Channel.findOne({attributes: ['title'], where: { id: +channelId }})).toJSON().title;
-      return { nickName, channelName };
+      const channelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
+      return {nickName, channelName};
     } catch (e) {
       throw(e);
     }
@@ -64,7 +64,7 @@ class VideoService {
         'tmp/jpg',
         {
           number: 2,
-          every_n_percentage: 50
+          every_n_percentage: 50,
         },
         async (err, files) => {
           try {
@@ -81,7 +81,7 @@ class VideoService {
           } catch (e) {
             throw e;
           }
-        }
+        },
       );
     } catch (e) {
       console.log(e);
@@ -118,7 +118,7 @@ class VideoService {
     try {
       const video = await videoQueries.findVideoById(id);
       const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
-      return { ...video, ...nickChannelNames };
+      return {...video, ...nickChannelNames};
     } catch (e) {
       throw e;
     }
@@ -135,7 +135,7 @@ class VideoService {
       if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
       return videos.map(video => {
-        return { ...video, ...nickChannelNames }
+        return {...video, ...nickChannelNames};
       });
     } catch (e) {
       throw e;
@@ -144,7 +144,7 @@ class VideoService {
 
   async findVideoByPartName(title) {
     try {
-      return videoQueries.findVideoByPartName(title)
+      return videoQueries.findVideoByPartName(title);
     } catch (e) {
       throw e;
     }
@@ -188,10 +188,17 @@ class VideoService {
       removeFile(hashName);
       removeFile(frameName);
       return videoQueries.deleteVideo(id);
-    }
-    catch (e) {
+    } catch (e) {
       throw e;
     }
+  }
+
+  async createHistory(userId, videoId) {
+    return videoQueries.createVideoHistory(userId, videoId);
+  }
+
+  async findHistory(userId) {
+    return videoQueries.findVideoHistoryByUserId(userId);
   }
 }
 
