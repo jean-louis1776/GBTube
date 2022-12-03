@@ -1,4 +1,4 @@
-import { DataTypes, where } from 'sequelize';
+import { DataTypes, Op, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 //Импортирование моделей
@@ -229,6 +229,15 @@ export const runDB = async function () {
     // await Channel.sync({ alter: true });
     // await ChannelInfo.sync({ alter: true });
 
+    // const videoById = await Video.findAll({
+    //   where: { title: {
+    //       [Op.substring]: 'test'
+    //     }},
+    //
+    //   include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+    //
+    // });
+    // console.log(videoById);
     // const subscribers = (await ChannelInfo.findOne({where: {channelId: 16}}));
     // await subscribers.increment('subscribersCount', {by: 1});
     // console.log(subscribers);

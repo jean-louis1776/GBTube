@@ -151,6 +151,24 @@ class VideoQueries {
     }
   }
 
+  async findVideoByPartName(title) {
+    try {
+      const videoByPartName = await Video.findAll({
+        where: {title: {[Op.substring]: title}},
+        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
+      });
+      if (!videoByPartName) return null;
+      const result = [];
+      for (const videoByList of videoByPartName) {
+        result.push(this.parsingQueryModel(videoByList));
+      }
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
   /**
    * Удаление видео
    * @param {number} channelId - id канала с видео
@@ -254,7 +272,7 @@ class VideoQueries {
 
   async checkVideoById(id) {
     try {
-      return !!(await Video.findOne({where: {id}}))
+      return !!(await Video.findOne({where: {id}}));
     } catch (e) {
       console.log(e.message);
       throw(e);
