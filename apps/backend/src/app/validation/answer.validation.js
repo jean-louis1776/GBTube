@@ -11,7 +11,7 @@ export class AnswerValidation extends Validation {
     this.edit.shift();
     //??? что то не то наверное ) ??????
     // this.getAllAnswerComment = [param('commentId').exists({checkFalsy: true}).isString().withMessage(NOT_EXISTS)];
-    // this.getAllAnswerComment = [ param('commentId').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
+    this.getAllAnswerComment = [ param('commentId').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
   }
 }
 

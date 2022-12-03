@@ -1,5 +1,6 @@
 import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
+import { VideoHistory } from "../models/VideoHistory";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
 import { VideoLike } from "../models/VideoLike";
@@ -154,15 +155,13 @@ class VideoQueries {
   async findVideoByPartName(title) {
     try {
       const videoByPartName = await Video.findAll({
+        attributes: ['id'],
         where: {title: {[Op.substring]: title}},
-        include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
       });
-      if (!videoByPartName) return null;
-      const result = [];
-      for (const videoByList of videoByPartName) {
-        result.push(this.parsingQueryModel(videoByList));
+      if (videoByPartName) {
+        return (videoByPartName).map(value => value.toJSON().id.toString());
       }
-      return result;
+      return null;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -185,8 +184,8 @@ class VideoQueries {
   async countViews(id) {
     try {
       const vCount = await VideoInfo.findOne({where: {id}});
-      if (vCount !== 0) return vCount.toJSON().viewsCount();
-      throw ApiError.NotFound(`У данного видео 0(ноль) просмотров`);
+      if (vCount !== null) return vCount.toJSON().viewsCount;
+      return null;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -252,7 +251,7 @@ class VideoQueries {
     try {
       const lCount = await VideoLike.count({where: {videoId, liked: true}});
       if (lCount) return lCount;
-      throw ApiError.BadRequest(`Лайки отсутствуют`);
+      return null
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -263,7 +262,7 @@ class VideoQueries {
     try {
       const dislikesCount = await VideoLike.count({where: {videoId, liked: false}});
       if (dislikesCount) return dislikesCount;
-      throw ApiError.BadRequest(`Дизайки отсутствуют`);
+      return null
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -289,6 +288,30 @@ class VideoQueries {
       throw(e);
     }
   }
+
+  async createVideoHistory(userId, videoId) {
+    try {
+      if (await VideoHistory.findOne({where: {userId, videoId}})) {
+        return (VideoHistory.update({updatedTimestamp: Date.now()}, {where: {userId, videoId}}));
+      }
+      return (await VideoHistory.create({userId, videoId, updatedTimestamp: Date.now()}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async findVideoHistoryByUserId(userId) {
+    try {
+      const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}});
+      if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().id);
+      return null;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
 }
 
 export const videoQueries = new VideoQueries();
