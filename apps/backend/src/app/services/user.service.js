@@ -10,7 +10,6 @@ import mailService from './mail.service.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { tokenQueries } from '../queries/TokenQueries.js';
 import { imageExtensions } from '../util/videoImageExtensions.js';
-import { ftpServer } from '../../main.js';
 import { removeFile } from '../gRPC/removeFile.grpc.js';
 import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
 
@@ -92,15 +91,18 @@ class UserService {
       const userFromDB = await userQueries.findOneById(user.id);
       if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');
 
-      return await tokenService.createNewTokens(
-        {
-          id: userFromDB.id,
-          nickName: userFromDB.nickName,
-          email: userFromDB.email,
-          role: userFromDB.role
-        },
-        refreshTokenFromDB.id
-      );
+      return {
+        ...await tokenService.createNewTokens(
+          {
+            id: userFromDB.id,
+            nickName: userFromDB.nickName,
+            email: userFromDB.email,
+            role: userFromDB.role
+          },
+          refreshTokenFromDB.id,
+        ),
+        isBaned: userFromDB.isBaned
+      };
     } catch (e) {
       console.log(e.message);
       throw e;
@@ -201,7 +203,7 @@ class UserService {
       if (!avatarName) {
         throw ApiError.NotFound('У данного пользователя нет аватара');
       }
-      await ftpServer.delete(avatarName);
+      removeFile(avatarName);
       return await userQueries.updateUser(id, {avatar: null});
     } catch (e) {
       console.log(e.message);

@@ -26,6 +26,8 @@ class VideoValidation extends Validation {
     this.checkTitle = [param('title').exists().withMessage(NOT_EXISTS)];
 
     this.checkPlaylistId = [ param('playlist_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
+
+    this.checkParamsTitle = [ param('title').exists().withMessage(NOT_EXISTS) ];
   }
 }
 
