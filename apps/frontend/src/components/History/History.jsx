@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import { Header } from '../';
 import SearchHistoryForm from './SearchHistoryForm';
 import VideoListItem from '../VideoListItem/VideoListItem';
-import { VIDEO } from '@constants/frontend';
 
 import styles from './History.module.scss';
 
@@ -25,35 +24,21 @@ const History = (props) => {
 
       <Header selectedCategory={selectedCategory} />
 
-      <Box sx={{ display: 'flex', pt: 8 }}>
-        <Box
-          component="main"
-          sx={{
-            bgcolor: 'darkBackground.main',
-            py: 2,
-            px: 4,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: 600, width: '100%', textAlign: 'left' }}
-          >
+      <Box className={styles.historyWrapper}>
+        <Box component="main" className={styles.historyMain}>
+          <Typography className={styles.historyTitle} variant="h4">
             История просмотров
           </Typography>
 
           <SearchHistoryForm />
 
           {listId.map((index) => (
-            <>
-              <Link to={`/${VIDEO}/get_one/:idList`} key={index}>
+            <Box key={index} className={styles.linkCard}>
+              <Link to={`/videoDetail`}>
                 <VideoListItem />
               </Link>
-              <Divider sx={{ width: '1100px' }} />
-            </>
+              <Divider className={styles.divider} />
+            </Box>
           ))}
         </Box>
       </Box>

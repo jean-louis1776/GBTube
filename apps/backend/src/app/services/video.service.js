@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import remove from 'remove';
 import path from 'path';
 import { v4 as uuidV4 } from 'uuid';
 import ffmpeg from 'ffmpeg';
@@ -6,12 +7,12 @@ import fs from 'fs';
 
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
-import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
-import { sendMediaToBack } from '../gRPC/send-media-to-back.js';
+import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
+import { removeFile } from '../gRPC/removeFile.grpc.js';
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -68,10 +69,15 @@ class VideoService {
         async (err, files) => {
           try {
             if (err) console.log('FROM CALLBACK TO fnExtractFrameToJPG: ', err.message);
+            if (!files || !files.length) {
+              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+            }
+            console.log('files = ', files);
+            return sendMediaToBack(files[files.length - 1], frameHashName, async () => {
+              await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
+              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+            });
 
-            sendMediaToBack(files[1], frameHashName);
-
-            return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
           } catch (e) {
             throw e;
           }
@@ -90,16 +96,6 @@ class VideoService {
         throw ApiError.NotFound(`Видео с id ${id} не существует`);
       }
       return await videoQueries.downloadVideo(id);
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  async getFrameShot(id) {
-    try {
-      const hashName = await videoQueries.downloadVideo(id);
-      const frameName = path.parse(hashName).name + ".jpg";
-      return await ftpServer.get(frameName);
     } catch (e) {
       throw e;
     }
@@ -189,8 +185,8 @@ class VideoService {
     try {
       const hashName = await videoQueries.downloadVideo(id);
       const frameName = path.parse(hashName).name + ".jpg";
-      await ftpServer.delete(hashName);
-      await ftpServer.delete(frameName);
+      removeFile(hashName);
+      removeFile(frameName);
       return videoQueries.deleteVideo(id);
     } catch (e) {
       throw e;

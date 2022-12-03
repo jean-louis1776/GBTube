@@ -23,16 +23,16 @@ const VideoListItem = () => {
             Never Gonna Give You Up
           </Typography>
 
-          <Link to={`/${CHANNEL}/get_one/:id`} className={styles.channelLink}>
-            <Typography className={styles.channelName}>
-              <VerifiedIcon sx={{ mr: 1 }} />
+          <Link to={`/user-channel`} className={styles.channelLink}>
+            <Typography variant="subtitle2" className={styles.channelName}>
+              <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
               Rick & Morty
             </Typography>
           </Link>
         </Box>
 
         <Box className={styles.videoInfoView}>
-          <Typography className={styles.viewCount}>
+          <Typography variant="caption" className={styles.viewCount}>
             {viewCount} просмотров
           </Typography>
         </Box>

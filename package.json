@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "nx run-many --target=serve",
+    "start": "nx run-many --target=serve --projects=backend,frontend",
     "start:backend": "nx serve backend",
+    "start:file-server": "nx serve file-server",
     "start:frontend": "nx serve frontend --open",
     "build": "nx affected:build --all --configuration=production",
     "build:backend": "nx build backend",
@@ -100,6 +101,7 @@
     "react-router-dom": "6.4.1",
     "react-show-more-text": "^1.6.2",
     "regenerator-runtime": "0.13.7",
+    "remove": "^0.1.5",
     "sequelize": "^6.25.3",
     "tslib": "^2.3.0",
     "uuid": "^9.0.0",

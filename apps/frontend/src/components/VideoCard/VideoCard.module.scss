@@ -1,0 +1,62 @@
+.videoCard {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 16px;
+  border-radius: 18px;
+  position: relative;
+  transition: 0.3s;
+  margin: 8px 0;
+
+  .videoThumbnail {
+    display: flex;
+    overflow: hidden;
+    border-radius: 12px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .videoInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 8px;
+
+    .videoInfoTitle {
+      .title {
+        font-size: 1.3rem;
+        line-height: 1.1;
+        margin-bottom: 5px;
+      }
+
+      .channelLink {
+        display: block;
+        width: fit-content;
+
+        .channelName {
+          display: flex;
+          align-items: center;
+          opacity: 0.6;
+          transition: 0.3s;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    .videoInfoView {
+      .viewCount {
+        opacity: 0.6;
+        user-select: none;
+      }
+    }
+  }
+
+  &:hover {
+    background-color: #464646;
+  }
+}
