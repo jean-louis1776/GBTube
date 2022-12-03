@@ -142,6 +142,14 @@ class VideoService {
     }
   }
 
+  async findVideoByPartName(title) {
+    try {
+      return videoQueries.findVideoByPartName(title)
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async like(userId, videoId, isLike) {
     try {
       const user = await userQueries.checkUserById(userId);
