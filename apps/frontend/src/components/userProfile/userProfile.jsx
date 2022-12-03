@@ -12,17 +12,17 @@ import {
 import { styled, useTheme } from '@mui/material/styles';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  clearUser,
-  userDataUpdate,
-} from '../../features/userProfile/userProfileSlice';
+// import { useDispatch, useSelector } from 'react-redux';
+// import {
+//   clearUser,
+//   userDataUpdate,
+// } from '../../features/userProfile/userProfileSlice';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userProfileFormSchema } from './validation';
-import { getSelector } from '../../store/getSelector';
+// import { getSelector } from '../../store/getSelector';
 import { PhotoCamera } from '@mui/icons-material';
-import store from '../../store/store';
+// import store from '../../store/store';
 
 import styles from './userProfile.module.scss';
 import { Helmet } from 'react-helmet';
@@ -60,8 +60,8 @@ const UserProfile = () => {
     },
   }));
 
-  const user = useSelector(getSelector('userProfile', 'user'));
-  console.log(user);
+  // const user = useSelector(getSelector('userProfile', 'user'));
+  // console.log(user);
 
   const {
     handleSubmit,
@@ -70,15 +70,15 @@ const UserProfile = () => {
     setValue,
     formState: { errors },
   } = useForm({
-    defaultValues: user,
+    // defaultValues: user,
     resolver: yupResolver(userProfileFormSchema),
   });
 
   const [emailDisabled, setEmailDisabled] = useState(true);
 
-  const currentUserState = store.getState().userProfile;
-  const [currentState, setCurrentState] = useState(currentUserState);
-  console.log('currentUserState:', currentUserState);
+  // const currentUserState = store.getState().userProfile;
+  // const [currentState, setCurrentState] = useState(currentUserState);
+  // console.log('currentUserState:', currentUserState);
 
   const resolveMailEdit = () => {
     setEmailDisabled((prevDisabled) => !prevDisabled);
@@ -89,14 +89,15 @@ const UserProfile = () => {
     setIsEqualUserData((prevCompare) => !prevCompare);
   };
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const onChangeDate = (date) => {
     setValue('birthDate', date);
   };
 
   const onSubmitForm = handleSubmit((updatingUser) => {
-    dispatch(userDataUpdate(updatingUser));
+
+    // dispatch(userDataUpdate(updatingUser));
     console.log(updatingUser);
   });
 

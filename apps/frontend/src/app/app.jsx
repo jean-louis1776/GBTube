@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { checkAuthHandler } from '../features/auth/authSlice';
+// import { checkAuthHandler } from '../features/auth/authSlice';
 import { Box } from '@mui/material';
 
 import './app.module.scss';
@@ -32,6 +32,8 @@ import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import UploadVideoDraft from '../components/UploadVideo/UploadVideoDraft';
 import UserPage from '../components/UserPage/UserPage';
 import UserAbout from '../components/UserPage/UserAbout';
+import AuthController from '../controllers/AuthController';
+import { setAccessToken, setAuthStatus, setId, setNickName } from '../store/slice';
 
 export function App() {
   const dispatch = useDispatch();
@@ -43,13 +45,36 @@ export function App() {
       console.log('Auth flag dropped');
     };
     return () => {
-      console.log('useEffect run');
-      if (runOnceFlag && localStorage.getItem('token')) {
-        console.log('Auth running');
-        dispatch(checkAuthHandler());
-        runOnceFlag = false;
-        setTimeout(setFlagToTrue, 3000);
-      }
+      const handle = async () => {
+        console.log('useEffect run');
+        if (runOnceFlag && localStorage.getItem('token')) {
+          console.log('Auth running');
+          const { data } = await AuthController.checkAuth();
+          if (data.isBaned) {
+            localStorage.setItem('token', '');
+            console.log(data, 'user banned');
+            dispatch(setAuthStatus(false));
+            dispatch(setAccessToken(''));
+            dispatch(setId(''));
+            dispatch(setNickName(''));
+            return;
+          }
+          localStorage.setItem('token', data.accessToken);
+          console.log(data, 'data user update');
+          dispatch(setAuthStatus(true));
+          dispatch(setAccessToken(data.accessToken));
+          dispatch(setId(data.id));
+          dispatch(setNickName(data.nickName));
+          runOnceFlag = false;
+          setTimeout(setFlagToTrue, 3000);
+        }
+      };
+      handle().then(() => {
+        console.log('User update successful');
+      }).catch((err) => {
+        console.log('User update failed');
+        console.log(err);
+      });
     };
   };
 
@@ -57,11 +82,7 @@ export function App() {
 
   useEffect(
     runOnceInstance,
-    /*() => {
-    if (localStorage.getItem('token')) {
-      dispatch(checkAuthHandler());
-    }
-  }*/ []
+ []
   );
   return (
     <Box sx={{ bgcolor: 'darkBackground.main' }}>
