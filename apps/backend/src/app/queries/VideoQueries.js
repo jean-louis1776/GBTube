@@ -294,7 +294,7 @@ class VideoQueries {
       if (await VideoHistory.findOne({where: {userId, videoId}})) {
         return (VideoHistory.update({updatedTimestamp: Date.now()}, {where: {userId, videoId}}));
       }
-      return (await VideoHistory.create({userId, videoId, updatedTimestamp: Date.now()}));
+      return !!(await VideoHistory.create({userId, videoId, updatedTimestamp: Date.now()}));
     } catch (e) {
       console.log(e.message);
       throw(e);
