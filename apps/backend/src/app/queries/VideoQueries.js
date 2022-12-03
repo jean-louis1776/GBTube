@@ -305,7 +305,7 @@ class VideoQueries {
     try {
       const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}, order: ['updatedTimestamp','DESC']});
       if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().videoId.toString());
-      return null;
+      return [];
     } catch (e) {
       console.log(e.message);
       throw(e);
