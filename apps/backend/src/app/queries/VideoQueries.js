@@ -303,9 +303,9 @@ class VideoQueries {
 
   async findVideoHistoryByUserId(userId) {
     try {
-      const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}});
-      if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().id);
-      return null;
+      const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}, order: ['updatedTimestamp','DESC']});
+      if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().videoId.toString());
+      return [];
     } catch (e) {
       console.log(e.message);
       throw(e);

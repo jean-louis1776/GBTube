@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
-import { loginHandler } from '../../features/auth/authSlice';
+// import { loginHandler } from '../../features/auth/authSlice';
 import styles from './LoginForm.module.scss';
 import { Box, Stack, Typography } from '@mui/material';
 import { LoginFormElemButton } from './LoginFormElemButton';
@@ -13,6 +13,8 @@ import { LoginFormStatusError } from './LoginFormStatusError';
 import { EMAIL, PASSWORD } from '@constants/frontend';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import AuthController from '../../controllers/AuthController';
+import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
 
 export const LoginFormElem = () => {
   const [loginError, setLoginError] = useState('');
@@ -44,14 +46,37 @@ export const LoginFormElem = () => {
 
   const onSubmit = async ({ email, password }) => {
     try {
-      dispatch(loginHandler({ email, password }));
+      const { data } = await AuthController.login(email, password);
+      if (data.isBanned) {
+        localStorage.setItem('token', '');
+        dispatch(setAuthStatus(false));
+        dispatch(setAccessToken(''));
+        dispatch(setId(''));
+        dispatch(setNickName(''));
+        setLoginError('Пользователь заблокирован');
+        return;
+      }
+      localStorage.setItem('token', data.accessToken);
+      dispatch(setAuthStatus(true));
+      dispatch(setAccessToken(data.accessToken));
+      dispatch(setId(data.id));
+      dispatch(setNickName(data.nickName));
       setLoginError('');
-      navigate('/', { replace: true });
-    } catch {
+      reset();
+      navigate(-1, { replace: true });
+    } catch (err) {
       setLoginError('Ошибка авторизации. Неверен логин или пароль');
       console.log('Login failed');
+      console.log(err);
     }
-    reset();
+    // try {
+    //   dispatch(loginHandler({ email, password }));
+    //   setLoginError('');
+    //   navigate('/', { replace: true });
+    // } catch {
+    //   setLoginError('Ошибка авторизации. Неверен логин или пароль');
+    //   console.log('Login failed');
+    // }
   };
 
   const togglePassword = () => {

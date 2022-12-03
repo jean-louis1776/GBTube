@@ -18,6 +18,7 @@ export default class UserController {
   }
 
   static async changePassword(pass) {
-    return $authApi.post(`/user/edit/${pass.id}`, { ...pass });
+    const { id, oldPassword, newPassword } = pass;
+    return $authApi.post(`/user/change_password`, { id, oldPassword, newPassword });
   }
 }
