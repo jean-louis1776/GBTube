@@ -2,7 +2,7 @@ import { ApiError } from '../errors/apiError.js';
 import { getChunkData } from './getChunkData.grpc.js';
 import { clientVideo } from './grpcClient.grpc.js';
 
-export const createMediaStream = (req, res, pathToMedia) => {
+export const createMediaStream = (req, res, pathToMedia, callback) => {
   try {
     clientVideo.callMediaInfo({ pathToMedia }, (err, resGrpc) => {
       if (err) {
@@ -35,7 +35,8 @@ export const createMediaStream = (req, res, pathToMedia) => {
         res.write(chunk.mediaStream);
       });
 
-      stream.on('end', () => {
+      stream.on('end', async () => {
+        if (callback) await callback(req);
         res.end();
       });
     });

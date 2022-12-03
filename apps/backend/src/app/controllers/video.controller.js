@@ -21,21 +21,13 @@ class VideoController {
     }
   }
 
-
-  async createHistory(req, res, next) {
-    try {
-      validateError(req);
-      const {userId, videoId} = req.body;
-      return res.status(201).json(await videoService.createHistory(userId, videoId));
-    } catch (e) {
-      next(e);
-    }
-  }
-
   async findHistory(req, res, next) {
     try {
       validateError(req);
-      return res.json(await videoService.findHistory(req.params.id))
+      const videoList = await videoService.findHistory(req.params.id);
+      let statusCode = 200;
+      if (!videoList.length) statusCode = 204;
+      return res.status(statusCode).json(videoList);
     } catch (e) {
       next(e);
     }
@@ -53,7 +45,7 @@ class VideoController {
   async download(req, res, next) {
     try {
       validateError(req);
-      return createMediaStream(req, res, req.params.hash_name);
+      return createMediaStream(req, res, req.params.hash_name, videoService.changeStatusOfVideo);
     } catch (e) {
       next(e);
     }
@@ -143,7 +135,7 @@ class VideoController {
     try {
       const videoIdList = await videoService.getFavoriteIdList();
       let statusCode = 200;
-      if (videoIdList.length === 0) statusCode = 204;
+      if (!videoIdList.length) statusCode = 204;
       return res.status(statusCode).json(videoIdList);
     } catch (e) {
       next(e);

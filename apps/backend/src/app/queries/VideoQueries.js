@@ -15,7 +15,6 @@ class VideoQueries {
     };
   }
 
-
   async isVideoNameUnique(title, channelId) {
     try {
       return !(await Video.findOne({where: {title, channelId}}));
@@ -185,16 +184,16 @@ class VideoQueries {
     try {
       const vCount = await VideoInfo.findOne({where: {id}});
       if (vCount !== null) return vCount.toJSON().viewsCount;
-      return null;
+      return 0;
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
 
-  async viewsIncrement(id) {
+  async viewsIncrement(videoId) {
     try {
-      const vIncrement = await VideoInfo.findOne({attributes: ['viewsCount'], where: {id}});
+      const vIncrement = await VideoInfo.findOne({/*attributes: ['viewsCount'],*/ where: {videoId}});
       if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
       throw ApiError.NotFound(`Ошибка добавления просмотра!`);
     } catch (e) {
@@ -249,9 +248,7 @@ class VideoQueries {
 
   async likesCount(videoId) {
     try {
-      const lCount = await VideoLike.count({where: {videoId, liked: true}});
-      if (lCount) return lCount;
-      return null
+      return await VideoLike.count({where: {videoId, liked: true}});
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -260,9 +257,7 @@ class VideoQueries {
 
   async dislikesCount(videoId) {
     try {
-      const dislikesCount = await VideoLike.count({where: {videoId, liked: false}});
-      if (dislikesCount) return dislikesCount;
-      return null
+      return await VideoLike.count({where: {videoId, liked: false}});
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -312,6 +307,16 @@ class VideoQueries {
     }
   }
 
+  async getVideoIdByHashName(hashName) {
+    try {
+      const video = await VideoInfo.findOne({attributes: ['videoId'], where: {hashName}});
+      if (!video) throw ApiError.NotFound('Такого видео не существует');
+      return video.toJSON().videoId;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
 }
 
 export const videoQueries = new VideoQueries();

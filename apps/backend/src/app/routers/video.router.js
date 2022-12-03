@@ -6,7 +6,6 @@ import videoValidation from '../validation/video.validation.js';
 const router = new Router();
 
 router.post('/create', videoValidation.create, videoController.create);
-router.post('/history', videoValidation.createHistory, videoController.createHistory);
 router.get('/history/:id', videoValidation.checkId, videoController.findHistory);
 router.get('/get_name/:id', videoValidation.checkId, videoController.getHashName);
 router.get('/download/:hash_name', videoValidation.checkName, videoController.download);
