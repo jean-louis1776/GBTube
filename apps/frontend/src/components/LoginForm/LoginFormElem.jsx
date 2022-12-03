@@ -47,7 +47,7 @@ export const LoginFormElem = () => {
   const onSubmit = async ({ email, password }) => {
     try {
       const { data } = await AuthController.login(email, password);
-      if (data.isBanned) {
+      if (data.isBaned) {
         localStorage.setItem('token', '');
         dispatch(setAuthStatus(false));
         dispatch(setAccessToken(''));
