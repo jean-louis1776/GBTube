@@ -16,6 +16,7 @@ const UploadVideoDraft = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadErrorMsg, setUploadErrorMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const handleChangeFile = (evt) => {
@@ -36,10 +37,13 @@ const UploadVideoDraft = () => {
     formData.append('idList', idList);
 
     try {
+      setIsLoading(true);
       await VideoController.addVideo(formData);
-      navigate(-1);
       evt.target.reset();
+      setIsLoading(false);
+      navigate(-1);
     } catch {
+      setIsLoading(false);
       console.log('Load video failed');
       setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
     }
@@ -65,7 +69,7 @@ const UploadVideoDraft = () => {
 
           <Box className={styles.uploadVideoBox}>
             <form onSubmit={handleSubmit} className={styles.uploadForm}>
-              <Button variant="contained" color="baseBlue" component="label">
+              <Button variant="contained" color="baseBlue" component="label" disabled={isLoading}>
                 <VideoCallIcon sx={{ mr: 1 }} />
                 Выбрать файл
                 <input
@@ -122,6 +126,7 @@ const UploadVideoDraft = () => {
                 variant="contained"
                 color="baseBlue"
                 sx={{ mt: 2 }}
+                disabled={isLoading}
               >
                 <CloudUploadIcon sx={{ mr: 1 }} />
                 Отправить
