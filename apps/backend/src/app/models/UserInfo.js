@@ -1,6 +1,5 @@
-import { BOOLEAN, DataTypes } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
-import { bool } from "prop-types";
 
 
 export const UserInfo = sequelize.define('UserInfo', {

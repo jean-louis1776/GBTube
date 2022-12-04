@@ -16,14 +16,17 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 import { logo } from '@constants/frontend';
 import { Navbar, SearchForm, UserMenu } from '../';
-import { getSelector } from '../../store/getSelector';
-import { logoutHandler } from '../../features/auth/authSlice';
+// import { getSelector } from '../../store/getSelector';
+// import { logoutHandler } from '../../features/auth/authSlice';
 import { AppBar, DrawerHeader } from './HeaderComponents';
 
 import styles from './Header.module.scss';
+import { getAuthStatus } from '../../store/selectors';
+import AuthController from '../../controllers/AuthController';
+import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
 
 const Header = ({ selectedCategory }) => {
-  const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
   const dispatch = useDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);
@@ -39,8 +42,20 @@ const Header = ({ selectedCategory }) => {
     setOpenMenu(toggleOpen);
   };
 
-  const handleLogoutClick = () => {
-    dispatch(logoutHandler());
+  const handleLogoutClick = async () => {
+    try {
+      await AuthController.logout();
+      localStorage.setItem('token', '');
+      dispatch(setAuthStatus(false));
+      dispatch(setAccessToken(''));
+      dispatch(setId(''));
+      dispatch(setNickName(''));
+      console.log('logout successful');
+    } catch (err) {
+      console.log('logout fail');
+      console.log(err);
+    }
+    // dispatch(logoutHandler());
   };
 
   return (

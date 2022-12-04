@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidV4 } from 'uuid';
 import path from 'path';
 import fs from 'fs-extra';
+import remove from 'remove';
 
 import { ApiError } from '../errors/apiError.js';
 import tokenService from './token.service.js';
@@ -9,7 +10,8 @@ import mailService from './mail.service.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { tokenQueries } from '../queries/TokenQueries.js';
 import { imageExtensions } from '../util/videoImageExtensions.js';
-import { ftpServer } from '../../main.js';
+import { removeFile } from '../gRPC/removeFile.grpc.js';
+import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
 
 class UserService {
   async getAll() {
@@ -89,15 +91,20 @@ class UserService {
       const userFromDB = await userQueries.findOneById(user.id);
       if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');
 
-      return await tokenService.createNewTokens(
-        {
-          id: userFromDB.id,
-          nickName: userFromDB.nickName,
-          email: userFromDB.email,
-          role: userFromDB.role
-        },
-        refreshTokenFromDB.id
-      );
+      userFromDB.isBaned = false;      //!! Это временно. Хардкод
+
+      return {
+        ...await tokenService.createNewTokens(
+          {
+            id: userFromDB.id,
+            nickName: userFromDB.nickName,
+            email: userFromDB.email,
+            role: userFromDB.role
+          },
+          refreshTokenFromDB.id,
+        ),
+        isBaned: userFromDB.isBaned
+      };
     } catch (e) {
       console.log(e.message);
       throw e;
@@ -167,27 +174,26 @@ class UserService {
 
       const oldAvatar = await userQueries.getUserAvatarById(id);              // Проверяем нет ли у юзера аватарки
       if (oldAvatar) {
-        await ftpServer.delete(oldAvatar);                                       // Если есть - удаляем
+        removeFile(oldAvatar);                                                // Если есть - удаляем
       }
-
       const hashName = uuidV4() + extension;
-      await ftpServer.put(file.tempFilePath, hashName);                          // Сохраняем аватарку на ftp-сервер
-      const result = await userQueries.updateUser(id, { avatar: hashName });     //Прописываем имя файла сохраненной аватарки в userInfos
-      await fs.remove(path.resolve(path.resolve(), 'tmp'), err => { if (err) console.log(err); });
-      return result;
+      const tempFilePath = path.resolve(path.dirname(file.tempFilePath), hashName);
+      fs.renameSync(file.tempFilePath, tempFilePath);
+      return sendMediaToBack(tempFilePath, hashName, async () => {                 // Сохраняем аватарку на VDS-сервер
+        const result = await userQueries.updateUser(id, { avatar: hashName });     //Прописываем имя файла сохраненной аватарки в userInfos
+        await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
+        return result;
+      });
+
     } catch (e) {
       console.log(e.message);
       throw e;
     }
   }
 
-  async downloadAvatar(id) {
+  async getAvatarName(id) {
     try {
-      const avatarName = await userQueries.getUserAvatarById(id);
-      if (!avatarName) {
-        return null;
-      }
-      return await ftpServer.get(avatarName);
+      return await userQueries.getUserAvatarById(id);
     } catch {
       return null;
     }
@@ -199,7 +205,7 @@ class UserService {
       if (!avatarName) {
         throw ApiError.NotFound('У данного пользователя нет аватара');
       }
-      await ftpServer.delete(avatarName);
+      removeFile(avatarName);
       return await userQueries.updateUser(id, {avatar: null});
     } catch (e) {
       console.log(e.message);

@@ -1,17 +1,19 @@
 import dotenv from 'dotenv';
+import remove from 'remove';
 import path from 'path';
-import { v4 as uuidV4} from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import ffmpeg from 'ffmpeg';
 import fs from 'fs';
 
 import { ApiError } from '../errors/apiError.js';
 import { videoExtensions } from '../util/videoImageExtensions.js';
-import { ftpServer } from '../../main.js';
 import { videoQueries } from '../queries/VideoQueries.js';
 import { userQueries } from '../queries/UserQueries.js';
 import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
-import { sendMediaToBack } from '../gRPC/send-media-to-back.js';
+import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
+import { removeFile } from '../gRPC/removeFile.grpc.js';
+import tokenService from './token.service.js'
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -21,8 +23,8 @@ class VideoService {
     try {
       const [userId, channelId] = idList.split('_');
       const nickName = await userQueries.getNickNameById(+userId);
-      const channelName = (await Channel.findOne({attributes: ['title'], where: { id: +channelId }})).toJSON().title;
-      return { nickName, channelName };
+      const channelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
+      return {nickName, channelName};
     } catch (e) {
       throw(e);
     }
@@ -63,19 +65,24 @@ class VideoService {
         'tmp/jpg',
         {
           number: 2,
-          every_n_percentage: 50
+          every_n_percentage: 50,
         },
         async (err, files) => {
           try {
             if (err) console.log('FROM CALLBACK TO fnExtractFrameToJPG: ', err.message);
+            if (!files || !files.length) {
+              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+            }
+            console.log('files = ', files);
+            return sendMediaToBack(files[files.length - 1], frameHashName, async () => {
+              await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
+              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
+            });
 
-            sendMediaToBack(files[1], frameHashName);
-
-            return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
           } catch (e) {
             throw e;
           }
-        }
+        },
       );
     } catch (e) {
       console.log(e);
@@ -90,16 +97,6 @@ class VideoService {
         throw ApiError.NotFound(`Видео с id ${id} не существует`);
       }
       return await videoQueries.downloadVideo(id);
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  async getFrameShot(id) {
-    try {
-      const hashName = await videoQueries.downloadVideo(id);
-      const frameName = path.parse(hashName).name + ".jpg";
-      return await ftpServer.get(frameName);
     } catch (e) {
       throw e;
     }
@@ -122,7 +119,7 @@ class VideoService {
     try {
       const video = await videoQueries.findVideoById(id);
       const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
-      return { ...video, ...nickChannelNames };
+      return {...video, ...nickChannelNames};
     } catch (e) {
       throw e;
     }
@@ -139,8 +136,16 @@ class VideoService {
       if (!videos?.length) return null;
       const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
       return videos.map(video => {
-        return { ...video, ...nickChannelNames }
+        return {...video, ...nickChannelNames};
       });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findVideoByPartName(title) {
+    try {
+      return videoQueries.findVideoByPartName(title);
     } catch (e) {
       throw e;
     }
@@ -181,13 +186,33 @@ class VideoService {
     try {
       const hashName = await videoQueries.downloadVideo(id);
       const frameName = path.parse(hashName).name + ".jpg";
-      await ftpServer.delete(hashName);
-      await ftpServer.delete(frameName);
+      removeFile(hashName);
+      removeFile(frameName);
       return videoQueries.deleteVideo(id);
-    }
-    catch (e) {
+    } catch (e) {
       throw e;
     }
+  }
+
+  async changeStatusOfVideo(req) {
+    try {
+      const videoId = await videoQueries.getVideoIdByHashName(req.params.hash_name);
+      videoQueries.viewsIncrement(videoId);
+
+      let userId;
+      if (req.cookies && req.cookies.refreshToken) {
+        const user = tokenService.validateToken(req.cookies.refreshToken, true);
+        if (user) userId = user.id;
+      }
+      if (userId) await videoQueries.createVideoHistory(userId, videoId);
+      return;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findHistory(userId) {
+    return videoQueries.findVideoHistoryByUserId(userId);
   }
 }
 

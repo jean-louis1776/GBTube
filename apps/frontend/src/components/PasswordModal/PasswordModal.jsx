@@ -1,11 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPasswordSchema } from './validation';
-import { userPasswordUpdate } from '../../features/userProfile/userProfileSlice';
-import { useDispatch, useSelector } from 'react-redux';
+// import { userPasswordUpdate } from '../../features/userProfile/userProfileSlice';
+import { shallowEqual, /*useDispatch,*/ useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { getSelector } from '../../store/getSelector';
+// import { getSelector } from '../../store/getSelector';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
+import { getUserId } from '../../store/selectors';
+import UserController from '../../controllers/UsersController';
 
 const PasswordModal = () => {
   const style = {
@@ -18,28 +20,36 @@ const PasswordModal = () => {
     boxShadow: 24,
     p: 4,
   };
+  const userId = useSelector(getUserId, shallowEqual);
 
-  const password = useSelector(getSelector('passwordModal', 'user'));
+  // const password = useSelector(getSelector('passwordModal', 'user'));
 
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm({
-    defaultValues: password,
+    // defaultValues: password,
     resolver: yupResolver(userPasswordSchema),
   });
 
-  const onSubmitPassword = handleSubmit((passwordForm) => {
-    dispatch(userPasswordUpdate(passwordForm));
-    console.log(passwordForm);
-  });
+  const onSubmitPassword = async ({oldPassword, newPassword}) => {
+    try {
+      await UserController.changePassword({oldPassword, newPassword, id: userId});
+      console.log('change password successful');
+    } catch (err) {
+      console.log('change password failed');
+      console.log(err);
+    }
+    // dispatch(userPasswordUpdate(passwordForm));
+    // console.log(passwordForm);
+  };
 
   useEffect(() => {
     console.log('errors', errors);
@@ -86,7 +96,7 @@ const PasswordModal = () => {
                 type="password"
               />
             </Stack>
-            <Button onClick={onSubmitPassword} sx={{ mt: 2 }}>
+            <Button onClick={handleSubmit(onSubmitPassword)} sx={{ mt: 2 }}>
               Подтвердить
             </Button>
           </Box>

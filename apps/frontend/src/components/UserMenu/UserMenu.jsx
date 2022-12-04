@@ -14,32 +14,37 @@ import {
   Typography,
   Zoom,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 // import styles from './UserMenu.module.scss';
 import { blueGrey, deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
-import { getSelector } from '../../store/getSelector';
-import { logoutHandler } from '../../features/auth/authSlice';
+// import { getSelector } from '../../store/getSelector';
+// import { logoutHandler } from '../../features/auth/authSlice';
 import { useTheme } from '@mui/material/styles';
 
 import styles from './UserMenu.module.scss';
+import AuthController from '../../controllers/AuthController';
+import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
+import { getAuthStatus, getNickName, getUserId } from '../../store/selectors';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [unauthorized, setUnauthorized] = useState(false);
   const navigate = useNavigate();
-  const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
-  const isAuth = useSelector(getSelector('auth', 'isAuth'), shallowEqual);
+  // const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
+  const userId = useSelector(getUserId, shallowEqual);
+  const nickName = useSelector(getNickName, shallowEqual);
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const theme = useTheme();
 
-  useEffect(() => {
-    console.log('user');
-    console.log(user);
-  }, []);
+  // useEffect(() => {
+  //   console.log('user');
+  //   console.log(user);
+  // }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -49,9 +54,9 @@ const UserMenu = () => {
   };
 
   const handleUserMenuClick = (link) => () => {
-    if (isAuth && user.id) {
-      navigate(`${link}/get_all/${user.id}`, {
-        state: { idList: [`${user.id}`] },
+    if (isAuth && userId) {
+      navigate(`${link}/get_all/${userId}`, {
+        state: { idList: [`${userId}`] },
       });
     } else {
       setUnauthorized((prev) => !prev);
@@ -60,9 +65,9 @@ const UserMenu = () => {
   };
 
   const handleUserProfileClick = (link) => () => {
-    if (isAuth && user.id) {
-      navigate(`${link}/${user.id}`, {
-        state: { idList: [`${user.id}`] },
+    if (isAuth && userId) {
+      navigate(`${link}/${userId}`, {
+        state: { idList: [`${userId}`] },
       });
     } else {
       setUnauthorized((prev) => !prev);
@@ -70,8 +75,20 @@ const UserMenu = () => {
     }
   };
 
-  const handleLogoutClick = () => {
-    dispatch(logoutHandler());
+  const handleLogoutClick = async () => {
+    try {
+      await AuthController.logout();
+      localStorage.setItem('token', '');
+      dispatch(setAuthStatus(false));
+      dispatch(setAccessToken(''));
+      dispatch(setId(''));
+      dispatch(setNickName(''));
+      console.log('logout successful');
+    } catch (err) {
+      console.log('logout fail');
+      console.log(err);
+    }
+    // dispatch(logoutHandler());
   };
 
   return (
@@ -138,7 +155,7 @@ const UserMenu = () => {
             sx={{ color: deepOrange[500] }}
             onClick={handleUserProfileClick('/userProfile')}
           >
-            {user.nickName || 'Где ник?'}
+            {nickName || 'Где ник?'}
           </MenuItem>
         ) : (
           ''
@@ -170,7 +187,7 @@ const UserMenu = () => {
               <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
                 <ListItemIcon>{userMenu.icon}</ListItemIcon>
                 <ListItemText>
-                  {isAuth && user.id ? userMenu.name : userMenu.altName}
+                  {isAuth && userId ? userMenu.name : userMenu.altName}
                 </ListItemText>
               </MenuItem>
             </Box>

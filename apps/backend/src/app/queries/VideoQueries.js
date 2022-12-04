@@ -1,5 +1,6 @@
 import { Video } from "../models/Video";
 import { VideoInfo } from "../models/VideoInfo";
+import { VideoHistory } from "../models/VideoHistory";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
 import { VideoLike } from "../models/VideoLike";
@@ -13,7 +14,6 @@ class VideoQueries {
       title: modelFromQuery.title,
     };
   }
-
 
   async isVideoNameUnique(title, channelId) {
     try {
@@ -151,6 +151,22 @@ class VideoQueries {
     }
   }
 
+  async findVideoByPartName(title) {
+    try {
+      const videoByPartName = await Video.findAll({
+        attributes: ['id'],
+        where: {title: {[Op.substring]: title}},
+      });
+      if (videoByPartName) {
+        return (videoByPartName).map(value => value.toJSON().id.toString());
+      }
+      return null;
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
   /**
    * Удаление видео
    * @param {number} channelId - id канала с видео
@@ -167,17 +183,17 @@ class VideoQueries {
   async countViews(id) {
     try {
       const vCount = await VideoInfo.findOne({where: {id}});
-      if (vCount !== 0) return vCount.toJSON().viewsCount();
-      throw ApiError.NotFound(`У данного видео 0(ноль) просмотров`);
+      if (vCount !== null) return vCount.toJSON().viewsCount;
+      return 0;
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
 
-  async viewsIncrement(id) {
+  async viewsIncrement(videoId) {
     try {
-      const vIncrement = await VideoInfo.findOne({attributes: ['viewsCount'], where: {id}});
+      const vIncrement = await VideoInfo.findOne({/*attributes: ['viewsCount'],*/ where: {videoId}});
       if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
       throw ApiError.NotFound(`Ошибка добавления просмотра!`);
     } catch (e) {
@@ -232,9 +248,7 @@ class VideoQueries {
 
   async likesCount(videoId) {
     try {
-      const lCount = await VideoLike.count({where: {videoId, liked: true}});
-      if (lCount) return lCount;
-      throw ApiError.BadRequest(`Лайки отсутствуют`);
+      return await VideoLike.count({where: {videoId, liked: true}});
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -243,9 +257,7 @@ class VideoQueries {
 
   async dislikesCount(videoId) {
     try {
-      const dislikesCount = await VideoLike.count({where: {videoId, liked: false}});
-      if (dislikesCount) return dislikesCount;
-      throw ApiError.BadRequest(`Дизайки отсутствуют`);
+      return await VideoLike.count({where: {videoId, liked: false}});
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -254,7 +266,7 @@ class VideoQueries {
 
   async checkVideoById(id) {
     try {
-      return !!(await Video.findOne({where: {id}}))
+      return !!(await Video.findOne({where: {id}}));
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -266,6 +278,40 @@ class VideoQueries {
       const videoIdList = await Video.findAll({attributes: ['id']});
       if (!videoIdList) return [];
       return videoIdList.map(videoId => videoId.toJSON().id);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async createVideoHistory(userId, videoId) {
+    try {
+      if (await VideoHistory.findOne({where: {userId, videoId}})) {
+        return (VideoHistory.update({updatedTimestamp: Date.now()}, {where: {userId, videoId}}));
+      }
+      return !!(await VideoHistory.create({userId, videoId, updatedTimestamp: Date.now()}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async findVideoHistoryByUserId(userId) {
+    try {
+      const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}, order: ['updatedTimestamp','DESC']});
+      if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().videoId.toString());
+      return [];
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async getVideoIdByHashName(hashName) {
+    try {
+      const video = await VideoInfo.findOne({attributes: ['videoId'], where: {hashName}});
+      if (!video) throw ApiError.NotFound('Такого видео не существует');
+      return video.toJSON().videoId;
     } catch (e) {
       console.log(e.message);
       throw(e);

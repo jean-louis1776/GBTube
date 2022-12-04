@@ -15,8 +15,8 @@ import { demoChannelUrl, demoThumbnail, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
 import { theme } from '../../theme';
-import { useDispatch, useSelector } from 'react-redux';
-import { getSelector } from '../../store/getSelector';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { getSelector } from '../../store/getSelector';
 
 import styles from './VideoCard.module.scss';
 
@@ -24,8 +24,8 @@ const VideoCard = () => {
   const [title, setTitle] = useState('');
   const { idList } = useParams();
 
-  const dispatch = useDispatch();
-  const video = useSelector(getSelector('videoDetail', 'video'));
+  // const dispatch = useDispatch();
+  // const video = useSelector(getSelector('videoDetail', 'video'));
 
   useEffect(() => {
     const fetchData = async () => {
