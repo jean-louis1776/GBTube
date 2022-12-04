@@ -194,33 +194,10 @@ class VideoService {
     }
   }
 
-  async oldChangeStatusOfVideo(req) {
-    try {
-      const videoId = await videoQueries.getVideoIdByHashName(req.params.hash_name);
-      console.log('Делаю инкримент');
-      videoQueries.viewsIncrement(videoId);
-
-      let userId;
-      if (req.cookies && req.cookies.refreshToken) {
-        const user = tokenService.validateToken(req.cookies.refreshToken, true);
-        if (user) userId = user.id;
-      }
-      console.log('Создаю историю');
-      if (userId) await videoQueries.createVideoHistory(userId, videoId);
-      return;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async changeStatusOfVideo(req) {
     try {
       const { video_id, user_id } = req.query;
-
-      console.log('Делаю инкримент');
       videoQueries.viewsIncrement(video_id);
-
-      console.log('Создаю историю');
       if (user_id) await videoQueries.createVideoHistory(user_id, video_id);
       return;
     } catch (e) {

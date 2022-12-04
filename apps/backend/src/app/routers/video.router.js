@@ -8,7 +8,6 @@ const router = new Router();
 router.post('/create', videoValidation.create, videoController.create);
 router.get('/history/:id', videoValidation.checkId, videoController.findHistory);
 router.get('/get_name/:id', videoValidation.checkId, videoController.getHashName);
-router.get('/download/:hash_name', videoValidation.checkName, videoController.oldDownload);
 router.get('/download', videoValidation.checkDownload, videoController.download);
 router.get('/frameshot/:hash_name', videoValidation.checkName, videoController.getFrameShot);
 router.get('/get_one/:id', videoValidation.checkId, videoController.getVideoInfoById);

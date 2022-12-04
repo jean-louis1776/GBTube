@@ -42,15 +42,6 @@ class VideoController {
     }
   }
 
-  async oldDownload(req, res, next) {
-    try {
-      validateError(req);
-      return createMediaStream(req, res, req.params.hash_name, videoService.oldChangeStatusOfVideo);
-    } catch (e) {
-      next(e);
-    }
-  }
-
   async download(req, res, next) {
     try {
       validateError(req);
