@@ -24,7 +24,7 @@ class VideoController {
   async findHistory(req, res, next) {
     try {
       validateError(req);
-      const videoList = await videoService.findHistory(req.params.id);
+      const videoList = await videoService.findHistory(req.params.user_id);
       let statusCode = 200;
       if (!videoList.length) statusCode = 204;
       return res.status(statusCode).json(videoList);
@@ -45,7 +45,7 @@ class VideoController {
   async download(req, res, next) {
     try {
       validateError(req);
-      return createMediaStream(req, res, req.params.hash_name, videoService.changeStatusOfVideo);
+      return createMediaStream(req, res, req.query.hash_name, videoService.changeStatusOfVideo);
     } catch (e) {
       next(e);
     }

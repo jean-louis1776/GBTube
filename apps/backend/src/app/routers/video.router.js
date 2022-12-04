@@ -6,9 +6,9 @@ import videoValidation from '../validation/video.validation.js';
 const router = new Router();
 
 router.post('/create', videoValidation.create, videoController.create);
-router.get('/history/:id', videoValidation.checkId, videoController.findHistory);
+router.get('/history/:user_id', videoValidation.checkUserId, videoController.findHistory);
 router.get('/get_name/:id', videoValidation.checkId, videoController.getHashName);
-router.get('/download/:hash_name', videoValidation.checkName, videoController.download);
+router.get('/download', videoValidation.checkDownload, videoController.download);
 router.get('/frameshot/:hash_name', videoValidation.checkName, videoController.getFrameShot);
 router.get('/get_one/:id', videoValidation.checkId, videoController.getVideoInfoById);
 router.get('/query/:title', videoValidation.checkTitle, videoController.findVideoByPartName);

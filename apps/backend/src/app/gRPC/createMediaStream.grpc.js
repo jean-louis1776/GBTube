@@ -4,6 +4,7 @@ import { clientVideo } from './grpcClient.grpc.js';
 
 export const createMediaStream = (req, res, pathToMedia, callback) => {
   try {
+    let needCallback = true;
     clientVideo.callMediaInfo({ pathToMedia }, (err, resGrpc) => {
       if (err) {
         throw ApiError.InternalServerError('Remote Server Error');
@@ -13,6 +14,7 @@ export const createMediaStream = (req, res, pathToMedia, callback) => {
       let stream, headers, statusCode;
       if (range) {
         const { start, end, chunkSize } = getChunkData(range, resGrpc.fileSize);
+        if (start > 0) needCallback = false;
         stream = clientVideo.callVideoChunk({ pathToMedia, start, end });
         headers = {
           'Content-Range': `bytes ${start}-${end}/${resGrpc.fileSize}`,
@@ -36,7 +38,7 @@ export const createMediaStream = (req, res, pathToMedia, callback) => {
       });
 
       stream.on('end', async () => {
-        if (callback) await callback(req);
+        if (needCallback && callback) await callback(req);
         res.end();
       });
     });

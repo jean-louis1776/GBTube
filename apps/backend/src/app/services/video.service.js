@@ -13,7 +13,6 @@ import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
 import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
 import { removeFile } from '../gRPC/removeFile.grpc.js';
-import tokenService from './token.service.js'
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -196,15 +195,9 @@ class VideoService {
 
   async changeStatusOfVideo(req) {
     try {
-      const videoId = await videoQueries.getVideoIdByHashName(req.params.hash_name);
-      videoQueries.viewsIncrement(videoId);
-
-      let userId;
-      if (req.cookies && req.cookies.refreshToken) {
-        const user = tokenService.validateToken(req.cookies.refreshToken, true);
-        if (user) userId = user.id;
-      }
-      if (userId) await videoQueries.createVideoHistory(userId, videoId);
+      const { video_id, user_id } = req.query;
+      videoQueries.viewsIncrement(video_id);
+      if (user_id) await videoQueries.createVideoHistory(user_id, video_id);
       return;
     } catch (e) {
       throw e;
