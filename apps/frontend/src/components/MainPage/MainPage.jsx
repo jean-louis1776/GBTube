@@ -5,25 +5,22 @@ import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import { Header, Navbar, VideoGrid } from '../';
 import { VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import Loader from '../Loader/Loader';
-
 import styles from './MainPage.module.scss';
 
-const MainPage = (props) => {
+const MainPage = () => {
   const selectedCategory = 'Главная';
+
+  useEffect(() => {
+    document.title = 'GeekTube';
+  }, []);
 
   return (
     <>
-      <Helmet>
-        <title>GeekTube</title>
-      </Helmet>
-
       <Header selectedCategory={selectedCategory} />
-
       <Box sx={{ display: 'flex' }}>
         <Box
           component="main"

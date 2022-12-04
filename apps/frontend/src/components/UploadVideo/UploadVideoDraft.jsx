@@ -1,24 +1,24 @@
 import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-
 import VideoController from '../../controllers/VideoController';
 import Header from '../Header/Header';
 import { uploadVideoLogo } from '@constants/frontend';
-
 import styles from './UploadVideo.module.scss';
 
 const UploadVideoDraft = () => {
   const { idList } = useParams();
-
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadErrorMsg, setUploadErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'GeekTube | Загрузка видео';
+  }, []);
+
   const handleChangeFile = (evt) => {
     setSelectedFile(evt.target.files[0]);
   };
@@ -51,12 +51,7 @@ const UploadVideoDraft = () => {
 
   return (
     <>
-      <Helmet>
-        <title>GeekTube | Загрузка видео</title>
-      </Helmet>
-
       <Header />
-
       <Stack className={styles.uploadWrapper}>
         <Paper elevation={3} className={styles.uploadPaper}>
           <Typography variant="h5" className={styles.uploadTitle}>

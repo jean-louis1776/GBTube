@@ -1,5 +1,5 @@
 import styles from './edit-item-info.module.scss';
-import { Link, /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import React/*,{ useEffect, useState }*/ from 'react';
 import { Button, Paper, Stack, Typography } from '@mui/material';
 import { CHANNEL, DESCRIPTION, logo, TITLE } from '@constants/frontend';
@@ -16,21 +16,9 @@ import { useForm } from 'react-hook-form';
 export function EditItemInfo({ elemType, sendData }) {
   const { idList } = useParams();
   let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
-  // let [title, setTitle] = useState('');
-  // let [description, setDescription] = useState('');
   const navigate = useNavigate();
-  // const location = useLocation();
-  // let [idList, setIdList] = useState(location.state.idList);
+
   const { register, handleSubmit, formState:{ errors, isValid, isDirty }, reset } = useForm({mode: 'onBlur'});
-  // const handleTitleChange = (evt) => {
-  //   console.log(evt.target.value);
-  //   setTitle(evt.target.value);
-  // }
-  //
-  // const handleDescriptionChange = (evt) => {
-  //   console.log(evt.target.value);
-  //   setDescription(evt.target.value);
-  // }
 
   const onSubmit = async ({title, description}) => {
     console.log(idList);
@@ -71,8 +59,9 @@ export function EditItemInfo({ elemType, sendData }) {
           sx={{ ml: 1 }}
         >
           Geek
-          <Typography
-            // variant="h4"
+        </Typography>
+        <Typography
+            variant="h4"
             fontWeight="bold"
             sx={{
               color: 'baseBlue.main',
@@ -81,7 +70,6 @@ export function EditItemInfo({ elemType, sendData }) {
             }}
           >
             Tube
-          </Typography>
         </Typography>
       </Link>
 
@@ -102,8 +90,6 @@ export function EditItemInfo({ elemType, sendData }) {
                         message: 'Требуется не менее 1 символа в поле Название'
                         }
                       })}
-              // value={title}
-              // onChange={handleTitleChange}
               type="text"
               className={styles.loginInput}
               autoFocus
@@ -112,8 +98,6 @@ export function EditItemInfo({ elemType, sendData }) {
           <label className={styles.copyright}>Описание {elemName}<br/>
             <textarea
               {...register(DESCRIPTION)}
-              // value={description}
-              // onChange={handleDescriptionChange}
               className={styles.loginInput}
             />
           </label>

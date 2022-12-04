@@ -1,4 +1,4 @@
-import { /*useLocation,*/ useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { Loader } from '../index';
 import GetChildrenController from '../../controllers/GetChildrenController';
@@ -16,7 +16,6 @@ const PlayListGrid = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const navigate = useNavigate();
-  // const location = useLocation();
 
   useEffect(() => {
     console.log(idList.split('_'), 'PlayListGrid');
@@ -128,15 +127,15 @@ const PlayListGrid = () => {
           gap={2}
         >
           <Button
-            variant={'contained'}
-            backgroundColor={theme.palette.baseBlue.main}
+            variant='contained'
+            color='baseBlue'
             onClick={handleCreateChild}
           >
             Создать {PLAYLIST}
           </Button>
           <Button
-            variant={'contained'}
-            backgroundColor={theme.palette.baseBlue.main}
+            variant='contained'
+            color='baseBlue'
             onClick={handleDeleteChannel}
           >
             Удалить текущий {CHANNEL}

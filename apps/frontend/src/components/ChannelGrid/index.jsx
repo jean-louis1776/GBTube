@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CHANNEL } from '@constants/frontend';
 import { ContentChannel } from './ContentChannel';
 import { useTheme } from '@mui/material/styles';
@@ -12,7 +12,6 @@ const ChannelGrid = () => {
   const { user_id } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  const location = useLocation();
   const theme = useTheme();
 
   useEffect(() => {
@@ -38,10 +37,7 @@ const ChannelGrid = () => {
   }, []);
 
   const handleCreateChild = () => {
-    console.log(location.state.idList);
-    navigate(`/${CHANNEL}/create/${user_id}`, {
-      state: { idList: location.state.idList },
-    });
+    navigate(`/${CHANNEL}/create/${user_id}`);
   };
 
   return (
@@ -64,8 +60,8 @@ const ChannelGrid = () => {
           Каналы пользователя ID: {user_id}
         </Typography>
         <Button
-          variant={'contained'}
-          backgroundColor={theme.palette.baseBlue.main}
+          variant='contained'
+          color='baseBlue'
           onClick={handleCreateChild}
         >
           Создать {CHANNEL}
