@@ -40,12 +40,12 @@ export const UserInfo = sequelize.define('UserInfo', {
       type: DataTypes.CHAR,
     },
     isActivate: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: "false",
     },
     isBaned: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: "false",
     },
