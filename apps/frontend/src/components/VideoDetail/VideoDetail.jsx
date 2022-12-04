@@ -18,7 +18,6 @@ import ShowMoreText from 'react-show-more-text';
 import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
-import { Helmet } from 'react-helmet';
 import VideoController from '../../controllers/VideoController';
 import { VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
@@ -64,44 +63,37 @@ const VideoDetail = () => {
 
   // const currentReaction = likeOrDislikeHandler(reaction);
 
-  useEffect(() => {
-    setVideoContent(<Loader />);
-    const fetchData = async () => {
-      const videoInfo = await VideoController.getVideoInfo(
-        idList.split('_').at(-1)
-      );
-      setCategory(videoInfo.category);
-      setChannelName(videoInfo.channelName);
-      setCreateTimestamp(
-        new Date(videoInfo.createTimestamp).toLocaleDateString()
-      );
-      setDescription(videoInfo.description);
-      setDislikesCount(videoInfo.dislikesCount);
-      setLikesCount(videoInfo.likesCount);
-      setAuthorNickName(videoInfo.nickName);
-      setTitle(videoInfo.title);
-      setViewsCount(videoInfo.viewsCount);
-      console.log(videoInfo, 'VideoDataInfo');
-      const { hashName } = await VideoController.getVideoName(
-        idList.split('_').at(-1)
-      );
-      console.log('hashName', hashName);
-      const url = `http://localhost:3333/api/video/download/${hashName}`;
-      setVideoContent(
-        <Player
-          src={url}
-          primaryColor={theme.palette.baseBlue.main}
-          // poster={frameShot} // сюда поставить фреймшот/постер видео
-          seekDuration={5}
-        />
-      );
-    };
+    useEffect(() => {
+      setVideoContent(<Loader />);
+      const fetchData = async () => {
+        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
+        document.title = videoInfo.title;
+        setCategory(videoInfo.category);
+        setChannelName(videoInfo.channelName);
+        setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
+        setDescription(videoInfo.description);
+        setDislikesCount(videoInfo.dislikesCount);
+        setLikesCount(videoInfo.likesCount);
+        setAuthorNickName(videoInfo.nickName);
+        setTitle(videoInfo.title);
+        setViewsCount(videoInfo.viewsCount);
+        console.log(videoInfo, 'VideoDataInfo');
+        const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
+        console.log('hashName', hashName);
+        const idListSplit = idList.split('_');
+        const user_id = idListSplit[0];
+        const video_id = idListSplit.at(-1);
+        const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${user_id}&video_id=${video_id}`
+        setVideoContent(
+          <Player src={url}/>
+        );
+      }
 
-    fetchData().catch(() => {
-      setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
-      console.log('Fail get hashName video');
-    });
-  }, []);
+      fetchData().catch(() => {
+        setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
+        console.log('Fail get hashName video');
+      });
+    }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -113,25 +105,23 @@ const VideoDetail = () => {
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
-      navigate(
-        `/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
-        { replace: true }
-      );
+      navigate(`/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   return (
     <Box className={styles.wrapper}>
-      <Helmet>
-        <title>{title} | GeekTube VideoTitle | GeekTube</title>
-      </Helmet>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
           <Box>
-            {<div className={styles.playerWrapper}>{videoContent}</div>}
+            {
+              <div className={styles.playerWrapper}>
+                {videoContent}
+              </div>
+            }
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -199,9 +189,9 @@ const VideoDetail = () => {
                 >
                   <Tooltip title="Нравится">
                     <ReactionButton
-                    // onClick={() => dispatch(setReaction('Like'))}
+                      // onClick={() => dispatch(setReaction('Like'))}
                     >
-                      {/*                      {currentReaction === 'Like' ? (
+{/*                      {currentReaction === 'Like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -221,9 +211,9 @@ const VideoDetail = () => {
                   </Tooltip>
                   <Tooltip title="Не нравится">
                     <ReactionButton
-                    // onClick={() => dispatch(setReaction('Dislike'))}
+                      // onClick={() => dispatch(setReaction('Dislike'))}
                     >
-                      {/*                      {currentReaction === 'Dislike' ? (
+{/*                      {currentReaction === 'Dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,
