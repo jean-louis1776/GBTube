@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-// import ReactPlayer from 'react-player';
 import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
 import {
   AnnouncementOutlined,
@@ -22,6 +21,8 @@ import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import { Helmet } from 'react-helmet';
 import VideoController from '../../controllers/VideoController';
 import { VIDEO } from '@constants/frontend';
+import { Player } from 'react-tuby';
+import 'react-tuby/css/main.css';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -87,13 +88,12 @@ const VideoDetail = () => {
       console.log('hashName', hashName);
       const url = `http://localhost:3333/api/video/download/${hashName}`;
       setVideoContent(
-        // <ReactPlayer url={url} pip className={styles.reactPlayer} controls={true} />
-        <video
-          controls
-          className={styles.reactPlayer}
+        <Player
           src={url}
-          preload="auto"
-        ></video>
+          primaryColor={theme.palette.baseBlue.main}
+          // poster={frameShot} // сюда поставить фреймшот/постер видео
+          seekDuration={5}
+        />
       );
     };
 

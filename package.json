@@ -99,6 +99,7 @@
     "react-redux": "^8.0.4",
     "react-router-dom": "6.4.1",
     "react-show-more-text": "^1.6.2",
+    "react-tuby": "^0.1.24",
     "reduxjs-toolkit-persist": "^7.2.1",
     "regenerator-runtime": "0.13.7",
     "remove": "^0.1.5",
