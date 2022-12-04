@@ -1,5 +1,5 @@
 .wrapper {
-  max-width: 1540px;
+  max-width: 1480px;
   padding: 0 10px;
   margin: 90px auto 0;
 }
@@ -16,8 +16,9 @@
 
 .reactPlayer {
   width: auto !important;
-  height: min-content !important;
-  aspect-ratio: 16/9;
+  //max-height: min-content !important;
+
+  aspect-ratio: 16/9 !important;
   object-fit: cover;
 }
 

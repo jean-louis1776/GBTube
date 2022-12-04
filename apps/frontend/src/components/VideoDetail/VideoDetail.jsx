@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/lazy';
 import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
 import {
   AnnouncementOutlined,
@@ -74,31 +74,35 @@ const VideoDetail = () => {
   const [videos, setVideos] = useState(null);
   const { id } = useParams();
 
+  useEffect(() => {
+    setVideoContent(<Loader />);
+    const fetchData = async () => {
+      const { hashName } = await VideoController.getVideoName(
+        idList.split('_').at(-1)
+      );
+      console.log('hashName', hashName);
+      const url = `http://localhost:3333/api/video/download/${hashName}`;
+      setVideoContent(
+        // <ReactPlayer
+        //   url={url}
+        //   pip
+        //   className={styles.reactPlayer}
+        //   controls={true}
+        // />
+        <video
+          controls
+          className={styles.reactPlayer}
+          src={url}
+          preload="auto"
+        ></video>
+      );
+    };
 
-    useEffect(() => {
-      setVideoContent(<Loader />);
-      const fetchData = async () => {
-        const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
-        console.log('hashName', hashName);
-        const url = `http://localhost:3333/api/video/download/${hashName}`;
-        setVideoContent(
-          // <ReactPlayer url={url} pip className={styles.reactPlayer} controls={true} />
-          <video controls className={styles.reactPlayer} src={url} preload="auto"></video>
-        );
-      }
-
-      fetchData().catch((err) => {
-        setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
-        console.log('Fail get hashName video');
-      });
-    }, []);
-
-  // if (!videoDetail?.snippet) return <Loader />;
-  //
-  // const {
-  //   snippet: { title, channelId, channelTitle, publishedAt },
-  //   statistics: { viewCount, likeCount },
-  // } = videoDetail;
+    fetchData().catch((err) => {
+      setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
+      console.log('Fail get hashName video');
+    });
+  }, []);
 
   return (
     <Box className={styles.wrapper}>
@@ -112,11 +116,7 @@ const VideoDetail = () => {
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
           <Box>
-            {
-              <div className={styles.playerWrapper}>
-                {videoContent}
-              </div>
-            }
+            {<div className={styles.playerWrapper}>{videoContent}</div>}
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -310,11 +310,11 @@ const VideoDetail = () => {
           alignItems="center"
         >
           {/*<VideoGrid />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
+          <VideoCard videos={videos} direction="column" />
+          <VideoCard videos={videos} direction="column" />
+          <VideoCard videos={videos} direction="column" />
+          <VideoCard videos={videos} direction="column" />
+          <VideoCard videos={videos} direction="column" />
         </Box>
       </Stack>
     </Box>
