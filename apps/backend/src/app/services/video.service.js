@@ -13,7 +13,6 @@ import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
 import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
 import { removeFile } from '../gRPC/removeFile.grpc.js';
-import tokenService from './token.service.js'
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
