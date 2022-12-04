@@ -202,7 +202,6 @@ class VideoService {
       let userId;
       if (req.cookies && req.cookies.refreshToken) {
         const user = tokenService.validateToken(req.cookies.refreshToken, true);
-        console.log('\n\n\nuser = ', user, '\n\n\n');
         if (user) userId = user.id;
       }
       if (userId) await videoQueries.createVideoHistory(userId, videoId);

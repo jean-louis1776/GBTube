@@ -91,6 +91,8 @@ class UserService {
       const userFromDB = await userQueries.findOneById(user.id);
       if (!userFromDB) throw ApiError.UnAuthorization('Пользователя с таким refreshToken не существует в базе');
 
+      userFromDB.isBaned = false;      //!! Это временно. Хардкод
+
       return {
         ...await tokenService.createNewTokens(
           {
