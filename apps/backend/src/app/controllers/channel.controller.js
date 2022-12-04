@@ -65,6 +65,18 @@ class ChannelController {
       next(e);
     }
   }
+
+  async getSubscribedList(req, res, next) {
+    try {
+      validateError(req);
+      const channelList = await channelService.getSubscribedList(req.params.user_id);
+      let statusCode = 200;
+      if (!channelList.length) statusCode = 204;
+      return res.status(statusCode).json(channelList);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new ChannelController();

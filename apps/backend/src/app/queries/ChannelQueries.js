@@ -160,6 +160,17 @@ class ChannelQueries {
   async isChannel(id) {
     return !!(await Channel.findOne({where: {id}}));
   }
+
+  async getSubscribedListByUserId(userId) {
+    try {
+      const channelList = await ChannelSubscriber.findAll({where: {userId}});
+      if (!channelList) return [];
+      return channelList.map(channel => channel.toJSON().channelId.toString());
+    } catch (e) {
+      console.log(e.nessage);
+      throw e;
+    }
+  }
 }
 
 export const channelQueries = new ChannelQueries();

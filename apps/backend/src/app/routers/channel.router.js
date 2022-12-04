@@ -9,6 +9,7 @@ router.patch('/edit', channelValidation.edit, channelController.edit);
 router.patch('/subscribe', channelValidation.subscribeOrLike, channelController.subscribe);
 router.delete('/:id', channelValidation.checkId, channelController.remove)
 router.get('/get_one/:id', channelValidation.checkId, channelController.getOne);
-router.get('/get_all/:user_id', channelValidation.checkUser_id, channelController.getAllChannelsOfUser);
+router.get('/get_all/:user_id', channelValidation.checkUserId, channelController.getAllChannelsOfUser);
+router.get('/subscribes_list/:user_id', channelValidation.checkUserId, channelController.getSubscribedList);
 
 export default router;

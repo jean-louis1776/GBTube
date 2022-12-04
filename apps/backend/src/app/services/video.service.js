@@ -207,6 +207,10 @@ class VideoService {
   async findHistory(userId) {
     return videoQueries.findVideoHistoryByUserId(userId);
   }
+
+  async getLikesList(userId) {
+    return videoQueries.getLikesListByUserId(userId);
+  }
 }
 
 export default new VideoService();

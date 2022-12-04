@@ -307,11 +307,11 @@ class VideoQueries {
     }
   }
 
-  async getVideoIdByHashName(hashName) {
+  async getLikesListByUserId(userId) {
     try {
-      const video = await VideoInfo.findOne({attributes: ['videoId'], where: {hashName}});
-      if (!video) throw ApiError.NotFound('Такого видео не существует');
-      return video.toJSON().videoId;
+      const videoList = await VideoLike.findAll({where: {userId}});
+      if (!videoList) return [];
+      return (videoList).map(value => value.toJSON().videoId.toString());
     } catch (e) {
       console.log(e.message);
       throw(e);

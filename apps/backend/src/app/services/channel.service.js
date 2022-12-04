@@ -74,6 +74,15 @@ class ChannelService {
       throw(e);
     }
   }
+
+  async getSubscribedList(userId) {
+    try {
+      return await channelQueries.getSubscribedListByUserId(userId);
+    } catch(e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
 }
 
 export default new ChannelService();

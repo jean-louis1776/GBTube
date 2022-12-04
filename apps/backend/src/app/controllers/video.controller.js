@@ -33,6 +33,18 @@ class VideoController {
     }
   }
 
+  async getLikesList(req, res, next) {
+    try {
+      validateError(req);
+      const videoList = await videoService.getLikesList(req.params.user_id);
+      let statusCode = 200;
+      if (!videoList.length) statusCode = 204;
+      return res.status(statusCode).json(videoList);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async getHashName(req, res, next) {
     try {
       validateError(req);
