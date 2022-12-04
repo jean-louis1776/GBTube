@@ -90,9 +90,11 @@ const VideoDetail = () => {
       setVideoContent(
         <Player
           src={url}
+          // poster={frameShot} // String. сюда поставить фреймшот/постер видео
           primaryColor={theme.palette.baseBlue.main}
-          // poster={frameShot} // сюда поставить фреймшот/постер видео
+          playing={true}
           seekDuration={5}
+          // pictureInPicture={true}
         />
       );
     };
