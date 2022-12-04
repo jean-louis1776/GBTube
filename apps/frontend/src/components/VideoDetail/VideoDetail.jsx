@@ -63,34 +63,45 @@ const VideoDetail = () => {
 
   // const currentReaction = likeOrDislikeHandler(reaction);
 
-    useEffect(() => {
-      setVideoContent(<Loader />);
-      const fetchData = async () => {
-        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
-        setCategory(videoInfo.category);
-        setChannelName(videoInfo.channelName);
-        setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
-        setDescription(videoInfo.description);
-        setDislikesCount(videoInfo.dislikesCount);
-        setLikesCount(videoInfo.likesCount);
-        setAuthorNickName(videoInfo.nickName);
-        setTitle(videoInfo.title);
-        setViewsCount(videoInfo.viewsCount);
-        console.log(videoInfo, 'VideoDataInfo');
-        const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
-        console.log('hashName', hashName);
-        const url = `http://localhost:3333/api/video/download/${hashName}`;
-        setVideoContent(
-          // <ReactPlayer url={url} pip className={styles.reactPlayer} controls={true} />
-          <video controls className={styles.reactPlayer} src={url} preload="auto"></video>
-        );
-      }
+  useEffect(() => {
+    setVideoContent(<Loader />);
+    const fetchData = async () => {
+      const videoInfo = await VideoController.getVideoInfo(
+        idList.split('_').at(-1)
+      );
+      setCategory(videoInfo.category);
+      setChannelName(videoInfo.channelName);
+      setCreateTimestamp(
+        new Date(videoInfo.createTimestamp).toLocaleDateString()
+      );
+      setDescription(videoInfo.description);
+      setDislikesCount(videoInfo.dislikesCount);
+      setLikesCount(videoInfo.likesCount);
+      setAuthorNickName(videoInfo.nickName);
+      setTitle(videoInfo.title);
+      setViewsCount(videoInfo.viewsCount);
+      console.log(videoInfo, 'VideoDataInfo');
+      const { hashName } = await VideoController.getVideoName(
+        idList.split('_').at(-1)
+      );
+      console.log('hashName', hashName);
+      const url = `http://localhost:3333/api/video/download/${hashName}`;
+      setVideoContent(
+        // <ReactPlayer url={url} pip className={styles.reactPlayer} controls={true} />
+        <video
+          controls
+          className={styles.reactPlayer}
+          src={url}
+          preload="auto"
+        ></video>
+      );
+    };
 
-      fetchData().catch(() => {
-        setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
-        console.log('Fail get hashName video');
-      });
-    }, []);
+    fetchData().catch(() => {
+      setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
+      console.log('Fail get hashName video');
+    });
+  }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -102,19 +113,19 @@ const VideoDetail = () => {
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
-      navigate(`/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
+      navigate(
+        `/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
+        { replace: true }
+      );
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
     <Box className={styles.wrapper}>
       <Helmet>
-        <title>
-          {title} | GeekTube
-          VideoTitle | GeekTube
-        </title>
+        <title>{title} | GeekTube VideoTitle | GeekTube</title>
       </Helmet>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
@@ -188,9 +199,9 @@ const VideoDetail = () => {
                 >
                   <Tooltip title="Нравится">
                     <ReactionButton
-                      // onClick={() => dispatch(setReaction('Like'))}
+                    // onClick={() => dispatch(setReaction('Like'))}
                     >
-{/*                      {currentReaction === 'Like' ? (
+                      {/*                      {currentReaction === 'Like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -210,9 +221,9 @@ const VideoDetail = () => {
                   </Tooltip>
                   <Tooltip title="Не нравится">
                     <ReactionButton
-                      // onClick={() => dispatch(setReaction('Dislike'))}
+                    // onClick={() => dispatch(setReaction('Dislike'))}
                     >
-{/*                      {currentReaction === 'Dislike' ? (
+                      {/*                      {currentReaction === 'Dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -314,11 +325,11 @@ const VideoDetail = () => {
           alignItems="center"
         >
           {/*<VideoGrid />*/}
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
-          <VideoCard videos={videos} direction="column" />
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
+          {/*<VideoCard videos={videos} direction="column" />*/}
         </Box>
       </Stack>
     </Box>
