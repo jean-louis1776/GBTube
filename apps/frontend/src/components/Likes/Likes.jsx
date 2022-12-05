@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import { Header } from '../';

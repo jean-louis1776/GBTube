@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Divider, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import { Header } from '../';
@@ -18,10 +17,6 @@ const History = (props) => {
 
   return (
     <>
-      <Helmet>
-        <title>GeekTube | История</title>
-      </Helmet>
-
       <Header selectedCategory={selectedCategory} />
 
       <Box className={styles.historyWrapper}>

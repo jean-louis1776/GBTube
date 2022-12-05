@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
 
 import { Header, Navbar } from '../';
 

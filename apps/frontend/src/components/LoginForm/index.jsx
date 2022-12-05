@@ -6,10 +6,11 @@ import { LoginFooter } from './LoginFooter';
 import { LoginFormElem } from './LoginFormElem';
 import styles from './LoginForm.module.scss';
 
-useEffect(() => {
-  document.title = 'GeekTube | Войти в аккаунт';
-}, []);
 const LoginForm = () => {
+  useEffect(() => {
+    document.title = 'GeekTube | Войти в аккаунт';
+  }, []);
+
   return (
     <Stack className={styles.loginSection}>
       <Paper elevation={3} className={styles.loginPaper}>

@@ -25,7 +25,6 @@ import { PhotoCamera } from '@mui/icons-material';
 // import store from '../../store/store';
 
 import styles from './userProfile.module.scss';
-import { Helmet } from 'react-helmet';
 
 const UserProfile = () => {
   const theme = useTheme();
@@ -96,7 +95,6 @@ const UserProfile = () => {
   };
 
   const onSubmitForm = handleSubmit((updatingUser) => {
-
     // dispatch(userDataUpdate(updatingUser));
     console.log(updatingUser);
   });

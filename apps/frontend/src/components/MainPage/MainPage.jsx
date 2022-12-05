@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
 import { styled, useTheme } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';

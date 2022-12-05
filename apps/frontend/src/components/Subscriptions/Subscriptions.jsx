@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
 
 import { Header } from '../';
 import SearchSubForm from './SearchSubForm';
@@ -30,7 +29,7 @@ const Subscriptions = (props) => {
           </Typography>
 
           <SearchSubForm />
-          {/* 
+          {/*
           <Box className={styles.likesGrid}>
             {listId.map((index) => (
               <VideoCard key={index} />

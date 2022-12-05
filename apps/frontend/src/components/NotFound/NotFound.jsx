@@ -2,7 +2,6 @@ import React from 'react';
 import { notFoundLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 
 import styles from './NotFound.module.scss';
 
