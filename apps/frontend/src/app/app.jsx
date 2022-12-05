@@ -144,7 +144,6 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
-
         <Route path="miniVideo" element={<VideoCard />} />
         <Route path="user-channel" element={<UserPage />} />
       </Routes>
