@@ -53,7 +53,7 @@ class CommentController {
 
   async like(req, res, next) {
     try {
-      // validateError(req);
+      validateError(req);
       const {commentId, userId} = req.body;
       return res.json(await CommentService.like(commentId, userId));
     } catch (e) {
@@ -63,7 +63,7 @@ class CommentController {
 
   async dislike(req, res, next) {
     try {
-      // validateError(req);
+      validateError(req);
       const {commentId, userId} = req.body;
       return res.json(await CommentService.dislike(commentId, userId));
     } catch (e) {
