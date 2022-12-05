@@ -22,11 +22,14 @@ import VideoController from '../../controllers/VideoController';
 import { VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
 
 const VideoDetail = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { idList } = useParams();
+  const userId = useSelector(getUserId, shallowEqual);
   const [videoContent, setVideoContent] = useState(<Loader />);
   const [subscribe, setSubscribe] = useState(true);
   const [category, setCategory] = useState('');
@@ -66,8 +69,8 @@ const VideoDetail = () => {
     useEffect(() => {
       setVideoContent(<Loader />);
       const fetchData = async () => {
-        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
         document.title = videoInfo.title;
+        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
         setCategory(videoInfo.category);
         setChannelName(videoInfo.channelName);
         setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
@@ -80,10 +83,8 @@ const VideoDetail = () => {
         console.log(videoInfo, 'VideoDataInfo');
         const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
         console.log('hashName', hashName);
-        const idListSplit = idList.split('_');
-        const user_id = idListSplit[0];
-        const video_id = idListSplit.at(-1);
-        const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${user_id}&video_id=${video_id}`
+        const videoId = idList.split('_').at(-1);
+        const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`
         setVideoContent(
           <Player src={url}/>
         );
