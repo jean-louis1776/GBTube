@@ -30,9 +30,7 @@ const MainPage = () => {
             maxHeight: '93vh',
             flex: 2,
           }}
-        >
-          <VideoGrid />
-        </Box>
+        ></Box>
       </Box>
     </>
   );
