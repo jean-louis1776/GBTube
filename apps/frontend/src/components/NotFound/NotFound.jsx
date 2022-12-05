@@ -16,9 +16,9 @@ const NotFound = (props) => {
         position: 'relative',
       }}
     >
-      <Helmet>
+      {/* <Helmet>
         <title>404 | GeekTube</title>
-      </Helmet>
+      </Helmet> */}
       <Box
         sx={{
           width: '1150px',

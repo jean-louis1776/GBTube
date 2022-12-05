@@ -7,9 +7,9 @@ import styles from './SearchFeed.module.scss';
 const SearchFeed = (props) => {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>GeekTube | Поиск</title>
-      </Helmet>
+      </Helmet> */}
 
       <Header />
 

@@ -47,17 +47,25 @@
         align-items: center;
         justify-content: center;
 
+        .uploadBtnBox {
+          width: 100%;
+          display: flex;
+          justify-content: space-evenly;
+        }
+
         .uploadVideoWarning {
           margin: 8px 0;
           color: #999;
           text-align: center;
           user-select: none;
+          font-size: 0.9rem;
         }
 
         .selectedFileText {
           text-align: center;
           user-select: none;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
+          font-size: 0.95rem;
         }
 
         .inputBox {
@@ -87,11 +95,22 @@
         .errorText {
           text-align: center;
           user-select: none;
-          margin-top: 16px;
+          margin: 6px 0;
           font-size: 0.8rem;
           color: #fd5757;
         }
       }
+    }
+  }
+
+  .uploadLoader {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+
+    .loaderTitle {
+      text-align: center;
     }
   }
 }

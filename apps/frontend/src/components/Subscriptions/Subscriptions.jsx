@@ -16,10 +16,6 @@ const Subscriptions = (props) => {
 
   return (
     <>
-      <Helmet>
-        <title>GeekTube | Подписки</title>
-      </Helmet>
-
       <Header selectedCategory={selectedCategory} />
 
       <Box className={styles.subWrapper}>

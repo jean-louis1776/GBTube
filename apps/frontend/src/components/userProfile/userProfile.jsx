@@ -111,9 +111,9 @@ const UserProfile = () => {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title>GeekTube | Мой профиль</title>
-      </Helmet>
+      </Helmet> */}
 
       <Header />
 

@@ -17,10 +17,6 @@ const Likes = (props) => {
 
   return (
     <>
-      <Helmet>
-        <title>GeekTube | Понравившиеся</title>
-      </Helmet>
-
       <Header selectedCategory={selectedCategory} />
 
       <Box className={styles.likesWrapper}>

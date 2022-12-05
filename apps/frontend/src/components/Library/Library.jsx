@@ -10,9 +10,9 @@ const Library = (props) => {
 
   return (
     <Box sx={{ display: 'flex', pt: 8 }}>
-      <Helmet>
+      {/* <Helmet>
         <title>GeekTube | Библиотека</title>
-      </Helmet>
+      </Helmet> */}
 
       <Header selectedCategory={selectedCategory} />
       <Box

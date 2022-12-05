@@ -16,9 +16,9 @@ const EmailConfirm = (props) => {
         position: 'relative',
       }}
     >
-      <Helmet>
+      {/* <Helmet>
         <title>Почта подтверждена | GeekTube</title>
-      </Helmet>
+      </Helmet> */}
       <Box
         sx={{
           width: '1150px',
