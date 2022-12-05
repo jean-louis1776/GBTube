@@ -69,8 +69,8 @@ const VideoDetail = () => {
     useEffect(() => {
       setVideoContent(<Loader />);
       const fetchData = async () => {
-        document.title = videoInfo.title;
         const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
+        document.title = videoInfo.title;
         setCategory(videoInfo.category);
         setChannelName(videoInfo.channelName);
         setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
@@ -85,13 +85,15 @@ const VideoDetail = () => {
         console.log('hashName', hashName);
         const videoId = idList.split('_').at(-1);
         const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`
+        console.log(url);
         setVideoContent(
           <Player src={url}/>
         );
       }
 
-      fetchData().catch(() => {
+      fetchData().catch((err) => {
         setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
+        console.log(err);
         console.log('Fail get hashName video');
       });
     }, []);
@@ -149,7 +151,7 @@ const VideoDetail = () => {
                   <Box className={styles.channel_sub}>
                     <Avatar sx={{ mr: '10px' }} />
                     <Typography
-                      variant={{ sm: 'subtitle1', md: 'h6' }}
+                      variant='subtitle1'
                       fontWeight="500"
                     >
                       {channelName}
