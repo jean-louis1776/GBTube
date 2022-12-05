@@ -5,9 +5,9 @@ import { ApiError } from "../errors/apiError";
 
 class CommentQueries {
 
-  async createComment(userId, videoId, textInfo) {
+  async createComment(idList, videoId, userId, description) {
     try {
-      const cComment = (await Comment.create({userId, videoId, textInfo})).toJSON();
+      const cComment = (await Comment.create({idList, videoId, userId, description})).toJSON();
       if (cComment) return cComment.id;
       throw ApiError.BadRequest(`Комментарий не создан`);
     } catch (e) {
@@ -16,9 +16,9 @@ class CommentQueries {
     }
   }
 
-  async updateComment(id, textInfo) {
+  async updateComment(id, description) {
     try {
-      return !!(await Comment.update({textInfo}, {where: {id}}));
+      return !!(await Comment.update({description}, {where: {id}}));
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -60,10 +60,12 @@ class CommentQueries {
 
   async like(commentId, userId) {
     try {
-      const lComment = await Comment.findOne({where: {commentId}});
+      const lComment = await Comment.findOne({where: {id: commentId}});
+      if (!lComment) throw ApiError.NotFound(`Ответ с id ${commentId} не найден`);
       if (await CommentLike.findOne({where: {commentId, userId, liked: false}})) {
         await CommentLike.update({liked: true}, {where: {commentId, userId, liked: false}});
         await lComment.increment('likesCount', {by: 1});
+        await lComment.decrement('dislikesCount', {by: 1});
         return true;
       }
       if (await CommentLike.findOne({where: {commentId, userId, liked: true}})) {
@@ -71,7 +73,7 @@ class CommentQueries {
         await lComment.decrement('likesCount', {by: 1});
         return false;
       }
-      await CommentLike.create({where: {commentId, userId, liked: true}});
+      await CommentLike.create( {commentId, userId, liked: true});
       await lComment.increment('likesCount', {by: 1});
       return true;
     } catch (e) {
@@ -82,10 +84,11 @@ class CommentQueries {
 
   async dislike(commentId, userId) {
     try {
-      const dlComment = await Comment.findOne({where: {commentId}});
+      const dlComment = await Comment.findOne({where: {id: commentId}});
       if (await CommentLike.findOne({where: {commentId, userId, liked: true}})) {
         await CommentLike.update({liked: false}, {where: {commentId, userId, liked: true}});
         await dlComment.increment('dislikesCount', {by: 1});
+        await dlComment.decrement('likesCount', {by: 1});
         return true;
       }
       if (await CommentLike.findOne({where: {commentId, userId, liked: false}})) {
@@ -93,7 +96,7 @@ class CommentQueries {
         await dlComment.decrement('dislikesCount', {by: 1});
         return false;
       }
-      await CommentLike.create({where: {commentId, userId, liked: false}});
+      await CommentLike.create( {commentId, userId, liked: false});
       await dlComment.increment('dislikesCount', {by: 1});
       return true;
     } catch (e) {

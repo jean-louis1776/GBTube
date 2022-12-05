@@ -25,11 +25,11 @@ export const Answer = sequelize.define('Answer', {
       type: DataTypes.TEXT,
     },
   }, {
-  hooks: {
-    afterCreate: (answer) => {
-      Answer.update({idList: `${answer.idList}_${answer.id}`}, {where: {id: answer.id}});
-    }
-  },
+    hooks: {
+      afterCreate: (answer) => {
+        Answer.update({idList: `${answer.idList}_${answer.id}`}, {where: {id: answer.id}});
+      },
+    },
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',

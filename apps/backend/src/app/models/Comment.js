@@ -24,7 +24,13 @@ export const Comment = sequelize.define('Comment', {
     idList: {
       type: DataTypes.TEXT,
     },
+
   }, {
+    hooks: {
+      afterCreate: (comment) => {
+        Comment.update({idList: `${comment.idList}_${comment.id}`}, {where: {id: comment.id}});
+      },
+    },
     timestamps: true,
     createdAt: 'createdTimestamp',
     updatedAt: 'updateTimestamp',
