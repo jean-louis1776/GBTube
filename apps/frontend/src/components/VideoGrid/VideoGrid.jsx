@@ -52,14 +52,13 @@ const VideoGrid = () => {
               gap={2}
             >
               {children.map((item, idx) => (
-                <Box key={idx}>
-                  <Link
-                    to={`/${VIDEO}/get_one/${item.idList}`}
-                    style={{ color: 'white' }}
-                  >
-                    Видео {item.title}
-                  </Link>
-                </Box>
+                <Link
+                  key={idx}
+                  to={`/${VIDEO}/get_one/${item.idList}`}
+                  style={{ color: 'white' }}
+                >
+                  <VideoCard video={item} />
+                </Link>
               ))}
             </Stack>
           </Box>

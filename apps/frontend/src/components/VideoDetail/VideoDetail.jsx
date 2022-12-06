@@ -66,37 +66,48 @@ const VideoDetail = () => {
 
   // const currentReaction = likeOrDislikeHandler(reaction);
 
-    useEffect(() => {
-      setVideoContent(<Loader />);
-      const fetchData = async () => {
-        const videoInfo = await VideoController.getVideoInfo(idList.split('_').at(-1));
-        document.title = videoInfo.title;
-        setCategory(videoInfo.category);
-        setChannelName(videoInfo.channelName);
-        setCreateTimestamp((new Date(videoInfo.createTimestamp)).toLocaleDateString());
-        setDescription(videoInfo.description);
-        setDislikesCount(videoInfo.dislikesCount);
-        setLikesCount(videoInfo.likesCount);
-        setAuthorNickName(videoInfo.nickName);
-        setTitle(videoInfo.title);
-        setViewsCount(videoInfo.viewsCount);
-        console.log(videoInfo, 'VideoDataInfo');
-        const { hashName } = await VideoController.getVideoName(idList.split('_').at(-1));
-        console.log('hashName', hashName);
-        const videoId = idList.split('_').at(-1);
-        const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`
-        console.log(url);
-        setVideoContent(
-          <Player src={url}/>
-        );
-      }
+  useEffect(() => {
+    setVideoContent(<Loader />);
+    const fetchData = async () => {
+      const videoInfo = await VideoController.getVideoInfo(
+        idList.split('_').at(-1)
+      );
+      document.title = videoInfo.title;
+      setCategory(videoInfo.category);
+      setChannelName(videoInfo.channelName);
+      setCreateTimestamp(
+        new Date(videoInfo.createTimestamp).toLocaleDateString()
+      );
+      setDescription(videoInfo.description);
+      setDislikesCount(videoInfo.dislikesCount);
+      setLikesCount(videoInfo.likesCount);
+      setAuthorNickName(videoInfo.nickName);
+      setTitle(videoInfo.title);
+      setViewsCount(videoInfo.viewsCount);
+      console.log(videoInfo, 'VideoDataInfo');
+      const { hashName } = await VideoController.getVideoName(
+        idList.split('_').at(-1)
+      );
+      console.log('hashName', hashName);
+      const videoId = idList.split('_').at(-1);
+      const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
+      console.log(url);
+      setVideoContent(
+        <Player
+          src={url}
+          seekDuration={5}
+          primaryColor={theme.palette.baseBlue.main}
+          keyboardShortcut={false}
+        />
+      );
+    };
 
-      fetchData().catch((err) => {
-        setVideoContent(<p style={{color: 'white'}}>Видео не найдено</p>);
-        console.log(err);
-        console.log('Fail get hashName video');
-      });
-    }, []);
+    fetchData().catch((err) => {
+      setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
+      console.log(err);
+      console.log('Fail get hashName video');
+    });
+  }, []);
 
   // if (!videoDetail?.snippet) return <Loader />;
   //
@@ -108,11 +119,14 @@ const VideoDetail = () => {
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
-      navigate(`/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`, { replace: true });
+      navigate(
+        `/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
+        { replace: true }
+      );
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
     <Box className={styles.wrapper}>
@@ -120,11 +134,7 @@ const VideoDetail = () => {
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
         <Box>
           <Box>
-            {
-              <div className={styles.playerWrapper}>
-                {videoContent}
-              </div>
-            }
+            {<div className={styles.playerWrapper}>{videoContent}</div>}
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -150,10 +160,7 @@ const VideoDetail = () => {
                 <Link to="/channel">
                   <Box className={styles.channel_sub}>
                     <Avatar sx={{ mr: '10px' }} />
-                    <Typography
-                      variant='subtitle1'
-                      fontWeight="500"
-                    >
+                    <Typography variant="subtitle1" fontWeight="500">
                       {channelName}
                     </Typography>
                     <CheckCircle
@@ -192,9 +199,9 @@ const VideoDetail = () => {
                 >
                   <Tooltip title="Нравится">
                     <ReactionButton
-                      // onClick={() => dispatch(setReaction('Like'))}
+                    // onClick={() => dispatch(setReaction('Like'))}
                     >
-{/*                      {currentReaction === 'Like' ? (
+                      {/*                      {currentReaction === 'Like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -214,9 +221,9 @@ const VideoDetail = () => {
                   </Tooltip>
                   <Tooltip title="Не нравится">
                     <ReactionButton
-                      // onClick={() => dispatch(setReaction('Dislike'))}
+                    // onClick={() => dispatch(setReaction('Dislike'))}
                     >
-{/*                      {currentReaction === 'Dislike' ? (
+                      {/*                      {currentReaction === 'Dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,

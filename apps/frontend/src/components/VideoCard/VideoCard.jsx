@@ -20,7 +20,7 @@ import { theme } from '../../theme';
 
 import styles from './VideoCard.module.scss';
 
-const VideoCard = () => {
+const VideoCard = ({ video }) => {
   const [title, setTitle] = useState('');
   const { idList } = useParams();
 
@@ -104,34 +104,32 @@ const VideoCard = () => {
     //   </Link>
     // </Card>
 
-    <Link to={'/videoDetail'}>
-      <Box className={styles.videoCard}>
-        <Box className={styles.videoThumbnail}>
-          <img src={demoThumbnail} alt="Thumbnail" />
+    // <Link to={'/videoDetail'}>
+    <Box className={styles.videoCard}>
+      <Box className={styles.videoThumbnail}>
+        <img src={demoThumbnail} alt="Thumbnail" />
+      </Box>
+
+      <Box className={styles.videoInfo}>
+        <Box className={styles.videoInfoTitle}>
+          <Typography className={styles.title}>{video.title}</Typography>
+
+          <Link to={`/user-channel`} className={styles.channelLink}>
+            <Typography variant="subtitle2" className={styles.channelName}>
+              <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
+              Rick & Morty
+            </Typography>
+          </Link>
         </Box>
 
-        <Box className={styles.videoInfo}>
-          <Box className={styles.videoInfoTitle}>
-            <Typography className={styles.title}>
-              Never Gonna Give You Up
-            </Typography>
-
-            <Link to={`/user-channel`} className={styles.channelLink}>
-              <Typography variant="subtitle2" className={styles.channelName}>
-                <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-                Rick & Morty
-              </Typography>
-            </Link>
-          </Box>
-
-          <Box className={styles.videoInfoView}>
-            <Typography variant="caption" className={styles.viewCount}>
-              100 523 просмотров
-            </Typography>
-          </Box>
+        <Box className={styles.videoInfoView}>
+          <Typography variant="caption" className={styles.viewCount}>
+            100 523 просмотров
+          </Typography>
         </Box>
       </Box>
-    </Link>
+    </Box>
+    // </Link>
   );
 };
 
