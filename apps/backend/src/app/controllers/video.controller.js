@@ -8,14 +8,13 @@ import videoService from '../services/video.service.js';
 class VideoController {
   async create(req, res, next) {
     try {
-      console.log(req.body);
       validateError(req);
-      const {idList, title, category, description} = req.body;
+      const {idList, title, category, description, thumbnail} = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
         return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`));
       }
-      return await videoService.upload(res, req.files, idList, title, category, description);
+      return await videoService.upload(res, req.files, idList, title, category, description, thumbnail);
     } catch (e) {
       next(e);
     }

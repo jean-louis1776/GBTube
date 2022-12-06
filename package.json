@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run-many --target=serve --projects=backend,frontend",
+    "start:prod": "nx run-many --target=serve --projects=backend,frontend --configuration=production",
     "start:backend": "nx serve backend",
     "start:file-server": "nx serve file-server",
     "start:frontend": "nx serve frontend --open",
@@ -58,7 +59,7 @@
     "jest-environment-jsdom": "28.1.1",
     "nx": "^15.1.1",
     "prettier": "^2.6.2",
-    "react-test-renderer": "18.2.0",
+    "react-test-renderernx": "18.2.0",
     "ts-jest": "28.0.5",
     "ts-node": "10.9.1",
     "typescript": "~4.8.2"
@@ -83,7 +84,6 @@
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
     "express-validator": "^6.14.2",
-    "ffmpeg": "0.0.4",
     "file-type": "^18.0.0",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",

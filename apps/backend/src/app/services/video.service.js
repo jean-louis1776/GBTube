@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import remove from 'remove';
 import path from 'path';
 import { v4 as uuidV4 } from 'uuid';
-import ffmpeg from 'ffmpeg';
 import fs from 'fs';
 
 import { ApiError } from '../errors/apiError.js';
@@ -39,7 +38,7 @@ class VideoService {
     }
   }
 
-  async upload(res, files, idList, title, category, description) {
+  async upload(res, files, idList, title, category, description, thumbnail) {
     try {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
@@ -52,37 +51,14 @@ class VideoService {
 
       const hashName = uuidV4();
       const videoHashName = hashName + extension;
-      const frameHashName = hashName + '.jpg';
 
       const tempFilePath = path.resolve(path.dirname(file.tempFilePath), videoHashName);
       fs.renameSync(file.tempFilePath, tempFilePath);
 
-      sendMediaToBack(tempFilePath, videoHashName);
-
-      const video = await new ffmpeg(tempFilePath);
-      await video.fnExtractFrameToJPG(
-        'tmp/jpg',
-        {
-          number: 2,
-          every_n_percentage: 50,
-        },
-        async (err, files) => {
-          try {
-            if (err) console.log('FROM CALLBACK TO fnExtractFrameToJPG: ', err.message);
-            if (!files || !files.length) {
-              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
-            }
-            console.log('files = ', files);
-            return sendMediaToBack(files[files.length - 1], frameHashName, async () => {
-              await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
-              return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description));
-            });
-
-          } catch (e) {
-            throw e;
-          }
-        },
-      );
+      return sendMediaToBack(tempFilePath, videoHashName, async () => {
+        await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
+        return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description, thumbnail));
+      });
     } catch (e) {
       console.log(e);
       throw e;
