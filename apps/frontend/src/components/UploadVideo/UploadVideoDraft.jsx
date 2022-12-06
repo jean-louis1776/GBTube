@@ -15,7 +15,7 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import VideoController from '../../controllers/VideoController';
 import Header from '../Header/Header';
 import Thumbnail from './Thumbnail';
-import { uploadVideoLogo } from '@constants/frontend';
+import { uploadVideoLogo, VIDEO } from '@constants/frontend';
 import useVideoThumbnailsForm from '@gbtube/thumbGenerator';
 
 import styles from './UploadVideo.module.scss';
@@ -40,7 +40,7 @@ const UploadVideoDraft = () => {
     document.title = 'GeekTube | Загрузка видео';
   }, []);
 
-  const ref = useRef([]);
+  const ref = useRef('');
   useEffect(() => {
     ref.current = selectedThumbnail;
   });
@@ -70,7 +70,7 @@ const UploadVideoDraft = () => {
       await VideoController.addVideo(formData);
       evt.target.reset();
       setIsLoading(false);
-      navigate(-1);
+      navigate(`/${VIDEO}/get_all/${idList}`, { replace: true });
     } catch {
       setIsLoading(false);
       console.log('Load video failed');
