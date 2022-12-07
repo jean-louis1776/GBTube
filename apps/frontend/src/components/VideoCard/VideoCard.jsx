@@ -107,24 +107,33 @@ const VideoCard = ({ video }) => {
     // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
       <Box className={styles.videoThumbnail}>
-        <img src={demoThumbnail} alt="Thumbnail" />
+        <img src={video.thumbnail} alt="Thumbnail" />
       </Box>
 
       <Box className={styles.videoInfo}>
         <Box className={styles.videoInfoTitle}>
-          <Typography className={styles.title}>{video.title}</Typography>
+          {video?.title?.length > 20 ? (
+            <Tooltip title={video.title}>
+              <Typography className={styles.title}>
+                {video.title.slice(0, 20) + '...'}
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography className={styles.title}>{video.title}</Typography>
+          )}
 
           <Link to={`/user-channel`} className={styles.channelLink}>
             <Typography variant="subtitle2" className={styles.channelName}>
               <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-              Rick & Morty
+              {video.channelName}
             </Typography>
           </Link>
         </Box>
 
         <Box className={styles.videoInfoView}>
           <Typography variant="caption" className={styles.viewCount}>
-            100 523 просмотров
+            {'Просмотров: '}
+            {+video.viewsCount}
           </Typography>
         </Box>
       </Box>
