@@ -160,9 +160,7 @@ class VideoService {
   async remove(id) {
     try {
       const hashName = await videoQueries.downloadVideo(id);
-      const frameName = path.parse(hashName).name + ".jpg";
       removeFile(hashName);
-      removeFile(frameName);
       return videoQueries.deleteVideo(id);
     } catch (e) {
       throw e;
