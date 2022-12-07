@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-import { Typography, Box, Stack, Button, Avatar, Tooltip } from '@mui/material';
-import {
-  AnnouncementOutlined,
-  CheckCircle,
-  PlaylistAdd,
-  ReplyAllOutlined,
-  ThumbDownOutlined,
-  ThumbUpOutlined,
-  ThumbUp,
-  ThumbDown,
-} from '@mui/icons-material';
+import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import { AnnouncementOutlined, CheckCircle, PlaylistAdd, ReplyAllOutlined } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
-import VideoCard from '../VideoCard/VideoCard';
 import ShowMoreText from 'react-show-more-text';
 import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
@@ -23,13 +13,15 @@ import { VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
+import { getRole, getUserId } from '../../store/selectors';
+import CommentController from '../../controllers/CommentController';
 
 const VideoDetail = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
+  const userRole = useSelector(getRole);
   const [videoContent, setVideoContent] = useState(<Loader />);
   const [subscribe, setSubscribe] = useState(true);
   const [category, setCategory] = useState('');
@@ -41,6 +33,8 @@ const VideoDetail = () => {
   const [authorNickName, setAuthorNickName] = useState('');
   const [title, setTitle] = useState('');
   const [viewsCount, setViewsCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState('');
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -68,16 +62,13 @@ const VideoDetail = () => {
 
   useEffect(() => {
     setVideoContent(<Loader />);
+    const videoId = idList.split('_').at(-1);
     const fetchData = async () => {
-      const videoInfo = await VideoController.getVideoInfo(
-        idList.split('_').at(-1)
-      );
+      const videoInfo = await VideoController.getVideoInfo(videoId);
       document.title = videoInfo.title;
       setCategory(videoInfo.category);
       setChannelName(videoInfo.channelName);
-      setCreateTimestamp(
-        new Date(videoInfo.createTimestamp).toLocaleDateString()
-      );
+      setCreateTimestamp(new Date(videoInfo.createTimestamp).toLocaleDateString());
       setDescription(videoInfo.description);
       setDislikesCount(videoInfo.dislikesCount);
       setLikesCount(videoInfo.likesCount);
@@ -85,11 +76,8 @@ const VideoDetail = () => {
       setTitle(videoInfo.title);
       setViewsCount(videoInfo.viewsCount);
       console.log(videoInfo, 'VideoDataInfo');
-      const { hashName } = await VideoController.getVideoName(
-        idList.split('_').at(-1)
-      );
+      const { hashName } = await VideoController.getVideoName(videoId);
       console.log('hashName', hashName);
-      const videoId = idList.split('_').at(-1);
       const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
       console.log(url);
       setVideoContent(
@@ -100,12 +88,13 @@ const VideoDetail = () => {
           keyboardShortcut={false}
         />
       );
+      setComments(await CommentController.getAllItemsByVideo(videoId));
     };
 
     fetchData().catch((err) => {
       setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
       console.log(err);
-      console.log('Fail get hashName video');
+      console.log('Fail get some about video');
     });
   }, []);
 
@@ -119,13 +108,20 @@ const VideoDetail = () => {
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
-      navigate(
-        `/${VIDEO}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
-        { replace: true }
-      );
+      const idListToPlayList = idList.split('_').slice(0, -1).join('_');
+      navigate(`/${VIDEO}/get_all/${idListToPlayList}`, { replace: true });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleChangeCommentText = (evt) => {
+    setCommentText(evt.target.value);
+  }
+
+  const isMayModerate = () => {
+    const authorId = idList.split('_')[0];
+    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
   };
 
   return (
@@ -190,7 +186,7 @@ const VideoDetail = () => {
                   </SubscribeButton>
                 )}
               </Stack>
-              <Button onClick={handleDeleteVideo}>Удалить видео</Button>
+              {isMayModerate() ? <Button onClick={handleDeleteVideo}>Удалить видео</Button> : ''}
               <Stack direction="row" gap="10px">
                 <Stack
                   direction="row"
@@ -301,21 +297,18 @@ const VideoDetail = () => {
                     type="text"
                     className={styles.commentaryInput}
                     placeholder="Оставьте комментарий"
+                    onChange={handleChangeCommentText}
+                    value={commentText}
                   />
                 </Box>
               }
 
-              {/*<Typography variant={'body1'}>*/}
-              {/*  Пока нет комментариев...*/}
-              {/*</Typography>*/}
-
-              <div>
-                <VideoCommentary />
-                <VideoCommentary />
-                <VideoCommentary />
-                <VideoCommentary />
-                <VideoCommentary />
-              </div>
+              <Box>
+                { comments?.length > 0 ? comments?.map((comment, index) =>
+                    <VideoCommentary key={index} comment={comment} />) :
+                  <Typography variant={'body1'}>Пока нет комментариев...</Typography>
+                }
+              </Box>
             </Box>
           </Box>
         </Box>
