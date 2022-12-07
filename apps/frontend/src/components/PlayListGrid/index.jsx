@@ -8,10 +8,14 @@ import { ContentPlayList } from './ContentPlayList';
 import EditItemController from '../../controllers/EditItemController';
 import { useTheme } from '@mui/material/styles';
 import Header from '../Header/Header';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getRole, getUserId } from '../../store/selectors';
 
 const PlayListGrid = () => {
   const theme = useTheme();
   const { idList } = useParams();
+  const userId = useSelector(getUserId, shallowEqual);
+  const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -70,6 +74,11 @@ const PlayListGrid = () => {
     } catch (err) {
       console.log('delete channel fail', err);
     }
+  };
+
+  const isMayModerate = () => {
+    const authorId = idList.split('_')[0];
+    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
   };
 
   return (
@@ -133,13 +142,12 @@ const PlayListGrid = () => {
           >
             Создать {PLAYLIST}
           </Button>
-          <Button
+
+          {isMayModerate() ? <Button
             variant='contained'
             color='baseBlue'
             onClick={handleDeleteChannel}
-          >
-            Удалить текущий {CHANNEL}
-          </Button>
+          >Удалить текущий {CHANNEL}</Button> : ''}
         </Box>
       </Stack>
       {content}
