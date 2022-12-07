@@ -3,11 +3,11 @@ import $authApi from '../api/AuthClient';
 
 export default class AuthController {
   static async login(email, password) {
-    return $authApi.post('/user/login', { email, password });
+    return (await $authApi.post('/user/login', { email, password })).data;
   }
 
   static async registration(nickName, email, password) {
-    return $authApi.post('/user/registration', { nickName, email, password });
+    return (await $authApi.post('/user/registration', { nickName, email, password })).data;
   }
 
   static async logout() {
@@ -15,7 +15,7 @@ export default class AuthController {
   }
 
   static async checkAuth() {
-    return $api.get('/user/refresh', { withCredentials: true });
+    return (await $api.get('/user/refresh', { withCredentials: true })).data;
   }
 
   static async activate(link) {

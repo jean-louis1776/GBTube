@@ -14,7 +14,7 @@ import { EMAIL, PASSWORD } from '@constants/frontend';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AuthController from '../../controllers/AuthController';
-import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
+import { setAccessToken, setAuthStatus, setId, setNickName, setRole } from '../../store/slice';
 
 export const LoginFormElem = () => {
   const [loginError, setLoginError] = useState('');
@@ -46,21 +46,28 @@ export const LoginFormElem = () => {
 
   const onSubmit = async ({ email, password }) => {
     try {
-      const { data } = await AuthController.login(email, password);
-      if (data.isBaned) {
+      const {
+        accessToken,
+        isBaned,
+        id,
+        nickName,
+        role } = await AuthController.login(email, password);
+      if (isBaned) {
         localStorage.setItem('token', '');
         dispatch(setAuthStatus(false));
         dispatch(setAccessToken(''));
         dispatch(setId(''));
         dispatch(setNickName(''));
+        dispatch(setRole(''));
         setLoginError('Пользователь заблокирован');
         return;
       }
-      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('token', accessToken);
       dispatch(setAuthStatus(true));
-      dispatch(setAccessToken(data.accessToken));
-      dispatch(setId(data.id));
-      dispatch(setNickName(data.nickName));
+      dispatch(setAccessToken(accessToken));
+      dispatch(setId(String(id)));
+      dispatch(setNickName(nickName));
+      dispatch(setRole(role));
       setLoginError('');
       reset();
       navigate(-1, { replace: true });

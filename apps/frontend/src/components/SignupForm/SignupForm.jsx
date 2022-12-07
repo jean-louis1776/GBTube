@@ -76,11 +76,11 @@ const SignupForm = () => {
   const onSubmit = async ({ email, password }) => {
     const nickName = email.split('@')[0] + nanoid(10);
     try {
-      const { data } = await AuthController.registration(nickName, email, password);
-      localStorage.setItem('token', data.accessToken);
+      const { accessToken, id } = await AuthController.registration(nickName, email, password);
+      localStorage.setItem('token', accessToken);
       dispatch(setAuthStatus(true));
-      dispatch(setAccessToken(data.accessToken));
-      dispatch(setId(data.id));
+      dispatch(setAccessToken(accessToken));
+      dispatch(setId(String(id)));
       dispatch(setNickName(nickName));
       // dispatch(registrationHandler({ nickName, email, password }));
       reset();

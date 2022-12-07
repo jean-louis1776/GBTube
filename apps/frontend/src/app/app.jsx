@@ -37,7 +37,7 @@ import {
   setAccessToken,
   setAuthStatus,
   setId,
-  setNickName,
+  setNickName, setRole
 } from '../store/slice';
 
 export function App() {
@@ -54,22 +54,23 @@ export function App() {
         console.log('useEffect run');
         if (runOnceFlag && localStorage.getItem('token')) {
           console.log('Auth running');
-          const { data } = await AuthController.checkAuth();
-          if (data.isBaned) {
+          const { isBaned, accessToken, id, nickName, role } = await AuthController.checkAuth();
+          if (isBaned) {
             localStorage.setItem('token', '');
             console.log(data, 'user banned');
             dispatch(setAuthStatus(false));
             dispatch(setAccessToken(''));
             dispatch(setId(''));
             dispatch(setNickName(''));
+            dispatch(setRole(''));
             return;
           }
-          localStorage.setItem('token', data.accessToken);
-          console.log(data, 'data user update');
+          localStorage.setItem('token', accessToken);
           dispatch(setAuthStatus(true));
-          dispatch(setAccessToken(data.accessToken));
-          dispatch(setId(data.id));
-          dispatch(setNickName(data.nickName));
+          dispatch(setAccessToken(accessToken));
+          dispatch(setId(String(id)));
+          dispatch(setNickName(nickName));
+          dispatch(setRole(role));
           runOnceFlag = false;
           setTimeout(setFlagToTrue, 3000);
         }
