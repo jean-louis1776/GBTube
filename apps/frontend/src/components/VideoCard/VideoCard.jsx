@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Typography,
   Card,
@@ -15,31 +15,23 @@ import { demoChannelUrl, demoThumbnail, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
 import { theme } from '../../theme';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { getSelector } from '../../store/getSelector';
 
 import styles from './VideoCard.module.scss';
 
-const VideoCard = ({ video }) => {
-  // const [title, setTitle] = useState('');
-  const { idList } = useParams();
+const VideoCard = ({ idList }) => {
+  const videoId = idList.split('_').at(-1);
+  const [video, setVideo] = useState({});
 
-  // const dispatch = useDispatch();
-  // const video = useSelector(getSelector('videoDetail', 'video'));
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const { title } = await GetChildrenController.getItemById(
-  //       VIDEO,
-  //       idList.split('_').at(-1)
-  //     );
-  //     setTitle(title);
-  //   };
-  //   fetchData().catch(() => {
-  //     setTitle('');
-  //     console.log(`Video ID: ${idList} not found`);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const vids = await GetChildrenController.getItemById(VIDEO, videoId);
+      console.log(vids);
+      setVideo(vids);
+    };
+    fetchData().then().catch(() => {
+      console.log(`Video ID: ${idList} not found`);
+    });
+  }, []);
 
   return (
     // <Card
@@ -107,7 +99,7 @@ const VideoCard = ({ video }) => {
     // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
       <Box className={styles.videoThumbnail}>
-        <img src={video.thumbnail} alt="Thumbnail" />
+        <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
       </Box>
 
       <Box className={styles.videoInfo}>

@@ -9,23 +9,17 @@ import { useTheme } from '@mui/material/styles';
 
 export const ChannelChildren = ({ childType, itemId }) => {
   const theme = useTheme();
-  // const { channel_id } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  // const location = useLocation();
   let [idListState, setIdList] = useState([] /*location.state.idList*/);
-  // let [currentId, setCurrentId] = useState(props.idList.split(';').at(-1));
 
-  // useEffect(() => {
-  //
-  // })
   useEffect(() => {
     const fetchData = async () => {
       const { title, idList } = await GetChildrenController.getItemById(
         childType,
         itemId.split('_').at(-1)
       );
-      console.log(title, idList);
+      // console.log(title, idList);
       setIdList([...idList.split('_')]);
       setContent(<Typography className={styles.title}>{title}</Typography>);
     };
@@ -37,19 +31,17 @@ export const ChannelChildren = ({ childType, itemId }) => {
 
   const handleClick = () => {
     const url = `/${PLAYLIST}/get_all/${idListState.join('_')}`;
-    console.log(url);
-    console.log(idListState, 'idListState');
-    navigate(url, { state: [...idListState] });
+    // console.log(url);
+    // console.log(idListState, 'idListState');
+    navigate(url);
   };
 
   return (
-    // <Link to={`/${childType}/get_one/:${id}`}></Link>
     <Button
       sx={{ borderTop: 1, borderColor: theme.palette.shadows.main }}
       onClick={handleClick}
       className={styles.child}
     >
-      {/*Title: {props.title}*/}
       {content}
     </Button>
   );

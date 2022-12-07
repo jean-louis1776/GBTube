@@ -14,7 +14,7 @@ import UserController from '../../controllers/UsersController';
 const ChannelGrid = () => {
   const { authorId } = useParams();
   const [content, setContent] = useState(<Loader />);
-  const [authorNick, setAuthorNik] = useState('Временно не работает');
+  const [authorNick, setAuthorNik] = useState('');
   const navigate = useNavigate();
   const theme = useTheme();
   const userId = useSelector(getUserId, shallowEqual);
@@ -22,12 +22,11 @@ const ChannelGrid = () => {
   useEffect(() => {
     const fetchData = async () => {
       setContent(<Loader />);
-      console.log(authorId);
       const children = await GetChildrenController.getAllItemsById(
         CHANNEL,
         authorId
       );
-      console.log(children);
+      // console.log(children);
       if (children.length === 0) {
         setContent(
           <p style={{ color: 'white' }}>Не создано ни одного Канала </p>
@@ -35,7 +34,7 @@ const ChannelGrid = () => {
       } else {
         setContent(<ContentChannel children={children} />);
       }
-      // setAuthorNik(await UserController.getUserNick(authorId));
+      setAuthorNik((await UserController.getUserNick(authorId)).nickName);
     };
     fetchData().catch(() => {
       setContent('');
