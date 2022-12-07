@@ -21,7 +21,7 @@ import { Loader } from '../index';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
-  const [video, setVideo] = useState([]);
+  const [video, setVideo] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,10 +99,9 @@ const VideoCard = ({ idList }) => {
 
     // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
-      {Object.hasOwn(video, 'thumbnail') ? <Box className={styles.videoThumbnail}>
-        <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
-      </Box> : <Loader/>}
-
+      <Box className={styles.videoThumbnail}>
+        {Object.hasOwn(video, 'thumbnail') ? <img src={video.thumbnail} alt={`Thumbnail:${idList}`} /> : <Loader/>}
+      </Box>
       <Box className={styles.videoInfo}>
         <Box className={styles.videoInfoTitle}>
           {video?.title?.length > 20 ? (
@@ -117,18 +116,18 @@ const VideoCard = ({ idList }) => {
 
           <Link to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
                 className={styles.channelLink}>
-            <Typography variant="subtitle2" className={styles.channelName}>
+            {Object.hasOwn(video, 'thumbnail') ? <Typography variant="subtitle2" className={styles.channelName}>
               <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
               {video.channelName}
-            </Typography>
+            </Typography> : ''}
           </Link>
         </Box>
 
         <Box className={styles.videoInfoView}>
-          <Typography variant="caption" className={styles.viewCount}>
+          {Object.hasOwn(video, 'thumbnail') ? <Typography variant="caption" className={styles.viewCount}>
             {'Просмотров: '}
             {+video.viewsCount}
-          </Typography>
+          </Typography> : ''}
         </Box>
       </Box>
     </Box>
