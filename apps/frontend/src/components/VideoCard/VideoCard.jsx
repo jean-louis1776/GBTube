@@ -11,16 +11,17 @@ import {
 import { CheckCircle } from '@mui/icons-material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { demoChannelUrl, demoThumbnail, VIDEO } from '@constants/frontend';
+import { PLAYLIST, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
 import { theme } from '../../theme';
 
 import styles from './VideoCard.module.scss';
+import { Loader } from '../index';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
-  const [video, setVideo] = useState({});
+  const [video, setVideo] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,9 +99,9 @@ const VideoCard = ({ idList }) => {
 
     // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
-      <Box className={styles.videoThumbnail}>
+      {Object.hasOwn(video, 'thumbnail') ? <Box className={styles.videoThumbnail}>
         <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
-      </Box>
+      </Box> : <Loader/>}
 
       <Box className={styles.videoInfo}>
         <Box className={styles.videoInfoTitle}>
@@ -114,7 +115,8 @@ const VideoCard = ({ idList }) => {
             <Typography className={styles.title}>{video.title}</Typography>
           )}
 
-          <Link to={`/user-channel`} className={styles.channelLink}>
+          <Link to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
+                className={styles.channelLink}>
             <Typography variant="subtitle2" className={styles.channelName}>
               <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
               {video.channelName}
