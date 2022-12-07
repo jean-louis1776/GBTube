@@ -37,7 +37,8 @@ import {
   setAccessToken,
   setAuthStatus,
   setId,
-  setNickName, setRole
+  setNickName,
+  setRole,
 } from '../store/slice';
 
 export function App() {
@@ -54,7 +55,8 @@ export function App() {
         console.log('useEffect run');
         if (runOnceFlag && localStorage.getItem('token')) {
           console.log('Auth running');
-          const { isBaned, accessToken, id, nickName, role } = await AuthController.checkAuth();
+          const { isBaned, accessToken, id, nickName, role } =
+            await AuthController.checkAuth();
           if (isBaned) {
             localStorage.setItem('token', '');
             console.log(data, 'user banned');
@@ -145,7 +147,6 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="miniVideo" element={<VideoCard />} />
         <Route path="user-channel" element={<UserPage />} />
       </Routes>
     </Box>
