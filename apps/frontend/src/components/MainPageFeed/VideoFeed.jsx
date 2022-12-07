@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import Loader from '../Loader/Loader';
 import VideoController from '../../controllers/VideoController';
-import GetChildrenController from '../../controllers/GetChildrenController';
 import { VIDEO } from '@constants/frontend';
 import { Link } from 'react-router-dom';
 import VideoCard from '../VideoCard/VideoCard';
 
 const VideoFeed = () => {
-  const [videoComp, setVideoComp] = useState(null);
+  const [videoComp, setVideoComp] = useState(<Loader />);
+  const refVideos = useRef([]);
 
-  const getRandomVideoCompilation = async () => {
-    try {
-      const data = await VideoController.getVideoCompilation();
-      const promises = data.map((id) =>
-        GetChildrenController.getItemById(VIDEO, id)
-      );
-      const videos = await Promise.all(promises);
-
+  useEffect(() => {
+    document.title = 'GeekTube';
+    const getRandomVideoCompilation = async () => {
+        return VideoController.getVideoCompilation();
+    };
+    getRandomVideoCompilation().then((videos) => {
+      refVideos.current = videos;
       setVideoComp(
         <Box
           sx={{
@@ -37,27 +36,26 @@ const VideoFeed = () => {
             },
           }}
         >
-          {videos.map((item) => (
+          {videos.map((idList) =>
             <Link
-              key={item.idList.split('_').at(-1)}
-              to={`/${VIDEO}/get_one/${item.idList}`}
+              key={idList}
+              to={`/${VIDEO}/get_one/${idList}`}
             >
-              <VideoCard video={item} />
+              <VideoCard idList={idList} />
             </Link>
-          ))}
+          )}
         </Box>
       );
-    } catch (err) {
+    }).catch((err) => {
+      console.log('Failed get favorite videos list');
       console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    document.title = 'GeekTube';
-    getRandomVideoCompilation();
+    });
   }, []);
 
-  return <Box>{videoComp ?? <Loader />}</Box>;
+  return <Box>
+    {refVideos.current.length > 0 ? videoComp :
+      <Typography sx={{ color: 'white' }}>На сервере нет ни одного видео</Typography>}
+  </Box>;
 };
 
 export default VideoFeed;
