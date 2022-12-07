@@ -2,15 +2,26 @@ import Header from '../Header/Header';
 import { Avatar, Box, Button, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { userChannelTabs } from '@constants/frontend';
-import { Link } from 'react-router-dom';
+import { CHANNEL, userChannelTabs } from '@constants/frontend';
+import { Link, useParams } from 'react-router-dom';
 import UserAbout from './UserAbout';
 import ChannelGrid from '../ChannelGrid';
 import PlayListGrid from '../PlayListGrid';
 import VideoGrid from '../VideoGrid/VideoGrid';
+import VideoController from '../../controllers/VideoController';
+import GetChildrenController from '../../controllers/GetChildrenController';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
 
 const UserPage = () => {
   const theme = useTheme();
+  const { idList } = useParams();
+  const userId = useSelector(getUserId, shallowEqual);
+
+  const isOwner = () => {
+    const authorId = idList.split('_')[0];
+    return authorId === userId;
+  };
 
   const SubscribeButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -74,10 +85,14 @@ const UserPage = () => {
             }}
           >
             <Box>
-              <Typography variant={'h5'}>UserName</Typography>
+              <Typography variant={'h5'}>ChannelName</Typography>
               <Typography variant={'subtitle2'}>100500 подписчиков</Typography>
             </Box>
-            {subscribe ? (
+            {isOwner() ? (
+              <SubscribeButton variant="outlined">
+                Редактировать
+              </SubscribeButton>
+            ) : subscribe ? (
               <SubscribeButton
                 onClick={() => setSubscribe((prevState) => !prevState)}
                 sx={{
@@ -141,7 +156,7 @@ const UserPage = () => {
           </TabPanel>
           <TabPanel value={value} index={1}>
             Плейлисты
-            {/*{<PlayListGrid />}*/}
+            {<PlayListGrid />}
           </TabPanel>
           <TabPanel value={value} index={2}>
             Каналы

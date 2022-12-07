@@ -99,7 +99,7 @@ export function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/userProfile/:user_id" element={<UserProfile />} />
-        <Route path="/channel/:channelId" element={<ChannelCard />} />
+        <Route path={`/${CHANNEL}/:idList`} element={<UserPage />} />
         <Route path="/video/:videoId" element={<VideoCard />} />
         <Route path="/subscriptions" element={<Subscriptions />} />
         <Route path="/likes" element={<Likes />} />
@@ -147,7 +147,7 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="user-channel" element={<UserPage />} />
+        {/*<Route path={`/${CHANNEL}/:idList`} element={<UserPage />} />*/}
       </Routes>
     </Box>
   );

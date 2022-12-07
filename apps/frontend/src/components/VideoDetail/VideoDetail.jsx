@@ -14,7 +14,7 @@ import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import VideoController from '../../controllers/VideoController';
-import { VIDEO } from '@constants/frontend';
+import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -40,6 +40,8 @@ const VideoDetail = () => {
   const [viewsCount, setViewsCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
+
+  const channelNameLink = idList.split('_').slice(0, 2).join('_');
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
@@ -105,13 +107,6 @@ const VideoDetail = () => {
     });
   }, []);
 
-  // if (!videoDetail?.snippet) return <Loader />;
-  //
-  // const {
-  //   snippet: { title, channelId, channelTitle, publishedAt },
-  //   statistics: { viewCount, likeCount },
-  // } = videoDetail;
-
   const handleDeleteVideo = async () => {
     try {
       await VideoController.deleteVideo(idList.split('_').at(-1));
@@ -162,7 +157,7 @@ const VideoDetail = () => {
               justifyContent="space-between"
             >
               <Stack direction="row" className={styles.channel_info}>
-                <Link to="/channel">
+                <Link to={`/${CHANNEL}/${channelNameLink}`}>
                   <Box className={styles.channel_sub}>
                     <Avatar sx={{ mr: '10px' }} />
                     <Typography variant="subtitle1" fontWeight="500">
