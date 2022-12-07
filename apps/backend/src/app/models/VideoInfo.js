@@ -25,7 +25,7 @@ export const VideoInfo = sequelize.define('VideoInfo', {
       allowNull: true,
     },
     thumbnail: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('medium'),
       allowNull: true,
     },
     viewsCount: {
