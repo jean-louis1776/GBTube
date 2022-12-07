@@ -15,6 +15,7 @@ const PlayListGrid = () => {
   const theme = useTheme();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
+  const authorId = idList.split('_')[0];
   const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const [title, setTitle] = useState('');
@@ -77,9 +78,10 @@ const PlayListGrid = () => {
   };
 
   const isMayModerate = () => {
-    const authorId = idList.split('_')[0];
     return authorId === userId || userRole === 'admin' || userRole === 'moderator';
   };
+
+  const isAuthor = () => authorId === userId;
 
   return (
     <Box
@@ -135,14 +137,14 @@ const PlayListGrid = () => {
           justifyContent={'center'}
           gap={2}
         >
-          <Button
+
+          {isAuthor() ? <Button
             variant='contained'
             color='baseBlue'
             onClick={handleCreateChild}
           >
             Создать {PLAYLIST}
-          </Button>
-
+          </Button> : ''}
           {isMayModerate() ? <Button
             variant='contained'
             color='baseBlue'

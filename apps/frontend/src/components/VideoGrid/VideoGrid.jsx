@@ -14,6 +14,9 @@ import Header from '../Header/Header';
 
 const VideoGrid = () => {
   const { idList } = useParams();
+  const userId = useSelector(getUserId, shallowEqual);
+  const authorId = idList.split('_')[0];
+  const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
   // const location = useLocation();
@@ -77,6 +80,12 @@ const VideoGrid = () => {
     );
   };
 
+  const isMayModerate = () => {
+    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
+  };
+
+  const isAuthor = () => authorId === userId;
+
   const handleDeletePlaylist = async () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
@@ -116,8 +125,8 @@ const VideoGrid = () => {
       {/*  ))}*/}
       {/*</Box>*/}
       {content}
-      <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
-      <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button>
+      {isAuthor() ? <Button onClick={handleCreateChild}>Создать {VIDEO}</Button> : ''}
+      {isMayModerate() ? <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button> : ''}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
     </Box>
   );
