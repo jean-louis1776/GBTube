@@ -176,7 +176,7 @@ class UserController {
   async getNickNameById(req, res, next) {
     try {
       validateError(req);
-      return res.json(await userService.getNickNameById(+req.params.id));
+      return res.json({ nickName: await userService.getNickNameById(+req.params.id) });
     } catch (e) {
       next(e);
     }

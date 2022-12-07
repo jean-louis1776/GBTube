@@ -225,6 +225,7 @@ class UserService {
       if (!nickName) {
         throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
       }
+      return nickName;
     } catch (e) {
       console.log(e.message);
       throw e;
