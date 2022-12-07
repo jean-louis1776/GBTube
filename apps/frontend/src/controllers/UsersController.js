@@ -9,6 +9,10 @@ export default class UserController {
     return $authApi.get(`user/find/${user.id}`);
   }
 
+  static async getUserNick(id) {
+    return (await $authApi.get(`/user/find_min/${id}`)).data;
+  }
+
   static async updateUser(user) {
     return $authApi.patch(`/user/edit/${user.id}`, { updatingUser: user });
   }

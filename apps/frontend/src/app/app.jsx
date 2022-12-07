@@ -59,7 +59,7 @@ export function App() {
             await AuthController.checkAuth();
           if (isBaned) {
             localStorage.setItem('token', '');
-            console.log(data, 'user banned');
+            console.log(isBaned, 'user banned');
             dispatch(setAuthStatus(false));
             dispatch(setAccessToken(''));
             dispatch(setId(''));
@@ -106,7 +106,7 @@ export function App() {
         <Route path="/library" element={<Library />} />
         <Route path="/history" element={<History />} />
         <Route
-          path={`/${CHANNEL}/get_all/:user_id`}
+          path={`/${CHANNEL}/get_all/:authorId`}
           element={<ChannelGrid />}
         />
         <Route

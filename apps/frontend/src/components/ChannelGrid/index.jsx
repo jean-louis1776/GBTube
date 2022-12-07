@@ -7,19 +7,25 @@ import { CHANNEL } from '@constants/frontend';
 import { ContentChannel } from './ContentChannel';
 import { useTheme } from '@mui/material/styles';
 import Header from '../Header/Header';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
+import UserController from '../../controllers/UsersController';
 
 const ChannelGrid = () => {
-  const { user_id } = useParams();
-  let [content, setContent] = useState(<Loader />);
+  const { authorId } = useParams();
+  const [content, setContent] = useState(<Loader />);
+  const [authorNick, setAuthorNik] = useState('Временно не работает');
   const navigate = useNavigate();
   const theme = useTheme();
+  const userId = useSelector(getUserId, shallowEqual);
 
   useEffect(() => {
     const fetchData = async () => {
       setContent(<Loader />);
+      console.log(authorId);
       const children = await GetChildrenController.getAllItemsById(
         CHANNEL,
-        user_id
+        authorId
       );
       console.log(children);
       if (children.length === 0) {
@@ -29,6 +35,7 @@ const ChannelGrid = () => {
       } else {
         setContent(<ContentChannel children={children} />);
       }
+      // setAuthorNik(await UserController.getUserNick(authorId));
     };
     fetchData().catch(() => {
       setContent('');
@@ -37,8 +44,10 @@ const ChannelGrid = () => {
   }, []);
 
   const handleCreateChild = () => {
-    navigate(`/${CHANNEL}/create/${user_id}`);
+    navigate(`/${CHANNEL}/create/${userId}`);
   };
+
+  const isAuthor = () => authorId === userId;
 
   return (
     <Box
@@ -57,15 +66,16 @@ const ChannelGrid = () => {
         }}
       >
         <Typography variant={'h6'} style={{ color: 'white' }}>
-          Каналы пользователя ID: {user_id}
+          Каналы: {authorNick}
         </Typography>
-        <Button
+        {isAuthor() ? <Button
           variant='contained'
           color='baseBlue'
           onClick={handleCreateChild}
         >
           Создать {CHANNEL}
-        </Button>
+        </Button> : ''}
+
       </Stack>
       {content}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
