@@ -13,7 +13,7 @@ router.get('/frameshot/:hash_name', videoValidation.checkName, videoController.g
 router.get('/get_one/:id', videoValidation.checkId, videoController.getVideoInfoById);
 router.get('/query/:title', videoValidation.checkTitle, videoController.findVideoByPartName);
 router.get('/get_all/:playlist_id', videoValidation.checkPlaylistId, videoController.getVideosInfoByPlaylistId);
-router.get('get_favorite', videoController.getFavoriteIdList);
+router.get('/get_favorite', videoController.getFavoriteIdList);
 router.get('/likes_list/:user_id', videoValidation.checkUserId, videoController.getLikesList)
 router.patch('/like', videoValidation.subscribeOrLike, videoController.like);
 router.patch('/dislike', videoValidation.subscribeOrLike, videoController.dislike);
