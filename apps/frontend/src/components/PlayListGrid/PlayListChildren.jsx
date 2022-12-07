@@ -1,6 +1,6 @@
 import styles from './PlayListChildren.module.scss';
 import { Button, Tooltip, Typography } from '@mui/material';
-import { /*useLocation,*/ useNavigate /*, useParams*/ } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { Loader } from '../index';
@@ -9,16 +9,11 @@ import { useTheme } from '@mui/material/styles';
 
 export const PlayListChildren = ({ childType, itemId }) => {
   const theme = useTheme();
-  // const { channel_id } = useParams();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  // const location = useLocation();
-  let [idListState, setIdList] = useState([] /*location.state.idList*/);
-  // let [currentId, setCurrentId] = useState(props.idList.split(';').at(-1));
 
-  // useEffect(() => {
-  //
-  // })
+  let [idListState, setIdList] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       const { title, idList } = await GetChildrenController.getItemById(
@@ -48,17 +43,15 @@ export const PlayListChildren = ({ childType, itemId }) => {
     const url = `/${VIDEO}/get_all/${idListState.join('_')}`;
     console.log(url);
     console.log(idListState, 'idListState');
-    navigate(url, { state: [...idListState] });
+    navigate(url);
   };
 
   return (
-    // <Link to={`/${childType}/get_one/:${id}`}></Link>
     <Button
       sx={{ borderTop: 1, borderColor: theme.palette.shadows.main }}
       onClick={handleClick}
       className={styles.child}
     >
-      {/*Title: {props.title}*/}
       {content}
     </Button>
   );
