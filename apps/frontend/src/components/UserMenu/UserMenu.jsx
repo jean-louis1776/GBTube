@@ -26,7 +26,12 @@ import { useTheme } from '@mui/material/styles';
 
 import styles from './UserMenu.module.scss';
 import AuthController from '../../controllers/AuthController';
-import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
+import {
+  setAccessToken,
+  setAuthStatus,
+  setId,
+  setNickName,
+} from '../../store/slice';
 import { getAuthStatus, getNickName, getUserId } from '../../store/selectors';
 
 const UserMenu = () => {
@@ -83,6 +88,7 @@ const UserMenu = () => {
       dispatch(setAccessToken(''));
       dispatch(setId(''));
       dispatch(setNickName(''));
+      navigate('/');
       console.log('logout successful');
     } catch (err) {
       console.log('logout fail');

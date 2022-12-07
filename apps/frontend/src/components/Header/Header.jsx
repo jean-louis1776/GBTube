@@ -11,10 +11,10 @@ import Toolbar from '@mui/material/Toolbar';
 import CssBaseline from '@mui/material/CssBaseline';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { logo } from '@constants/frontend';
+import { logo, VIDEO } from '@constants/frontend';
 import { Navbar, SearchForm, UserMenu } from '../';
 // import { getSelector } from '../../store/getSelector';
 // import { logoutHandler } from '../../features/auth/authSlice';
@@ -23,11 +23,17 @@ import { AppBar, DrawerHeader } from './HeaderComponents';
 import styles from './Header.module.scss';
 import { getAuthStatus } from '../../store/selectors';
 import AuthController from '../../controllers/AuthController';
-import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
+import {
+  setAccessToken,
+  setAuthStatus,
+  setId,
+  setNickName,
+} from '../../store/slice';
 
 const Header = ({ selectedCategory }) => {
   const isAuth = useSelector(getAuthStatus, shallowEqual);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -50,6 +56,7 @@ const Header = ({ selectedCategory }) => {
       dispatch(setAccessToken(''));
       dispatch(setId(''));
       dispatch(setNickName(''));
+      navigate('/' /*, { state: { idList: location.state.idList } }*/);
       console.log('logout successful');
     } catch (err) {
       console.log('logout fail');

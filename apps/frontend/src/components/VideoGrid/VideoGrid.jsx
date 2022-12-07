@@ -11,6 +11,8 @@ import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
 import Header from '../Header/Header';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getRole, getUserId } from '../../store/selectors';
 
 const VideoGrid = () => {
   const { idList } = useParams();
@@ -81,7 +83,10 @@ const VideoGrid = () => {
   };
 
   const isMayModerate = () => {
-    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
+    const authorId = idList.split('_')[0];
+    return (
+      authorId === userId || userRole === 'admin' || userRole === 'moderator'
+    );
   };
 
   const isAuthor = () => authorId === userId;
@@ -125,8 +130,18 @@ const VideoGrid = () => {
       {/*  ))}*/}
       {/*</Box>*/}
       {content}
-      {isAuthor() ? <Button onClick={handleCreateChild}>Создать {VIDEO}</Button> : ''}
-      {isMayModerate() ? <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button> : ''}
+      {isAuthor() ? (
+        <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
+      ) : (
+        ''
+      )}
+      {isMayModerate() ? (
+        <Button onClick={handleDeletePlaylist}>
+          Удалить текущий {PLAYLIST}
+        </Button>
+      ) : (
+        ''
+      )}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
     </Box>
   );
