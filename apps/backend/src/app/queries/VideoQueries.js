@@ -274,11 +274,11 @@ class VideoQueries {
     }
   }
 
-  async getIdOfAllVideo() {
+  async getIdListsOfAllVideo() {
     try {
-      const videoIdList = await Video.findAll({attributes: ['id']});
+      const videoIdList = await VideoInfo.findAll({attributes: ['idList']});
       if (!videoIdList) return [];
-      return videoIdList.map(videoId => videoId.toJSON().id);
+      return videoIdList.map(videoId => videoId.toJSON().idList);
     } catch (e) {
       console.log(e.message);
       throw(e);

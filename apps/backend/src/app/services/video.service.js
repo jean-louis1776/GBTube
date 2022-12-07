@@ -144,13 +144,13 @@ class VideoService {
   }
 
   async getFavoriteIdList() {
-    const fullVideoIdList = await videoQueries.getIdOfAllVideo();
+    const fullVideoIdList = await videoQueries.getIdListsOfAllVideo();
     let portion = Math.min(process.env.VIDEO_PORTION, fullVideoIdList.length);
     const favoriteIdList = [];
 
     while (portion) {
       const index = Math.floor(Math.random() * portion);
-      favoriteIdList.push(fullVideoIdList[index].toString());
+      favoriteIdList.push(fullVideoIdList[index]);
       fullVideoIdList.splice(index, 1);
       portion--;
     }
