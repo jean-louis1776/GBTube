@@ -19,7 +19,7 @@ import { theme } from '../../theme';
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
-  const videoId = idList.split('_').at(-1);
+  const videoId = idList?.split('_').at(-1);
   const [video, setVideo] = useState({});
 
   useEffect(() => {
