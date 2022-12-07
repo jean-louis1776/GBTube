@@ -15,7 +15,7 @@ export const ContentChannel = ({ children }) => {
       {children.map((item, idx) => (
         <Box key={idx}>
           <ChannelChildren
-            itemId={item.idList.split(';').at(-1)}
+            itemId={item.idList.split('_').at(-1)}
             childType={CHANNEL}
           />
         </Box>
