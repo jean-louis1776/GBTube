@@ -21,7 +21,7 @@ const VideoDetail = () => {
   const navigate = useNavigate();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
-  const userRole = useSelector(getRole);
+  const userRole = useSelector(getRole, shallowEqual);
   const [videoContent, setVideoContent] = useState(<Loader />);
   const [subscribe, setSubscribe] = useState(true);
   const [category, setCategory] = useState('');

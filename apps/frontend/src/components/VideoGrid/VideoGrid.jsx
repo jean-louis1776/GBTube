@@ -17,7 +17,7 @@ import { getRole, getUserId } from '../../store/selectors';
 const VideoGrid = () => {
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
-  const userRole = useSelector(getRole);
+  const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
   // const location = useLocation();
