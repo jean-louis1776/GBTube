@@ -2,7 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
 import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
-import { AnnouncementOutlined, CheckCircle, PlaylistAdd, ReplyAllOutlined } from '@mui/icons-material';
+import {
+  AnnouncementOutlined,
+  CheckCircle,
+  PlaylistAdd,
+  ReplyAllOutlined,
+} from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import ShowMoreText from 'react-show-more-text';
 import styles from './VideoDetail.module.scss';
@@ -68,7 +73,9 @@ const VideoDetail = () => {
       document.title = videoInfo.title;
       setCategory(videoInfo.category);
       setChannelName(videoInfo.channelName);
-      setCreateTimestamp(new Date(videoInfo.createTimestamp).toLocaleDateString());
+      setCreateTimestamp(
+        new Date(videoInfo.createTimestamp).toLocaleDateString()
+      );
       setDescription(videoInfo.description);
       setDislikesCount(videoInfo.dislikesCount);
       setLikesCount(videoInfo.likesCount);
@@ -117,11 +124,13 @@ const VideoDetail = () => {
 
   const handleChangeCommentText = (evt) => {
     setCommentText(evt.target.value);
-  }
+  };
 
   const isMayModerate = () => {
     const authorId = idList.split('_')[0];
-    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
+    return (
+      authorId === userId || userRole === 'admin' || userRole === 'moderator'
+    );
   };
 
   return (
@@ -164,7 +173,9 @@ const VideoDetail = () => {
                     />
                   </Box>
                 </Link>
-                {subscribe ? (
+                {isMayModerate() ? (
+                  <Button onClick={handleDeleteVideo}>Удалить видео</Button>
+                ) : subscribe ? (
                   <SubscribeButton
                     onClick={() => setSubscribe((prevState) => !prevState)}
                     sx={{
@@ -186,7 +197,6 @@ const VideoDetail = () => {
                   </SubscribeButton>
                 )}
               </Stack>
-              {isMayModerate() ? <Button onClick={handleDeleteVideo}>Удалить видео</Button> : ''}
               <Stack direction="row" gap="10px">
                 <Stack
                   direction="row"
@@ -304,10 +314,15 @@ const VideoDetail = () => {
               }
 
               <Box>
-                { comments?.length > 0 ? comments?.map((comment, index) =>
-                    <VideoCommentary key={index} comment={comment} />) :
-                  <Typography variant={'body1'}>Пока нет комментариев...</Typography>
-                }
+                {comments?.length > 0 ? (
+                  comments?.map((comment, index) => (
+                    <VideoCommentary key={index} comment={comment} />
+                  ))
+                ) : (
+                  <Typography variant={'body1'}>
+                    Пока нет комментариев...
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>
