@@ -11,9 +11,13 @@ import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
 import Header from '../Header/Header';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getRole, getUserId } from '../../store/selectors';
 
 const VideoGrid = () => {
   const { idList } = useParams();
+  const userId = useSelector(getUserId, shallowEqual);
+  const userRole = useSelector(getRole);
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
   // const location = useLocation();
@@ -77,6 +81,11 @@ const VideoGrid = () => {
     );
   };
 
+  const isMayModerate = () => {
+    const authorId = idList.split('_')[0];
+    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
+  };
+
   const handleDeletePlaylist = async () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
@@ -117,7 +126,7 @@ const VideoGrid = () => {
       {/*</Box>*/}
       {content}
       <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
-      <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button>
+      {isMayModerate() ? <Button onClick={handleDeletePlaylist}>Удалить текущий {PLAYLIST}</Button> : ''}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
     </Box>
   );
