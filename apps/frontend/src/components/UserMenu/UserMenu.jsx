@@ -14,7 +14,7 @@ import {
   Typography,
   Zoom,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
 // import styles from './UserMenu.module.scss';
@@ -189,14 +189,18 @@ const UserMenu = () => {
               </MenuItem>
             </Box>
           ) : (
-            <Box onClick={handleLogoutClick} key={index}>
-              <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
-                <ListItemIcon>{userMenu.icon}</ListItemIcon>
-                <ListItemText>
-                  {isAuth && userId ? userMenu.name : userMenu.altName}
-                </ListItemText>
-              </MenuItem>
-            </Box>
+            userMenu.name === 'Войти' || (
+              <Link to="/login">
+                <Box onClick={handleLogoutClick} key={index}>
+                  <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+                    <ListItemIcon>{userMenu.icon}</ListItemIcon>
+                    <ListItemText>
+                      {isAuth && userId ? userMenu.name : userMenu.altName}
+                    </ListItemText>
+                  </MenuItem>
+                </Box>
+              </Link>
+            )
           )
         )}
       </Menu>

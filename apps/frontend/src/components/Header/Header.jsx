@@ -56,7 +56,7 @@ const Header = ({ selectedCategory }) => {
       dispatch(setAccessToken(''));
       dispatch(setId(''));
       dispatch(setNickName(''));
-      navigate('/' /*, { state: { idList: location.state.idList } }*/);
+      navigate('/');
       console.log('logout successful');
     } catch (err) {
       console.log('logout fail');
