@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -43,54 +43,49 @@ import {
 
 export function App() {
   const dispatch = useDispatch();
+  const refFlag = useRef(true);
 
-  const runOnceBuild = () => {
-    let runOnceFlag = true;
-    const setFlagToTrue = () => {
-      runOnceFlag = true;
-      console.log('Auth flag dropped');
-    };
-    return () => {
-      const handle = async () => {
-        console.log('useEffect run');
-        if (runOnceFlag && localStorage.getItem('token')) {
-          console.log('Auth running');
-          const { isBaned, accessToken, id, nickName, role } =
-            await AuthController.checkAuth();
-          if (isBaned) {
-            localStorage.setItem('token', '');
-            console.log(isBaned, 'user banned');
-            dispatch(setAuthStatus(false));
-            dispatch(setAccessToken(''));
-            dispatch(setId(''));
-            dispatch(setNickName(''));
-            dispatch(setRole(''));
-            return;
-          }
-          localStorage.setItem('token', accessToken);
-          dispatch(setAuthStatus(true));
-          dispatch(setAccessToken(accessToken));
-          dispatch(setId(String(id)));
-          dispatch(setNickName(nickName));
-          dispatch(setRole(role));
-          runOnceFlag = false;
-          setTimeout(setFlagToTrue, 3000);
+  const setFlagToTrue = () => {
+    refFlag.current = true;
+    console.log('Auth flag dropped');
+  }
+
+  useEffect(() => {
+    const handle = async () => {
+      console.log(refFlag.current, 'refresh flag', 'useEffect run');
+      if (refFlag.current && localStorage.getItem('token')) {
+        console.log('Auth running');
+        const { isBaned, accessToken, id, nickName, role } =
+          await AuthController.checkAuth();
+        if (isBaned) {
+          localStorage.setItem('token', '');
+          console.log(isBaned, 'user banned');
+          dispatch(setAuthStatus(false));
+          dispatch(setAccessToken(''));
+          dispatch(setId(''));
+          dispatch(setNickName(''));
+          dispatch(setRole(''));
+          return;
         }
-      };
-      handle()
-        .then(() => {
-          console.log('User update successful');
-        })
-        .catch((err) => {
-          console.log('User update failed');
-          console.log(err);
-        });
+        localStorage.setItem('token', accessToken);
+        dispatch(setAuthStatus(true));
+        dispatch(setAccessToken(accessToken));
+        dispatch(setId(String(id)));
+        dispatch(setNickName(nickName));
+        dispatch(setRole(role));
+        refFlag.current = false;
+        setTimeout(setFlagToTrue, 4000);
+      }
     };
-  };
-
-  const runOnceInstance = runOnceBuild();
-
-  useEffect(runOnceInstance, []);
+    handle()
+      .then(() => {
+        console.log('User update successful');
+      })
+      .catch((err) => {
+        console.log('User update failed');
+        console.log(err);
+      });
+  }, []);
   return (
     <Box sx={{ bgcolor: 'darkBackground.main' }}>
       <Routes>
