@@ -24,7 +24,9 @@ const VideoCard = ({ idList }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setVideo(await GetChildrenController.getItemById(VIDEO, videoId));
+      const vids = await GetChildrenController.getItemById(VIDEO, videoId);
+      console.log(vids);
+      setVideo(vids);
     };
     fetchData().then().catch(() => {
       console.log(`Video ID: ${idList} not found`);
