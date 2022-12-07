@@ -4,7 +4,7 @@ import { Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import {
   Link,
-  /*useLocation,*/ useNavigate,
+  useNavigate,
   useParams,
 } from 'react-router-dom';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
@@ -21,21 +21,21 @@ const VideoGrid = () => {
   const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  // const location = useLocation();
+  const playListId = idList.split('_').at(-1);
 
   useEffect(() => {
     const fetchData = async () => {
       setContent(<Loader />);
       const { title, description } = await GetChildrenController.getItemById(
         PLAYLIST,
-        idList.split('_').at(-1)
+        playListId
       );
       console.log(VIDEO, idList);
       const children = await GetChildrenController.getAllItemsById(
         VIDEO,
-        idList.split('_').at(-1)
+        playListId
       );
-      console.log(children);
+
       if (children.length === 0) {
         setContent(
           <p style={{ color: 'white' }}>Не создано ни одного видео </p>
@@ -62,7 +62,7 @@ const VideoGrid = () => {
                   to={`/${VIDEO}/get_one/${item.idList}`}
                   style={{ color: 'white' }}
                 >
-                  <VideoCard video={item} />
+                  <VideoCard idList={item.idList} />
                 </Link>
               ))}
             </Stack>
@@ -77,9 +77,7 @@ const VideoGrid = () => {
   }, []);
 
   const handleCreateChild = () => {
-    navigate(
-      `/${VIDEO}/create/${idList}` /*, { state: { idList: location.state.idList } }*/
-    );
+    navigate(`/${VIDEO}/create/${idList}`);
   };
 
   const isMayModerate = () => {
@@ -94,7 +92,7 @@ const VideoGrid = () => {
   const handleDeletePlaylist = async () => {
     console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
-      await EditItemController.deleteItem(PLAYLIST, idList.split('_').at(-1));
+      await EditItemController.deleteItem(PLAYLIST, playListId);
       navigate(
         `/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
         { replace: true }
@@ -142,7 +140,6 @@ const VideoGrid = () => {
       ) : (
         ''
       )}
-      {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
     </Box>
   );
 };
