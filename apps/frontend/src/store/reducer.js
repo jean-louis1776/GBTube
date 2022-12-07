@@ -14,4 +14,8 @@ export const reducers = {
   setNickName(state, action){
     state.nickName = action.payload;
   },
+
+  setRole(state, action){
+    state.role = action.payload;
+  },
 }

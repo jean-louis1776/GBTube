@@ -7,8 +7,9 @@ export const profileSlice = createSlice({
     id: '',
     isAuth: false,
     nickName: 'Anonymous',
+    role: '',
   },
   reducers: reducers
 });
 
-export const { setAccessToken, setAuthStatus, setId, setNickName } = profileSlice.actions;
+export const { setAccessToken, setAuthStatus, setId, setNickName, setRole } = profileSlice.actions;
