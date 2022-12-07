@@ -21,25 +21,25 @@ import { theme } from '../../theme';
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ video }) => {
-  const [title, setTitle] = useState('');
+  // const [title, setTitle] = useState('');
   const { idList } = useParams();
 
   // const dispatch = useDispatch();
   // const video = useSelector(getSelector('videoDetail', 'video'));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { title } = await GetChildrenController.getItemById(
-        VIDEO,
-        idList.split('_').at(-1)
-      );
-      setTitle(title);
-    };
-    fetchData().catch(() => {
-      setTitle('');
-      console.log(`Video ID: ${idList} not found`);
-    });
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const { title } = await GetChildrenController.getItemById(
+  //       VIDEO,
+  //       idList.split('_').at(-1)
+  //     );
+  //     setTitle(title);
+  //   };
+  //   fetchData().catch(() => {
+  //     setTitle('');
+  //     console.log(`Video ID: ${idList} not found`);
+  //   });
+  // }, []);
 
   return (
     // <Card

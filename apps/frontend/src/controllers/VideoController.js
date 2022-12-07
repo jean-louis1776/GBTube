@@ -40,4 +40,8 @@ export default class VideoController {
   static async getFrameShotVideo(id) {
     return $authApi.get(`video/frameshot/${id}`);
   }
+
+  static async getVideoCompilation() {
+    return (await $authApi.get('/video/get_favorite')).data;
+  }
 }
