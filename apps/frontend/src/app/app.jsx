@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 import './app.module.scss';
 
 import {
-  ChannelCard,
   EmailConfirm,
   History,
   Library,
