@@ -11,10 +11,10 @@ export default class CommentController {
     const url = `/comment/videoId/id/${commentId}`;
     return (await $authApi.get(url)).data;
   }
-  static async add(idList, textContent) {
-    const url = `api/comment/create`;
+  static async send(idList, userId, textContent) {
+    const url = `/comment/create`;
     console.log(url);
-    const dto = {idList, description: textContent};
+    const dto = {idList, userId, description: textContent};
     console.log(dto);
     return await $authApi.post(url, dto, {
       headers: {

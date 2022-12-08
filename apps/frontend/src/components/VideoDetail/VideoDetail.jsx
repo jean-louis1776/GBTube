@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import {
   AnnouncementOutlined,
   CheckCircle,
@@ -20,11 +20,14 @@ import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
 import CommentController from '../../controllers/CommentController';
+import SendIcon from '@mui/icons-material/Send';
 
 const VideoDetail = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { idList } = useParams();
+  const videoId = idList.split('_').at(-1);
+  const authorId = idList.split('_')[0];
   const userId = useSelector(getUserId, shallowEqual);
   const userRole = useSelector(getRole, shallowEqual);
   const [videoContent, setVideoContent] = useState(<Loader />);
@@ -69,7 +72,6 @@ const VideoDetail = () => {
 
   useEffect(() => {
     setVideoContent(<Loader />);
-    const videoId = idList.split('_').at(-1);
     const fetchData = async () => {
       const videoInfo = await VideoController.getVideoInfo(videoId);
       document.title = videoInfo.title;
@@ -121,12 +123,35 @@ const VideoDetail = () => {
     setCommentText(evt.target.value);
   };
 
+  const handleSendComment = async () => {
+    console.log('Send comment');
+    try {
+      await CommentController.send(idList, userId, commentText.trim());
+      setCommentText('');
+      setComments(await CommentController.getAllItemsByVideo(videoId));
+    } catch (err) {
+      console.log('Send comment error');
+      console.log(err);
+    }
+  }
+
+  const isCommentEmpty = () => commentText.length === 0;
+
   const isMayModerate = () => {
-    const authorId = idList.split('_')[0];
     return (
       authorId === userId || userRole === 'admin' || userRole === 'moderator'
     );
   };
+
+  const handleDeleteComment = (id) => async () => {
+    try {
+      await CommentController.delete(id);
+      setComments(await CommentController.getAllItemsByVideo(videoId));
+    } catch (err) {
+      console.log(`Failed delete comment ${id}`);
+      console.log(err);
+    }
+  }
 
   return (
     <Box className={styles.wrapper}>
@@ -305,19 +330,27 @@ const VideoDetail = () => {
                     onChange={handleChangeCommentText}
                     value={commentText}
                   />
+                  <IconButton disabled={isCommentEmpty()} onClick={handleSendComment} size='large' variant="contained">
+                    <SendIcon/>
+                  </IconButton>
                 </Box>
               }
 
               <Box>
-                {comments?.length > 0 ? (
-                  comments?.map((comment, index) => (
-                    <VideoCommentary key={index} comment={comment} />
-                  ))
-                ) : (
-                  <Typography variant="body1">
+                {comments?.length > 0 ?
+                  comments?.map((comment, index) =>
+                    // <p style={{color: 'white'}} key={index}>{comment.description}</p>
+                    <VideoCommentary key={index}
+                                     commentData={comment}
+                                     currentUserId={userId}
+                                     videoOwnerId={authorId}
+                                     handleDelete={handleDeleteComment(comment.id)}
+                    />
+                  )
+                 : <Typography variant={'body1'}>
                     Пока нет комментариев...
                   </Typography>
-                )}
+                }
               </Box>
             </Box>
           </Box>
