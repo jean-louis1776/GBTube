@@ -29,9 +29,11 @@ const VideoCard = ({ idList }) => {
       console.log(vids);
       setVideo(vids);
     };
-    fetchData().then().catch(() => {
-      console.log(`Video ID: ${idList} not found`);
-    });
+    fetchData()
+      .then()
+      .catch(() => {
+        console.log(`Video ID: ${idList} not found`);
+      });
   }, []);
 
   return (
@@ -99,9 +101,32 @@ const VideoCard = ({ idList }) => {
 
     // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
-      <Box className={styles.videoThumbnail}>
-        {Object.hasOwn(video, 'thumbnail') ? <img src={video.thumbnail} alt={`Thumbnail:${idList}`} /> : <Loader/>}
-      </Box>
+      {/* <Box className={styles.videoThumbnail}>
+        {Object.hasOwn(video, 'thumbnail') ? (
+          <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+        ) : (
+          <Loader />
+        )}
+      </Box> */}
+
+      {Object.hasOwn(video, 'thumbnail') ? (
+        <Box
+          className={styles.videoThumbnail}
+          sx={{ backgroundImage: `url(${video.thumbnail})` }}
+        >
+          <Box className={styles.blur}>
+            <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+          </Box>
+        </Box>
+      ) : (
+        <Box
+          className={styles.videoThumbnail}
+          sx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+          <Loader />
+        </Box>
+      )}
+
       <Box className={styles.videoInfo}>
         <Box className={styles.videoInfoTitle}>
           {video?.title?.length > 20 ? (
@@ -114,20 +139,33 @@ const VideoCard = ({ idList }) => {
             <Typography className={styles.title}>{video.title}</Typography>
           )}
 
-          <Link to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
-                className={styles.channelLink}>
-          {Object.hasOwn(video, 'channelName') ? <Typography variant="subtitle2" className={styles.channelName}>
-              <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-              {video.channelName}
-            </Typography> : ''}
+          <Link
+            to={`/${PLAYLIST}/get_all/${idList
+              .split('_')
+              .slice(0, 2)
+              .join('_')}`}
+            className={styles.channelLink}
+          >
+            {Object.hasOwn(video, 'channelName') ? (
+              <Typography variant="subtitle2" className={styles.channelName}>
+                <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
+                {video.channelName}
+              </Typography>
+            ) : (
+              ''
+            )}
           </Link>
         </Box>
 
         <Box className={styles.videoInfoView}>
-          {Object.hasOwn(video, 'viewsCount') ? <Typography variant="caption" className={styles.viewCount}>
-            {'Просмотров: '}
-            {+video.viewsCount}
-          </Typography> : ''}
+          {Object.hasOwn(video, 'viewsCount') ? (
+            <Typography variant="caption" className={styles.viewCount}>
+              {'Просмотров: '}
+              {+video.viewsCount}
+            </Typography>
+          ) : (
+            ''
+          )}
         </Box>
       </Box>
     </Box>
