@@ -155,11 +155,11 @@ class VideoQueries {
   async findVideoByPartName(title) {
     try {
       const videoByPartName = await Video.findAll({
-        attributes: ['id'],
+        include: [{model: VideoInfo, attributes: ['idList']}],
         where: {title: {[Op.substring]: title}},
       });
       if (videoByPartName) {
-        return (videoByPartName).map(value => value.toJSON().id.toString());
+        return (videoByPartName).map(value => value.toJSON().VideoInfo.idList);
       }
       return null;
     } catch (e) {
@@ -194,9 +194,9 @@ class VideoQueries {
 
   async viewsIncrement(videoId) {
     try {
-      const vIncrement = await VideoInfo.findOne({/*attributes: ['viewsCount'],*/ where: {videoId}});
+      const vIncrement = await VideoInfo.findOne({where: {videoId}});
       if (vIncrement) return !!(await vIncrement.increment('viewsCount', {by: 1}));
-      throw ApiError.NotFound(`Ошибка добавления просмотра!`);
+      throw ApiError.NotFound('Ошибка добавления просмотра!');
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -299,9 +299,13 @@ class VideoQueries {
 
   async findVideoHistoryByUserId(userId) {
     try {
-      const fVideoHistoryByUserIdd = await VideoHistory.findAll({where: {userId}, order: ['updatedTimestamp','DESC']});
-      if (fVideoHistoryByUserIdd) return (fVideoHistoryByUserIdd).map(value => value.toJSON().videoId.toString());
-      return [];
+      const fVideoHistoryByUserId = await VideoHistory.findAll({
+        where: {userId},
+        order: [['updatedTimestamp','DESC']],
+        attributes: ['videoId']
+      });
+      if (fVideoHistoryByUserId) return (fVideoHistoryByUserId).map(value => value.toJSON().videoId);
+      return null;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -311,11 +315,23 @@ class VideoQueries {
   async getLikesListByUserId(userId) {
     try {
       const videoList = await VideoLike.findAll({where: {userId}});
-      if (!videoList) return [];
-      return (videoList).map(value => value.toJSON().videoId.toString());
+      if (!videoList) return null;
+      return (videoList).map(value => value.toJSON().videoId);
     } catch (e) {
       console.log(e.message);
       throw(e);
+    }
+  }
+
+
+  async getVideoIdListByVideoId(listOfVideosId) {
+    try {
+      const videosList = await VideoInfo.findAll({where: {videoId: listOfVideosId}, attributes: ['idList']});
+      if (!videosList) throw ApiError.InternalServerError('Внутренняя ошибка сервера');
+      return videosList.map(video => video.toJSON().idList);
+  } catch (e) {
+      console.log(e.message);
+      throw e;
     }
   }
 }
