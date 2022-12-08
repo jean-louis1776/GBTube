@@ -1,14 +1,30 @@
-import { Avatar, Box, Button, Stack, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import styles from './VideoCommentary.module.scss';
 import { styled } from '@mui/material/styles';
+import UserController from '../../controllers/UsersController';
 
-const VideoCommentary = () => {
+const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete}) => {
   const [answer, setAnswer] = useState(false);
+  const [authorCommentNick, setAuthorCommentNick] = useState('');
+  const [date, _] = useState(new Date(commentData.createdTimestamp));
+
+  useEffect(() => {
+    const resolveAuthorNick = async () => {
+      return (await UserController.getUserNick(commentData.userId)).nickName;
+    }
+    resolveAuthorNick().then((nick) => {
+      setAuthorCommentNick(nick);
+    }).catch((err) => {
+      console.log('Failed resolve author name');
+      console.log(err);
+    });
+  }, []);
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -41,6 +57,10 @@ const VideoCommentary = () => {
     },
   }));
 
+  const isMayRemove = () => {
+    return !(currentUserId === String(commentData.userId) || currentUserId === videoOwnerId);
+  }
+
   return (
     <Stack direction="column" marginBottom={3}>
       <Box className={styles.comment}>
@@ -52,7 +72,7 @@ const VideoCommentary = () => {
         <Box>
           <Stack direction="row" alignItems="center">
             <Link to="/user/:id">
-              <Typography variant="subtitle1">UserName</Typography>
+              <Typography variant="subtitle1">{authorCommentNick}</Typography>
             </Link>
             <Typography
               variant={'overline'}
@@ -60,7 +80,7 @@ const VideoCommentary = () => {
               fontWeight="200"
               marginLeft="10px"
             >
-              2 месяца назад
+             Дата публикации: {date.toLocaleDateString()}
             </Typography>
           </Stack>
           <ShowMoreText
@@ -74,18 +94,7 @@ const VideoCommentary = () => {
             // width={800}
             truncatedEndingComponent={'... '}
           >
-            lorem ipsum dolor sit amet, consectetur adipisicing elit. A cum
-            cupiditate in, necessitatibus, neque nostrum, nulla officia omnis
-            qui rerum tempora vel veritatis! Ab adipisci error fuga iusto magnam
-            numquam quae reiciendis reprehenderit, sequi voluptate. Adipisci
-            blanditiis consequatur, distinctio ipsum labore laborum nesciunt non
-            pariatur quo sit unde voluptas voluptates? lorem ipsum dolor sit
-            amet, consectetur adipisicing elit. A cum cupiditate in,
-            necessitatibus, neque nostrum, nulla officia omnis qui rerum tempora
-            vel veritatis! Ab adipisci error fuga iusto magnam numquam quae
-            reiciendis reprehenderit, sequi voluptate. Adipisci blanditiis
-            consequatur, distinctio ipsum labore laborum nesciunt non pariatur
-            quo sit unde voluptas voluptates?
+            {commentData.description}
           </ShowMoreText>
           <Box>
             <Tooltip title="Нравится">
@@ -101,6 +110,9 @@ const VideoCommentary = () => {
             <CommentButton onClick={() => setAnswer((prevState) => !prevState)}>
               Ответить
             </CommentButton>
+            <IconButton size='large' disabled={isMayRemove()} onClick={handleDelete} variant="contained">
+              <DeleteForeverIcon/>
+            </IconButton>
           </Box>
           <Box
             sx={{ display: answer ? 'flex' : 'none' }}
