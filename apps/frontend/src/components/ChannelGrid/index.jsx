@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import {Box, Button, Stack, Tooltip, Typography} from '@mui/material';
 import { Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,7 +29,7 @@ const ChannelGrid = () => {
       // console.log(children);
       if (children.length === 0) {
         setContent(
-          <p style={{ color: 'white' }}>Не создано ни одного Канала </p>
+          <Typography variant='h6'>Не создано ни одного Канала </Typography>
         );
       } else {
         setContent(<ContentChannel children={children} />);
@@ -59,22 +59,37 @@ const ChannelGrid = () => {
       <Stack
         sx={{
           flexDirection: 'row',
-          width: '77vw',
+          width: '72vw',
           margin: '20px auto',
           justifyContent: 'space-around',
+          alignItems: 'center',
         }}
       >
-        <Typography variant={'h6'} style={{ color: 'white' }}>
-          Каналы: {authorNick}
-        </Typography>
-        {isAuthor() ? <Button
+        <Box maxWidth={'25vw'}>
+          {authorNick.length > 60 ? (
+            <Tooltip title={authorNick}>
+              <Typography variant={'h6'} color={'white'} marginBottom={2}>
+                Каналы пользователя:
+                <Typography variant={'body1'}>
+                  {authorNick.slice(0, 60) + '...'}
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography variant={'h6'} color={'white'} marginBottom={2}>
+              Каналы пользователя:
+              <Typography variant={'body1'}>{authorNick}</Typography>
+            </Typography>
+          )}
+        </Box>
+        {isAuthor() ?
+        <Button
           variant='contained'
           color='baseBlue'
           onClick={handleCreateChild}
         >
           Создать {CHANNEL}
         </Button> : ''}
-
       </Stack>
       {content}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
