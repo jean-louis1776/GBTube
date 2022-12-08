@@ -94,7 +94,7 @@ const PlayListGrid = () => {
       <Stack
         sx={{
           flexDirection: 'row',
-          width: '60vw',
+          width: '72vw',
           margin: '20px auto',
           justifyContent: 'space-around',
         }}

@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
 import Header from '../Header/Header';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
+import styles from './VideoGrid.module.scss';
 
 const VideoGrid = () => {
   const { idList } = useParams();
@@ -20,6 +17,8 @@ const VideoGrid = () => {
   const authorId = idList.split('_')[0];
   const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const navigate = useNavigate();
   const playListId = idList.split('_').at(-1);
 
@@ -30,6 +29,8 @@ const VideoGrid = () => {
         PLAYLIST,
         playListId
       );
+      setTitle(title);
+      setDescription(description);
       console.log(VIDEO, idList);
       const children = await GetChildrenController.getAllItemsById(
         VIDEO,
@@ -38,34 +39,18 @@ const VideoGrid = () => {
 
       if (children.length === 0) {
         setContent(
-          <p style={{ color: 'white' }}>Не создано ни одного видео </p>
+          <Typography sx={{ mb: 8 }} className={styles.videoTitle}>
+            Не создано ни одного видео{' '}
+          </Typography>
         );
       } else {
         setContent(
-          <Box>
-            <p style={{ color: 'white' }}>
-              Название текущего плейлиста: {title}
-            </p>
-            <p style={{ color: 'white' }}>
-              Описание текущего плейлиста: {description}
-            </p>
-            <Stack
-              direction={/*direction ||*/ 'row'}
-              flexWrap="wrap"
-              justifyContent="start"
-              alignItems="start"
-              gap={2}
-            >
-              {children.map((item, idx) => (
-                <Link
-                  key={idx}
-                  to={`/${VIDEO}/get_one/${item.idList}`}
-                  style={{ color: 'white' }}
-                >
-                  <VideoCard idList={item.idList} />
-                </Link>
-              ))}
-            </Stack>
+          <Box className={styles.videoGrid}>
+            {children.map((item, idx) => (
+              <Link key={idx} to={`/${VIDEO}/get_one/${item.idList}`}>
+                <VideoCard idList={item.idList} />
+              </Link>
+            ))}
           </Box>
         );
       }
@@ -103,43 +88,88 @@ const VideoGrid = () => {
   };
 
   return (
-    <Box sx={{ pt: 8 }}>
-      <Header />
-      {/*<Box*/}
-      {/*  sx={{*/}
-      {/*    // display: 'flex',*/}
-      {/*    // flexFlow: 'row wrap',*/}
-      {/*    // gap: 1,*/}
-      {/*    margin: '20px',*/}
-      {/*    display: 'grid',*/}
-      {/*    columnGap: 3,*/}
-      {/*    rowGap: 2,*/}
-      {/*    gridTemplateColumns: {*/}
-      {/*      xs: 'repeat(1, 1fr)',*/}
-      {/*      sm: 'repeat(2, 1fr)',*/}
-      {/*      md: 'repeat(3, 1fr)',*/}
-      {/*      lg: 'repeat(4, 1fr)',*/}
-      {/*      xl: 'repeat(5, 1fr)',*/}
-      {/*    },*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  {videos.map(() => (*/}
-      {/*    <VideoCard />*/}
-      {/*  ))}*/}
-      {/*</Box>*/}
-      {content}
-      {isAuthor() ? (
-        <Button onClick={handleCreateChild}>Создать {VIDEO}</Button>
-      ) : (
-        ''
-      )}
-      {isMayModerate() ? (
-        <Button onClick={handleDeletePlaylist}>
-          Удалить текущий {PLAYLIST}
-        </Button>
-      ) : (
-        ''
-      )}
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Stack
+        sx={{
+          flexDirection: 'row',
+          width: '60vw',
+          margin: '20px auto',
+          justifyContent: 'space-around',
+        }}
+      >
+        <Box maxWidth={'25vw'}>
+          {title.length > 60 ? (
+            <Tooltip title={title}>
+              <Typography variant={'h6'} color={'white'} marginBottom={2}>
+                Название плейлиста:
+                <Typography variant={'body1'}>
+                  {title.slice(0, 60) + '...'}
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography variant={'h6'} color={'white'} marginBottom={2}>
+              Название плейлиста:
+              <Typography variant={'body1'}>{title}</Typography>
+            </Typography>
+          )}
+          {description.length > 100 ? (
+            <Tooltip title={description}>
+              <Typography variant={'h6'} style={{ color: 'white' }}>
+                Описание:
+                <Typography variant={'body1'}>
+                  {description.slice(0, 100) + '...'}
+                </Typography>
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography variant={'h6'} style={{ color: 'white' }}>
+              Описание:
+              <Typography variant={'body1'}>{description}</Typography>
+            </Typography>
+          )}
+        </Box>
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}
+          gap={2}
+        >
+          {isAuthor() ? (
+            <Button
+              variant="contained"
+              color="baseBlue"
+              onClick={handleCreateChild}
+            >
+              Создать {VIDEO}
+            </Button>
+          ) : (
+            ''
+          )}
+          {isMayModerate() ? (
+            <Button
+              variant="contained"
+              color="baseBlue"
+              onClick={handleDeletePlaylist}
+            >
+              Удалить текущий {PLAYLIST}
+            </Button>
+          ) : (
+            ''
+          )}
+        </Box>
+      </Stack>
+      <Box className={styles.videoWrapper}>
+        <Box component="main" className={styles.videoMain}>
+          {content}
+        </Box>
+      </Box>
     </Box>
   );
 };

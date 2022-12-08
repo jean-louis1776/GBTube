@@ -44,4 +44,8 @@ export default class VideoController {
   static async getVideoCompilation() {
     return (await $authApi.get('/video/get_favorite')).data;
   }
+
+  static async getSearchQueryCompilation(query) {
+    return (await $authApi.get(`/video/query/${query}`)).data;
+  }
 }

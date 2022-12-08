@@ -190,8 +190,8 @@ const UserMenu = () => {
             </Box>
           ) : (
             userMenu.name === 'Войти' || (
-              <Link to="/login">
-                <Box onClick={handleLogoutClick} key={index}>
+              <Link to="/login" key={index}>
+                <Box onClick={handleLogoutClick}>
                   <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
                     <ListItemIcon>{userMenu.icon}</ListItemIcon>
                     <ListItemText>

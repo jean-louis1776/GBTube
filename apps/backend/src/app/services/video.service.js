@@ -30,9 +30,7 @@ class VideoService {
 
   async isNameUnique(channelId, title) {
     try {
-      const result = await videoQueries.isVideoNameUnique(title, channelId);
-      console.log(result);
-      return result;
+      return await videoQueries.isVideoNameUnique(title, channelId);
     } catch (e) {
       throw e;
     }
@@ -43,6 +41,7 @@ class VideoService {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
       }
+
       const file = files.videoName;
       const extension = path.extname(file.name);
       if (!videoExtensions.includes(extension)) {
@@ -179,11 +178,23 @@ class VideoService {
   }
 
   async findHistory(userId) {
-    return videoQueries.findVideoHistoryByUserId(userId);
+    try {
+      const videosId = await videoQueries.findVideoHistoryByUserId(userId);
+      if (!videosId) return [];
+      return await videoQueries.getVideoIdListByVideoId(videosId);
+    } catch (e) {
+      throw e;
+    }
   }
 
   async getLikesList(userId) {
-    return videoQueries.getLikesListByUserId(userId);
+    try {
+      const videosId = await videoQueries.getLikesListByUserId(userId);
+      if (!videosId) return [];
+      return await videoQueries.getVideoIdListByVideoId(videosId);
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

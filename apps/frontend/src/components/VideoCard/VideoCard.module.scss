@@ -14,11 +14,15 @@
     border-radius: 12px;
     aspect-ratio: 16/9;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
+    background-size: cover;
+    background-position: center;
 
-    //img {
-    //  width: 100%;
-    //}
+    .blur {
+      display: flex;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      width: 100%;
+    }
   }
 
   .videoInfo {
