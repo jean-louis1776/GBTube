@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-.playerWrapper {
+.player {
 }
 
 .reactPlayer {
@@ -39,12 +39,28 @@
 
 }
 
+.descriptionWrapper {
+  background-color: #464646;
+  border-radius: 18px;
+  transition: 0.3s;
+  overflow: hidden;
+  &:hover {
+    background: rgba(70, 70, 70, 0.7);
+  }
+}
+
 .commentSection {
   padding: 1.25rem;
   margin: 1rem 0 0 0;
   flex-direction: column;
-  //height: 1000px;
   width: 100%;
+  background-color: #464646;
+  border-radius: 18px;
+  transition: 0.3s;
+  overflow: hidden;
+  &:hover {
+    background: rgba(70, 70, 70, 0.7);
+  }
 }
 
 .userCommentary {

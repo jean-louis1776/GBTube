@@ -265,7 +265,7 @@ const VideoDetail = () => {
               padding=".7rem"
               marginTop="2rem"
               width="100%"
-              backgroundColor={theme.palette.shadows.main}
+              className={styles.descriptionWrapper}
             >
               <Box variant="body1" sx={{ opacity: 0.7 }}>
                 <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
@@ -314,7 +314,7 @@ const VideoDetail = () => {
                     <VideoCommentary key={index} comment={comment} />
                   ))
                 ) : (
-                  <Typography variant={'body1'}>
+                  <Typography variant="body1">
                     Пока нет комментариев...
                   </Typography>
                 )}

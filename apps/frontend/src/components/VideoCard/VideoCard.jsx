@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Tooltip,
-  Box,
-} from '@mui/material';
+import { Typography, Tooltip, Box } from '@mui/material';
 import { CheckCircle } from '@mui/icons-material';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
@@ -37,69 +29,6 @@ const VideoCard = ({ idList }) => {
   }, []);
 
   return (
-    // <Card
-    //   sx={{
-    //     width: { xs: '100%', sm: '358px', md: '320px' },
-    //     height: 'auto',
-    //     boxShadow: 'none',
-    //     borderRadius: 0,
-    //     backgroundColor: theme.palette.baseBlue.main,
-    //   }}
-    // >
-    //   <Link to={'/videoDetail'}>
-    //     <CardMedia
-    //       // image={video.frameShot ? video.frameShot : <VisibilityOffIcon />}
-    //       image={demoThumbnail}
-    //       sx={{
-    //         height: 180,
-    //         backgroundColor: theme.palette.baseBlue.main,
-    //       }}
-    //     />
-    //     <CardContent
-    //       sx={{
-    //         backgroundColor: theme.palette.darkBackground.main,
-    //         // height: '132px',
-    //         height: 'auto',
-    //       }}
-    //     >
-    //       {video?.title?.length > 60 ? (
-    //         <Tooltip title={video.title}>
-    //           <Typography variant="subtitle1" fontWeight="bold" color="#fff">
-    //             {video.title.slice(0, 60) + '...'}
-    //           </Typography>
-    //         </Tooltip>
-    //       ) : (
-    //         <Typography variant="subtitle1" fontWeight="bold" color="#fff">
-    //           {video.title}
-    //         </Typography>
-    //       )}
-    //       <Link to={'/user-channel'}>
-    //         <Typography
-    //           sx={{
-    //             display: 'inline-block',
-    //             paddingY: '3px',
-    //             color: theme.palette.shadows.second,
-    //           }}
-    //           variant="subtitle2"
-    //         >
-    //           {video.channelName}
-    //           <CheckCircle
-    //             sx={{ fontSize: '12px', color: 'gray', ml: '5px' }}
-    //           />
-    //         </Typography>
-    //       </Link>
-    //       <Typography
-    //         variant="caption"
-    //         sx={{ display: 'block', color: theme.palette.shadows.second }}
-    //       >
-    //         {video.viewsCount}
-    //         {' просмотров'}
-    //       </Typography>
-    //     </CardContent>
-    //   </Link>
-    // </Card>
-
-    // <Link to={'/videoDetail'}>
     <Box className={styles.videoCard}>
       {/* <Box className={styles.videoThumbnail}>
         {Object.hasOwn(video, 'thumbnail') ? (
@@ -169,7 +98,6 @@ const VideoCard = ({ idList }) => {
         </Box>
       </Box>
     </Box>
-    // </Link>
   );
 };
 
