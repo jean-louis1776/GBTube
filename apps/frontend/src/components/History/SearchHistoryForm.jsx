@@ -12,7 +12,6 @@ const SearchHistoryForm = (props) => {
 
     if (searchTerm) {
       setSearchTerm('');
-      console.log(searchTerm);
     }
   };
 

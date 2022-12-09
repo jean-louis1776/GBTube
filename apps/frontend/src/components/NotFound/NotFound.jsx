@@ -3,8 +3,6 @@ import { notFoundLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import styles from './NotFound.module.scss';
-
 const NotFound = (props) => {
   return (
     <Stack

@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
-// import { loginHandler } from '../../features/auth/authSlice';
 import styles from './LoginForm.module.scss';
 import { Box, Stack, Typography } from '@mui/material';
 import { LoginFormElemButton } from './LoginFormElemButton';
@@ -14,7 +13,13 @@ import { EMAIL, PASSWORD } from '@constants/frontend';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import AuthController from '../../controllers/AuthController';
-import { setAccessToken, setAuthStatus, setId, setNickName, setRole } from '../../store/slice';
+import {
+  setAccessToken,
+  setAuthStatus,
+  setId,
+  setNickName,
+  setRole,
+} from '../../store/slice';
 
 export const LoginFormElem = () => {
   const [loginError, setLoginError] = useState('');
@@ -46,12 +51,8 @@ export const LoginFormElem = () => {
 
   const onSubmit = async ({ email, password }) => {
     try {
-      const {
-        accessToken,
-        isBaned,
-        id,
-        nickName,
-        role } = await AuthController.login(email, password);
+      const { accessToken, isBaned, id, nickName, role } =
+        await AuthController.login(email, password);
       if (isBaned) {
         localStorage.setItem('token', '');
         dispatch(setAuthStatus(false));
@@ -76,14 +77,6 @@ export const LoginFormElem = () => {
       console.log('Login failed');
       console.log(err);
     }
-    // try {
-    //   dispatch(loginHandler({ email, password }));
-    //   setLoginError('');
-    //   navigate('/', { replace: true });
-    // } catch {
-    //   setLoginError('Ошибка авторизации. Неверен логин или пароль');
-    //   console.log('Login failed');
-    // }
   };
 
   const togglePassword = () => {

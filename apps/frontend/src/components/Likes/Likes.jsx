@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Divider, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 import { Header } from '../';
-import VideoListItem from '../VideoListItem/VideoListItem';
 import VideoCard from '../VideoCard/VideoCard';
 
 import styles from './Likes.module.scss';

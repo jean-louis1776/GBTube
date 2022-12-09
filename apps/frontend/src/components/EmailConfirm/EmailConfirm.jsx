@@ -3,8 +3,6 @@ import { RedirectLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import styles from './EmailConfirm.module.scss';
-
 const EmailConfirm = (props) => {
   return (
     <Stack
@@ -16,9 +14,6 @@ const EmailConfirm = (props) => {
         position: 'relative',
       }}
     >
-      {/* <Helmet>
-        <title>Почта подтверждена | GeekTube</title>
-      </Helmet> */}
       <Box
         sx={{
           width: '1150px',

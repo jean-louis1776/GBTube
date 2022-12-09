@@ -21,9 +21,6 @@ const VideoFeed = () => {
         setVideoComp(
           <Box
             sx={{
-              // display: 'flex',
-              // flexFlow: 'row wrap',
-              // gap: 1,
               marginTop: 10,
               display: 'grid',
               columnGap: 4,

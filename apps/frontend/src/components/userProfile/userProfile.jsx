@@ -96,7 +96,6 @@ const UserProfile = () => {
 
   const onSubmitForm = handleSubmit((updatingUser) => {
     // dispatch(userDataUpdate(updatingUser));
-    console.log(updatingUser);
   });
 
   // useEffect(() => {
