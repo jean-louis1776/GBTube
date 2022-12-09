@@ -46,9 +46,7 @@ const VideoGrid = () => {
         setContent(
           <Box className={styles.videoGrid}>
             {children.map((item, idx) => (
-              <Link key={idx} to={`/${VIDEO}/get_one/${item.idList}`}>
-                <VideoCard idList={item.idList} />
-              </Link>
+              <VideoCard idList={item.idList} key={idx} />
             ))}
           </Box>
         );

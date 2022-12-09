@@ -5,10 +5,11 @@ import { Header } from '../';
 import SearchHistoryForm from './SearchHistoryForm';
 import VideoListItem from '../VideoListItem/VideoListItem';
 import VideoController from '../../controllers/VideoController';
-import styles from './History.module.scss';
 import { store } from '../../store';
 import Loader from '../Loader/Loader';
 import { VIDEO } from '@constants/frontend';
+
+import styles from './History.module.scss';
 
 const History = () => {
   const selectedCategory = 'История';
@@ -16,8 +17,8 @@ const History = () => {
   const { profileReducer } = store.getState();
   const currentUserId = Number(profileReducer.id);
 
-  const [likedVideoComp, setLikedVideoComp] = useState(<Loader />);
-  const refLikedVideos = useRef([]);
+  const [storyVideoComp, setStoryVideoComp] = useState(<Loader />);
+  const refStoryVideos = useRef([]);
 
   useEffect(() => {
     document.title = 'История | GeekTube';
@@ -26,15 +27,12 @@ const History = () => {
       return VideoController.getVideoHistory(userId);
     };
     videoHistory(currentUserId).then((videos) => {
-      refLikedVideos.current = videos;
-      setLikedVideoComp(
-        <Box className={styles.linkCard}>
+      refStoryVideos.current = videos;
+      setStoryVideoComp(
+        <Box>
           {videos.map((idList) => (
-            <Link key={idList} to={`/${VIDEO}/get_one/${idList}`}>
-              <VideoListItem idList={idList} />
-            </Link>
+            <VideoListItem idList={idList} key={idList} />
           ))}
-          <Divider className={styles.divider} />
         </Box>
       );
     });
@@ -52,7 +50,7 @@ const History = () => {
 
           <SearchHistoryForm />
 
-          {likedVideoComp}
+          {storyVideoComp}
         </Box>
       </Box>
     </>
