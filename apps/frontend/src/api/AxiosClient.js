@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-export const API_URL = `http://localhost:3333/api`;
+import {API_URL} from "@constants/frontend";
 
 const $api = axios.create({
   baseURL: API_URL,

@@ -22,7 +22,7 @@ import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import VideoController from '../../controllers/VideoController';
-import { CHANNEL, VIDEO } from '@constants/frontend';
+import {API_URL, CHANNEL, VIDEO} from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -95,7 +95,7 @@ const VideoDetail = () => {
       setTitle(videoInfo.title);
       setViewsCount(videoInfo.viewsCount);
       const { hashName } = await VideoController.getVideoName(videoId);
-      const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
+      const url = `${API_URL}/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
       setVideoContent(
         <div className={styles.outerPlayerContainer}>
           <Player
