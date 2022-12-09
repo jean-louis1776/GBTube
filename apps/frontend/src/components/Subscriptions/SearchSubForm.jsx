@@ -12,7 +12,6 @@ const SearchSubForm = (props) => {
 
     if (searchTerm) {
       setSearchTerm('');
-      console.log(searchTerm);
     }
   };
 

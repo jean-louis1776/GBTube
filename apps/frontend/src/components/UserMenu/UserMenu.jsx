@@ -7,21 +7,15 @@ import {
   IconButton,
   ListItemIcon,
   ListItemText,
-  makeStyles,
   Menu,
   MenuItem,
   Tooltip,
   Typography,
-  Zoom,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-
-// import styles from './UserMenu.module.scss';
-import { blueGrey, deepOrange } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
-// import { getSelector } from '../../store/getSelector';
-// import { logoutHandler } from '../../features/auth/authSlice';
 import { useTheme } from '@mui/material/styles';
 
 import styles from './UserMenu.module.scss';
@@ -94,7 +88,6 @@ const UserMenu = () => {
       console.log('logout fail');
       console.log(err);
     }
-    // dispatch(logoutHandler());
   };
 
   return (

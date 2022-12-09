@@ -23,10 +23,8 @@ const PlayListGrid = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(idList.split('_'), 'PlayListGrid');
     const fetchData = async () => {
       setContent(<Loader />);
-      // console.log(idList.split('_').at(-1), 'playlist ID');
       const { title, description } = await GetChildrenController.getItemById(
         CHANNEL,
         idList.split('_').at(-1)
@@ -37,7 +35,6 @@ const PlayListGrid = () => {
         PLAYLIST,
         idList.split('_').at(-1)
       );
-      console.log(children, 'children');
       if (children.length === 0) {
         setContent(
           <Typography
@@ -58,14 +55,12 @@ const PlayListGrid = () => {
   }, []);
 
   const handleCreateChild = () => {
-    // console.log(location.state.idList);
     navigate(
       `/${PLAYLIST}/create/${idList}` /*, { state: { idList: location.state.idList } }*/
     );
   };
 
   const handleDeleteChannel = async () => {
-    console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
       await EditItemController.deleteItem(CHANNEL, idList.split('_').at(-1));
       navigate(
@@ -78,7 +73,9 @@ const PlayListGrid = () => {
   };
 
   const isMayModerate = () => {
-    return authorId === userId || userRole === 'admin' || userRole === 'moderator';
+    return (
+      authorId === userId || userRole === 'admin' || userRole === 'moderator'
+    );
   };
 
   const isAuthor = () => authorId === userId;
@@ -137,19 +134,28 @@ const PlayListGrid = () => {
           justifyContent={'center'}
           gap={2}
         >
-
-          {isAuthor() ? <Button
-            variant='contained'
-            color='baseBlue'
-            onClick={handleCreateChild}
-          >
-            Создать {PLAYLIST}
-          </Button> : ''}
-          {isMayModerate() ? <Button
-            variant='contained'
-            color='baseBlue'
-            onClick={handleDeleteChannel}
-          >Удалить текущий {CHANNEL}</Button> : ''}
+          {isAuthor() ? (
+            <Button
+              variant="contained"
+              color="baseBlue"
+              onClick={handleCreateChild}
+            >
+              Создать {PLAYLIST}
+            </Button>
+          ) : (
+            ''
+          )}
+          {isMayModerate() ? (
+            <Button
+              variant="contained"
+              color="baseBlue"
+              onClick={handleDeleteChannel}
+            >
+              Удалить текущий {CHANNEL}
+            </Button>
+          ) : (
+            ''
+          )}
         </Box>
       </Stack>
       {content}

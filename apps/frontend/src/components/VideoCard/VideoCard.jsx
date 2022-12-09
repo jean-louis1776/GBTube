@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Tooltip, Box } from '@mui/material';
-import { CheckCircle } from '@mui/icons-material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import GetChildrenController from '../../controllers/GetChildrenController';
-
-import { theme } from '../../theme';
-
 import styles from './VideoCard.module.scss';
 import { Loader } from '../index';
 

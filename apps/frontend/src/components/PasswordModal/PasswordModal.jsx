@@ -1,10 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userPasswordSchema } from './validation';
-// import { userPasswordUpdate } from '../../features/userProfile/userProfileSlice';
-import { shallowEqual, /*useDispatch,*/ useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-// import { getSelector } from '../../store/getSelector';
 import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import { getUserId } from '../../store/selectors';
 import UserController from '../../controllers/UsersController';
@@ -22,13 +20,9 @@ const PasswordModal = () => {
   };
   const userId = useSelector(getUserId, shallowEqual);
 
-  // const password = useSelector(getSelector('passwordModal', 'user'));
-
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  // const dispatch = useDispatch();
 
   const {
     handleSubmit,
@@ -39,16 +33,18 @@ const PasswordModal = () => {
     resolver: yupResolver(userPasswordSchema),
   });
 
-  const onSubmitPassword = async ({oldPassword, newPassword}) => {
+  const onSubmitPassword = async ({ oldPassword, newPassword }) => {
     try {
-      await UserController.changePassword({oldPassword, newPassword, id: userId});
+      await UserController.changePassword({
+        oldPassword,
+        newPassword,
+        id: userId,
+      });
       console.log('change password successful');
     } catch (err) {
       console.log('change password failed');
       console.log(err);
     }
-    // dispatch(userPasswordUpdate(passwordForm));
-    // console.log(passwordForm);
   };
 
   useEffect(() => {

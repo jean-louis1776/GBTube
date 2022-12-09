@@ -47,13 +47,13 @@ export function App() {
   const setFlagToTrue = () => {
     refFlag.current = true;
     console.log('Auth flag dropped');
-  }
+  };
 
   useEffect(() => {
     const handle = async () => {
-      console.log(refFlag.current, 'refresh flag', 'useEffect run');
+      // console.log(refFlag.current, 'refresh flag', 'useEffect run');
       if (refFlag.current && localStorage.getItem('token')) {
-        console.log('Auth running');
+        // console.log('Auth running');
         const { isBaned, accessToken, id, nickName, role } =
           await AuthController.checkAuth();
         if (isBaned) {

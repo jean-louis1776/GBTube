@@ -73,7 +73,6 @@ const UploadVideoDraft = () => {
       navigate(`/${VIDEO}/get_all/${idList}`, { replace: true });
     } catch {
       setIsLoading(false);
-      console.log('Load video failed');
       setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
     }
   };

@@ -94,11 +94,8 @@ const VideoDetail = () => {
       setAuthorNickName(videoInfo.nickName);
       setTitle(videoInfo.title);
       setViewsCount(videoInfo.viewsCount);
-      console.log(videoInfo, 'VideoDataInfo');
       const { hashName } = await VideoController.getVideoName(videoId);
-      console.log('hashName', hashName);
       const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
-      console.log(url);
       setVideoContent(
         <div className={styles.outerPlayerContainer}>
           <Player

@@ -13,13 +13,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-
-import { logo, VIDEO } from '@constants/frontend';
+import { logo } from '@constants/frontend';
 import { Navbar, SearchForm, UserMenu } from '../';
-// import { getSelector } from '../../store/getSelector';
-// import { logoutHandler } from '../../features/auth/authSlice';
 import { AppBar, DrawerHeader } from './HeaderComponents';
-
 import styles from './Header.module.scss';
 import { getAuthStatus } from '../../store/selectors';
 import AuthController from '../../controllers/AuthController';
@@ -62,7 +58,6 @@ const Header = ({ selectedCategory }) => {
       console.log('logout fail');
       console.log(err);
     }
-    // dispatch(logoutHandler());
   };
 
   return (

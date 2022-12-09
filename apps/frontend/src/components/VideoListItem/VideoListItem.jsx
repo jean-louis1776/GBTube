@@ -4,7 +4,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
 import { CHANNEL, VIDEO } from '@constants/frontend';
-
 import styles from './VideoListItem.module.scss';
 import { Loader } from '../index';
 import GetChildrenController from '../../controllers/GetChildrenController';

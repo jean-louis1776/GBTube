@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import { nanoid } from "@reduxjs/toolkit";
-import {
-  Box,
-  Button,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { nanoid } from '@reduxjs/toolkit';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { logo } from '@constants/frontend';
 import AuthController from '../../controllers/AuthController';
 import { useDispatch } from 'react-redux';
-// import { registrationHandler } from '../../features/auth/authSlice';
 import { useForm } from 'react-hook-form';
 import PasswordValidator from 'password-validator';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,7 +13,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 import styles from './SignupForm.module.scss';
-import { setAccessToken, setAuthStatus, setId, setNickName } from '../../store/slice';
+import {
+  setAccessToken,
+  setAuthStatus,
+  setId,
+  setNickName,
+} from '../../store/slice';
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -32,13 +29,22 @@ const SignupForm = () => {
 
   const schemaPsw = new PasswordValidator();
   schemaPsw
-    .is().min(8) // Minimum length 8
-    .is().max(100) // Maximum length 100
-    .has().uppercase() // Must have uppercase letters
-    .has().lowercase() // Must have lowercase letters
-    .has().digits(2) // Must have at least 2 digits
-    .has().not().spaces() // Should not have spaces
-    .is().not().oneOf(['Passw0rd', 'Password123']);
+    .is()
+    .min(8) // Minimum length 8
+    .is()
+    .max(100) // Maximum length 100
+    .has()
+    .uppercase() // Must have uppercase letters
+    .has()
+    .lowercase() // Must have lowercase letters
+    .has()
+    .digits(2) // Must have at least 2 digits
+    .has()
+    .not()
+    .spaces() // Should not have spaces
+    .is()
+    .not()
+    .oneOf(['Passw0rd', 'Password123']);
 
   const schema = yup.object({
     email: yup
@@ -76,7 +82,11 @@ const SignupForm = () => {
   const onSubmit = async ({ email, password }) => {
     const nickName = email.split('@')[0] + nanoid(10);
     try {
-      const { accessToken, id } = await AuthController.registration(nickName, email, password);
+      const { accessToken, id } = await AuthController.registration(
+        nickName,
+        email,
+        password
+      );
       localStorage.setItem('token', accessToken);
       dispatch(setAuthStatus(true));
       dispatch(setAccessToken(accessToken));
