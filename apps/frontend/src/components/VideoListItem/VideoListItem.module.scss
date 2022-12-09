@@ -13,15 +13,13 @@
     border-radius: 12px;
     aspect-ratio: 16/9;
     justify-content: center;
+    background-size: cover;
+    //background-position: center;
 
     .blur {
       display: flex;
       justify-content: center;
       backdrop-filter: blur(5px);
-      width: 100%;
-    }
-
-    img {
       width: 100%;
     }
   }

@@ -29,14 +29,6 @@ const VideoCard = ({ idList }) => {
 
   return (
     <Box className={styles.videoCard}>
-      {/* <Box className={styles.videoThumbnail}>
-        {Object.hasOwn(video, 'thumbnail') ? (
-          <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
-        ) : (
-          <Loader />
-        )}
-      </Box> */}
-
       {Object.hasOwn(video, 'thumbnail') ? (
         <Box
           className={styles.videoThumbnail}
