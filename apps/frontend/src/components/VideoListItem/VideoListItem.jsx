@@ -1,39 +1,70 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
-
-import { CHANNEL, demoThumbnail } from '@constants/frontend';
+import { CHANNEL, VIDEO } from '@constants/frontend';
 
 import styles from './VideoListItem.module.scss';
+import { Loader } from '../index';
+import GetChildrenController from '../../controllers/GetChildrenController';
 
-const VideoListItem = () => {
-  const viewCount = '100 000 000';
+const VideoListItem = ({ idList }) => {
+  const videoId = idList.split('_').at(-1);
+  const channelId = idList.split('_').at(-2);
+  const [video, setVideo] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const vids = await GetChildrenController.getItemById(VIDEO, videoId);
+      setVideo(vids);
+    };
+    fetchData()
+      .then()
+      .catch(() => {
+        console.log(`Video ID: ${idList} not found`);
+      });
+  }, []);
 
   return (
     <Box className={styles.videoListItem}>
-      <Box className={styles.videoThumbnail}>
-        <img src={demoThumbnail} alt="Thumbnail" />
-      </Box>
+      {Object.hasOwn(video, 'thumbnail') ? (
+        <Box
+          className={styles.videoThumbnail}
+          sx={{ backgroundImage: `url(${video.thumbnail})` }}
+        >
+          <Box className={styles.blur}>
+            <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+          </Box>
+        </Box>
+      ) : (
+        <Box className={styles.videoThumbnail}>
+          <Loader />
+        </Box>
+      )}
 
       <Box className={styles.videoInfo}>
         <Box className={styles.videoInfoTitle}>
-          <Typography className={styles.title}>
-            Never Gonna Give You Up
-          </Typography>
-
-          <Link to={`/user-channel`} className={styles.channelLink}>
+          {video?.title?.length > 40 ? (
+            <Tooltip title={video.title}>
+              <Typography className={styles.title}>
+                {video.title.slice(0, 40) + '...'}
+              </Typography>
+            </Tooltip>
+          ) : (
+            <Typography className={styles.title}>{video.title}</Typography>
+          )}
+          <Link to={`/${CHANNEL}/${channelId}`} className={styles.channelLink}>
             <Typography variant="subtitle2" className={styles.channelName}>
               <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-              Rick & Morty
+              {video.channelName}
             </Typography>
           </Link>
         </Box>
 
         <Box className={styles.videoInfoView}>
           <Typography variant="caption" className={styles.viewCount}>
-            {viewCount} просмотров
+            {+video.viewsCount} просмотров
           </Typography>
         </Box>
       </Box>

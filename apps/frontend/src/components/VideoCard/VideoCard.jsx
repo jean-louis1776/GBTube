@@ -18,7 +18,6 @@ const VideoCard = ({ idList }) => {
   useEffect(() => {
     const fetchData = async () => {
       const vids = await GetChildrenController.getItemById(VIDEO, videoId);
-      console.log(vids);
       setVideo(vids);
     };
     fetchData()
@@ -48,10 +47,7 @@ const VideoCard = ({ idList }) => {
           </Box>
         </Box>
       ) : (
-        <Box
-          className={styles.videoThumbnail}
-          sx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        >
+        <Box className={styles.videoThumbnail}>
           <Loader />
         </Box>
       )}

@@ -11,6 +11,15 @@
     display: flex;
     overflow: hidden;
     border-radius: 12px;
+    aspect-ratio: 16/9;
+    justify-content: center;
+
+    .blur {
+      display: flex;
+      justify-content: center;
+      backdrop-filter: blur(5px);
+      width: 100%;
+    }
 
     img {
       width: 100%;
