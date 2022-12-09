@@ -1,0 +1,14 @@
+.modalWindow {
+  position: absolute;
+  top: 40vh;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 600px;
+  border-radius: 8px;
+
+  .modalContent {
+    padding: 4rem;
+    text-align: center;
+  }
+}

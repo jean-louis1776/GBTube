@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
   Divider,
-  Grow,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -16,7 +15,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
-import { useTheme } from '@mui/material/styles';
 
 import styles from './UserMenu.module.scss';
 import AuthController from '../../controllers/AuthController';
@@ -27,6 +25,7 @@ import {
   setNickName,
 } from '../../store/slice';
 import { getAuthStatus, getNickName, getUserId } from '../../store/selectors';
+import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -38,7 +37,6 @@ const UserMenu = () => {
   const isAuth = useSelector(getAuthStatus, shallowEqual);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
-  const theme = useTheme();
 
   // useEffect(() => {
   //   console.log('user');
@@ -57,7 +55,8 @@ const UserMenu = () => {
       navigate(`${link}/get_all/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    } else {
+    }
+    else {
       setUnauthorized((prev) => !prev);
       setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
@@ -68,7 +67,8 @@ const UserMenu = () => {
       navigate(`${link}/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    } else {
+    }
+    else {
       setUnauthorized((prev) => !prev);
       setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
@@ -197,23 +197,7 @@ const UserMenu = () => {
           )
         )}
       </Menu>
-      <Grow in={unauthorized} {...(unauthorized ? { timeout: 800 } : {})}>
-        <Box
-          sx={{
-            position: 'fixed',
-            top: '40vh',
-            left: '28vw',
-            borderRadius: 1,
-            boxShadow: `0 1px 2px ${theme.palette.shadows.main}`,
-            padding: '5vh 5vw',
-            backgroundColor: theme.palette.shadows.second,
-          }}
-        >
-          <Typography variant={'h6'}>
-            Функционал доступен зарегистрированным пользователям
-          </Typography>
-        </Box>
-      </Grow>
+      <UnauthorizedModal isAuth={unauthorized}/>
     </>
   );
 };
