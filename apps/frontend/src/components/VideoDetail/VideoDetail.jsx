@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Header from '../Header/Header';
-import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import {
   AnnouncementOutlined,
   CheckCircle,
@@ -92,12 +100,14 @@ const VideoDetail = () => {
       const url = `http://localhost:3333/api/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
       console.log(url);
       setVideoContent(
-        <Player
-          src={url}
-          seekDuration={5}
-          primaryColor={theme.palette.baseBlue.main}
-          keyboardShortcut={false}
-        />
+        <div className={styles.outerPlayerContainer}>
+          <Player
+            src={url}
+            seekDuration={5}
+            primaryColor={theme.palette.baseBlue.main}
+            keyboardShortcut={false}
+          />
+        </div>
       );
       setComments(await CommentController.getAllItemsByVideo(videoId));
     };
@@ -133,7 +143,7 @@ const VideoDetail = () => {
       console.log('Send comment error');
       console.log(err);
     }
-  }
+  };
 
   const isCommentEmpty = () => commentText.length === 0;
 
@@ -151,7 +161,7 @@ const VideoDetail = () => {
       console.log(`Failed delete comment ${id}`);
       console.log(err);
     }
-  }
+  };
 
   return (
     <Box className={styles.wrapper}>
@@ -330,27 +340,34 @@ const VideoDetail = () => {
                     onChange={handleChangeCommentText}
                     value={commentText}
                   />
-                  <IconButton disabled={isCommentEmpty()} onClick={handleSendComment} size='large' variant="contained">
-                    <SendIcon/>
+                  <IconButton
+                    disabled={isCommentEmpty()}
+                    onClick={handleSendComment}
+                    size="large"
+                    variant="contained"
+                  >
+                    <SendIcon />
                   </IconButton>
                 </Box>
               }
 
               <Box>
-                {comments?.length > 0 ?
-                  comments?.map((comment, index) =>
+                {comments?.length > 0 ? (
+                  comments?.map((comment, index) => (
                     // <p style={{color: 'white'}} key={index}>{comment.description}</p>
-                    <VideoCommentary key={index}
-                                     commentData={comment}
-                                     currentUserId={userId}
-                                     videoOwnerId={authorId}
-                                     handleDelete={handleDeleteComment(comment.id)}
+                    <VideoCommentary
+                      key={index}
+                      commentData={comment}
+                      currentUserId={userId}
+                      videoOwnerId={authorId}
+                      handleDelete={handleDeleteComment(comment.id)}
                     />
-                  )
-                 : <Typography variant={'body1'}>
+                  ))
+                ) : (
+                  <Typography variant={'body1'}>
                     Пока нет комментариев...
                   </Typography>
-                }
+                )}
               </Box>
             </Box>
           </Box>
