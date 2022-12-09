@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -42,22 +42,14 @@ import {
 
 export function App() {
   const dispatch = useDispatch();
-  const refFlag = useRef(true);
-
-  const setFlagToTrue = () => {
-    refFlag.current = true;
-    console.log('Auth flag dropped');
-  };
 
   useEffect(() => {
-    const handle = async () => {
-      // console.log(refFlag.current, 'refresh flag', 'useEffect run');
-      if (refFlag.current && localStorage.getItem('token')) {
-        // console.log('Auth running');
+    const refreshAuth = async () => {
+      if (localStorage.getItem('token')) {
         const { isBaned, accessToken, id, nickName, role } =
           await AuthController.checkAuth();
         if (isBaned) {
-          localStorage.setItem('token', '');
+          localStorage.removeItem('token');
           console.log(isBaned, 'user banned');
           dispatch(setAuthStatus(false));
           dispatch(setAccessToken(''));
@@ -72,14 +64,10 @@ export function App() {
         dispatch(setId(String(id)));
         dispatch(setNickName(nickName));
         dispatch(setRole(role));
-        refFlag.current = false;
-        setTimeout(setFlagToTrue, 4000);
       }
     };
-    handle()
-      .then(() => {
-        console.log('User update successful');
-      })
+    refreshAuth()
+      .then(() => { console.log('User update successful'); })
       .catch((err) => {
         console.log('User update failed');
         console.log(err);
