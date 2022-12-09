@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -77,12 +77,12 @@ const UserMenu = () => {
   const handleLogoutClick = async () => {
     try {
       await AuthController.logout();
-      localStorage.setItem('token', '');
+      localStorage.removeItem('token');
       dispatch(setAuthStatus(false));
       dispatch(setAccessToken(''));
       dispatch(setId(''));
       dispatch(setNickName(''));
-      navigate('/');
+      navigate('/', { replace: true });
       console.log('logout successful');
     } catch (err) {
       console.log('logout fail');
