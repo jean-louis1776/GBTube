@@ -25,12 +25,10 @@ import {
   setId,
   setNickName,
 } from '../../store/slice';
+import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
 
 const Header = ({ selectedCategory }) => {
   const isAuth = useSelector(getAuthStatus, shallowEqual);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
   const [openMenu, setOpenMenu] = useState(false);
 
   const toggleDrawer = (toggleOpen) => (event) => {
@@ -44,19 +42,16 @@ const Header = ({ selectedCategory }) => {
     setOpenMenu(toggleOpen);
   };
 
-  const handleLogoutClick = async () => {
-    try {
-      await AuthController.logout();
-      localStorage.removeItem('token');
-      dispatch(setAuthStatus(false));
-      dispatch(setAccessToken(''));
-      dispatch(setId(''));
-      dispatch(setNickName(''));
-      navigate('/', { replace: true });
-      console.log('logout successful');
-    } catch (err) {
-      console.log('logout fail');
-      console.log(err);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const navigate = useNavigate();
+
+  const handleListItemClick = (link) => () => {
+    if (isAuth || link === '/') {
+      navigate(`${link}`);
+      toggleDrawer(false);
+    } else {
+      setUnauthorized((prev) => !prev);
+      setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
   };
 
@@ -118,8 +113,6 @@ const Header = ({ selectedCategory }) => {
                 </Button>
               </Link>
             )}
-
-            {/* <UserMenu /> */}
           </Stack>
         </Toolbar>
       </AppBar>
@@ -143,8 +136,14 @@ const Header = ({ selectedCategory }) => {
           </IconButton>
         </DrawerHeader>
 
-        <Navbar toggle={toggleDrawer(false)} selectCat={selectedCategory} />
+        <Navbar
+          // toggle={toggleDrawer(false)}
+          selectCat={selectedCategory}
+          handleListItemClick={handleListItemClick}
+        />
       </Drawer>
+
+      <UnauthorizedModal isAuth={unauthorized} />
     </>
   );
 };

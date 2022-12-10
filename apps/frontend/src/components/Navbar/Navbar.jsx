@@ -11,53 +11,54 @@ import {
 } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import { categories, nestedCategories } from '@constants/frontend';
+import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getAuthStatus } from '../../store/selectors';
 
-const Navbar = ({ toggle, selectCat }) => {
-  const [openColl, setOpenColl] = useState(true);
+const Navbar = ({ toggle, selectCat, handleListItemClick }) => {
+  // const [openColl, setOpenColl] = useState(true);
 
-  const handleCollClick = () => {
-    setOpenColl(!openColl);
-  };
+  // const handleCollClick = () => {
+  //   setOpenColl(!openColl);
+  // };
 
   return (
     <Box sx={{ width: 250, zIndex: 10000 }}>
       <List>
         {categories.map((item, index) => (
-          <Link to={item.link} key={index}>
-            <ListItem
-              onClick={toggle}
-              onKeyDown={toggle}
-              disablePadding
-              sx={{ display: 'block' }}
+          <ListItem
+            onClick={handleListItemClick(item.link)}
+            onKeyDown={handleListItemClick(item.link)}
+            disablePadding
+            sx={{ display: 'block' }}
+            key={index}
+          >
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: 'center',
+              }}
+              selected={item.name === selectCat}
             >
-              <ListItemButton
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
+                  minWidth: 0,
+                  mr: 3,
                   justifyContent: 'center',
+                  color: 'baseBlue.main',
                 }}
-                selected={item.name === selectCat}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: 3,
-                    justifyContent: 'center',
-                    color: 'baseBlue.main',
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.name} sx={{ opacity: 1 }} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.name} sx={{ opacity: 1 }} />
+            </ListItemButton>
+          </ListItem>
         ))}
       </List>
 
-      <Divider />
+      {/* <Divider />
 
       <List>
         {nestedCategories.map((item, index) => (
@@ -112,7 +113,7 @@ const Navbar = ({ toggle, selectCat }) => {
             )}
           </List>
         </Collapse>
-      </List>
+      </List> */}
     </Box>
   );
 };
