@@ -45,7 +45,8 @@ class CommentController {
   async getAllCommentsVideo(req, res, next) {
     try {
       validateError(req);
-      return res.json(await CommentService.getAllCommentsVideo(req.params.videoId));
+      // console.log(req.query);
+      return res.json(await CommentService.getAllCommentsVideo(req.query));
     } catch (e) {
       next(e);
     }
