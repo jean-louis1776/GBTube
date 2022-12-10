@@ -15,6 +15,10 @@ import {
   CheckCircle,
   PlaylistAdd,
   ReplyAllOutlined,
+  ThumbDown,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbUpOutlined
 } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import ShowMoreText from 'react-show-more-text';
@@ -72,6 +76,8 @@ const VideoDetail = () => {
       color: theme.palette.coplimentPink.contrastText,
     },
   }));
+
+  const currentReaction = 'Like'
 
   // const likeOrDislikeHandler = (likes) =>
   //   likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
@@ -160,6 +166,15 @@ const VideoDetail = () => {
     }
   };
 
+  const handleSendLikeReaction = async () => {
+    try {
+      await VideoController.sendLikeReactionVideo(videoId, userId);
+    } catch (err) {
+      console.log('Failed');
+      console.log(err);
+    }
+  }
+
   return (
     <Box className={styles.wrapper}>
       <Header />
@@ -232,9 +247,9 @@ const VideoDetail = () => {
                 >
                   <Tooltip title="Нравится">
                     <ReactionButton
-                    // onClick={() => dispatch(setReaction('Like'))}
+                    onClick={handleSendLikeReaction}
                     >
-                      {/*                      {currentReaction === 'Like' ? (
+                                           {currentReaction === 'Like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -242,7 +257,7 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbUpOutlined />
-                      )}*/}
+                      )}
                       <Typography
                         variant={'body1'}
                         sx={{ opacity: 0.7 }}
@@ -256,7 +271,7 @@ const VideoDetail = () => {
                     <ReactionButton
                     // onClick={() => dispatch(setReaction('Dislike'))}
                     >
-                      {/*                      {currentReaction === 'Dislike' ? (
+                                           {currentReaction === 'Dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -264,7 +279,7 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbDownOutlined />
-                      )}*/}
+                      )}
                       <Typography
                         variant="body1"
                         sx={{ opacity: 0.7 }}
