@@ -70,11 +70,13 @@ const getVideoThumbnail = (file, videoTimeInSeconds) => {
         ? void 0
         : _a.match('video')
     ) {
-      importFileandPreview(file).then((urlOfFIle) => {
-        getVideoCover(urlOfFIle, videoTimeInSeconds).then((res) => {
-          resolve(res);
-        });
-      });
+      importFileandPreview(file)
+        .then((urlOfFIle) => {
+          getVideoCover(urlOfFIle, videoTimeInSeconds).then((res) => {
+            resolve(res);
+          });
+        })
+        .catch((error) => console.log(error));
     } else if (file) {
       getVideoCover(file, videoTimeInSeconds)
         .then((res) => {
@@ -212,11 +214,13 @@ export const getVideoDurationFromVideoFile = (videoFile) => {
             ? void 0
             : _a.match('video')
         ) {
-          importFileandPreview(videoFile).then((url) => {
-            generateVideoDurationFromUrl(url).then((res) => {
-              resolve(res);
-            });
-          });
+          importFileandPreview(videoFile)
+            .then((url) => {
+              generateVideoDurationFromUrl(url).then((res) => {
+                resolve(res);
+              });
+            })
+            .catch((error) => console.log(error));
         } else {
           generateVideoDurationFromUrl(videoFile).then((res) => {
             resolve(res);

@@ -12,12 +12,10 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('BEFORE', searchTerm);
 
     if (searchTerm) {
       navigate(`/search/${searchTerm}`);
       setSearchTerm('');
-      console.log('AFTER', searchTerm);
     }
   };
 

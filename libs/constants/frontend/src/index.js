@@ -100,5 +100,3 @@ export const EMAIL = 'email';
 export const PASSWORD = 'password';
 export const PASSWORD_2 = 'password2';
 export const VIDEO_FILE = 'file';
-
-export const API_URL = 'http://localhost:3333/api';

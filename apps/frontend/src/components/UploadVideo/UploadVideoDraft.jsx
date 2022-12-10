@@ -39,6 +39,9 @@ const UploadVideoDraft = () => {
 
   const calcDuration = (evt) => {
     const file = evt.target.files[0];
+
+    if (!file) return;
+
     const video = document.createElement('video');
     video.preload = 'metadata';
 
@@ -46,19 +49,19 @@ const UploadVideoDraft = () => {
       URL.revokeObjectURL(video.src);
       let duration = video.duration.toFixed(1);
       let hour = Math.trunc(duration / (60 * 60));
-      duration = hour > 0 ? (duration - hour * 60 * 60) : duration;
+      duration = hour > 0 ? duration - hour * 60 * 60 : duration;
       hour = hour === 0 ? '00' : hour;
-      hour = (typeof hour === 'number' && hour < 10) ? `0${hour}` : hour;
+      hour = typeof hour === 'number' && hour < 10 ? `0${hour}` : hour;
       let min = Math.trunc(duration / 60);
       min = min === 0 ? '00' : min;
-      min = (typeof min === 'number' && min < 10) ? `0${min}` : min;
+      min = typeof min === 'number' && min < 10 ? `0${min}` : min;
       let sec = Math.trunc(duration % 60);
       sec = sec < 10 ? `0${sec}` : sec;
       refDuration.current = `${hour} : ${min} : ${sec}`;
       console.log(refDuration.current);
-    }
+    };
     video.src = URL.createObjectURL(file);
-  }
+  };
 
   useEffect(() => {
     document.title = 'GeekTube | Загрузка видео';
