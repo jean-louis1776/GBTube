@@ -25,11 +25,11 @@ import {
   setNickName,
 } from '../../store/slice';
 import { getAuthStatus, getNickName, getUserId } from '../../store/selectors';
-import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [unauthorized, setUnauthorized] = useState(false);
+
+  // const [unauthorized, setUnauthorized] = useState(false); // переключатель для UnauthorizedModal
   const navigate = useNavigate();
   // const user = useSelector(getSelector('userProfile', 'user'), shallowEqual);
   const userId = useSelector(getUserId, shallowEqual);
@@ -55,10 +55,12 @@ const UserMenu = () => {
       navigate(`${link}/get_all/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    } else {
-      setUnauthorized((prev) => !prev);
-      setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
+    // Условие для показа UnauthorizedModal
+    // else {
+    //   setUnauthorized((prev) => !prev);
+    //   setTimeout(() => setUnauthorized((prev) => !prev), 2000);
+    // }
   };
 
   const handleUserProfileClick = (link) => () => {
@@ -66,10 +68,12 @@ const UserMenu = () => {
       navigate(`${link}/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    } else {
-      setUnauthorized((prev) => !prev);
-      setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
+    // Условие для показа UnauthorizedModal
+    // else {
+    //   setUnauthorized((prev) => !prev);
+    //   setTimeout(() => setUnauthorized((prev) => !prev), 2000);
+    // }
   };
 
   const handleLogoutClick = async () => {
@@ -191,7 +195,7 @@ const UserMenu = () => {
           )
         )}
       </Menu>
-      <UnauthorizedModal isAuth={unauthorized} />
+      {/*<UnauthorizedModal isAuth={unauthorized} />*/}
     </>
   );
 };
