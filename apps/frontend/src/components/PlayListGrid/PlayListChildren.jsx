@@ -41,7 +41,6 @@ export const PlayListChildren = ({ childType, itemId }) => {
 
   const handleClick = () => {
     const url = `/${VIDEO}/get_all/${idListState.join('_')}`;
-    console.log(url);
     console.log(idListState, 'idListState');
     navigate(url);
   };

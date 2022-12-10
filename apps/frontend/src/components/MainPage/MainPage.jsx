@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Header, Navbar, VideoGrid } from '../';
-import { VIDEO } from '@constants/frontend';
-import GetChildrenController from '../../controllers/GetChildrenController';
-import Loader from '../Loader/Loader';
-import styles from './MainPage.module.scss';
+import React, { useEffect } from 'react';
+import { Box } from '@mui/material';
+import { Header } from '../';
 import VideoFeed from '../MainPageFeed/VideoFeed';
 
 const MainPage = () => {
@@ -19,7 +13,6 @@ const MainPage = () => {
   return (
     <>
       <Header selectedCategory={selectedCategory} />
-      {/*<Box sx={{ display: 'flex' }}>*/}
       <Box
         component="main"
         sx={{
@@ -28,13 +21,11 @@ const MainPage = () => {
           flexGrow: 1,
           bgcolor: 'darkBackground.main',
           p: 2,
-          // maxHeight: '93vh',
           flex: 2,
         }}
       >
         <VideoFeed />
       </Box>
-      {/*</Box>*/}
     </>
   );
 };

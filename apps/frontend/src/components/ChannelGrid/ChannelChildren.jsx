@@ -1,6 +1,6 @@
 import styles from './ChannelChildren.module.scss';
 import { Button, Typography } from '@mui/material';
-import { /*useLocation,*/ useNavigate /*, useParams*/ } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { Loader } from '../index';
@@ -11,7 +11,7 @@ export const ChannelChildren = ({ childType, itemId }) => {
   const theme = useTheme();
   let [content, setContent] = useState(<Loader />);
   const navigate = useNavigate();
-  let [idListState, setIdList] = useState([] /*location.state.idList*/);
+  let [idListState, setIdList] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +19,6 @@ export const ChannelChildren = ({ childType, itemId }) => {
         childType,
         itemId.split('_').at(-1)
       );
-      // console.log(title, idList);
       setIdList([...idList.split('_')]);
       setContent(<Typography className={styles.title}>{title}</Typography>);
     };
@@ -31,8 +30,6 @@ export const ChannelChildren = ({ childType, itemId }) => {
 
   const handleClick = () => {
     const url = `/${PLAYLIST}/get_all/${idListState.join('_')}`;
-    // console.log(url);
-    // console.log(idListState, 'idListState');
     navigate(url);
   };
 

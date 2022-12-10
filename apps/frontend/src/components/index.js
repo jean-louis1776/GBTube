@@ -1,4 +1,3 @@
-export { default as ChannelCard } from './ChannelCard/ChannelCard';
 export { default as ChannelGrid } from './ChannelGrid';
 export { default as EmailConfirm } from './EmailConfirm/EmailConfirm';
 export { default as Header } from './Header/Header';

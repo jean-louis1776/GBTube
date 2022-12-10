@@ -2,14 +2,12 @@ import Header from '../Header/Header';
 import { Avatar, Box, Button, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { CHANNEL, userChannelTabs } from '@constants/frontend';
-import { Link, useParams } from 'react-router-dom';
+import { userChannelTabs } from '@constants/frontend';
+import { useParams } from 'react-router-dom';
 import UserAbout from './UserAbout';
 import ChannelGrid from '../ChannelGrid';
 import PlayListGrid from '../PlayListGrid';
 import VideoGrid from '../VideoGrid/VideoGrid';
-import VideoController from '../../controllers/VideoController';
-import GetChildrenController from '../../controllers/GetChildrenController';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getUserId } from '../../store/selectors';
 

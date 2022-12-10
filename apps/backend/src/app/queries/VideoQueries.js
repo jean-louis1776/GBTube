@@ -120,9 +120,7 @@ class VideoQueries {
     try {
       const videoById = await Video.findOne({
         where: {id},
-
         include: [{model: VideoInfo, attributes: {exclude: ['id', 'videoId', 'path', 'hashName']}}],
-
       });
       if (videoById) return this.parsingQueryModel(videoById);
       throw ApiError.NotFound(`Видео с id: ${id} не найдено`);
@@ -288,7 +286,7 @@ class VideoQueries {
   async createVideoHistory(userId, videoId) {
     try {
       if (await VideoHistory.findOne({where: {userId, videoId}})) {
-        return (VideoHistory.update({updatedTimestamp: Date.now()}, {where: {userId, videoId}}));
+        return (await VideoHistory.update({updatedTimestamp: Date.now()}, {where: {userId, videoId}}));
       }
       return !!(await VideoHistory.create({userId, videoId, updatedTimestamp: Date.now()}));
     } catch (e) {

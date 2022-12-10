@@ -31,7 +31,6 @@ const VideoGrid = () => {
       );
       setTitle(title);
       setDescription(description);
-      console.log(VIDEO, idList);
       const children = await GetChildrenController.getAllItemsById(
         VIDEO,
         playListId
@@ -47,9 +46,7 @@ const VideoGrid = () => {
         setContent(
           <Box className={styles.videoGrid}>
             {children.map((item, idx) => (
-              <Link key={idx} to={`/${VIDEO}/get_one/${item.idList}`}>
-                <VideoCard idList={item.idList} />
-              </Link>
+              <VideoCard idList={item.idList} key={idx} />
             ))}
           </Box>
         );
@@ -75,7 +72,6 @@ const VideoGrid = () => {
   const isAuthor = () => authorId === userId;
 
   const handleDeletePlaylist = async () => {
-    console.log(idList, idList.split('_').slice(0, -1).join('_'));
     try {
       await EditItemController.deleteItem(PLAYLIST, playListId);
       navigate(

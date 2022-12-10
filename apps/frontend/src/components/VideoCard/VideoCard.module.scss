@@ -2,64 +2,82 @@
   display: flex;
   flex-direction: column;
   width: 300px;
-  padding: 16px;
+  height: 285px;
   border-radius: 18px;
   position: relative;
   transition: 0.3s;
   margin: 8px 0;
 
-  .videoThumbnail {
-    display: flex;
-    overflow: hidden;
-    border-radius: 12px;
-    aspect-ratio: 16/9;
-    justify-content: center;
-    background-size: cover;
-    background-position: center;
-
-    .blur {
-      display: flex;
-      justify-content: center;
-      backdrop-filter: blur(5px);
-      width: 100%;
-    }
+  .videoLink,
+  .channelLink {
+    position: absolute;
   }
 
-  .videoInfo {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin-top: 8px;
+  .videoLink {
+    display: inline-block;
+    padding: 16px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    .videoInfoTitle {
-      .title {
-        font-size: 1.3rem;
-        line-height: 1.1;
-        margin-bottom: 5px;
-        overflow: hidden;
+    .videoThumbnail {
+      display: flex;
+      overflow: hidden;
+      border-radius: 12px;
+      aspect-ratio: 16/9;
+      justify-content: center;
+      background-size: cover;
+      background-position: center;
+
+      .blur {
+        display: flex;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        width: 100%;
+      }
+    }
+
+    .videoInfo {
+      height: 39%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-top: 8px;
+
+      .videoInfoTitle {
+        .title {
+          font-size: 1.2rem;
+          line-height: 1.1;
+          margin-bottom: 5px;
+          overflow: hidden;
+          height: 43px;
+        }
       }
 
-      .channelLink {
-        display: block;
-        width: fit-content;
-
-        .channelName {
-          display: flex;
-          align-items: center;
+      .videoInfoView {
+        .viewCount {
           opacity: 0.6;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 1;
-          }
+          user-select: none;
         }
       }
     }
+  }
 
-    .videoInfoView {
-      .viewCount {
-        opacity: 0.6;
-        user-select: none;
+  .channelLink {
+    bottom: 35px;
+    left: 15px;
+    display: block;
+    width: fit-content;
+
+    .channelName {
+      display: flex;
+      align-items: center;
+      opacity: 0.6;
+      transition: 0.3s;
+
+      &:hover {
+        opacity: 1;
       }
     }
   }

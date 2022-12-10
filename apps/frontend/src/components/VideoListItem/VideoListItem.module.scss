@@ -1,75 +1,100 @@
 .videoListItem {
-  display: flex;
   width: 800px;
-  padding: 16px;
+  height: 120px;
   border-radius: 18px;
   position: relative;
   transition: 0.3s;
 
-  .videoThumbnail {
-    width: 20%;
-    display: flex;
-    overflow: hidden;
-    border-radius: 12px;
-
-    img {
-      width: 100%;
-    }
+  .mainLink,
+  .channelLink,
+  .deleteButton {
+    position: absolute;
   }
 
-  .videoInfo {
-    width: 80%;
-    padding-left: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  .mainLink {
+    padding: 16px;
+    display: inline-flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    .videoInfoTitle {
-      .title {
-        font-size: 1.5rem;
+    .videoThumbnail {
+      width: 20%;
+      display: flex;
+      overflow: hidden;
+      border-radius: 12px;
+      aspect-ratio: 16/9;
+      justify-content: center;
+      background-size: cover;
+      background-position: center;
+
+      .blur {
+        display: flex;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        width: 100%;
+      }
+    }
+
+    .videoInfo {
+      width: 80%;
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .videoInfoTitle {
+        .title {
+          font-size: 1.4rem;
+        }
       }
 
-      .channelLink {
-        display: block;
-        width: fit-content;
-
-        .channelName {
-          display: flex;
-          align-items: center;
+      .videoInfoView {
+        .viewCount {
           opacity: 0.6;
-          transition: 0.3s;
-
-          &:hover {
-            opacity: 1;
-          }
+          user-select: none;
         }
       }
     }
+  }
 
-    .videoInfoView {
-      .viewCount {
-        opacity: 0.6;
-        user-select: none;
+  .channelLink {
+    top: 60px;
+    left: 192px;
+    display: block;
+    width: fit-content;
+
+    .channelName {
+      display: flex;
+      align-items: center;
+      opacity: 0.6;
+      transition: 0.3s;
+
+      &:hover {
+        opacity: 1;
       }
     }
   }
 
-  .deleteButton {
-    color: #0089eb;
-    position: absolute;
-    top: 24px;
-    right: 24px;
+  .deleteLink {
     display: none;
 
-    &:hover {
-      background-color: rgba(25, 118, 210, 0.25);
+    .deleteButton {
+      top: 16px;
+      right: 16px;
+      color: #0089eb;
+
+      &:hover {
+        background-color: rgba(25, 118, 210, 0.25);
+      }
     }
   }
 
   &:hover {
     background-color: #464646;
 
-    .deleteButton {
+    .deleteLink {
       display: inline-flex;
     }
   }

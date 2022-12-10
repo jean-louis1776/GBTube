@@ -1,19 +1,13 @@
-import React, { useState } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import React from 'react';
+import { Box, Typography } from '@mui/material';
 
-import { Header, Navbar } from '../';
-
-import styles from './Library.module.scss';
+import { Header } from '../';
 
 const Library = (props) => {
   const selectedCategory = 'Моя библиотека';
 
   return (
     <Box sx={{ display: 'flex', pt: 8 }}>
-      {/* <Helmet>
-        <title>GeekTube | Библиотека</title>
-      </Helmet> */}
-
       <Header selectedCategory={selectedCategory} />
       <Box
         component="main"

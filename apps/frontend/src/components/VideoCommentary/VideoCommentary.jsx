@@ -4,13 +4,15 @@ import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 import styles from './VideoCommentary.module.scss';
 import { styled } from '@mui/material/styles';
 import UserController from '../../controllers/UsersController';
 
 const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete}) => {
-  const [answer, setAnswer] = useState(false);
+  const [isVisibleSetAnswer, setIsVisibleSetAnswer] = useState(false);
   const [authorCommentNick, setAuthorCommentNick] = useState('');
   const [date, _] = useState(new Date(commentData.createdTimestamp));
 
@@ -61,6 +63,9 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
     return !(currentUserId === String(commentData.userId) || currentUserId === videoOwnerId);
   }
 
+  const handleHideAnswer = () => {setIsVisibleSetAnswer(false)};
+  const handleToggleVisibleAnswer = () => {setIsVisibleSetAnswer(!isVisibleSetAnswer)};
+
   return (
     <Stack direction="column" marginBottom={3}>
       <Box className={styles.comment}>
@@ -107,26 +112,24 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
                 <ThumbDownOutlined />
               </ReactionButton>
             </Tooltip>
-            <CommentButton onClick={() => setAnswer((prevState) => !prevState)}>
-              Ответить
-            </CommentButton>
+            <CommentButton onClick={handleToggleVisibleAnswer}>Ответить</CommentButton>
             <IconButton size='large' disabled={isMayRemove()} onClick={handleDelete} variant="contained">
               <DeleteForeverIcon/>
             </IconButton>
           </Box>
-          <Box
-            sx={{ display: answer ? 'flex' : 'none' }}
-            className={styles.comment_answer}
-          >
+          {isVisibleSetAnswer ? <Box sx={{display: 'flex'}} className={styles.comment_answer}>
             <input className={styles.comment_inputField} />
             <Box gap="30px" className={styles.comment_btn}>
               <CommentButton>Отправить</CommentButton>
-              <CancelButton onClick={() => setAnswer(false)}>
-                Отмена
-              </CancelButton>
+              <CancelButton onClick={handleHideAnswer}>Отмена</CancelButton>
             </Box>
-          </Box>
+          </Box> : ''}
         </Box>
+      </Box>
+      <Box>
+        <IconButton>
+          <ArrowDropDownIcon/><ArrowDropUpIcon/>Ответов
+        </IconButton>
       </Box>
     </Stack>
   );
