@@ -107,7 +107,7 @@ const VideoDetail = () => {
           />
         </div>
       );
-      setComments(await CommentController.getAllItemsByVideo(videoId));
+      setComments(await CommentController.getAllItemsByVideo(videoId, userId));
     };
 
     fetchData().catch((err) => {
