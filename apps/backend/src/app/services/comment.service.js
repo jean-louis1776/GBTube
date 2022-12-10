@@ -1,4 +1,5 @@
 import { commentQueries } from '../queries/CommentQueries';
+import { userQueries } from '../queries/UserQueries';
 
 class CommentService {
 
@@ -33,16 +34,30 @@ class CommentService {
 
   async getOne(id) {
     try {
-      return commentQueries.getCommentById(id);
+      const gCommentById = await commentQueries.getCommentById(id);
+      gCommentById.nickName = gCommentById.User.nickName;
+      delete gCommentById.User;
+      return gCommentById;
     } catch (e) {
       console.log(e.message);
       throw(e);
     }
   }
 
-  async getAllCommentsVideo(videoId) {
+  async getAllCommentsVideo(query) {
     try {
-      return commentQueries.getAllCommentsVideo(videoId);
+      const {video_id, user_id} = query;
+      const getAllCommentsVideo = await commentQueries.getAllCommentsVideo(video_id);
+      await Promise.all(getAllCommentsVideo.map(async (value) => {
+        const isGrade = await commentQueries.getGrade(user_id, value.id);
+        if (isGrade === true) value.grade = 'like';
+        if (isGrade === false) value.grade = 'dislike';
+        if (isGrade === undefined) value.grade = '';
+        value.nickName = value.User.nickName;
+        delete value.User;
+        delete value.id;
+      }));
+      return getAllCommentsVideo;
     } catch (e) {
       console.log(e.message);
       throw(e);
