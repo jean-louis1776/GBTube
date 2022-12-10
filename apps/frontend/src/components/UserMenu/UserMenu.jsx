@@ -55,8 +55,7 @@ const UserMenu = () => {
       navigate(`${link}/get_all/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    }
-    else {
+    } else {
       setUnauthorized((prev) => !prev);
       setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
@@ -67,8 +66,7 @@ const UserMenu = () => {
       navigate(`${link}/${userId}`, {
         state: { idList: [`${userId}`] },
       });
-    }
-    else {
+    } else {
       setUnauthorized((prev) => !prev);
       setTimeout(() => setUnauthorized((prev) => !prev), 2000);
     }
@@ -104,7 +102,7 @@ const UserMenu = () => {
             sx={{
               width: 40,
               height: 40,
-              bgcolor: isAuth ? deepOrange[500] : 'baseBlue.main',
+              bgcolor: isAuth ? 'baseBlue.main' : deepOrange[500],
             }}
           />
         </IconButton>
@@ -197,7 +195,7 @@ const UserMenu = () => {
           )
         )}
       </Menu>
-      <UnauthorizedModal isAuth={unauthorized}/>
+      <UnauthorizedModal isAuth={unauthorized} />
     </>
   );
 };

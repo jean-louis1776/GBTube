@@ -110,13 +110,7 @@ const Header = ({ selectedCategory }) => {
             <SearchForm />
 
             {isAuth ? (
-              <Button
-                variant="outlined"
-                color="baseBlue"
-                onClick={handleLogoutClick}
-              >
-                Выйти
-              </Button>
+              <UserMenu />
             ) : (
               <Link to="/login">
                 <Button variant="outlined" color="baseBlue">
@@ -125,7 +119,7 @@ const Header = ({ selectedCategory }) => {
               </Link>
             )}
 
-            <UserMenu />
+            {/* <UserMenu /> */}
           </Stack>
         </Toolbar>
       </AppBar>
