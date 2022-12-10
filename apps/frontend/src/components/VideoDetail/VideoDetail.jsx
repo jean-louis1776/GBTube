@@ -22,7 +22,7 @@ import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import VideoController from '../../controllers/VideoController';
-import { CHANNEL, VIDEO } from '@constants/frontend';
+import { API_URL, CHANNEL, VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -95,7 +95,7 @@ const VideoDetail = () => {
       setTitle(videoInfo.title);
       setViewsCount(videoInfo.viewsCount);
       const { hashName } = await VideoController.getVideoName(videoId);
-      const url = `${process.env.API_URL}/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
+      const url = `${API_URL}/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
       setVideoContent(
         <div className={styles.outerPlayerContainer}>
           <Player
@@ -109,20 +109,24 @@ const VideoDetail = () => {
       );
     };
 
-    fetchVideoData().then().catch((err) => {
-      setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
-      console.log(err);
-      console.log('Fail get info about video');
-    });
+    fetchVideoData()
+      .then()
+      .catch((err) => {
+        setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
+        console.log(err);
+        console.log('Fail get info about video');
+      });
     const fetchCommentData = async () => {
       setComments(await CommentController.getAllItemsByVideo(videoId, userId));
-    }
+    };
 
-    fetchCommentData().then().catch((err) => {
-      setComments([]);
-      console.log(err);
-      console.log('Fail get info about comments');
-    })
+    fetchCommentData()
+      .then()
+      .catch((err) => {
+        setComments([]);
+        console.log(err);
+        console.log('Fail get info about comments');
+      });
   }, []);
 
   const handleDeleteVideo = async () => {
