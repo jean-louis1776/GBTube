@@ -35,6 +35,30 @@ const UploadVideoDraft = () => {
   const [uploadErrorMsg, setUploadErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const refDuration = useRef('');
+
+  const calcDuration = (evt) => {
+    const file = evt.target.files[0];
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src);
+      let duration = video.duration.toFixed(1);
+      let hour = Math.trunc(duration / (60 * 60));
+      duration = hour > 0 ? (duration - hour * 60 * 60) : duration;
+      hour = hour === 0 ? '00' : hour;
+      hour = (typeof hour === 'number' && hour < 10) ? `0${hour}` : hour;
+      let min = Math.trunc(duration / 60);
+      min = min === 0 ? '00' : min;
+      min = (typeof min === 'number' && min < 10) ? `0${min}` : min;
+      let sec = Math.trunc(duration % 60);
+      sec = sec < 10 ? `0${sec}` : sec;
+      refDuration.current = `${hour} : ${min} : ${sec}`;
+      console.log(refDuration.current);
+    }
+    video.src = URL.createObjectURL(file);
+  }
 
   useEffect(() => {
     document.title = 'GeekTube | Загрузка видео';
@@ -64,6 +88,7 @@ const UploadVideoDraft = () => {
     const formData = new FormData(evt.target);
     formData.append('idList', idList);
     formData.append('thumbnail', ref.current);
+    formData.append('duration', refDuration.current);
 
     try {
       setIsLoading(true);
@@ -124,10 +149,11 @@ const UploadVideoDraft = () => {
                         onChange={(e) => {
                           handleChangeFile(e);
                           handleInputFileChange(e);
+                          calcDuration(e);
                         }}
                         type="file"
                         hidden
-                        accept="video/*,.3gp,.avi,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.wmv,.webm"
+                        accept="video/*,.3gp,.flv,.m4v,.mkv,.mov,.mp4,.mpeg,.mpg,.webm"
                       />
                     </Button>
                     <Button
@@ -204,7 +230,6 @@ const UploadVideoDraft = () => {
           )}
         </Paper>
       </Stack>
-
       <Box className={styles.copyright}>
         <Typography sx={{ color: '#999', textAlign: 'center' }}>
           &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
