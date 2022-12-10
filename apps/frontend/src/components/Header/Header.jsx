@@ -141,6 +141,20 @@ const Header = ({ selectedCategory }) => {
           selectCat={selectedCategory}
           handleListItemClick={handleListItemClick}
         />
+
+        <Typography
+          sx={{
+            width: '100%',
+            position: 'absolute',
+            bottom: '10px',
+            textAlign: 'center',
+            opacity: 0.6,
+            userSelect: 'none',
+          }}
+        >
+          &copy; {new Date().getFullYear()} GeekTube Team. <br /> Все права
+          защищены
+        </Typography>
       </Drawer>
 
       <UnauthorizedModal isAuth={unauthorized} />
