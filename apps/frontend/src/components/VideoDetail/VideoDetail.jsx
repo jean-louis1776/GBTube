@@ -100,6 +100,7 @@ const VideoDetail = () => {
         <div className={styles.outerPlayerContainer}>
           <Player
             src={url}
+            poster={videoInfo.thumbnail}
             seekDuration={5}
             primaryColor={theme.palette.baseBlue.main}
             keyboardShortcut={false}
