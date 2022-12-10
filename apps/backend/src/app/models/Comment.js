@@ -1,5 +1,6 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
+import { User } from "./Users";
 
 export const Comment = sequelize.define('Comment', {
     id: {
@@ -24,7 +25,6 @@ export const Comment = sequelize.define('Comment', {
     idList: {
       type: DataTypes.TEXT,
     },
-
   }, {
     hooks: {
       afterCreate: (comment) => {
