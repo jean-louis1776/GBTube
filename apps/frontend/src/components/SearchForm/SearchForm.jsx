@@ -5,17 +5,19 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './SearchForm.module.scss';
 
-const SearchForm = (props) => {
+const SearchForm = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('BEFORE', searchTerm);
 
     if (searchTerm) {
       navigate(`/search/${searchTerm}`);
       setSearchTerm('');
+      console.log('AFTER', searchTerm);
     }
   };
 
