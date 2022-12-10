@@ -28,13 +28,20 @@ const History = () => {
     };
     videoHistory(currentUserId).then((videos) => {
       refStoryVideos.current = videos;
-      setStoryVideoComp(
-        <Box>
-          {videos.map((idList) => (
-            <VideoListItem idList={idList} key={idList} />
-          ))}
-        </Box>
-      );
+
+      refStoryVideos.current.length === 0
+        ? setStoryVideoComp(
+            <Typography variant="h5" sx={{ userSelect: 'none' }}>
+              Похоже вы не еще не посмотрели свое первое видео
+            </Typography>
+          )
+        : setStoryVideoComp(
+            <Box>
+              {videos.map((idList) => (
+                <VideoListItem idList={idList} key={idList} />
+              ))}
+            </Box>
+          );
     });
   }, []);
 

@@ -52,4 +52,8 @@ export default class VideoController {
   static async getVideoHistory(userId) {
     return (await $authApi.get(`/video/history/${userId}`)).data;
   }
+
+  static async getVideoLikes(userId) {
+    return (await $authApi.get(`/video/likes_list/${userId}`)).data;
+  }
 }

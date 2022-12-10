@@ -1,16 +1,45 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { Header } from '../';
+import { Header, Loader } from '../';
 import VideoCard from '../VideoCard/VideoCard';
+import { store } from '../../store';
+import VideoController from '../../controllers/VideoController';
 
 import styles from './Likes.module.scss';
 
 const Likes = (props) => {
   const selectedCategory = 'Понравившиеся';
 
-  const listId = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+  const { profileReducer } = store.getState();
+  const currentUserId = Number(profileReducer.id);
+
+  const [likesVideoComp, setLikesVideoComp] = useState(<Loader />);
+  const refLikesVideos = useRef([]);
+
+  useEffect(() => {
+    document.title = 'Понравившиеся | GeekTube';
+
+    const videoLikes = async (userId) => {
+      return VideoController.getVideoLikes(userId);
+    };
+    videoLikes(currentUserId).then((videos) => {
+      refLikesVideos.current = videos;
+
+      refLikesVideos.current.length === 0
+        ? setLikesVideoComp(
+            <Typography variant="h5" sx={{ userSelect: 'none' }}>
+              Поставьте лайк на свое первое видео, оно будет ждать тут
+            </Typography>
+          )
+        : setLikesVideoComp(
+            <Box className={styles.likesGrid}>
+              {videos.map((idList) => (
+                <VideoCard idList={idList} key={idList} />
+              ))}
+            </Box>
+          );
+    });
+  }, []);
 
   return (
     <>
@@ -22,11 +51,7 @@ const Likes = (props) => {
             Понравившиеся видео
           </Typography>
 
-          <Box className={styles.likesGrid}>
-            {listId.map((index) => (
-              <VideoCard key={index} />
-            ))}
-          </Box>
+          {likesVideoComp}
         </Box>
       </Box>
     </>
