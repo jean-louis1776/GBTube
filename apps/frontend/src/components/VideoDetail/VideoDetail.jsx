@@ -80,7 +80,7 @@ const VideoDetail = () => {
 
   useEffect(() => {
     setVideoContent(<Loader />);
-    const fetchData = async () => {
+    const fetchVideoData = async () => {
       const videoInfo = await VideoController.getVideoInfo(videoId);
       document.title = videoInfo.title;
       setCategory(videoInfo.category);
@@ -107,14 +107,22 @@ const VideoDetail = () => {
           />
         </div>
       );
-      setComments(await CommentController.getAllItemsByVideo(videoId, userId));
     };
 
-    fetchData().catch((err) => {
+    fetchVideoData().then().catch((err) => {
       setVideoContent(<p style={{ color: 'white' }}>Видео не найдено</p>);
       console.log(err);
-      console.log('Fail get some about video');
+      console.log('Fail get info about video');
     });
+    const fetchCommentData = async () => {
+      setComments(await CommentController.getAllItemsByVideo(videoId, userId));
+    }
+
+    fetchCommentData().then().catch((err) => {
+      setComments([]);
+      console.log(err);
+      console.log('Fail get info about comments');
+    })
   }, []);
 
   const handleDeleteVideo = async () => {
