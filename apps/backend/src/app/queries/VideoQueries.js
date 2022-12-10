@@ -203,7 +203,7 @@ class VideoQueries {
 
   async like(videoId, userId) {
     try {
-      const lVideo = await Video.findOne({where: {id: videoId}});
+      const lVideo = await VideoInfo.findOne({where: {videoId}});
       if (await VideoLike.findOne({where: {videoId, userId, liked: false}})) {
         await VideoLike.update({liked: true}, {where: {videoId, userId, liked: false}});
         await lVideo.increment('likesCount', {by: 1});
@@ -225,7 +225,7 @@ class VideoQueries {
 
   async dislike(videoId, userId) {
     try {
-      const dlVideo = await Video.findOne({where: {id: videoId}});
+      const dlVideo = await VideoInfo.findOne({where: {videoId}});
       if (await VideoLike.findOne({where: {videoId, userId, liked: true}})) {
         await VideoLike.update({liked: false}, {where: {videoId, userId, liked: true}});
         await dlVideo.increment('dislikesCount', {by: 1});
