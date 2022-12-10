@@ -180,18 +180,14 @@ const UserMenu = () => {
               </MenuItem>
             </Box>
           ) : (
-            userMenu.name === 'Войти' || (
-              <Link to="/login" key={index}>
-                <Box onClick={handleLogoutClick}>
-                  <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
-                    <ListItemIcon>{userMenu.icon}</ListItemIcon>
-                    <ListItemText>
-                      {isAuth && userId ? userMenu.name : userMenu.altName}
-                    </ListItemText>
-                  </MenuItem>
-                </Box>
-              </Link>
-            )
+            <Box onClick={handleLogoutClick} key={index}>
+              <MenuItem sx={{ pt: 1.25, pb: 1.25 }}>
+                <ListItemIcon>{userMenu.icon}</ListItemIcon>
+                <ListItemText>
+                  {isAuth && userId ? userMenu.name : userMenu.altName}
+                </ListItemText>
+              </MenuItem>
+            </Box>
           )
         )}
       </Menu>
