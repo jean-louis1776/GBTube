@@ -58,11 +58,7 @@ export default class VideoController {
   }
 
   static async sendLikeReactionVideo(videoId, userId) {
-    const dto = {userId: +userId, id: +videoId };
-    return await $authApi.patch((`/video/like`), dto, {
-      headers: {
-        'Content-type': 'application/json',
-      },
-    });
+    const dto = { userId: +userId, id: +videoId };
+    return await $authApi.patch(`/video/like`, dto);
   }
 }
