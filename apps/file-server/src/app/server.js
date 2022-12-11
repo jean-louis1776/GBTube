@@ -47,12 +47,12 @@ function callVideoChunk(call) {
   const videoStream = fs.createReadStream(resolvedPath, { start, end });
 
   videoStream.on('error', (err) => {
-    call.write({ isError: true, mediaStream: 0 });
+    call.write({ isError: true });
     console.log(err);
   });
 
   videoStream.on('data', (chunk) => {
-    call.write({ isError: false, mediaStream: chunk });
+    call.write({ mediaStream: chunk });
   });
 
   videoStream.on('end', () => {
@@ -65,11 +65,11 @@ function callMediaSimple(call) {
   const resolvedPath = resolve(PATH_TO_MEDIA, pathToMedia);
   const mediaStream = fs.createReadStream(resolvedPath);
   mediaStream.on('error', (err) => {
-    call.write({ isError: true, mediaStream: 0 });
+    call.write({ isError: true });
     console.log(err);
   });
   mediaStream.on('data', (chunk) => {
-    call.write({ isError: false, mediaStream: chunk });
+    call.write({ mediaStream: chunk });
   });
   mediaStream.on('end', () => {
     call.end();
