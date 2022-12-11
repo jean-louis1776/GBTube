@@ -5,18 +5,15 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
-import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
 
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
   const [video, setVideo] = useState({});
-  const userId = useSelector(getUserId, shallowEqual);
   useEffect(() => {
     const fetchData = async () => {
-      setVideo(await VideoController.getVideoInfo(videoId, userId));
+      setVideo(await VideoController.getVideoInfo(videoId));
     };
     fetchData()
       .then()

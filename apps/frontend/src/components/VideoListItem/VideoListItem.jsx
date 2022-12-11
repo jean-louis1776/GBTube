@@ -5,8 +5,6 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
-import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
 import VideoController from '../../controllers/VideoController';
 
 import styles from './VideoListItem.module.scss';
@@ -15,11 +13,10 @@ const VideoListItem = ({ idList }) => {
   const videoId = idList.split('_').at(-1);
   const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
-  const userId = useSelector(getUserId, shallowEqual);
 
   useEffect(() => {
     const fetchData = async () => {
-      setVideo(await VideoController.getVideoInfo(videoId, userId));
+      setVideo(await VideoController.getVideoInfo(videoId));
     };
     fetchData()
       .then()
