@@ -30,6 +30,8 @@ import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
 const Header = ({ selectedCategory }) => {
   const isAuth = useSelector(getAuthStatus, shallowEqual);
   const [openMenu, setOpenMenu] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDrawer = (toggleOpen) => (event) => {
     if (
@@ -41,9 +43,6 @@ const Header = ({ selectedCategory }) => {
 
     setOpenMenu(toggleOpen);
   };
-
-  const [unauthorized, setUnauthorized] = useState(false);
-  const navigate = useNavigate();
 
   const handleListItemClick = (link) => () => {
     if (isAuth || link === '/') {
@@ -150,10 +149,10 @@ const Header = ({ selectedCategory }) => {
             textAlign: 'center',
             opacity: 0.6,
             userSelect: 'none',
+            fontSize: '.8rem',
           }}
         >
-          &copy; {new Date().getFullYear()} GeekTube Team. <br /> Все права
-          защищены
+          &copy; {new Date().getFullYear()} GeekTube Team. Все права защищены
         </Typography>
       </Drawer>
 

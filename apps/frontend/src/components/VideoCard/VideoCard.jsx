@@ -3,18 +3,19 @@ import { Link } from 'react-router-dom';
 import { Typography, Tooltip, Box } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
-import GetChildrenController from '../../controllers/GetChildrenController';
 import styles from './VideoCard.module.scss';
 import { Loader } from '../index';
+import VideoController from '../../controllers/VideoController';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
   const [video, setVideo] = useState({});
-
+  const userId = useSelector(getUserId, shallowEqual);
   useEffect(() => {
     const fetchData = async () => {
-      const vids = await GetChildrenController.getItemById(VIDEO, videoId);
-      setVideo(vids);
+      setVideo(await VideoController.getVideoInfo(videoId, userId));
     };
     fetchData()
       .then()

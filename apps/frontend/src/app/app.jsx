@@ -53,7 +53,7 @@ export function App() {
           console.log(isBaned, 'user banned');
           dispatch(setAuthStatus(false));
           dispatch(setAccessToken(''));
-          dispatch(setId(''));
+          dispatch(setId('0'));
           dispatch(setNickName(''));
           dispatch(setRole(''));
           return;

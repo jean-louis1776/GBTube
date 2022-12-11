@@ -9,6 +9,7 @@ class VideoValidation extends Validation {
   checkName;
   checkPlaylistId;
   checkDownload;
+  getOne;
 
   constructor() {
     super();
@@ -33,6 +34,11 @@ class VideoValidation extends Validation {
     this.checkDownload = [
       query('hash_name').exists().withMessage(NOT_EXISTS),
       query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT)
+    ];
+
+    this.getOne = [
+      query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT),
+      query('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT)
     ];
   }
 }

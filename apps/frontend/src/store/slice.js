@@ -4,9 +4,9 @@ export const profileSlice = createSlice({
   name: "profile",
   initialState: {
     accessToken: '',
-    id: '',
+    id: '0',
     isAuth: false,
-    nickName: 'Anonymous',
+    nickName: '',
     role: '',
   },
   reducers: reducers

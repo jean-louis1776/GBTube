@@ -10,7 +10,7 @@ router.get('/history/:user_id', videoValidation.checkUserId, videoController.fin
 router.get('/get_name/:id', videoValidation.checkId, videoController.getHashName);
 router.get('/download', videoValidation.checkDownload, videoController.download);
 router.get('/frameshot/:hash_name', videoValidation.checkName, videoController.getFrameShot);
-router.get('/get_one/:id', videoValidation.checkId, videoController.getVideoInfoById);
+router.get('/get_one', videoValidation.getOne, videoController.getVideoInfoById);
 router.get('/query/:title', videoValidation.checkTitle, videoController.findVideoByPartName);
 router.get('/get_all/:playlist_id', videoValidation.checkPlaylistId, videoController.getVideosInfoByPlaylistId);
 router.get('/get_favorite', videoController.getFavoriteIdList);

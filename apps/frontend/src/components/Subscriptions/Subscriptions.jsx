@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 
 import { Header } from '../';
 import SearchSubForm from './SearchSubForm';
-import VideoCard from '../VideoCard/VideoCard';
+import ChannelCard from '../ChannelCard/ChannelCard';
 
 import styles from './Subscriptions.module.scss';
 
 const Subscriptions = (props) => {
   const selectedCategory = 'Мои подписки';
+
+  useEffect(() => {
+    document.title = 'Мои подписки | GeekTube';
+  }, []);
 
   const listId = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -25,12 +29,12 @@ const Subscriptions = (props) => {
           </Typography>
 
           <SearchSubForm />
-          {/*
+
           <Box className={styles.likesGrid}>
             {listId.map((index) => (
-              <VideoCard key={index} />
+              <ChannelCard key={index} />
             ))}
-          </Box> */}
+          </Box>
         </Box>
       </Box>
     </>

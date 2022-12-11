@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { deepOrange } from '@mui/material/colors';
 import { userMenu } from '@constants/frontend';
@@ -82,7 +82,7 @@ const UserMenu = () => {
       localStorage.removeItem('token');
       dispatch(setAuthStatus(false));
       dispatch(setAccessToken(''));
-      dispatch(setId(''));
+      dispatch(setId('0'));
       dispatch(setNickName(''));
       navigate('/', { replace: true });
       console.log('logout successful');
