@@ -2,32 +2,18 @@ import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mu
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 import styles from './VideoCommentary.module.scss';
 import { styled } from '@mui/material/styles';
-import UserController from '../../controllers/UsersController';
 import CommentAnswers from './CommentAnswers';
 
 const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete}) => {
   const [isVisibleSetAnswer, setIsVisibleSetAnswer] = useState(false);
-  const [authorCommentNick, setAuthorCommentNick] = useState('');
-  const [date, _] = useState(new Date(commentData.createdTimestamp));
-
-  useEffect(() => {
-    const resolveAuthorNick = async () => {
-      return (await UserController.getUserNick(commentData.userId)).nickName;
-    }
-    resolveAuthorNick().then((nick) => {
-      setAuthorCommentNick(nick);
-    }).catch((err) => {
-      console.log('Failed resolve author name');
-      console.log(err);
-    });
-  }, []);
+  const date = useRef(new Date(commentData.createdTimestamp));
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -78,7 +64,7 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
         <Box>
           <Stack direction="row" alignItems="center">
             <Link to="/user/:id">
-              <Typography variant="subtitle1">{authorCommentNick}</Typography>
+              <Typography variant="subtitle1">{commentData.nickName}</Typography>
             </Link>
             <Typography
               variant={'overline'}
@@ -86,7 +72,7 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
               fontWeight="200"
               marginLeft="10px"
             >
-             Дата публикации: {date.toLocaleDateString()}
+             Дата публикации: {date.current.toLocaleDateString()}
             </Typography>
           </Stack>
           <ShowMoreText
