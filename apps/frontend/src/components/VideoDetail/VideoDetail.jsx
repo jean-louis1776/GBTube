@@ -81,7 +81,7 @@ const VideoDetail = () => {
   useEffect(() => {
     setVideoContent(<Loader />);
     const fetchVideoData = async () => {
-      const videoInfo = await VideoController.getVideoInfo(videoId);
+      const videoInfo = await VideoController.getVideoInfo(videoId, userId);
       document.title = videoInfo.title;
       setCategory(videoInfo.category);
       setChannelName(videoInfo.channelName);
