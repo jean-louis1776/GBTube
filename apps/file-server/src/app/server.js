@@ -3,7 +3,7 @@ import protoLoader from '@grpc/proto-loader';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 import * as fs from 'fs';
-import { stat, appendFile, access, constants, rm } from 'node:fs/promises';
+import { stat, /*appendFile,*/ access, constants, rm } from 'node:fs/promises';
 import { fileTypeFromFile } from 'file-type';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -46,8 +46,13 @@ function callVideoChunk(call) {
   const resolvedPath = resolve(PATH_TO_MEDIA, pathToMedia);
   const videoStream = fs.createReadStream(resolvedPath, { start, end });
 
+  videoStream.on('error', (err) => {
+    call.write({ isError: true, mediaStream: 0 });
+    console.log(err);
+  });
+
   videoStream.on('data', (chunk) => {
-    call.write({ mediaStream: chunk });
+    call.write({ isError: false, mediaStream: chunk });
   });
 
   videoStream.on('end', () => {
@@ -59,15 +64,19 @@ function callMediaSimple(call) {
   const { pathToMedia } = call.request;
   const resolvedPath = resolve(PATH_TO_MEDIA, pathToMedia);
   const mediaStream = fs.createReadStream(resolvedPath);
+  mediaStream.on('error', (err) => {
+    call.write({ isError: true, mediaStream: 0 });
+    console.log(err);
+  });
   mediaStream.on('data', (chunk) => {
-    call.write({ mediaStream: chunk });
+    call.write({ isError: false, mediaStream: chunk });
   });
   mediaStream.on('end', () => {
     call.end();
   });
 }
 
-function sendMedia (call, res) {
+/*function sendMedia (call, res) {
   call.on('data', (payload) => {
     const fileName = payload.fileName;
     const chunk = payload.chunk;
@@ -83,6 +92,31 @@ function sendMedia (call, res) {
   call.on('end', () => {
     console.log('Finished');
     res(null, {});
+  });
+}*/
+
+function sendMedia(call, res) {
+  let file
+
+  call.on('data', (payload) => {
+    const chunk = payload.chunk;
+    const fileName = payload.fileName;
+    if (!chunk) {
+      const resolvedPath = resolve(PATH_TO_MEDIA, fileName);
+      file = fs.createWriteStream(resolvedPath);
+      file.on('error', (err) => {
+        console.log('Write file error');
+        console.log(err);
+        res(err, { status: 'FAILED' });
+      });
+    } else {
+      file.write(chunk);
+    }
+  });
+
+  call.on('end', () => {
+    file.close();
+    res(null, { status: 'SUCCESS' });
   });
 }
 
