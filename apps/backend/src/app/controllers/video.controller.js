@@ -93,7 +93,8 @@ class VideoController {
   async getVideoInfoById(req, res, next) {
     try {
       validateError(req);
-      return res.json(await videoService.getVideoInfoById(+req.params.id));
+      const { video_id, user_id } = req.query;
+      return res.json(await videoService.getVideoInfoById(+video_id, +user_id));
     } catch (e) {
       next(e);
     }

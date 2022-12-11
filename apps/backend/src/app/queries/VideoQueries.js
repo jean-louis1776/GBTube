@@ -264,6 +264,14 @@ class VideoQueries {
     }
   }
 
+  async gradeLikeDislikeOfVideoByUserId(videoId, userId) {
+    if (!userId) return '';
+    const video = await VideoLike.findOne({where: {videoId, userId}});
+    if (!video) return '';
+    if (video.toJSON().liked) return 'like';
+    return 'dislike';
+  }
+
   async checkVideoById(id) {
     try {
       return !!(await Video.findOne({where: {id}}));

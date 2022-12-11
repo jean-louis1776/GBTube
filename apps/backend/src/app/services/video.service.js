@@ -89,11 +89,13 @@ class VideoService {
     }
   }
 
-  async getVideoInfoById(id) {
+  async getVideoInfoById(id, userId) {
     try {
       const video = await videoQueries.findVideoById(id);
-      const nickChannelNames = await this.getNickAndPlaylistNames(video.idList);
-      return {...video, ...nickChannelNames};
+      const [, channelId] = video.idList.split('_');
+      const сhannelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
+      const grade = await videoQueries.gradeLikeDislikeOfVideoByUserId(id, userId);
+      return { ...video, сhannelName, grade };
     } catch (e) {
       throw e;
     }
@@ -108,9 +110,10 @@ class VideoService {
       console.log('playlistId = ', playlistId);
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
       if (!videos?.length) return null;
-      const nickChannelNames = await this.getNickAndPlaylistNames(videos[0].idList);
+      const [, channelId] = videos[0].idList.split('_');
+      const сhannelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
       return videos.map(video => {
-        return {...video, ...nickChannelNames};
+        return { ...video, сhannelName };
       });
     } catch (e) {
       throw e;
