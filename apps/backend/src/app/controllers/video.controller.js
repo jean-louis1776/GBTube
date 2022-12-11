@@ -9,12 +9,12 @@ class VideoController {
   async create(req, res, next) {
     try {
       validateError(req);
-      const {idList, title, category, description, thumbnail} = req.body;
+      const { idList, title, category, description, thumbnail, duration } = req.body;
       const [, channelId] = idList.split('_');
       if (!await videoService.isNameUnique(+channelId, title)) {
         return next(ApiError.Conflict(`Видео с названием "${title}" уже существует`));
       }
-      return await videoService.upload(res, req.files, idList, title, category, description, thumbnail);
+      return await videoService.upload(res, req.files, idList, title, category, description, thumbnail, duration);
     } catch (e) {
       next(e);
     }

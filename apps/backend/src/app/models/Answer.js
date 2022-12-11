@@ -1,4 +1,4 @@
-import { DataTypes, where } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 export const Answer = sequelize.define('Answer', {
