@@ -4,9 +4,10 @@ import { Box, Typography } from '@mui/material';
 import Loader from '../Loader/Loader';
 import VideoController from '../../controllers/VideoController';
 import VideoCard from '../VideoCard/VideoCard';
+import { useParams } from 'react-router-dom';
+import Header from '../Header/Header';
 
 import styles from './SearchFeed.module.scss';
-import { useParams } from 'react-router-dom';
 
 const SearchFeed = ({ query }) => {
   const [searchComp, setSearchComp] = useState(<Loader />);
@@ -50,15 +51,31 @@ const SearchFeed = ({ query }) => {
   }, []);
 
   return (
-    <Box>
-      {refVideos.current.length > 0 ? (
-        searchComp
-      ) : (
-        <Typography>
-          Не найдено ни одного видео по запросу: {searchTerm}
-        </Typography>
-      )}
-    </Box>
+    <>
+      <Header />
+
+      <Box sx={{ display: 'flex', pt: '64px' }}>
+        <Box
+          component="main"
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexGrow: 1,
+            bgcolor: 'darkBackground.main',
+            p: 2,
+            flex: 2,
+          }}
+        >
+          {refVideos.current.length > 0 ? (
+            searchComp
+          ) : (
+            <Typography>
+              Не найдено ни одного видео по запросу: {searchTerm}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+    </>
   );
 };
 

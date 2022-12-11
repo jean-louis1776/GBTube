@@ -3,13 +3,13 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
-import { CHANNEL, VIDEO } from '@constants/frontend';
+import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
-
-import styles from './VideoListItem.module.scss';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getUserId } from '../../store/selectors';
 import VideoController from '../../controllers/VideoController';
+
+import styles from './VideoListItem.module.scss';
 
 const VideoListItem = ({ idList }) => {
   const videoId = idList.split('_').at(-1);
@@ -31,20 +31,38 @@ const VideoListItem = ({ idList }) => {
   return (
     <Box className={styles.videoListItem}>
       <Link to={`/${VIDEO}/get_one/${idList}`} className={styles.mainLink}>
-        {Object.hasOwn(video, 'thumbnail') ? (
-          <Box
-            className={styles.videoThumbnail}
-            sx={{ backgroundImage: `url(${video.thumbnail})` }}
-          >
-            <Box className={styles.blur}>
-              <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+        <Box className={styles.videoThumbWrapper}>
+          {Object.hasOwn(video, 'thumbnail') ? (
+            <Box
+              className={styles.videoThumbnail}
+              sx={{ backgroundImage: `url(${video.thumbnail})` }}
+            >
+              <Box className={styles.blur}>
+                <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+              </Box>
             </Box>
+          ) : (
+            <Box className={styles.videoThumbnail}>
+              <Loader />
+            </Box>
+          )}
+
+          <Box className={styles.duration}>
+            {Object.hasOwn(video, 'duration') ? (
+              <Typography>
+                {video.duration.split(' - ')[0] === '00'
+                  ? `${video.duration.split(' : ')[0]}:${
+                      video.duration.split(' : ')[1]
+                    }:${video.duration.split(' : ')[2]}`
+                  : `${video.duration.split(' : ')[1]}:${
+                      video.duration.split(' : ')[2]
+                    }`}
+              </Typography>
+            ) : (
+              ''
+            )}
           </Box>
-        ) : (
-          <Box className={styles.videoThumbnail}>
-            <Loader />
-          </Box>
-        )}
+        </Box>
 
         <Box className={styles.videoInfo}>
           <Box className={styles.videoInfoTitle}>
@@ -67,7 +85,10 @@ const VideoListItem = ({ idList }) => {
         </Box>
       </Link>
 
-      <Link to={`/${CHANNEL}/${channelId}`} className={styles.channelLink}>
+      <Link
+        to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
+        className={styles.channelLink}
+      >
         <Typography variant="subtitle2" className={styles.channelName}>
           <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
           {video.channelName}

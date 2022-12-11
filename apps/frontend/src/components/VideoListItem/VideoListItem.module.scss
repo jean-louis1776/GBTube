@@ -1,6 +1,6 @@
 .videoListItem {
   width: 800px;
-  height: 120px;
+  height: 149px;
   border-radius: 18px;
   position: relative;
   transition: 0.3s;
@@ -13,32 +13,49 @@
 
   .mainLink {
     padding: 16px;
-    display: inline-flex;
+    display: flex;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 
-    .videoThumbnail {
-      width: 20%;
-      display: flex;
-      overflow: hidden;
-      border-radius: 12px;
-      aspect-ratio: 16/9;
-      justify-content: center;
-      background-size: cover;
-      background-position: center;
+    .videoThumbWrapper {
+      width: 27%;
+      position: relative;
 
-      .blur {
+      .videoThumbnail {
+        user-select: none;
         display: flex;
+        overflow: hidden;
+        border-radius: 12px;
+        aspect-ratio: 16/9;
         justify-content: center;
-        backdrop-filter: blur(5px);
-        width: 100%;
+        background-size: cover;
+        background-position: center;
+
+        .blur {
+          display: flex;
+          justify-content: center;
+          backdrop-filter: blur(5px);
+          width: 100%;
+        }
+      }
+
+      .duration {
+        p {
+          user-select: none;
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          font-size: 0.85rem;
+          padding: 3px 7px;
+          border-radius: 11px 0;
+          background-color: rgba(31, 31, 31, 0.8);
+        }
       }
     }
 
     .videoInfo {
-      width: 80%;
       padding-left: 24px;
       display: flex;
       flex-direction: column;
@@ -61,7 +78,7 @@
 
   .channelLink {
     top: 60px;
-    left: 192px;
+    left: 246px;
     display: block;
     width: fit-content;
 

@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { Typography, Tooltip, Box } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
-import styles from './VideoCard.module.scss';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getUserId } from '../../store/selectors';
+
+import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
@@ -27,23 +28,41 @@ const VideoCard = ({ idList }) => {
   return (
     <Box className={styles.videoCard}>
       <Link to={`/${VIDEO}/get_one/${idList}`} className={styles.videoLink}>
-        {Object.hasOwn(video, 'thumbnail') ? (
-          <Box
-            className={styles.videoThumbnail}
-            sx={{ backgroundImage: `url(${video.thumbnail})` }}
-          >
-            <Box className={styles.blur}>
-              <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+        <Box className={styles.videoThumbWrapper}>
+          {Object.hasOwn(video, 'thumbnail') ? (
+            <Box
+              className={styles.videoThumbnail}
+              sx={{ backgroundImage: `url(${video.thumbnail})` }}
+            >
+              <Box className={styles.blur}>
+                <img src={video.thumbnail} alt={`Thumbnail:${idList}`} />
+              </Box>
             </Box>
+          ) : (
+            <Box
+              className={styles.videoThumbnail}
+              sx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            >
+              <Loader />
+            </Box>
+          )}
+
+          <Box className={styles.duration}>
+            {Object.hasOwn(video, 'duration') ? (
+              <Typography>
+                {video.duration.split(' - ')[0] === '00'
+                  ? `${video.duration.split(' : ')[0]}:${
+                      video.duration.split(' : ')[1]
+                    }:${video.duration.split(' : ')[2]}`
+                  : `${video.duration.split(' : ')[1]}:${
+                      video.duration.split(' : ')[2]
+                    }`}
+              </Typography>
+            ) : (
+              ''
+            )}
           </Box>
-        ) : (
-          <Box
-            className={styles.videoThumbnail}
-            sx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-          >
-            <Loader />
-          </Box>
-        )}
+        </Box>
 
         <Box className={styles.videoInfo}>
           <Box className={styles.videoInfoTitle}>
@@ -70,6 +89,7 @@ const VideoCard = ({ idList }) => {
           </Box>
         </Box>
       </Link>
+
       <Link
         to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
         className={styles.channelLink}
