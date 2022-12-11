@@ -9,13 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import PlaylistAddCheckCircleIcon from '@mui/icons-material/PlaylistAddCheckCircle';
-import { Link, useNavigate } from 'react-router-dom';
-import { categories, nestedCategories } from '@constants/frontend';
-import UnauthorizedModal from '../UnauthorizedModal/UnauthorizedModal';
-import { shallowEqual, useSelector } from 'react-redux';
-import { getAuthStatus } from '../../store/selectors';
+import { categories } from '@constants/frontend';
 
 const Navbar = ({ toggle, selectCat, handleListItemClick }) => {
   // const [openColl, setOpenColl] = useState(true);
