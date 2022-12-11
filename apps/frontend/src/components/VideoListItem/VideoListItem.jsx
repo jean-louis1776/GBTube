@@ -5,19 +5,21 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
 import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
-import GetChildrenController from '../../controllers/GetChildrenController';
 
 import styles from './VideoListItem.module.scss';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
+import VideoController from '../../controllers/VideoController';
 
 const VideoListItem = ({ idList }) => {
   const videoId = idList.split('_').at(-1);
   const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
+  const userId = useSelector(getUserId, shallowEqual);
 
   useEffect(() => {
     const fetchData = async () => {
-      const vids = await GetChildrenController.getItemById(VIDEO, videoId);
-      setVideo(vids);
+      setVideo(await VideoController.getVideoInfo(videoId, userId));
     };
     fetchData()
       .then()
