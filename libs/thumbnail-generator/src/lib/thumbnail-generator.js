@@ -1,4 +1,6 @@
 /* eslint-disable no-async-promise-executor */
+import videoDetail from '../../../../apps/frontend/src/components/VideoDetail/VideoDetail';
+
 export const importFileandPreview = (file, revoke) => {
   return new Promise((resolve, reject) => {
     window.URL = window.URL || window.webkitURL;
@@ -110,8 +112,14 @@ export const getVideoCover = (urlOfFIle, seekTo = 0) => {
         }, 200);
         videoPlayer.addEventListener('seeked', () => {
           const canvas = document.createElement('canvas');
+          // canvas.width = videoPlayer.videoWidth;
+          // canvas.height = videoPlayer.videoHeight;
           canvas.width = 300;
           canvas.height = 169;
+          // if (videoPlayer.videoWidth > videoPlayer.videoHeight) {
+          //   canvas.width = 300;
+          // } else {
+          // }
           const ctx = canvas.getContext('2d');
           ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
           ctx.canvas.toBlob(

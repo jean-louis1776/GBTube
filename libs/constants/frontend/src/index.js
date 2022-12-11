@@ -102,3 +102,5 @@ export const PASSWORD_2 = 'password2';
 export const VIDEO_FILE = 'file';
 
 export const API_URL = 'http://localhost:3333/api';
+
+export const CLIENT_API = 'http://localhost:4200';

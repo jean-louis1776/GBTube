@@ -11,11 +11,15 @@ export const reducers = {
     state.id = action.payload;
   },
 
-  setNickName(state, action){
+  setNickName(state, action) {
     state.nickName = action.payload;
   },
 
-  setRole(state, action){
+  setRole(state, action) {
     state.role = action.payload;
   },
-}
+
+  getSearchTerm(state, { payload }) {
+    state.searchTerm = payload;
+  },
+};
