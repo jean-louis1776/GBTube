@@ -38,7 +38,7 @@ class VideoValidation extends Validation {
 
     this.getOne = [
       query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT),
-      query('user_id').optional().matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT)
+      query('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT)
     ];
   }
 }
