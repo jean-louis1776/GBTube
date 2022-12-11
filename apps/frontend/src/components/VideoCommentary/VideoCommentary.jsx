@@ -2,7 +2,7 @@ import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mu
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
 import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
@@ -13,7 +13,7 @@ import CommentAnswers from './CommentAnswers';
 
 const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete}) => {
   const [isVisibleSetAnswer, setIsVisibleSetAnswer] = useState(false);
-  const date = useRef(new Date(commentData.createdTimestamp));
+  const [date, _] = useState(new Date(commentData.createdTimestamp));
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -72,7 +72,7 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
               fontWeight="200"
               marginLeft="10px"
             >
-             Дата публикации: {date.current.toLocaleDateString()}
+             Дата публикации: {date.toLocaleDateString()}
             </Typography>
           </Stack>
           <ShowMoreText
