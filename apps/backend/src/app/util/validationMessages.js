@@ -9,4 +9,5 @@ export const NOT_INT = `${NOT_FORMAT} целого числа`;
 export const NOT_ID_LIST = `${NOT_FORMAT} idList`;
 export const NOT_DIGIT = 'может содержать только цифры';
 export const REG_EXP_FOR_ID_LIST = /^((\d+_)*\d+)$/;
-export const REG_EXP_FOR_PARAMS_ID = /^\d+$/;
+export const REG_EXP_FOR_DIGITS = /^\d+$/;
+export const REG_EXP_FOR_DIGITS_OR_EMPTY = /^\d*$/;

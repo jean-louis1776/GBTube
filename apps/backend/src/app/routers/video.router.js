@@ -3,7 +3,7 @@ import { Router } from 'express';
 import videoController from '../controllers/video.controller.js';
 import videoValidation from '../validation/video.validation.js';
 
-const router = new Router();
+const router = new Router(); 
 
 router.post('/create', videoValidation.create, videoController.create);
 router.get('/history/:user_id', videoValidation.checkUserId, videoController.findHistory);

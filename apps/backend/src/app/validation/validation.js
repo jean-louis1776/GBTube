@@ -8,7 +8,7 @@ import {
   NOT_INT,
   NOT_STRING,
   REG_EXP_FOR_ID_LIST,
-  REG_EXP_FOR_PARAMS_ID
+  REG_EXP_FOR_DIGITS
 } from '../util/validationMessages';
 
 export class Validation {
@@ -31,9 +31,9 @@ export class Validation {
         .matches(REG_EXP_FOR_ID_LIST).withMessage(NOT_ID_LIST)
     ];
 
-    this.checkId = [ param('id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
+    this.checkId = [ param('id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT) ];
 
-    this.checkUserId = [ param('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_PARAMS_ID).withMessage(NOT_DIGIT) ];
+    this.checkUserId = [ param('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT) ];
 
     this.subscribeOrLike = [
       body('id').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isNumeric().withMessage(NOT_INT),
