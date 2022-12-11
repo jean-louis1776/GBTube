@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import Loader from '../Loader/Loader';
 import VideoController from '../../controllers/VideoController';
-import { VIDEO } from '@constants/frontend';
-import { Link } from 'react-router-dom';
 import VideoCard from '../VideoCard/VideoCard';
 
 const VideoFeed = () => {

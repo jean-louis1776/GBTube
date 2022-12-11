@@ -1,6 +1,9 @@
 import { Comment } from '../models/Comment';
 import { CommentLike } from '../models/CommentLike';
 import { ApiError } from "../errors/apiError";
+import { User } from "../models/Users";
+import { includes } from "core-js/internals/array-includes";
+import { where } from "sequelize";
 
 
 class CommentQueries {
@@ -36,7 +39,11 @@ class CommentQueries {
 
   async getCommentById(id) {
     try {
-      const gCommentById = await Comment.findOne({where: {id}, attributes: {exclude: ['updateTimestamp']}});
+      let gCommentById = await Comment.findOne({
+        where: {id},
+        attributes: {exclude: ['updateTimestamp', 'id', 'userId', 'videoId']},
+        include: [{model: User, attributes: {exclude: ['id']}}, {model: CommentLike}],
+      });
       if (gCommentById) return gCommentById.toJSON();
       throw ApiError.BadRequest(`Комментарий по Id не найден`);
     } catch (e) {
@@ -45,13 +52,36 @@ class CommentQueries {
     }
   }
 
-  async getAllCommentsVideo(videoId) {
+  async getAllCommentsVideo(videoId, userId) {
     try {
-      const gAllCommentsVideo = Comment.findAll({where: {videoId}, attributes: {exclude: ['updateTimestamp']}});
-      if (gAllCommentsVideo) {
-        return (await gAllCommentsVideo).map(value => value.toJSON());
-      }
+      const gAllCommentsVideo = await Comment.findAll({
+        where: {videoId},
+        attributes: {exclude: ['updateTimestamp', 'userId', 'videoId']},
+        include: [{model: User, attributes: {exclude: ['id']}}],
+      });
+      if (gAllCommentsVideo) return (gAllCommentsVideo).map(value => value.toJSON());
       throw ApiError.BadRequest(`Комментарии к видео не найдены`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  // async getAllLikesByUserId(userId) {
+  //   try {
+  //     const gAllLikesByUserId = await CommentLike.findAll({where: {userId}});
+  //     if (gAllLikesByUserId) return gAllLikesByUserId.map(value => value.toJSON());
+  //     return gAllLikesByUserId;
+  //   } catch (e) {
+  //     console.log(e.message);
+  //     throw(e);
+  //   }
+  // }
+
+  async getGrade(userId, commentId) {
+    try {
+      const gGrade = await CommentLike.findOne({where: {userId, commentId}})
+      if (gGrade) return gGrade.liked;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -73,7 +103,7 @@ class CommentQueries {
         await lComment.decrement('likesCount', {by: 1});
         return false;
       }
-      await CommentLike.create( {commentId, userId, liked: true});
+      await CommentLike.create({commentId, userId, liked: true});
       await lComment.increment('likesCount', {by: 1});
       return true;
     } catch (e) {
@@ -96,7 +126,7 @@ class CommentQueries {
         await dlComment.decrement('dislikesCount', {by: 1});
         return false;
       }
-      await CommentLike.create( {commentId, userId, liked: false});
+      await CommentLike.create({commentId, userId, liked: false});
       await dlComment.increment('dislikesCount', {by: 1});
       return true;
     } catch (e) {

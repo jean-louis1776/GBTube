@@ -1,9 +1,9 @@
 import $authApi from '../api/AuthClient';
 
 export default class CommentController {
-  static async getAllItemsByVideo(videoId) {
+  static async getAllItemsByVideo(videoId, userId) {
     console.log('getAllCommentsByVideo run');
-    const url = `/comment/videoId/${videoId}`;
+    const url = `/comment/get_all/?video_id=${videoId}&user_id=${userId}`;
     console.log(url);
     return (await $authApi.get(url)).data;
   }

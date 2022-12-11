@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {API_URL} from "@constants/frontend";
+import { API_URL } from '@constants/frontend';
 
 const $authApi = axios.create({
   withCredentials: true,

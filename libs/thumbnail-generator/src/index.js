@@ -39,10 +39,12 @@ const useVideoThumbnailsForm = () => {
         : selectedFile.type.includes('video')
     ) {
       clearForm();
-      importFileandPreview(selectedFile).then((url) => {
-        setInputFile(selectedFile);
-        setInputUrl(url);
-      });
+      importFileandPreview(selectedFile)
+        .then((url) => {
+          setInputFile(selectedFile);
+          setInputUrl(url);
+        })
+        .catch((error) => console.log(error));
     }
   };
 

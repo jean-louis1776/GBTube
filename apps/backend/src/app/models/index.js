@@ -1,4 +1,3 @@
-import { DataTypes, Op, where } from 'sequelize';
 import { sequelize } from "../dbConfig/db";
 
 //Импортирование моделей
@@ -17,8 +16,6 @@ import { Answer } from "./Answer";
 import { AnswerLike } from "./AnswerLike";
 import { CommentLike } from "./CommentLike";
 import { VideoLike } from "./VideoLike";
-import { includes } from "core-js/internals/array-includes";
-import excludeVariablesFromRoot from "@mui/material/styles/excludeVariablesFromRoot";
 
 
 //Связи для таблицы Пользователей

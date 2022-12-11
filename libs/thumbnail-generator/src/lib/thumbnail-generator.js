@@ -70,11 +70,13 @@ const getVideoThumbnail = (file, videoTimeInSeconds) => {
         ? void 0
         : _a.match('video')
     ) {
-      importFileandPreview(file).then((urlOfFIle) => {
-        getVideoCover(urlOfFIle, videoTimeInSeconds).then((res) => {
-          resolve(res);
-        });
-      });
+      importFileandPreview(file)
+        .then((urlOfFIle) => {
+          getVideoCover(urlOfFIle, videoTimeInSeconds).then((res) => {
+            resolve(res);
+          });
+        })
+        .catch((error) => console.log(error));
     } else if (file) {
       getVideoCover(file, videoTimeInSeconds)
         .then((res) => {
@@ -108,8 +110,8 @@ export const getVideoCover = (urlOfFIle, seekTo = 0) => {
         }, 200);
         videoPlayer.addEventListener('seeked', () => {
           const canvas = document.createElement('canvas');
-          canvas.width = videoPlayer.videoWidth;
-          canvas.height = videoPlayer.videoHeight;
+          canvas.width = 300;
+          canvas.height = 169;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
           ctx.canvas.toBlob(
@@ -212,11 +214,13 @@ export const getVideoDurationFromVideoFile = (videoFile) => {
             ? void 0
             : _a.match('video')
         ) {
-          importFileandPreview(videoFile).then((url) => {
-            generateVideoDurationFromUrl(url).then((res) => {
-              resolve(res);
-            });
-          });
+          importFileandPreview(videoFile)
+            .then((url) => {
+              generateVideoDurationFromUrl(url).then((res) => {
+                resolve(res);
+              });
+            })
+            .catch((error) => console.log(error));
         } else {
           generateVideoDurationFromUrl(videoFile).then((res) => {
             resolve(res);

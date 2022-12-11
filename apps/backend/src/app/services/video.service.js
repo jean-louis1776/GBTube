@@ -36,7 +36,7 @@ class VideoService {
     }
   }
 
-  async upload(res, files, idList, title, category, description, thumbnail) {
+  async upload(res, files, idList, title, category, description, thumbnail, duration) {
     try {
       if (!files) {
         throw ApiError.BadRequest('Отсутствует видеофайл для сохранения');
@@ -56,7 +56,7 @@ class VideoService {
 
       return sendMediaToBack(tempFilePath, videoHashName, async () => {
         await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
-        return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description, thumbnail));
+        return res.status(201).json(await videoQueries.uploadVideo(idList, videoHashName, title, category, description, thumbnail, duration));
       });
     } catch (e) {
       console.log(e);

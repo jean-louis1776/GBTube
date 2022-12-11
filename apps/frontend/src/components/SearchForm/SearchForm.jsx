@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './SearchForm.module.scss';
 
-const SearchForm = (props) => {
+const SearchForm = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const navigate = useNavigate();
