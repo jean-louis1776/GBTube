@@ -93,9 +93,9 @@ class VideoService {
     try {
       const video = await videoQueries.findVideoById(id);
       const [, channelId] = video.idList.split('_');
-      const сhannelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
+      const channelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
       const grade = await videoQueries.gradeLikeDislikeOfVideoByUserId(id, userId);
-      return { ...video, сhannelName, grade };
+      return { ...video, channelName, grade };
     } catch (e) {
       throw e;
     }
@@ -111,9 +111,9 @@ class VideoService {
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
       if (!videos?.length) return null;
       const [, channelId] = videos[0].idList.split('_');
-      const сhannelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
+      const channelName = (await Channel.findOne({attributes: ['title'], where: {id: +channelId}})).toJSON().title;
       return videos.map(video => {
-        return { ...video, сhannelName };
+        return { ...video, channelName };
       });
     } catch (e) {
       throw e;
