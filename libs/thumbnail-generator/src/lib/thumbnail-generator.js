@@ -110,8 +110,8 @@ export const getVideoCover = (urlOfFIle, seekTo = 0) => {
         }, 200);
         videoPlayer.addEventListener('seeked', () => {
           const canvas = document.createElement('canvas');
-          canvas.width = videoPlayer.videoWidth;
-          canvas.height = videoPlayer.videoHeight;
+          canvas.width = 265;
+          canvas.height = 151;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
           ctx.canvas.toBlob(
