@@ -34,7 +34,7 @@ class VideoQueries {
    * @param {string} description - подробная информация о видео
    * @returns {number}
    */
-  async uploadVideo(idList, hashName, title, category, description, thumbnail) {
+  async uploadVideo(idList, hashName, title, category, description, thumbnail, duration) {
     try {
       const [, channelId, playListId] = idList.split('_');  //!
       const uVideo = await Video.create({
@@ -53,7 +53,8 @@ class VideoQueries {
           description,
           idList,
           videoId,
-          thumbnail
+          thumbnail,
+          duration
         });
         return videoId;
       }
