@@ -69,10 +69,6 @@ export const userChannelTabs = [
     link: '/user-playlists',
   },
   {
-    name: 'Каналы',
-    link: '/user-channels',
-  },
-  {
     name: 'О канале',
     link: '/user-about',
   },
