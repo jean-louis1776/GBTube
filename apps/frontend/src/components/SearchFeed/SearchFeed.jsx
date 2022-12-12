@@ -15,7 +15,6 @@ const SearchFeed = ({ query }) => {
   const [searchComp, setSearchComp] = useState(<Loader />);
   const refVideos = useRef([]);
   const { searchTerm } = useParams();
-  console.log(searchTerm);
 
   useEffect(() => {
     document.title = `${searchTerm} - результаты поиска | Geektube`;

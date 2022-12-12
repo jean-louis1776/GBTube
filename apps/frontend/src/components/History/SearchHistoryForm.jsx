@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Paper, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { setSearchString } from '../../store/slice';
+import { useDispatch } from 'react-redux';
 
 import styles from './SearchHistoryForm.module.scss';
+import { searchStringSelector } from '../../store/selectors';
 
-const SearchHistoryForm = (props) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchHistoryForm = () => {
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    if (searchTerm) {
-      setSearchTerm('');
-    }
+    if (searchStringSelector) dispatch(setSearchString(''));
   };
 
   return (
@@ -24,8 +25,8 @@ const SearchHistoryForm = (props) => {
       <input
         className={styles.searchInput}
         placeholder="Искать в истории..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        // value={searchStringSelector}
+        onChange={(event) => dispatch(setSearchString(event.target.value))}
       />
       <Tooltip title="Поиск">
         <IconButton
@@ -33,7 +34,7 @@ const SearchHistoryForm = (props) => {
           type="submit"
           sx={{ p: '10px', color: 'baseBlue.main' }}
         >
-          <SearchIcon />
+          <SearchIcon onSubmit={handleSubmit} />
         </IconButton>
       </Tooltip>
     </Paper>

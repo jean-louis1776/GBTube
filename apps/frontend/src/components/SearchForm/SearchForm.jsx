@@ -4,7 +4,6 @@ import { Paper, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './SearchForm.module.scss';
-import { useSelector } from 'react-redux';
 
 const SearchForm = () => {
   const [searchTerm, setSearchTerm] = useState('');

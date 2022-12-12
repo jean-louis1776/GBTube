@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { reducers } from "./reducer";
+import { createSlice } from '@reduxjs/toolkit';
+import { reducers, historyReducers } from './reducer';
 export const profileSlice = createSlice({
-  name: "profile",
+  name: 'profile',
   initialState: {
     accessToken: '',
     id: '0',
@@ -9,7 +9,18 @@ export const profileSlice = createSlice({
     nickName: '',
     role: '',
   },
-  reducers: reducers
+  reducers: reducers,
 });
 
-export const { setAccessToken, setAuthStatus, setId, setNickName, setRole } = profileSlice.actions;
+export const historySlice = createSlice({
+  name: 'history',
+  initialState: {
+    historyList: [],
+    searchString: '',
+  },
+  reducers: historyReducers,
+});
+
+export const { setAccessToken, setAuthStatus, setId, setNickName, setRole } =
+  profileSlice.actions;
+export const { setHistoryList, setSearchString } = historySlice.actions;

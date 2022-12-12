@@ -18,8 +18,14 @@ export const reducers = {
   setRole(state, action) {
     state.role = action.payload;
   },
+};
 
-  getSearchTerm(state, { payload }) {
-    state.searchTerm = payload;
+export const historyReducers = {
+  setHistoryList(state, { payload }) {
+    state.historyList = payload;
+  },
+
+  setSearchString(state, { payload }) {
+    state.searchString = payload;
   },
 };

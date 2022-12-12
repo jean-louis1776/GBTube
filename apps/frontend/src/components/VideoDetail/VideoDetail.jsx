@@ -15,6 +15,10 @@ import {
   CheckCircle,
   PlaylistAdd,
   ReplyAllOutlined,
+  ThumbDown,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbUpOutlined,
 } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import ShowMoreText from 'react-show-more-text';
@@ -51,6 +55,7 @@ const VideoDetail = () => {
   const [viewsCount, setViewsCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
+  const [currentReaction, setCurrentReaction] = useState('');
 
   const channelNameLink = idList.split('_').slice(0, 2).join('_');
 
@@ -73,11 +78,6 @@ const VideoDetail = () => {
     },
   }));
 
-  // const likeOrDislikeHandler = (likes) =>
-  //   likes.reduce((prev, cont) => (cont === prev ? null : cont), likes);
-
-  // const currentReaction = likeOrDislikeHandler(reaction);
-
   useEffect(() => {
     setVideoContent(<Loader />);
     const fetchVideoData = async () => {
@@ -94,6 +94,7 @@ const VideoDetail = () => {
       setAuthorNickName(videoInfo.nickName);
       setTitle(videoInfo.title);
       setViewsCount(videoInfo.viewsCount);
+      setCurrentReaction(videoInfo.grade);
       const { hashName } = await VideoController.getVideoName(videoId);
       const url = `${API_URL}/video/download?hash_name=${hashName}&user_id=${userId}&video_id=${videoId}`;
       setVideoContent(
@@ -173,6 +174,50 @@ const VideoDetail = () => {
     }
   };
 
+  const handleLikeReaction = async () => {
+    try {
+      const { data: status } = await VideoController.sendLikeReactionVideo(
+        videoId,
+        userId
+      );
+
+      if (status && currentReaction === '') {
+        setLikesCount(likesCount + 1);
+        setCurrentReaction('like');
+      } else if (status && currentReaction === 'dislike') {
+        setDislikesCount(dislikesCount - 1);
+        setCurrentReaction('like');
+      } else {
+        setLikesCount(likesCount - 1);
+        setCurrentReaction('');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDislikeReaction = async () => {
+    try {
+      const { data: status } = await VideoController.sendDislikeReactionVideo(
+        videoId,
+        userId
+      );
+
+      if (status && currentReaction === '') {
+        setDislikesCount(dislikesCount + 1);
+        setCurrentReaction('dislike');
+      } else if (status && currentReaction === 'like') {
+        setLikesCount(likesCount - 1);
+        setCurrentReaction('dislike');
+      } else {
+        setDislikesCount(dislikesCount - 1);
+        setCurrentReaction('');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Box className={styles.wrapper}>
       <Header />
@@ -244,10 +289,8 @@ const VideoDetail = () => {
                   className={styles.reactionsBtn}
                 >
                   <Tooltip title="Нравится">
-                    <ReactionButton
-                    // onClick={() => dispatch(setReaction('Like'))}
-                    >
-                      {/*                      {currentReaction === 'Like' ? (
+                    <ReactionButton onClick={handleLikeReaction}>
+                      {currentReaction === 'like' ? (
                         <ThumbUp
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -255,7 +298,7 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbUpOutlined />
-                      )}*/}
+                      )}
                       <Typography
                         variant={'body1'}
                         sx={{ opacity: 0.7 }}
@@ -266,10 +309,8 @@ const VideoDetail = () => {
                     </ReactionButton>
                   </Tooltip>
                   <Tooltip title="Не нравится">
-                    <ReactionButton
-                    // onClick={() => dispatch(setReaction('Dislike'))}
-                    >
-                      {/*                      {currentReaction === 'Dislike' ? (
+                    <ReactionButton onClick={handleDislikeReaction}>
+                      {currentReaction === 'dislike' ? (
                         <ThumbDown
                           sx={{
                             color: theme.palette.coplimentPink.main,
@@ -277,7 +318,7 @@ const VideoDetail = () => {
                         />
                       ) : (
                         <ThumbDownOutlined />
-                      )}*/}
+                      )}
                       <Typography
                         variant="body1"
                         sx={{ opacity: 0.7 }}
