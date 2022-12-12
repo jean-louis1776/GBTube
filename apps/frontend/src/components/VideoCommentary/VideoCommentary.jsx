@@ -1,19 +1,49 @@
-import { Avatar, Box, Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import ShowMoreText from 'react-show-more-text';
-import { ThumbDownOutlined, ThumbUpOutlined } from '@mui/icons-material';
-import React, { useState } from 'react';
+import {
+  ThumbDown,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbUpOutlined,
+} from '@mui/icons-material';
+import React, { useMemo, useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import CommentController from '../../controllers/CommentController';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
 
 import styles from './VideoCommentary.module.scss';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import CommentAnswers from './CommentAnswers';
 
-const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete}) => {
+const VideoCommentary = ({
+  commentData,
+  currentUserId,
+  videoOwnerId,
+  handleDelete,
+}) => {
   const [isVisibleSetAnswer, setIsVisibleSetAnswer] = useState(false);
+  const theme = useTheme();
   const [date, _] = useState(new Date(commentData.createdTimestamp));
+  const userId = useSelector(getUserId, shallowEqual);
+  const [dislikesCount, setDislikesCount] = useState(commentData.dislikesCount);
+  const [likesCount, setLikesCount] = useState(commentData.likesCount);
+  const [currentReaction, setCurrentReaction] = useState(commentData.grade);
+
+  const commentId = useMemo(() => {
+    return commentData.idList.split('_').at(-1);
+  }, [commentData.idList]);
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -47,11 +77,64 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
   }));
 
   const isMayRemove = () => {
-    return !(currentUserId === String(commentData.userId) || currentUserId === videoOwnerId);
-  }
+    return !(
+      currentUserId === String(commentData.userId) ||
+      currentUserId === videoOwnerId
+    );
+  };
 
-  const handleHideAnswer = () => {setIsVisibleSetAnswer(false)};
-  const handleToggleVisibleAnswer = () => {setIsVisibleSetAnswer(!isVisibleSetAnswer)};
+  const handleHideAnswer = () => {
+    setIsVisibleSetAnswer(false);
+  };
+  const handleToggleVisibleAnswer = () => {
+    setIsVisibleSetAnswer(!isVisibleSetAnswer);
+  };
+
+  const handleLikeReaction = async () => {
+    try {
+      const { data: status } = await CommentController.like(
+        commentId,
+        userId
+      );
+
+      if (status && currentReaction === '') {
+        setLikesCount(likesCount + 1);
+        setCurrentReaction('like');
+      } else if (status && currentReaction === 'dislike') {
+        setDislikesCount(dislikesCount - 1);
+        setLikesCount(likesCount + 1);
+        setCurrentReaction('like');
+      } else {
+        setLikesCount(likesCount - 1);
+        setCurrentReaction('');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDislikeReaction = async () => {
+    try {
+      const { data: status } = await CommentController.dislike(
+        commentId,
+        userId
+      );
+
+      if (status && currentReaction === '') {
+        setDislikesCount(dislikesCount + 1);
+        setCurrentReaction('dislike');
+      } else if (status && currentReaction === 'like') {
+        setLikesCount(likesCount - 1);
+        setDislikesCount(dislikesCount + 1);
+        setCurrentReaction('dislike');
+      } else {
+        setDislikesCount(dislikesCount - 1);
+        setCurrentReaction('');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Stack direction="column" marginBottom={3}>
@@ -64,7 +147,9 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
         <Box>
           <Stack direction="row" alignItems="center">
             <Link to="/user/:id">
-              <Typography variant="subtitle1">{commentData.nickName}</Typography>
+              <Typography variant="subtitle1">
+                {commentData.nickName}
+              </Typography>
             </Link>
             <Typography
               variant={'overline'}
@@ -72,7 +157,7 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
               fontWeight="200"
               marginLeft="10px"
             >
-             Дата публикации: {date.toLocaleDateString()}
+              Дата публикации: {date.toLocaleDateString()}
             </Typography>
           </Stack>
           <ShowMoreText
@@ -90,33 +175,76 @@ const VideoCommentary = ({commentData, currentUserId, videoOwnerId, handleDelete
           </ShowMoreText>
           <Box>
             <Tooltip title="Нравится">
-              <ReactionButton>
-                <ThumbUpOutlined />
+              <ReactionButton onClick={handleLikeReaction}>
+                {currentReaction === 'like' ? (
+                  <ThumbUp
+                    sx={{
+                      color: theme.palette.coplimentPink.main,
+                    }}
+                  />
+                ) : (
+                  <ThumbUpOutlined />
+                )}
+                <Typography
+                  variant={'body1'}
+                  sx={{ opacity: 0.7 }}
+                  marginLeft={2}
+                >
+                  {likesCount}{' '}
+                </Typography>
               </ReactionButton>
             </Tooltip>
             <Tooltip title="Не нравится">
-              <ReactionButton>
-                <ThumbDownOutlined />
+              <ReactionButton onClick={handleDislikeReaction}>
+                {currentReaction === 'dislike' ? (
+                  <ThumbDown
+                    sx={{
+                      color: theme.palette.coplimentPink.main,
+                    }}
+                  />
+                ) : (
+                  <ThumbDownOutlined />
+                )}
+                <Typography
+                  variant="body1"
+                  sx={{ opacity: 0.7 }}
+                  marginLeft={2}
+                >
+                  {dislikesCount}{' '}
+                </Typography>
               </ReactionButton>
             </Tooltip>
-            <CommentButton onClick={handleToggleVisibleAnswer}>Ответить</CommentButton>
-            <IconButton size='large' disabled={isMayRemove()} onClick={handleDelete} variant="contained">
-              <DeleteForeverIcon/>
+            <CommentButton onClick={handleToggleVisibleAnswer}>
+              Ответить
+            </CommentButton>
+            <IconButton
+              size="large"
+              disabled={isMayRemove()}
+              onClick={handleDelete}
+              variant="contained"
+            >
+              <DeleteForeverIcon />
             </IconButton>
           </Box>
-          {isVisibleSetAnswer ? <Box sx={{display: 'flex'}} className={styles.comment_answer}>
-            <input className={styles.comment_inputField} />
-            <Box gap="30px" className={styles.comment_btn}>
-              <CommentButton>Отправить</CommentButton>
-              <CancelButton onClick={handleHideAnswer}>Отмена</CancelButton>
+          {isVisibleSetAnswer ? (
+            <Box sx={{ display: 'flex' }} className={styles.comment_answer}>
+              <input className={styles.comment_inputField} />
+              <Box gap="30px" className={styles.comment_btn}>
+                <CommentButton>Отправить</CommentButton>
+                <CancelButton onClick={handleHideAnswer}>Отмена</CancelButton>
+              </Box>
             </Box>
-          </Box> : ''}
+          ) : (
+            ''
+          )}
         </Box>
       </Box>
       {/*<Box>*/}
-        <IconButton>
-          <ArrowDropDownIcon/><ArrowDropUpIcon/>Ответов
-        </IconButton>
+      <IconButton>
+        <ArrowDropDownIcon />
+        <ArrowDropUpIcon />
+        Ответов
+      </IconButton>
       {/*</Box>*/}
       {/*<CommentAnswers/>*/}
     </Stack>

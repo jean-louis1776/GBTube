@@ -38,20 +38,10 @@ export default class CommentController {
   }
   static async dislike(commentId, userId) {
     const url = `/comment/dislike`;
-    const dto = {id: commentId, userId};
-    await $authApi.patch(url, dto, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return await $authApi.patch(url, {commentId, userId});
   }
   static async like(commentId, userId) {
     const url = `/comment/like`;
-    const dto = {id: commentId, userId};
-    await $authApi.patch(url, dto, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return await $authApi.patch(url,{commentId, userId});
   }
 }
