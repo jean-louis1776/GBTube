@@ -1,21 +1,30 @@
 import Header from '../Header/Header';
 import { Avatar, Box, Button, Tab, Tabs, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
-import { userChannelTabs } from '@constants/frontend';
+import { CHANNEL, userChannelTabs } from '@constants/frontend';
 import { useParams } from 'react-router-dom';
 import UserAbout from './UserAbout';
-import ChannelGrid from '../ChannelGrid';
 import PlayListGrid from '../PlayListGrid';
 import VideoGrid from '../VideoGrid/VideoGrid';
 import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
+import { getAuthStatus, getUserId } from '../../store/selectors';
+import TabPanel from './TabPanel';
+import GetChildrenController from '../../controllers/GetChildrenController';
+import EditItemController from '../../controllers/EditItemController';
+import VideoController from '../../controllers/VideoController';
 
 const UserPage = () => {
   const theme = useTheme();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
-
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
+  const channelId = idList.split('_').at(-1);
+  const [channelName, setChannelName] = useState('');
+  const [description, setDescription] = useState('');
+  const [subscribersCount, setSubscribersCount] = useState('0');
+  const [subscribe, setSubscribe] = useState(true);
+  const [tabNumber, setTabNumber] = useState(0);
   const isOwner = () => {
     const authorId = idList.split('_')[0];
     return authorId === userId;
@@ -31,33 +40,30 @@ const UserPage = () => {
     },
   }));
 
-  const [subscribe, setSubscribe] = useState(true);
+useEffect(() => {
+  const fetchChannelData = async () => {
+    return await GetChildrenController.getItemById(CHANNEL, channelId);
+  }
+  fetchChannelData().then((channelData) => {
+    console.log(channelData);
+    setChannelName(channelData.title);
+    setDescription(channelData.description);
+    setSubscribersCount(channelData.subscribersCount);
+  }).catch((err) => {
+    console.log('Fetch channel data error');
+    console.log(err);
+  });
+}, [])
 
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleChangeTab = (event, newValue) => {
+    console.log(newValue);
+    setTabNumber(newValue);
   };
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
+  const handleSubscribe = async () => {
+    const { isSubscribe } = await EditItemController.subscribe(channelId, userId);
+    setSubscribe(isSubscribe);
+  };
 
   return (
     <>
@@ -83,8 +89,8 @@ const UserPage = () => {
             }}
           >
             <Box>
-              <Typography variant={'h5'}>ChannelName</Typography>
-              <Typography variant={'subtitle2'}>100500 подписчиков</Typography>
+              <Typography variant={'h5'}>{channelName}</Typography>
+              <Typography variant={'subtitle2'}>{subscribersCount} подписчиков</Typography>
             </Box>
             {isOwner() ? (
               <SubscribeButton variant="outlined">
@@ -92,7 +98,8 @@ const UserPage = () => {
               </SubscribeButton>
             ) : subscribe ? (
               <SubscribeButton
-                onClick={() => setSubscribe((prevState) => !prevState)}
+                onClick={handleSubscribe}
+                disabled={!isAuth}
                 sx={{
                   backgroundColor: theme.palette.coplimentPink.main,
                   color: theme.palette.coplimentPink.contrastText,
@@ -102,7 +109,8 @@ const UserPage = () => {
               </SubscribeButton>
             ) : (
               <SubscribeButton
-                onClick={() => setSubscribe((prevState) => !prevState)}
+                disabled={!isAuth}
+                onClick={handleSubscribe}
               >
                 Отписаться
               </SubscribeButton>
@@ -122,7 +130,7 @@ const UserPage = () => {
           <Box
             sx={{ borderBottom: 1, borderColor: theme.palette.shadows.main }}
           >
-            <Tabs value={value} onChange={handleChange}>
+            <Tabs value={tabNumber} onChange={handleChangeTab}>
               {userChannelTabs.map((tab, index) => (
                 // <Link to={tab.link} key={index}>
                 <Tab
@@ -148,20 +156,14 @@ const UserPage = () => {
             alignItems: 'center',
           }}
         >
-          <TabPanel value={value} index={0}>
-            Видиксы
-            {/*<VideoGrid />*/}
+          <TabPanel tabNumber={tabNumber} index={0}>
+            <VideoGrid isParent={false} getChildren={VideoController.getVideoByChannel}/>
           </TabPanel>
-          <TabPanel value={value} index={1}>
-            Плейлисты
-            {<PlayListGrid />}
+          <TabPanel tabNumber={tabNumber} index={1}>
+            <PlayListGrid isParent={false} />
           </TabPanel>
-          <TabPanel value={value} index={2}>
-            Каналы
-            {/*<ChannelGrid />*/}
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <UserAbout />
+          <TabPanel tabNumber={tabNumber} index={2}>
+            <UserAbout description={description}/>
           </TabPanel>
         </Box>
       </Box>

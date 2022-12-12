@@ -57,4 +57,10 @@ export default class VideoController {
   static async getVideoLikes(userId) {
     return (await $authApi.get(`/video/likes_list/${userId}`)).data;
   }
+
+  static async getVideoByChannel(channelId) {
+    const url = `/video/channel/${channelId}`;
+    console.log(url,'!!!!URL');
+    return (await $authApi.get(url)).data;
+  }
 }

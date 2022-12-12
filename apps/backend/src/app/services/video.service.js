@@ -12,6 +12,7 @@ import { Channel } from '../models/Channel.js';
 import { playListQueries } from '../queries/PlayListQueries.js';
 import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
 import { removeFile } from '../gRPC/removeFile.grpc.js';
+import { channelQueries } from '../queries/ChannelQueries.js';
 
 /* eslint-disable no-useless-catch */
 dotenv.config();
@@ -105,9 +106,8 @@ class VideoService {
     try {
       const playlist = !!(await playListQueries.findPlayListById(playlistId));
       if (!playlist) {
-        throw ApiError.NotFound(`Плайлист с id ${playlistId} не найден`);
+        throw ApiError.NotFound(`Плайлист с id '${playlistId}' не найден`);
       }
-      console.log('playlistId = ', playlistId);
       const videos = await videoQueries.findAllVideoByPlayList(playlistId);
       if (!videos?.length) return null;
       const [, channelId] = videos[0].idList.split('_');
@@ -115,6 +115,18 @@ class VideoService {
       return videos.map(video => {
         return { ...video, channelName };
       });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getVideoByChannelId(channelId) {
+    try {
+      const channel = !!(await channelQueries.findChannelById(channelId));
+      if (!channel) {
+        throw ApiError.NotFound(`Канал с id '${channelId}' не найден`);
+      }
+      return await videoQueries.getSortVideoIdListByChannelId(channelId);
     } catch (e) {
       throw e;
     }
