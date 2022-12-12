@@ -186,6 +186,7 @@ const VideoDetail = () => {
         setCurrentReaction('like');
       } else if (status && currentReaction === 'dislike') {
         setDislikesCount(dislikesCount - 1);
+        setLikesCount(likesCount + 1);
         setCurrentReaction('like');
       } else {
         setLikesCount(likesCount - 1);
@@ -208,6 +209,7 @@ const VideoDetail = () => {
         setCurrentReaction('dislike');
       } else if (status && currentReaction === 'like') {
         setLikesCount(likesCount - 1);
+        setDislikesCount(dislikesCount + 1);
         setCurrentReaction('dislike');
       } else {
         setDislikesCount(dislikesCount - 1);
