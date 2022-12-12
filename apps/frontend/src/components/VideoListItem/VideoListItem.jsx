@@ -11,7 +11,6 @@ import styles from './VideoListItem.module.scss';
 
 const VideoListItem = ({ idList, deleteFromHistory }) => {
   const videoId = idList.split('_').at(-1);
-  const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
 
   useEffect(() => {
@@ -82,7 +81,7 @@ const VideoListItem = ({ idList, deleteFromHistory }) => {
         </Box>
       </Link>
 
-      <Link to={`/${CHANNEL}/${channelId}`} className={styles.channelLink}>
+      <Link to={`/${CHANNEL}/${idList.split('_').slice(0,2).join('_')}`} className={styles.channelLink}>
         <Typography variant="subtitle2" className={styles.channelName}>
           <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
           {video.channelName}
