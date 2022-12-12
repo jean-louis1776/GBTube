@@ -62,6 +62,15 @@ class ChannelQueries {
     }
   }
 
+  async isSubscriber(channel_id, user_id) {
+    try {
+      return !!(await ChannelSubscriber.findOne({where: {channelId: channel_id, userId: user_id}}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
   /**
    * Поиск всех каналов по ID
    * @returns {Object[]}
@@ -110,6 +119,7 @@ class ChannelQueries {
       throw ApiError.InternalServerError(e.message);
     }
   }
+
 
   /**
    * Удаление канала
