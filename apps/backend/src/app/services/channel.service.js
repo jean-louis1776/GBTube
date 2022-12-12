@@ -7,7 +7,7 @@ class ChannelService {
     const idList = [channel.userId, channel.id].join('_');
     delete channel.id;
     delete channel.userId;
-    return { idList, ...channel };
+    return {idList, ...channel};
   }
 
   async create(userId, title, description) {
@@ -40,7 +40,7 @@ class ChannelService {
   async remove(id) {
     try {
       const result = channelQueries.deleteChannel(id);
-      if(!result) {
+      if (!result) {
         throw ApiError.NotFound(`Канала с id ${id} не существует`);
       }
       return !!result;
@@ -50,11 +50,15 @@ class ChannelService {
     }
   }
 
-  async getOne(id) {
+  async getOne(query) {
     try {
-      const channel = await channelQueries.findChannelById(id);
+      const {channel_id, user_id} = query;
+      const channel = await channelQueries.findChannelById(channel_id);
+      const isSub = await channelQueries.isSubscriber(channel_id, user_id);
+      channel.isSubscribed = isSub
+      console.log(isSub);
       return this.makeResultObject(channel);
-    } catch(e) {
+    } catch (e) {
       console.log(e.message);
       throw(e);
     }
@@ -69,7 +73,7 @@ class ChannelService {
       const channels = await channelQueries.findAllChannelByUserId(userId);
       if (!channels) return null;
       return channels.map(channel => this.makeResultObject(channel));
-    } catch(e) {
+    } catch (e) {
       console.log(e.message);
       throw(e);
     }
@@ -78,7 +82,7 @@ class ChannelService {
   async getSubscribedList(userId) {
     try {
       return await channelQueries.getSubscribedListByUserId(userId);
-    } catch(e) {
+    } catch (e) {
       console.log(e.message);
       throw(e);
     }
