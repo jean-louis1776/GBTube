@@ -11,7 +11,7 @@ import PersistLoader from './components/PersistLoader/PersistLoader';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  //<StrictMode>
+  <StrictMode>
     <Provider store={store}>
       <PersistGate loading={<PersistLoader />} persistor={persistor}>
         <BrowserRouter>
@@ -21,5 +21,5 @@ root.render(
         </BrowserRouter>
       </PersistGate>
     </Provider>
-  //</StrictMode>
+  </StrictMode>
 );
