@@ -1,6 +1,7 @@
 import { ApiError } from '../errors/apiError';
 import { channelQueries } from '../queries/ChannelQueries';
 import { userQueries } from '../queries/UserQueries';
+import { ChannelInfo } from "../models/ChannelInfo";
 
 class ChannelService {
   makeResultObject(channel) {
@@ -30,7 +31,10 @@ class ChannelService {
 
   async subscribe(id, userId) {
     try {
-      return channelQueries.subscriber(id, userId);
+      const isSubscribe = (await channelQueries.subscriber(id, userId));
+      const subscribe = (await ChannelInfo.findOne({where: {channelId: id}, attributes: ['subscribersCount']})).toJSON();
+      subscribe.isSubscribe = isSubscribe;
+      return subscribe;
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -55,7 +59,7 @@ class ChannelService {
       const {channel_id, user_id} = query;
       const channel = await channelQueries.findChannelById(channel_id);
       const isSub = await channelQueries.isSubscriber(channel_id, user_id);
-      channel.isSubscribed = isSub
+      channel.isSubscribed = isSub;
       console.log(isSub);
       return this.makeResultObject(channel);
     } catch (e) {

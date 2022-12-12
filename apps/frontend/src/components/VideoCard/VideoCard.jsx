@@ -10,7 +10,6 @@ import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
   const videoId = idList?.split('_').at(-1);
-  const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
   useEffect(() => {
     const fetchData = async () => {
@@ -88,7 +87,10 @@ const VideoCard = ({ idList }) => {
         </Box>
       </Link>
 
-      <Link to={`/${CHANNEL}/${channelId}`} className={styles.channelLink}>
+      <Link
+        to={`/${CHANNEL}/${idList.split('_').slice(0, 2).join('_')}`}
+        className={styles.channelLink}
+      >
         {Object.hasOwn(video, 'channelName') ? (
           <Typography variant="subtitle2" className={styles.channelName}>
             <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
