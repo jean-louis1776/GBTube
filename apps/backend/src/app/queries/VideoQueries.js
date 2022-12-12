@@ -323,6 +323,26 @@ class VideoQueries {
     }
   }
 
+  async getSortVideoIdListByChannelId(channelId) {
+    try {
+      const videos = await Video.findAll({
+        where: {
+          channelId,
+        },
+        include: [{
+          model: VideoInfo,
+          order: [['updatedTimestamp','ASC']],
+          attributes: ['idList'],
+        }],
+      })
+      if (!videos) return null;
+      return videos.map(video => video.toJSON().VideoInfo.idList);
+    } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
+  }
+
   async getLikesListByUserId(userId) {
     try {
       const videoList = await VideoLike.findAll({where: {userId}});
