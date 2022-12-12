@@ -49,7 +49,10 @@ function callVideoChunk(call) {
   videoStream.on('data', (chunk) => {
     call.write({ mediaStream: chunk });
   });
-
+  videoStream.on('error', () => {
+    call.write({ isError: true });
+    call.end();
+  });
   videoStream.on('end', () => {
     call.end();
   });
@@ -62,6 +65,10 @@ function callMediaSimple(call) {
 
   mediaStream.on('data', (chunk) => {
     call.write({ mediaStream: chunk });
+  });
+  mediaStream.on('error', () => {
+    call.write({ isError: true });
+    call.end();
   });
   mediaStream.on('end', () => {
     call.end();
@@ -96,7 +103,6 @@ function sendMedia(call, res) {
     if (typeof fileName === 'string' && !chunk) {
       const resolvedPath = resolve(PATH_TO_MEDIA, fileName);
       file = fs.createWriteStream(resolvedPath);
-      // Скорее всего до сработки этого события не дойдёт, и сервер сам обработает ошибку и отправит ответ о ней.
       file.on('error', (err) => {
         console.log('Write file error');
         console.log(err);
