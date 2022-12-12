@@ -62,9 +62,10 @@ useEffect(() => {
 
   const handleSubscribe = async () => {
     console.log(isSubscribed, 'isSubscribed');
-    const { isSubscribe } = await EditItemController.subscribe(channelId, userId);
+    const { isSubscribe, subscribersCount } = await EditItemController.subscribe(channelId, userId);
     console.log(isSubscribe, 'isSubscribe');
     setIsSubscribed(isSubscribe);
+    setSubscribersCount(subscribersCount);
   };
 
   return (
