@@ -13,6 +13,7 @@ const SearchFeed = ({ query }) => {
   const [searchComp, setSearchComp] = useState(<Loader />);
   const refVideos = useRef([]);
   const { searchTerm } = useParams();
+  console.log(searchTerm);
 
   useEffect(() => {
     document.title = `Результаты поиска ${searchTerm} | Geektube`;
@@ -48,7 +49,7 @@ const SearchFeed = ({ query }) => {
         console.log('Failed get favorite videos list');
         console.log(err);
       });
-  }, []);
+  }, [searchTerm]);
 
   return (
     <>
