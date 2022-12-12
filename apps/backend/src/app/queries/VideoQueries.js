@@ -327,11 +327,11 @@ class VideoQueries {
     try {
       const videos = await Video.findAll({
         where: {channelId},
-        attributes: {exclude: ['id', 'title', 'path', 'hashName']},
+        attributes: {exclude: ['id', 'title', 'channelId', 'playListId']},
         include: [{
           model: VideoInfo,
+          attributes: ['idList'],
           order: [['createTimestamp','DISC']],
-          attributes: ['idList', 'createTimestamp'],
         }],
       });
       if (!videos) return null;
