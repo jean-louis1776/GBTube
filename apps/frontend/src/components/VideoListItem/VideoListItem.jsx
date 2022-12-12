@@ -3,7 +3,7 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
-import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
+import { PLAYLIST, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
@@ -11,7 +11,6 @@ import styles from './VideoListItem.module.scss';
 
 const VideoListItem = ({ idList }) => {
   const videoId = idList.split('_').at(-1);
-  const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
 
   useEffect(() => {
