@@ -326,17 +326,16 @@ class VideoQueries {
   async getSortVideoIdListByChannelId(channelId) {
     try {
       const videos = await Video.findAll({
-        where: {
-          channelId,
-        },
+        where: {channelId},
+        attributes: {exclude: ['id', 'title', 'path', 'hashName']},
         include: [{
           model: VideoInfo,
-          order: [['updatedTimestamp','ASC']],
-          attributes: ['idList'],
+          order: [['createTimestamp','DISC']],
+          attributes: ['idList', 'createTimestamp'],
         }],
-      })
+      });
       if (!videos) return null;
-      return videos.map(video => video.toJSON().VideoInfo.idList);
+      return videos.map(video => { return {idList: video.toJSON().VideoInfo.idList}});
     } catch (e) {
       console.log(e.message);
       throw e;
