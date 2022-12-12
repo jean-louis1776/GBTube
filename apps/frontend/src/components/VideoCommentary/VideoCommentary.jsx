@@ -40,7 +40,6 @@ const VideoCommentary = ({
   const [dislikesCount, setDislikesCount] = useState(commentData.dislikesCount);
   const [likesCount, setLikesCount] = useState(commentData.likesCount);
   const [currentReaction, setCurrentReaction] = useState(commentData.grade);
-
   const commentId = useMemo(() => {
     return commentData.idList.split('_').at(-1);
   }, [commentData.idList]);
@@ -78,7 +77,7 @@ const VideoCommentary = ({
 
   const isMayRemove = () => {
     return !(
-      currentUserId === String(commentData.userId) ||
+      currentUserId === String(userId) ||
       currentUserId === videoOwnerId
     );
   };

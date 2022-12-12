@@ -13,6 +13,6 @@ export default class GetChildrenController {
   }
   static async getSubscriptions(userId) {
     const url = `channel/subscribes_list/${userId}`;
-    return await $authApi.get(url);
+    return (await $authApi.get(url)).data;
   }
 }

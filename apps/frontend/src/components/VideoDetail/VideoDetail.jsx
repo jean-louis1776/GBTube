@@ -149,7 +149,11 @@ const VideoDetail = () => {
     try {
       await CommentController.send(idList, userId, commentText.trim());
       setCommentText('');
-      setComments(await CommentController.getAllItemsByVideo(videoId));
+      const comments = await CommentController.getAllItemsByVideo(
+        videoId,
+        userId
+      );
+      setComments(comments);
     } catch (err) {
       console.log('Send comment error');
       console.log(err);
@@ -164,12 +168,17 @@ const VideoDetail = () => {
     );
   };
 
-  const handleDeleteComment = (id) => async () => {
+  const handleDeleteComment = (comment) => async () => {
+    const commentId = comment.idList.split('_').at(-1);
     try {
-      await CommentController.delete(id);
-      setComments(await CommentController.getAllItemsByVideo(videoId));
+      await CommentController.delete(commentId);
+      const newComments = await CommentController.getAllItemsByVideo(
+        videoId,
+        userId
+      );
+      setComments(newComments);
     } catch (err) {
-      console.log(`Failed delete comment ${id}`);
+      console.log(`Failed delete comment ${commentId}`);
       console.log(err);
     }
   };
@@ -413,7 +422,7 @@ const VideoDetail = () => {
                       commentData={comment}
                       currentUserId={userId}
                       videoOwnerId={authorId}
-                      handleDelete={handleDeleteComment(comment.id)}
+                      handleDelete={handleDeleteComment(comment)}
                     />
                   ))
                 ) : (
