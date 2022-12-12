@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Tooltip, Box } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { VIDEO } from '@constants/frontend';
+import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
@@ -88,7 +88,7 @@ const VideoCard = ({ idList }) => {
       </Link>
 
       <Link
-        to={`/channel/${idList.split('_').slice(0, 2).join('_')}`}
+        to={`/${CHANNEL}/${idList.split('_').slice(0, 2).join('_')}`}
         className={styles.channelLink}
       >
         {Object.hasOwn(video, 'channelName') ? (

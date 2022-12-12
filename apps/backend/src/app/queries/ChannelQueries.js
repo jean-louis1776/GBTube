@@ -62,6 +62,15 @@ class ChannelQueries {
     }
   }
 
+  async isSubscriber(channel_id, user_id) {
+    try {
+      return !!(await ChannelSubscriber.findOne({where: {channelId: channel_id, userId: user_id}}));
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
   /**
    * Поиск всех каналов по ID
    * @returns {Object[]}
@@ -105,11 +114,12 @@ class ChannelQueries {
         await subscribers.increment('subscribersCount', {by: 1});
         return true;
       }
-      throw ApiError.NotFound(`Канал с id: ${channelId} отсутствует!`);
+      throw ApiError.NotFound(`Канал с id '${channelId}' не найден`);
     } catch (e) {
       throw ApiError.InternalServerError(e.message);
     }
   }
+
 
   /**
    * Удаление канала
@@ -165,9 +175,12 @@ class ChannelQueries {
     try {
       const channelList = await ChannelSubscriber.findAll({where: {userId}});
       if (!channelList) return [];
-      return channelList.map(channel => channel.toJSON().channelId.toString());
+      return channelList.map(channel => {
+        const parseChannel = channel.toJSON();
+        return [parseChannel.userId, parseChannel.id].join('_');
+      });
     } catch (e) {
-      console.log(e.nessage);
+      console.log(e.message);
       throw e;
     }
   }

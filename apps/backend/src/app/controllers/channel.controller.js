@@ -47,8 +47,7 @@ class ChannelController {
   async getOne(req, res, next) {
     try {
       validateError(req);
-      console.log('ID FOR GET_ONE = ', req.params.id);
-      return res.json(await channelService.getOne(+req.params.id));
+      return res.json(await channelService.getOne(req.query));
     } catch (e) {
       next(e);
     }

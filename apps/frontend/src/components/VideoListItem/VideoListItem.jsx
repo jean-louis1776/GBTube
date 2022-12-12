@@ -3,7 +3,7 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
-import { VIDEO } from '@constants/frontend';
+import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
@@ -82,7 +82,7 @@ const VideoListItem = ({ idList, deleteFromHistory }) => {
       </Link>
 
       <Link
-        to={`/channel/${idList.split('_').slice(0, 2).join('_')}`}
+        to={`/${CHANNEL}/${idList.split('_').slice(0, 2).join('_')}`}
         className={styles.channelLink}
       >
         <Typography variant="subtitle2" className={styles.channelName}>
