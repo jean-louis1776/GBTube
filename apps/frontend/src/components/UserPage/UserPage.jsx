@@ -45,7 +45,6 @@ useEffect(() => {
     return await GetChildrenController.getItemById(CHANNEL, channelId);
   }
   fetchChannelData().then((channelData) => {
-    console.log(channelData);
     setChannelName(channelData.title);
     setDescription(channelData.description);
     setSubscribersCount(channelData.subscribersCount);
@@ -56,7 +55,6 @@ useEffect(() => {
 }, [])
 
   const handleChangeTab = (event, newValue) => {
-    console.log(newValue);
     setTabNumber(newValue);
   };
 

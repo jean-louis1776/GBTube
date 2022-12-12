@@ -9,7 +9,6 @@ import VideoController from '../../controllers/VideoController';
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
-  console.log(idList);
   const videoId = idList?.split('_').at(-1);
   const [video, setVideo] = useState({});
   useEffect(() => {
