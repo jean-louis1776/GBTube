@@ -85,7 +85,9 @@ class ChannelService {
 
   async getSubscribedList(userId) {
     try {
-      return await channelQueries.getSubscribedListByUserId(userId);
+      const channels = await channelQueries.getSubscribedListByUserId(userId);
+      if (!channels) return [];
+      return channels.map(channel => [channel.userId, channel.id].join('_'));
     } catch (e) {
       console.log(e.message);
       throw(e);

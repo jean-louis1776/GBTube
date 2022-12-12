@@ -105,6 +105,7 @@ class ChannelQueries {
     try {
       if (await this.isChannel(channelId)) {
         const subscribers = await ChannelInfo.findOne({where: {channelId}});
+        console.log(subscribers);
         if (await ChannelSubscriber.findOne({where: {channelId, userId}})) {
           await ChannelSubscriber.destroy({where: {channelId, userId}});
           await subscribers.decrement('subscribersCount', {by: 1});
@@ -173,12 +174,18 @@ class ChannelQueries {
 
   async getSubscribedListByUserId(userId) {
     try {
-      const channelList = await ChannelSubscriber.findAll({where: {userId}});
-      if (!channelList) return [];
-      return channelList.map(channel => {
-        const parseChannel = channel.toJSON();
-        return [parseChannel.userId, parseChannel.id].join('_');
+      const channels = await Channel.findAll({
+        attributes: ['id', 'userId'],
+        include: [
+          {
+            model: ChannelSubscriber,
+            where: {userId},
+            attributes: {exclude: ['id', 'userId', 'channelId']}
+          },
+        ]
       });
+      if (!channels) return null;
+      return channels.map(channel => channel.toJSON());
     } catch (e) {
       console.log(e.message);
       throw e;
