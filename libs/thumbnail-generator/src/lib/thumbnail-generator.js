@@ -112,14 +112,13 @@ export const getVideoCover = (urlOfFIle, seekTo = 0) => {
         }, 200);
         videoPlayer.addEventListener('seeked', () => {
           const canvas = document.createElement('canvas');
-          // canvas.width = videoPlayer.videoWidth;
-          // canvas.height = videoPlayer.videoHeight;
-          canvas.width = 300;
           canvas.height = 169;
-          // if (videoPlayer.videoWidth > videoPlayer.videoHeight) {
-          //   canvas.width = 300;
-          // } else {
-          // }
+          if (videoPlayer.videoWidth > videoPlayer.videoHeight) {
+            canvas.width = 300;
+          } else {
+            const heightMultiplicity = videoPlayer.videoHeight / canvas.height;
+            canvas.width = videoPlayer.videoWidth / heightMultiplicity;
+          }
           const ctx = canvas.getContext('2d');
           ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
           ctx.canvas.toBlob(

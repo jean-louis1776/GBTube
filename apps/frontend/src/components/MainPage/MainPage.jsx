@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Box } from '@mui/material';
 import { Header } from '../';
 import VideoFeed from '../MainPageFeed/VideoFeed';
-import SearchFeed from '../SearchFeed/SearchFeed';
 
 const MainPage = () => {
   const selectedCategory = 'Главная';
@@ -26,7 +25,6 @@ const MainPage = () => {
         }}
       >
         <VideoFeed />
-        {/*<SearchFeed />*/}
       </Box>
     </>
   );
