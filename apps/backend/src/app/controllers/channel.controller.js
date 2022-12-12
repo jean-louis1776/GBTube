@@ -47,7 +47,7 @@ class ChannelController {
   async getOne(req, res, next) {
     try {
       validateError(req);
-       return res.json(await channelService.getOne(req.query));
+      return res.json(await channelService.getOne(req.query));
     } catch (e) {
       next(e);
     }
