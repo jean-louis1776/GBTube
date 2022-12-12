@@ -13,11 +13,13 @@ import emailConfirmLogo from './assets/bar-chart.png';
 import logoNotFound from './assets/404Logo.png';
 import uploadLogo from './assets/uploadLogo.png';
 import demoThumb from './assets/demoThumb.png';
+import searchLogo from './assets/searchErrLogo.png';
 
 export const logo = appLogo;
 export const RedirectLogo = emailConfirmLogo;
 export const notFoundLogo = logoNotFound;
 export const uploadVideoLogo = uploadLogo;
+export const searchErrorLogo = searchLogo;
 
 export const categories = [
   { name: 'Главная', icon: <HomeIcon color="baseBlue" />, link: '/' },

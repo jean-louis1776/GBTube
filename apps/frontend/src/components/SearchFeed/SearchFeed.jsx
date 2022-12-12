@@ -6,6 +6,8 @@ import VideoController from '../../controllers/VideoController';
 import VideoCard from '../VideoCard/VideoCard';
 import { useParams } from 'react-router-dom';
 import Header from '../Header/Header';
+import VideoListItem from '../VideoListItem/VideoListItem';
+import { searchErrorLogo } from '@constants/frontend';
 
 import styles from './SearchFeed.module.scss';
 
@@ -16,34 +18,36 @@ const SearchFeed = ({ query }) => {
   console.log(searchTerm);
 
   useEffect(() => {
-    document.title = `Результаты поиска ${searchTerm} | Geektube`;
+    document.title = `${searchTerm} - результаты поиска | Geektube`;
     const getSearchTermCompilation = async () => {
       return VideoController.getSearchQueryCompilation(searchTerm);
     };
     getSearchTermCompilation()
       .then((videos) => {
         refVideos.current = videos;
-        setSearchComp(
-          <Box
-            sx={{
-              marginTop: 10,
-              display: 'grid',
-              columnGap: 4,
-              rowGap: 3,
-              gridTemplateColumns: {
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(3, 1fr)',
-                lg: 'repeat(4, 1fr)',
-                xl: 'repeat(5, 1fr)',
-              },
-            }}
-          >
-            {videos.map((idList) => (
-              <VideoCard idList={idList} key={idList} />
-            ))}
-          </Box>
-        );
+
+        refVideos.current.length === 0
+          ? setSearchComp(
+              <Box className={styles.resultBox}>
+                <Box className={styles.searchError}>
+                  <img
+                    src={searchErrorLogo}
+                    alt="No results"
+                    className={styles.searchErrorLogo}
+                  />
+                  <Typography className={styles.searchErrorText} variant="h5">
+                    К сожалению, не найдено ни одного видео
+                  </Typography>
+                </Box>
+              </Box>
+            )
+          : setSearchComp(
+              <Box className={styles.resultBox}>
+                {videos.map((idList) => (
+                  <VideoListItem idList={idList} key={idList} />
+                ))}
+              </Box>
+            );
       })
       .catch((err) => {
         console.log('Failed get favorite videos list');
@@ -55,25 +59,13 @@ const SearchFeed = ({ query }) => {
     <>
       <Header />
 
-      <Box sx={{ display: 'flex', pt: '64px' }}>
-        <Box
-          component="main"
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexGrow: 1,
-            bgcolor: 'darkBackground.main',
-            p: 2,
-            flex: 2,
-          }}
-        >
-          {refVideos.current.length > 0 ? (
-            searchComp
-          ) : (
-            <Typography>
-              Не найдено ни одного видео по запросу: {searchTerm}
-            </Typography>
-          )}
+      <Box className={styles.searchWrapper}>
+        <Box component="main" className={styles.searchMain}>
+          <Typography className={styles.searchTitle} variant="h4">
+            Поиск по запросу: <span>{searchTerm}</span>
+          </Typography>
+
+          {searchComp}
         </Box>
       </Box>
     </>

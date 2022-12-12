@@ -3,13 +3,13 @@ import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { Link } from 'react-router-dom';
-import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
+import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
 import styles from './VideoListItem.module.scss';
 
-const VideoListItem = ({ idList }) => {
+const VideoListItem = ({ idList, deleteFromHistory }) => {
   const videoId = idList.split('_').at(-1);
   const channelId = idList.split('_').at(-2);
   const [video, setVideo] = useState({});
@@ -47,13 +47,13 @@ const VideoListItem = ({ idList }) => {
           <Box className={styles.duration}>
             {Object.hasOwn(video, 'duration') ? (
               <Typography>
-                {video.duration.split(' - ')[0] === '00'
-                  ? `${video.duration.split(' : ')[0]}:${
-                      video.duration.split(' : ')[1]
-                    }:${video.duration.split(' : ')[2]}`
-                  : `${video.duration.split(' : ')[1]}:${
+                {video.duration.split(' : ')[0] === '00'
+                  ? `${video.duration.split(' : ')[1]}:${
                       video.duration.split(' : ')[2]
-                    }`}
+                    }`
+                  : `${video.duration.split(' : ')[0]}:${
+                      video.duration.split(' : ')[1]
+                    }:${video.duration.split(' : ')[2]}`}
               </Typography>
             ) : (
               ''
@@ -82,23 +82,22 @@ const VideoListItem = ({ idList }) => {
         </Box>
       </Link>
 
-      <Link
-        to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
-        className={styles.channelLink}
-      >
+      <Link to={`/${CHANNEL}/${channelId}`} className={styles.channelLink}>
         <Typography variant="subtitle2" className={styles.channelName}>
           <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
           {video.channelName}
         </Typography>
       </Link>
 
-      <Link className={styles.deleteLink}>
-        <Tooltip title="Удалить из истории">
-          <IconButton className={styles.deleteButton}>
-            <CloseIcon />
-          </IconButton>
-        </Tooltip>
-      </Link>
+      {deleteFromHistory && (
+        <Link className={styles.deleteLink}>
+          <Tooltip title="Удалить из истории">
+            <IconButton className={styles.deleteButton}>
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        </Link>
+      )}
     </Box>
   );
 };
