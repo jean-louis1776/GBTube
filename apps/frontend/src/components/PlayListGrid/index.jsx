@@ -11,11 +11,12 @@ import Header from '../Header/Header';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
 
-const PlayListGrid = () => {
+const PlayListGrid = ({isParent}) => {
   const theme = useTheme();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
   const authorId = idList.split('_')[0];
+  const channelId = idList.split('_').at(-1);
   const userRole = useSelector(getRole, shallowEqual);
   let [content, setContent] = useState(<Loader />);
   const [title, setTitle] = useState('');
@@ -25,15 +26,17 @@ const PlayListGrid = () => {
   useEffect(() => {
     const fetchData = async () => {
       setContent(<Loader />);
-      const { title, description } = await GetChildrenController.getItemById(
-        CHANNEL,
-        idList.split('_').at(-1)
-      );
-      setTitle(title);
-      setDescription(description);
+      if (isParent) {
+        const { title, description } = await GetChildrenController.getItemById(
+          CHANNEL,
+          channelId
+        );
+        setTitle(title);
+        setDescription(description);
+      }
       const children = await GetChildrenController.getAllItemsById(
-        PLAYLIST,
-        idList.split('_').at(-1)
+        channelId,
+        PLAYLIST
       );
       if (children.length === 0) {
         setContent(
@@ -48,8 +51,9 @@ const PlayListGrid = () => {
         setContent(<ContentPlayList children={children} />);
       }
     };
-    fetchData().catch(() => {
+    fetchData().catch((err) => {
       setContent('');
+      console.log(err);
       console.log(`Load ${PLAYLIST} fail in PlayListGrid`);
     });
   }, []);
@@ -88,76 +92,77 @@ const PlayListGrid = () => {
         flexDirection: 'column',
       }}
     >
-      <Stack
-        sx={{
-          flexDirection: 'row',
-          width: '72vw',
-          margin: '20px auto',
-          justifyContent: 'space-around',
-        }}
-      >
-        <Box maxWidth={'25vw'}>
-          {title.length > 60 ? (
-            <Tooltip title={title}>
+        {isParent ?
+          <Stack
+            sx={{
+              flexDirection: 'row',
+              width: '72vw',
+              margin: '20px auto',
+              justifyContent: 'space-around',
+            }}
+          >
+            <Box maxWidth={'25vw'}>
+            {title.length > 60 ? (
+              <Tooltip title={title}>
+                <Typography variant={'h6'} color={'white'} marginBottom={2}>
+                  Название текущего канала:
+                  <Typography variant={'body1'}>
+                    {title.slice(0, 60) + '...'}
+                  </Typography>
+                </Typography>
+              </Tooltip>
+            ) : (
               <Typography variant={'h6'} color={'white'} marginBottom={2}>
                 Название текущего канала:
-                <Typography variant={'body1'}>
-                  {title.slice(0, 60) + '...'}
-                </Typography>
+                <Typography variant={'body1'}>{title}</Typography>
               </Typography>
-            </Tooltip>
-          ) : (
-            <Typography variant={'h6'} color={'white'} marginBottom={2}>
-              Название текущего канала:
-              <Typography variant={'body1'}>{title}</Typography>
-            </Typography>
-          )}
-          {description.length > 100 ? (
-            <Tooltip title={description}>
+            )}
+            {description.length > 100 ? (
+              <Tooltip title={description}>
+                <Typography variant={'h6'} style={{ color: 'white' }}>
+                  Описание текущего канала:
+                  <Typography variant={'body1'}>
+                    {description.slice(0, 100) + '...'}
+                  </Typography>
+                </Typography>
+              </Tooltip>
+            ) : (
               <Typography variant={'h6'} style={{ color: 'white' }}>
                 Описание текущего канала:
-                <Typography variant={'body1'}>
-                  {description.slice(0, 100) + '...'}
-                </Typography>
+                <Typography variant={'body1'}>{description}</Typography>
               </Typography>
-            </Tooltip>
-          ) : (
-            <Typography variant={'h6'} style={{ color: 'white' }}>
-              Описание текущего канала:
-              <Typography variant={'body1'}>{description}</Typography>
-            </Typography>
-          )}
-        </Box>
-        <Box
-          display={'flex'}
-          flexDirection={'column'}
-          justifyContent={'center'}
-          gap={2}
-        >
-          {isAuthor() ? (
-            <Button
-              variant="contained"
-              color="baseBlue"
-              onClick={handleCreateChild}
-            >
-              Создать {PLAYLIST}
-            </Button>
-          ) : (
-            ''
-          )}
-          {isMayModerate() ? (
-            <Button
-              variant="contained"
-              color="baseBlue"
-              onClick={handleDeleteChannel}
-            >
-              Удалить текущий {CHANNEL}
-            </Button>
-          ) : (
-            ''
-          )}
-        </Box>
-      </Stack>
+            )}
+          </Box>
+          <Box
+            display={'flex'}
+            flexDirection={'column'}
+            justifyContent={'center'}
+            gap={2}
+          >
+            {isAuthor() ? (
+              <Button
+                variant="contained"
+                color="baseBlue"
+                onClick={handleCreateChild}
+              >
+                Создать {PLAYLIST}
+              </Button>
+            ) : (
+              ''
+            )}
+            {isMayModerate() ? (
+              <Button
+                variant="contained"
+                color="baseBlue"
+                onClick={handleDeleteChannel}
+              >
+                Удалить текущий {CHANNEL}
+              </Button>
+            ) : (
+              ''
+            )}
+          </Box>
+      </Stack> : ''}
       {content}
       {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
     </Box>

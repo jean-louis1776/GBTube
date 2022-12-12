@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Tooltip, Box } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { PLAYLIST, VIDEO } from '@constants/frontend';
+import { VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList }) => {
+  console.log(idList);
   const videoId = idList?.split('_').at(-1);
   const [video, setVideo] = useState({});
   useEffect(() => {
@@ -88,7 +89,7 @@ const VideoCard = ({ idList }) => {
       </Link>
 
       <Link
-        to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
+        to={`/channel/${idList.split('_').slice(0,2).join('_')}`}
         className={styles.channelLink}
       >
         {Object.hasOwn(video, 'channelName') ? (

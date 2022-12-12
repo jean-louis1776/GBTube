@@ -30,7 +30,6 @@ import EditItemController from '../controllers/EditItemController';
 import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import UploadVideoDraft from '../components/UploadVideo/UploadVideoDraft';
 import UserPage from '../components/UserPage/UserPage';
-import UserAbout from '../components/UserPage/UserAbout';
 import AuthController from '../controllers/AuthController';
 import {
   setAccessToken,
@@ -39,6 +38,7 @@ import {
   setNickName,
   setRole,
 } from '../store/slice';
+import GetChildrenController from '../controllers/GetChildrenController';
 
 export function App() {
   const dispatch = useDispatch();
@@ -93,14 +93,14 @@ export function App() {
         />
         <Route
           path={`/${PLAYLIST}/get_all/:idList`}
-          element={<PlayListGrid />}
+          element={<PlayListGrid isParent={true} />}
         />
         <Route
           path={`/${VIDEO}/get_all/:idList`}
-          element={<VideoGrid childrenType={VIDEO} />}
+          element={<VideoGrid isParent={true} getChildren={GetChildrenController.getAllItemsById} />}
         />
         <Route path={`/${CHANNEL}/get_one/:id`} element={<ChannelGrid />} />
-        <Route path={`/${PLAYLIST}/get_one/:id`} element={<PlayListGrid />} />
+        <Route path={`/${PLAYLIST}/get_one/:id`} element={<PlayListGrid isParent={true} />} />
         <Route path={`/${VIDEO}/get_one/:idList`} element={<VideoDetail />} />
         <Route
           path={`/${CHANNEL}/create/:idList`}

@@ -23,8 +23,8 @@ const ChannelGrid = () => {
     const fetchData = async () => {
       setContent(<Loader />);
       const children = await GetChildrenController.getAllItemsById(
-        CHANNEL,
-        authorId
+        authorId,
+        CHANNEL
       );
       // console.log(children);
       if (children.length === 0) {
