@@ -19,7 +19,6 @@ const History = () => {
 
   const dispatch = useDispatch();
   const historyList = useSelector(historyListSelector);
-  console.log(historyList);
 
   useEffect(() => {
     document.title = 'История | GeekTube';
@@ -54,9 +53,12 @@ const History = () => {
           <SearchHistoryForm />
 
           <Box>
-            {historyList.map((idList) => (
-              <VideoListItem idList={idList} key={idList} />
-            ))}
+            {historyList
+              .slice()
+              .reverse()
+              .map((idList) => (
+                <VideoListItem idList={idList} key={idList} />
+              ))}
           </Box>
         </Box>
       </Box>
