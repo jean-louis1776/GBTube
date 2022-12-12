@@ -29,7 +29,7 @@ class ChannelController {
       validateError(req);
       const { id, userId } = req.body;
       const isSubscribe = await channelService.subscribe(id, userId);
-      return res.json({ isSubscribe });
+      return res.json( isSubscribe );
     } catch (e) {
       next(e);
     }
