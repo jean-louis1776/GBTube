@@ -28,10 +28,7 @@ message VideoReq {
 }
 
 message MediaRes {
-  oneof response {
-    bytes mediaStream = 1;
-    bool isError = 2;
-  }
+  bytes mediaStream = 1;
 }
 
 message MediaSendReq {

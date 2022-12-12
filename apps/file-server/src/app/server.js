@@ -46,11 +46,6 @@ function callVideoChunk(call) {
   const resolvedPath = resolve(PATH_TO_MEDIA, pathToMedia);
   const videoStream = fs.createReadStream(resolvedPath, { start, end });
 
-  videoStream.on('error', (err) => {
-    call.write({ isError: true });
-    console.log(err);
-  });
-
   videoStream.on('data', (chunk) => {
     call.write({ mediaStream: chunk });
   });
@@ -64,10 +59,7 @@ function callMediaSimple(call) {
   const { pathToMedia } = call.request;
   const resolvedPath = resolve(PATH_TO_MEDIA, pathToMedia);
   const mediaStream = fs.createReadStream(resolvedPath);
-  mediaStream.on('error', (err) => {
-    call.write({ isError: true });
-    console.log(err);
-  });
+
   mediaStream.on('data', (chunk) => {
     call.write({ mediaStream: chunk });
   });
@@ -101,9 +93,10 @@ function sendMedia(call, res) {
   call.on('data', (payload) => {
     const chunk = payload.chunk;
     const fileName = payload.fileName;
-    if (!chunk) {
+    if (typeof fileName === 'string' && !chunk) {
       const resolvedPath = resolve(PATH_TO_MEDIA, fileName);
       file = fs.createWriteStream(resolvedPath);
+      // Скорее всего до сработки этого события не дойдёт, и сервер сам обработает ошибку и отправит ответ о ней.
       file.on('error', (err) => {
         console.log('Write file error');
         console.log(err);
