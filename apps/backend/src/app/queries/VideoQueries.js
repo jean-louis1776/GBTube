@@ -331,8 +331,8 @@ class VideoQueries {
         include: [{
           model: VideoInfo,
           attributes: ['idList'],
-          order: [['createTimestamp','DISC']],
         }],
+        order: [[{model: VideoInfo} , 'createTimestamp', 'DESC']],
       });
       if (!videos) return null;
       return videos.map(video => { return {idList: video.toJSON().VideoInfo.idList}});
