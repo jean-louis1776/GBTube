@@ -8,7 +8,7 @@ import UserAbout from './UserAbout';
 import PlayListGrid from '../PlayListGrid';
 import VideoGrid from '../VideoGrid/VideoGrid';
 import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
+import { getAuthStatus, getUserId } from '../../store/selectors';
 import TabPanel from './TabPanel';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import EditItemController from '../../controllers/EditItemController';
@@ -18,6 +18,7 @@ const UserPage = () => {
   const theme = useTheme();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
   const channelId = idList.split('_').at(-1);
   const [channelName, setChannelName] = useState('');
   const [description, setDescription] = useState('');
@@ -98,6 +99,7 @@ useEffect(() => {
             ) : subscribe ? (
               <SubscribeButton
                 onClick={handleSubscribe}
+                disabled={!isAuth}
                 sx={{
                   backgroundColor: theme.palette.coplimentPink.main,
                   color: theme.palette.coplimentPink.contrastText,
@@ -107,6 +109,7 @@ useEffect(() => {
               </SubscribeButton>
             ) : (
               <SubscribeButton
+                disabled={!isAuth}
                 onClick={handleSubscribe}
               >
                 Отписаться
