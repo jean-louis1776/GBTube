@@ -23,8 +23,8 @@ const UserPage = () => {
   const [channelName, setChannelName] = useState('');
   const [description, setDescription] = useState('');
   const [subscribersCount, setSubscribersCount] = useState('0');
-  const [subscribe, setSubscribe] = useState(true);
   const [tabNumber, setTabNumber] = useState(0);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const isOwner = () => {
     const authorId = idList.split('_')[0];
     return authorId === userId;
@@ -45,9 +45,11 @@ useEffect(() => {
     return await GetChildrenController.getItemById(CHANNEL, channelId);
   }
   fetchChannelData().then((channelData) => {
+    console.log(channelData);
     setChannelName(channelData.title);
     setDescription(channelData.description);
     setSubscribersCount(channelData.subscribersCount);
+    setIsSubscribed(channelData.isSubscribed);
   }).catch((err) => {
     console.log('Fetch channel data error');
     console.log(err);
@@ -59,8 +61,10 @@ useEffect(() => {
   };
 
   const handleSubscribe = async () => {
+    console.log(isSubscribed, 'isSubscribed');
     const { isSubscribe } = await EditItemController.subscribe(channelId, userId);
-    setSubscribe(isSubscribe);
+    console.log(isSubscribe, 'isSubscribe');
+    setIsSubscribed(isSubscribe);
   };
 
   return (
@@ -94,7 +98,7 @@ useEffect(() => {
               <SubscribeButton variant="outlined">
                 Редактировать
               </SubscribeButton>
-            ) : subscribe ? (
+            ) : (!isSubscribed ? (
               <SubscribeButton
                 onClick={handleSubscribe}
                 disabled={!isAuth}
@@ -112,7 +116,7 @@ useEffect(() => {
               >
                 Отписаться
               </SubscribeButton>
-            )}
+            ))}
           </Box>
         </Box>
 
