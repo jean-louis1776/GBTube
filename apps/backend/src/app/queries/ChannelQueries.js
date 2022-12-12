@@ -114,7 +114,7 @@ class ChannelQueries {
         await subscribers.increment('subscribersCount', {by: 1});
         return true;
       }
-      throw ApiError.NotFound(`Канал с id: ${channelId} отсутствует!`);
+      throw ApiError.NotFound(`Канал с id '${channelId}' не найден`);
     } catch (e) {
       throw ApiError.InternalServerError(e.message);
     }
@@ -174,8 +174,11 @@ class ChannelQueries {
   async getSubscribedListByUserId(userId) {
     try {
       const channelList = await ChannelSubscriber.findAll({where: {userId}});
-      if (channelList.length === 0) return [];
-      return channelList.map(channel => channel.toJSON().channelId.toString());
+      if (!channelList) return [];
+      return channelList.map(channel => {
+        const parseChannel = channel.toJSON();
+        return [parseChannel.userId, parseChannel.id].join('_');
+      });
     } catch (e) {
       console.log(e.message);
       throw e;
