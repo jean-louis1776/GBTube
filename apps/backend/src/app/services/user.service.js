@@ -19,12 +19,15 @@ class UserService {
   }
 
   async getOneById(id) {
-    const user = await userQueries.findOneById(id);
+    let user = await userQueries.findOneById(id);
     if (!user) {
       throw ApiError.NotFound(`Пользователь с id ${id} не найден`);
     }
     delete user.activateLink;
     delete user.password;
+    for (const key in user) {
+      if (user[key] === null) user[key] = "";
+    }
     return user;
   }
 
@@ -34,9 +37,9 @@ class UserService {
       const activateLink = uuidV4();
 
       const newUserId = await userQueries.createUser(nickName, email, password, activateLink);
-      const tokenObject =  await tokenService.createNewTokens({ id: newUserId, nickName, email, role: 'user' });
+      const tokenObject = await tokenService.createNewTokens({id: newUserId, nickName, email, role: 'user'});
       await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activateLink}`);
-      return { id: newUserId, ...tokenObject };
+      return {id: newUserId, ...tokenObject};
     } catch (e) {
       console.log(e.message);
       throw e;
@@ -59,9 +62,9 @@ class UserService {
         id: newUser.id,
         nickName: newUser.nickName,
         email: newUser.email,
-        role: newUser.role
+        role: newUser.role,
       });
-      return { newUser, tokenObject };
+      return {newUser, tokenObject};
     } catch (e) {
       console.log(e.message);
       throw e;
@@ -97,11 +100,11 @@ class UserService {
             id: userFromDB.id,
             nickName: userFromDB.nickName,
             email: userFromDB.email,
-            role: userFromDB.role
+            role: userFromDB.role,
           },
           refreshTokenFromDB.id,
         ),
-        isBaned: userFromDB.isBaned
+        isBaned: userFromDB.isBaned,
       };
     } catch (e) {
       console.log(e.message);
@@ -119,12 +122,12 @@ class UserService {
         throw ApiError.Conflict('Неправильный пароль');
       }
       newPassword = await bcrypt.hash(newPassword, 5);
-      if (!(await userQueries.updateUser(id, { password: newPassword }))) {
+      if (!(await userQueries.updateUser(id, {password: newPassword}))) {
         throw ApiError.InternalServerError('Не удалось сменить пароль');
       }
       // Далее разлогиниваем текущего User на других устройствах
       await tokenQueries.removeOtherDevicesTokens(id, refreshTokenId);
-      return { message: 'Замена пароля прошла успешно' };
+      return {message: 'Замена пароля прошла успешно'};
     } catch (e) {
       console.log(e.message);
       throw(e);
@@ -141,7 +144,7 @@ class UserService {
       if (!user) {
         throw ApiError.BadRequest('Пользователь по ссылке не найден. Возможно ссылка устарела.');
       }
-      await userQueries.updateUser(user.userId, { isActivate: true });
+      await userQueries.updateUser(user.userId, {isActivate: true});
     } catch (e) {
       console.log(e.message);
       throw e;
@@ -178,8 +181,10 @@ class UserService {
       const tempFilePath = path.resolve(path.dirname(file.tempFilePath), hashName);
       fs.renameSync(file.tempFilePath, tempFilePath);
       return sendMediaToBack(tempFilePath, hashName, async () => {                 // Сохраняем аватарку на VDS-сервер
-        const result = await userQueries.updateUser(id, { avatar: hashName });     //Прописываем имя файла сохраненной аватарки в userInfos
-        await remove('tmp', { verbose : true, ignoreErrors : false }, err => {if (err) console.log(err.message)});
+        const result = await userQueries.updateUser(id, {avatar: hashName});     //Прописываем имя файла сохраненной аватарки в userInfos
+        await remove('tmp', {verbose: true, ignoreErrors: false}, err => {
+          if (err) console.log(err.message);
+        });
         return result;
       });
 
