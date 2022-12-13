@@ -41,7 +41,7 @@ class CommentQueries {
     try {
       let gCommentById = await Comment.findOne({
         where: {id},
-        attributes: {exclude: ['updateTimestamp', 'id', 'userId', 'videoId']},
+        attributes: {exclude: ['updateTimestamp', 'userId', 'videoId']},
         include: [{model: User, attributes: {exclude: ['id']}}, {model: CommentLike}],
       });
       if (gCommentById) return gCommentById.toJSON();
