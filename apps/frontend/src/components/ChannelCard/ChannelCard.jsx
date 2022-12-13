@@ -1,36 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Loader from '../Loader/Loader';
 
 import styles from './ChannelCard.module.scss';
+import { CHANNEL } from '@constants/frontend';
+import GetChildrenController from '../../controllers/GetChildrenController';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
-const ChannelCard = ({ channelTitle }) => {
+const ChannelCard = ({ idList }) => {
+  const [channelData, setChannelData] = useState({});
+  const channelId = idList.split('_').at(-1);
+  useEffect(() => {
+    const fetchData = async () => {
+      // Без передачи userId в ответе isSubscribed будет всегда false,
+      // но так как для карточки это не важно, то и пох.
+      return await GetChildrenController.getItemById(CHANNEL, channelId);
+    }
+
+    fetchData().then((data) => {
+      setChannelData(data);
+    }).catch((err) => {
+      console.log('Fetch video data error');
+      console.log(err);
+    });
+  }, []);
+
   return (
-    <Box>
-      {/* <Box className={styles.videoCard}>
+       <Box className={styles.videoCard}>
         <Link
-          to={`/${PLAYLIST}/get_all/${idList.split('_').slice(0, 2).join('_')}`}
+          to={`/${CHANNEL}/${idList}`}
           className={styles.channelLink}
         >
           <Box className={styles.videoInfo}>
             <Box className={styles.videoInfoTitle}>
-              {video?.title?.length > 50 ? (
-                <Tooltip title={video.title}>
+              {channelData?.title?.length > 50 ? (
+                <Tooltip title={channelData.title}>
                   <Typography className={styles.title}>
-                    {video.title.slice(0, 50) + '...'}
+                    {channelData.title.slice(0, 50) + '...'}
                   </Typography>
                 </Tooltip>
               ) : (
-                <Typography className={styles.title}>{video.title}</Typography>
+                <Typography className={styles.title}>{channelData.title}</Typography>
               )}
             </Box>
 
             <Box className={styles.videoInfoView}>
-              {Object.hasOwn(video, 'channelName') ? (
+              {Object.hasOwn(channelData, 'title') ? (
                 <Typography variant="subtitle2" className={styles.channelName}>
                   <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-                  {video.channelName}
+                  {channelData.title}
                 </Typography>
               ) : (
                 ''
@@ -38,8 +56,7 @@ const ChannelCard = ({ channelTitle }) => {
             </Box>
           </Box>
         </Link>
-      </Box> */}
-    </Box>
+      </Box>
   );
 };
 

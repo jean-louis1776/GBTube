@@ -211,6 +211,22 @@ class VideoService {
       throw e;
     }
   }
+
+  async removeOneFromHistory(userId, videoId) {
+    try {
+      return await videoQueries.removeOneFromHistory(userId, videoId);
+    } catch(e) {
+      throw e;
+    }
+  }
+
+  async removeAllFromHistory(userId) {
+    try {
+      return await videoQueries.removeAllFromHistory(userId);
+    } catch(e) {
+      throw e;
+    }
+  }
 }
 
 export default new VideoService();

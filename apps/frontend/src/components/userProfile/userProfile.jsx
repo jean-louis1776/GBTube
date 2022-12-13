@@ -83,10 +83,10 @@ const UserProfile = () => {
     setEmailDisabled((prevDisabled) => !prevDisabled);
   };
 
-  const [isEqualUserData, setIsEqualUserData] = useState(true);
-  const compareUserData = () => {
-    setIsEqualUserData((prevCompare) => !prevCompare);
-  };
+  // const [isEqualUserData, setIsEqualUserData] = useState(true);
+  // const compareUserData = () => {
+  //   setIsEqualUserData((prevCompare) => !prevCompare);
+  // };
 
   // const dispatch = useDispatch();
 
@@ -142,7 +142,7 @@ const UserProfile = () => {
               '& .MuiTextField-root': { m: 1, width: '60ch' },
             }}
             autoComplete="off"
-            onChange={compareUserData}
+            // onChange={compareUserData}
           >
             <Stack>
               <FormField label="Имя" {...register('firstName')} />
@@ -182,7 +182,7 @@ const UserProfile = () => {
               {emailDisabled ? 'Изменить почту' : 'Подтвердить'}
             </Button>
             <Button
-              disabled={isEqualUserData}
+              // disabled={isEqualUserData}
               onClick={onSubmitForm}
               variant="contained"
             >

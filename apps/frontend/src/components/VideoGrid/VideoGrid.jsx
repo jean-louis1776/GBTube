@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
-import Header from '../Header/Header';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
 import styles from './VideoGrid.module.scss';
@@ -35,7 +34,6 @@ const VideoGrid = ({ isParent, getChildren, onChannelPage }) => {
       }
 
       const children = await getChildren(playListId, VIDEO);
-      console.log(children, 'video children');
 
       if (children.length === 0) {
         setContent(

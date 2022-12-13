@@ -353,13 +353,30 @@ class VideoQueries {
     }
   }
 
-
   async getVideoIdListByVideoId(listOfVideosId) {
     try {
       const videosList = await VideoInfo.findAll({where: {videoId: listOfVideosId}, attributes: ['idList']});
       if (!videosList) throw ApiError.InternalServerError('Внутренняя ошибка сервера');
       return videosList.map(video => video.toJSON().idList);
   } catch (e) {
+      console.log(e.message);
+      throw e;
+    }
+  }
+
+  async removeOneFromHistory(userId, videoId) {
+    try {
+      return !!(await VideoHistory.destroy({where: {userId, videoId}}));
+    } catch(e) {
+      console.log(e.message);
+      throw e;
+    }
+  }
+
+  async removeAllFromHistory(userId) {
+    try {
+      return !!(await VideoHistory.destroy({where: {userId}}));
+    } catch(e) {
       console.log(e.message);
       throw e;
     }

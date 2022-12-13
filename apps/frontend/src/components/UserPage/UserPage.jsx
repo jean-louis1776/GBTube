@@ -42,11 +42,14 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchChannelData = async () => {
-      return await GetChildrenController.getItemById(CHANNEL, channelId);
+      return await GetChildrenController.getItemById(
+        CHANNEL,
+        channelId,
+        userId
+      );
     };
     fetchChannelData()
       .then((channelData) => {
-        console.log(channelData);
         setChannelName(channelData.title);
         setDescription(channelData.description);
         setSubscribersCount(channelData.subscribersCount);
@@ -63,13 +66,10 @@ const UserPage = () => {
   };
 
   const handleSubscribe = async () => {
-    console.log(isSubscribed, 'isSubscribed');
-    const { isSubscribe } = await EditItemController.subscribe(
-      channelId,
-      userId
-    );
-    console.log(isSubscribe, 'isSubscribe');
+    const { isSubscribe, subscribersCount } =
+      await EditItemController.subscribe(channelId, userId);
     setIsSubscribed(isSubscribe);
+    setSubscribersCount(subscribersCount);
   };
 
   return (

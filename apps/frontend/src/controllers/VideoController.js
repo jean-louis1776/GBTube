@@ -60,7 +60,6 @@ export default class VideoController {
 
   static async getVideoByChannel(channelId) {
     const url = `/video/channel/${channelId}`;
-    console.log(url, '!!!!URL');
     return (await $authApi.get(url)).data;
   }
 

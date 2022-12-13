@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Stack, Typography } from '@mui/material';
-
+import { Box, Typography } from '@mui/material';
 import { Header } from '../';
 import SearchSubForm from './SearchSubForm';
 import ChannelCard from '../ChannelCard/ChannelCard';
-
 import styles from './Subscriptions.module.scss';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
+import GetChildrenController from '../../controllers/GetChildrenController';
 
-const Subscriptions = (props) => {
-  const selectedCategory = 'Мои подписки';
-
+const Subscriptions = () => {
+  const [subscriptions, setSubscriptions] = useState([]);
+  const userId = useSelector(getUserId, shallowEqual);
   useEffect(() => {
     document.title = 'Мои подписки | GeekTube';
-  }, []);
+    const fetchSubscriptions = async () => {
+      return GetChildrenController.getSubscriptions(userId);
+    }
 
-  const listId = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+    fetchSubscriptions().then((list) => {
+      setSubscriptions(list);
+    })
+      .catch((err) => {
+      console.log('Fetch subscriptions error');
+      console.log(err);
+    });
+  }, []);
 
   return (
     <>
-      <Header selectedCategory={selectedCategory} />
+      <Header selectedCategory={'Мои подписки'} />
 
       <Box className={styles.subWrapper}>
         <Box component="main" className={styles.subMain}>
@@ -28,12 +36,12 @@ const Subscriptions = (props) => {
             Мои подписки
           </Typography>
 
-          <SearchSubForm />
+          {/*<SearchSubForm />*/}
 
           <Box className={styles.likesGrid}>
-            {listId.map((index) => (
-              <ChannelCard key={index} />
-            ))}
+            {subscriptions.length > 0 ? subscriptions.map(
+              (idList, index) => <ChannelCard idList={idList} key={index} />)
+              : <Typography>Нет ни одной подписки</Typography>}
           </Box>
         </Box>
       </Box>

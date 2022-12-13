@@ -20,5 +20,7 @@ router.patch('/like', videoValidation.subscribeOrLike, videoController.like);
 router.patch('/dislike', videoValidation.subscribeOrLike, videoController.dislike);
 router.patch('/edit', videoValidation.edit, videoController.edit);
 router.delete('/:id', videoValidation.checkId, videoController.remove);
+router.delete('/history/del_one', videoValidation.removeOne, videoController.removeOneFromHistory);
+router.delete('/history/del_all/user_id', videoValidation.checkUserId, videoController.removeAllFromHistory);
 
 export default router;
