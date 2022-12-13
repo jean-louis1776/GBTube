@@ -19,9 +19,11 @@ const MainPage = () => {
           display: 'flex',
           justifyContent: 'center',
           flexGrow: 1,
-          bgcolor: 'darkBackground.main',
-          p: 2,
+          background:
+            'linear-gradient(0deg, rgba(31, 31, 31, 0.36) 70%, rgba(245, 249, 255, 0.1) 100%)',
+          p: '64px 16px',
           flex: 2,
+          minHeight: '93vh',
         }}
       >
         <VideoFeed />

@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { Header } from '../';
 import SearchHistoryForm from './SearchHistoryForm';
 import VideoListItem from '../VideoListItem/VideoListItem';
 import VideoController from '../../controllers/VideoController';
 import { store } from '../../store';
 import Loader from '../Loader/Loader';
-import styles from './History.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { historyListSelector } from '../../store/selectors';
 import { setHistoryList } from '../../store/slice';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import styles from './History.module.scss';
 
 const History = () => {
   const selectedCategory = 'История';
@@ -52,12 +54,17 @@ const History = () => {
 
           <SearchHistoryForm />
 
+          <Button variant="outlined" color="whiteButton" sx={{ mb: 4 }}>
+            <DeleteIcon sx={{ mr: 1 }} />
+            Очистить историю
+          </Button>
+
           <Box>
             {historyList
               .slice()
               .reverse()
               .map((idList) => (
-                <VideoListItem idList={idList} key={idList} />
+                <VideoListItem idList={idList} key={idList} deleteFromHistory />
               ))}
           </Box>
         </Box>

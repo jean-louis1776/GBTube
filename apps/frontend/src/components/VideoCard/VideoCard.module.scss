@@ -8,6 +8,17 @@
   transition: 0.3s;
   margin: 8px 0;
 
+  .deleteButton {
+    position: absolute;
+    z-index: 10;
+    right: 17px;
+    top: 17px;
+
+    &:hover {
+      background-color: rgba(31, 31, 31, 0.5);
+    }
+  }
+
   .videoLink,
   .channelLink {
     position: absolute;

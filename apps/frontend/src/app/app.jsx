@@ -39,6 +39,7 @@ import {
   setRole,
 } from '../store/slice';
 import GetChildrenController from '../controllers/GetChildrenController';
+import ConfirmModal from '../components/ConfirmModal/ConfirmModal';
 
 export function App() {
   const dispatch = useDispatch();
@@ -67,7 +68,9 @@ export function App() {
       }
     };
     refreshAuth()
-      .then(() => { console.log('User update successful'); })
+      .then(() => {
+        console.log('User update successful');
+      })
       .catch((err) => {
         console.log('User update failed');
         console.log(err);
@@ -97,10 +100,18 @@ export function App() {
         />
         <Route
           path={`/${VIDEO}/get_all/:idList`}
-          element={<VideoGrid isParent={true} getChildren={GetChildrenController.getAllItemsById} />}
+          element={
+            <VideoGrid
+              isParent={true}
+              getChildren={GetChildrenController.getAllItemsById}
+            />
+          }
         />
         <Route path={`/${CHANNEL}/get_one/:id`} element={<ChannelGrid />} />
-        <Route path={`/${PLAYLIST}/get_one/:id`} element={<PlayListGrid isParent={true} />} />
+        <Route
+          path={`/${PLAYLIST}/get_one/:id`}
+          element={<PlayListGrid isParent={true} />}
+        />
         <Route path={`/${VIDEO}/get_one/:idList`} element={<VideoDetail />} />
         <Route
           path={`/${CHANNEL}/create/:idList`}
@@ -129,7 +140,7 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
-        {/*<Route path={`/${CHANNEL}/:idList`} element={<UserPage />} />*/}
+        <Route path={`/confirmModal`} element={<ConfirmModal />} />
       </Routes>
     </Box>
   );

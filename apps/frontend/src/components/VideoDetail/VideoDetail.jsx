@@ -130,15 +130,15 @@ const VideoDetail = () => {
       });
   }, []);
 
-  const handleDeleteVideo = async () => {
-    try {
-      await VideoController.deleteVideo(idList.split('_').at(-1));
-      const idListToPlayList = idList.split('_').slice(0, -1).join('_');
-      navigate(`/${VIDEO}/get_all/${idListToPlayList}`, { replace: true });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const handleDeleteVideo = async () => {
+  //   try {
+  //     await VideoController.deleteVideo(idList.split('_').at(-1));
+  //     const idListToPlayList = idList.split('_').slice(0, -1).join('_');
+  //     navigate(`/${VIDEO}/get_all/${idListToPlayList}`, { replace: true });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const handleChangeCommentText = (evt) => {
     setCommentText(evt.target.value);
@@ -261,7 +261,7 @@ const VideoDetail = () => {
                   </Box>
                 </Link>
                 {isMayModerate() ? (
-                  <Button onClick={handleDeleteVideo}>Удалить видео</Button>
+                  ''
                 ) : subscribe ? (
                   <SubscribeButton
                     onClick={() => setSubscribe((prevState) => !prevState)}

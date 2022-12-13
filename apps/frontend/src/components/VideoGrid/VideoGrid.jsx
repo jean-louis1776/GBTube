@@ -11,7 +11,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
 import styles from './VideoGrid.module.scss';
 
-const VideoGrid = ({isParent, getChildren}) => {
+const VideoGrid = ({ isParent, getChildren, onChannelPage }) => {
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
   const authorId = idList.split('_')[0];
@@ -47,7 +47,7 @@ const VideoGrid = ({isParent, getChildren}) => {
         setContent(
           <Box className={styles.videoGrid}>
             {children.map((item, idx) => (
-              <VideoCard idList={item.idList || item} key={idx} />
+              <VideoCard idList={item.idList || item} key={idx} onChannelPage />
             ))}
           </Box>
         );
@@ -91,7 +91,7 @@ const VideoGrid = ({isParent, getChildren}) => {
         flexDirection: 'column',
       }}
     >
-      {isParent ?
+      {isParent ? (
         <Stack
           sx={{
             flexDirection: 'row',
@@ -162,7 +162,9 @@ const VideoGrid = ({isParent, getChildren}) => {
             )}
           </Box>
         </Stack>
-        : ''}
+      ) : (
+        ''
+      )}
       <Box className={styles.videoWrapper}>
         <Box component="main" className={styles.videoMain}>
           {content}

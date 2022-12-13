@@ -40,21 +40,23 @@ const UserPage = () => {
     },
   }));
 
-useEffect(() => {
-  const fetchChannelData = async () => {
-    return await GetChildrenController.getItemById(CHANNEL, channelId);
-  }
-  fetchChannelData().then((channelData) => {
-    console.log(channelData);
-    setChannelName(channelData.title);
-    setDescription(channelData.description);
-    setSubscribersCount(channelData.subscribersCount);
-    setIsSubscribed(channelData.isSubscribed);
-  }).catch((err) => {
-    console.log('Fetch channel data error');
-    console.log(err);
-  });
-}, [])
+  useEffect(() => {
+    const fetchChannelData = async () => {
+      return await GetChildrenController.getItemById(CHANNEL, channelId);
+    };
+    fetchChannelData()
+      .then((channelData) => {
+        console.log(channelData);
+        setChannelName(channelData.title);
+        setDescription(channelData.description);
+        setSubscribersCount(channelData.subscribersCount);
+        setIsSubscribed(channelData.isSubscribed);
+      })
+      .catch((err) => {
+        console.log('Fetch channel data error');
+        console.log(err);
+      });
+  }, []);
 
   const handleChangeTab = (event, newValue) => {
     setTabNumber(newValue);
@@ -62,7 +64,10 @@ useEffect(() => {
 
   const handleSubscribe = async () => {
     console.log(isSubscribed, 'isSubscribed');
-    const { isSubscribe } = await EditItemController.subscribe(channelId, userId);
+    const { isSubscribe } = await EditItemController.subscribe(
+      channelId,
+      userId
+    );
     console.log(isSubscribe, 'isSubscribe');
     setIsSubscribed(isSubscribe);
   };
@@ -92,13 +97,15 @@ useEffect(() => {
           >
             <Box>
               <Typography variant={'h5'}>{channelName}</Typography>
-              <Typography variant={'subtitle2'}>{subscribersCount} подписчиков</Typography>
+              <Typography variant={'subtitle2'}>
+                {subscribersCount} подписчиков
+              </Typography>
             </Box>
             {isOwner() ? (
-              <SubscribeButton variant="outlined">
+              <SubscribeButton variant="outlined" color="whiteButton">
                 Редактировать
               </SubscribeButton>
-            ) : (!isSubscribed ? (
+            ) : !isSubscribed ? (
               <SubscribeButton
                 onClick={handleSubscribe}
                 disabled={!isAuth}
@@ -113,10 +120,11 @@ useEffect(() => {
               <SubscribeButton
                 disabled={!isAuth}
                 onClick={handleSubscribe}
+                color="whiteButton"
               >
                 Отписаться
               </SubscribeButton>
-            ))}
+            )}
           </Box>
         </Box>
 
@@ -159,13 +167,17 @@ useEffect(() => {
           }}
         >
           <TabPanel tabNumber={tabNumber} index={0}>
-            <VideoGrid isParent={false} getChildren={VideoController.getVideoByChannel}/>
+            <VideoGrid
+              isParent={false}
+              getChildren={VideoController.getVideoByChannel}
+              onChannelPage
+            />
           </TabPanel>
           <TabPanel tabNumber={tabNumber} index={1}>
             <PlayListGrid isParent={false} />
           </TabPanel>
           <TabPanel tabNumber={tabNumber} index={2}>
-            <UserAbout description={description}/>
+            <UserAbout description={description} />
           </TabPanel>
         </Box>
       </Box>

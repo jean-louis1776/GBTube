@@ -21,6 +21,9 @@ export const theme = createTheme({
       main: '#E0557F',
       contrastText: '#FFF4F8',
     },
+    whiteButton: {
+      main: '#F2F9FF',
+    },
   },
 
   components: {

@@ -19,7 +19,7 @@ const VideoFeed = () => {
         setVideoComp(
           <Box
             sx={{
-              marginTop: 10,
+              marginTop: 4,
               display: 'grid',
               columnGap: 4,
               rowGap: 3,
