@@ -176,16 +176,18 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   </Typography>
                 </Tooltip>
               ) : (
-                <Typography
-                  variant={'h5'}
-                  fontWeight={600}
-                  sx={{ textTransform: 'uppercase', userSelect: 'none' }}
-                >
-                  Описание:
+                <>
+                  <Typography
+                    variant={'h5'}
+                    fontWeight={600}
+                    sx={{ textTransform: 'uppercase', userSelect: 'none' }}
+                  >
+                    Описание:
+                  </Typography>
                   <Typography variant="h6" fontWeight={300}>
                     {description}
                   </Typography>
-                </Typography>
+                </>
               )}
               {description.length === 0 && (
                 <Typography
