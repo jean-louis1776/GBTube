@@ -177,7 +177,7 @@ class VideoController {
   async removeAllFromHistory(req, res, next) {
     try {
       validateError(req);
-      return res.status(204).json(await videoService.removeOneFromHistory(+req.params.user_id));
+      return res.status(204).json(await videoService.removeAllFromHistory(+req.params.user_id));
     } catch (e) {
       next(e);
     }
