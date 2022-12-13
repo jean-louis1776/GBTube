@@ -57,7 +57,6 @@ const VideoFeed = () => {
                 sx={{
                   marginTop: 4,
                   display: 'grid',
-                  columnGap: 4,
                   rowGap: 3,
                   gridTemplateColumns: {
                     xs: 'repeat(1, 1fr)',
