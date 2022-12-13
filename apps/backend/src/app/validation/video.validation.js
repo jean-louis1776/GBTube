@@ -11,13 +11,6 @@ import {
 import { Validation } from './validation';
 
 class VideoValidation extends Validation {
-  createHistory;
-  checkTitle;
-  checkName;
-  checkPlaylistId;
-  checkDownload;
-  getOne;
-
   constructor() {
     super();
 
@@ -33,9 +26,8 @@ class VideoValidation extends Validation {
 
     this.checkName = [ param('hash_name').exists().withMessage(NOT_EXISTS) ];
     this.checkTitle = [ param('title').exists().withMessage(NOT_EXISTS) ];
-
     this.checkPlaylistId = [ param('playlist_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT) ];
-
+    this.checkUserId = [ param('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT) ];
     this.checkParamsTitle = [ param('title').exists().withMessage(NOT_EXISTS) ];
 
     this.checkDownload = [
@@ -46,6 +38,11 @@ class VideoValidation extends Validation {
     this.getOne = [
       query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT),
       query('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS_OR_EMPTY).withMessage(NOT_DIGIT)
+    ];
+
+    this.removeOne = [
+      query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT),
+      query('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT)
     ];
   }
 }
