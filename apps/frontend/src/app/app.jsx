@@ -39,7 +39,6 @@ import {
   setRole,
 } from '../store/slice';
 import GetChildrenController from '../controllers/GetChildrenController';
-import ConfirmModal from '../components/ConfirmModal/ConfirmModal';
 
 export function App() {
   const dispatch = useDispatch();
@@ -139,8 +138,6 @@ export function App() {
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
-        //!
-        <Route path={`/confirmModal`} element={<ConfirmModal />} />
       </Routes>
     </Box>
   );
