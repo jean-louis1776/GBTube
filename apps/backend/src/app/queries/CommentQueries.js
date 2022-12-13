@@ -41,7 +41,7 @@ class CommentQueries {
     try {
       let gCommentById = await Comment.findOne({
         where: {id},
-        attributes: {exclude: ['updateTimestamp', 'id', 'userId', 'videoId']},
+        attributes: {exclude: ['updateTimestamp', 'id', 'videoId']},
         include: [{model: User, attributes: {exclude: ['id']}}, {model: CommentLike}],
       });
       if (gCommentById) return gCommentById.toJSON();
@@ -56,7 +56,7 @@ class CommentQueries {
     try {
       const gAllCommentsVideo = await Comment.findAll({
         where: {videoId},
-        attributes: {exclude: ['updateTimestamp', 'userId', 'videoId']},
+        attributes: {exclude: ['updateTimestamp', 'videoId']},
         include: [{model: User, attributes: {exclude: ['id']}}],
       });
       if (gAllCommentsVideo) return (gAllCommentsVideo).map(value => value.toJSON());

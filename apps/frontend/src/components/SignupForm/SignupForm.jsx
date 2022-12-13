@@ -22,29 +22,18 @@ import {
 
 const SignupForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [passwordShownFirst, setPasswordShownFirst] = useState(false);
   const [passwordShownSecond, setPasswordShownSecond] = useState(false);
 
   const schemaPsw = new PasswordValidator();
   schemaPsw
-    .is()
-    .min(8) // Minimum length 8
-    .is()
-    .max(100) // Maximum length 100
-    .has()
-    .uppercase() // Must have uppercase letters
-    .has()
-    .lowercase() // Must have lowercase letters
-    .has()
-    .digits(2) // Must have at least 2 digits
-    .has()
-    .not()
-    .spaces() // Should not have spaces
-    .is()
-    .not()
-    .oneOf(['Passw0rd', 'Password123']);
+    .is().min(8) // Minimum length 8
+    .is().max(100) // Maximum length 100
+    .has().uppercase() // Must have uppercase letters
+    .has().lowercase() // Must have lowercase letters
+    .has().digits(2) // Must have at least 2 digits
+    .has().not().spaces() // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123']);
 
   const schema = yup.object({
     email: yup
@@ -100,14 +89,6 @@ const SignupForm = () => {
     }
   };
 
-  const handleChangeEmail = (evt) => {
-    setEmail(evt.target.value);
-  };
-
-  const handleChangePassword = (evt) => {
-    setPassword(evt.target.value);
-  };
-
   const togglePasswordFirst = () => {
     // When the handler is invoked
     // inverse the boolean state of passwordShown
@@ -157,8 +138,6 @@ const SignupForm = () => {
                 placeholder="E-mail"
                 type="email"
                 className={styles.signupInput}
-                value={email}
-                onChange={handleChangeEmail}
               />
             </Box>
 
@@ -174,8 +153,6 @@ const SignupForm = () => {
                 placeholder="Придумайте пароль"
                 type={passwordShownFirst ? 'text' : 'password'}
                 className={styles.signupInput}
-                value={password}
-                onChange={handleChangePassword}
               />
 
               <div className={styles.passToggle} onClick={togglePasswordFirst}>
