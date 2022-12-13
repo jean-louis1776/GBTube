@@ -167,8 +167,8 @@ class VideoController {
   async removeOneFromHistory(req, res, next) {
     try {
       validateError(req);
-      const { user_id, video_id} = req.query;
-      return res.status(204).videoService.removeOneFromHistory(+user_id, +video_id);
+      const { user_id, video_id } = req.query;
+      return res.status(204).json(await videoService.removeOneFromHistory(+user_id, +video_id));
     } catch (e) {
       next(e);
     }
@@ -177,7 +177,7 @@ class VideoController {
   async removeAllFromHistory(req, res, next) {
     try {
       validateError(req);
-      return res.status(204).videoService.removeOneFromHistory(+req.params.user_id);
+      return res.status(204).json(await videoService.removeOneFromHistory(+req.params.user_id));
     } catch (e) {
       next(e);
     }
