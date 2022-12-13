@@ -10,8 +10,11 @@ import { useTheme } from '@mui/material/styles';
 import Header from '../Header/Header';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getRole, getUserId } from '../../store/selectors';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 
-const PlayListGrid = ({isParent}) => {
+const PlayListGrid = ({ isParent }) => {
   const theme = useTheme();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
@@ -21,6 +24,7 @@ const PlayListGrid = ({isParent}) => {
   let [content, setContent] = useState(<Loader />);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +48,7 @@ const PlayListGrid = ({isParent}) => {
             variant={'h6'}
             sx={{ color: 'white', display: 'flex', justifyContent: 'center' }}
           >
-            Не создано ни одного Плейлиста{' '}
+            Не создано ни одного плейлиста
           </Typography>
         );
       } else {
@@ -59,9 +63,7 @@ const PlayListGrid = ({isParent}) => {
   }, []);
 
   const handleCreateChild = () => {
-    navigate(
-      `/${PLAYLIST}/create/${idList}` /*, { state: { idList: location.state.idList } }*/
-    );
+    navigate(`/${PLAYLIST}/create/${idList}`);
   };
 
   const handleDeleteChannel = async () => {
@@ -84,15 +86,23 @@ const PlayListGrid = ({isParent}) => {
 
   const isAuthor = () => authorId === userId;
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-        {isParent ?
+    <>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {isParent ? (
           <Stack
             sx={{
               flexDirection: 'row',
@@ -101,71 +111,49 @@ const PlayListGrid = ({isParent}) => {
               justifyContent: 'space-around',
             }}
           >
-            <Box maxWidth={'25vw'}>
-            {title.length > 60 ? (
-              <Tooltip title={title}>
-                <Typography variant={'h6'} color={'white'} marginBottom={2}>
-                  Название текущего канала:
-                  <Typography variant={'body1'}>
-                    {title.slice(0, 60) + '...'}
-                  </Typography>
-                </Typography>
-              </Tooltip>
-            ) : (
-              <Typography variant={'h6'} color={'white'} marginBottom={2}>
-                Название текущего канала:
-                <Typography variant={'body1'}>{title}</Typography>
-              </Typography>
-            )}
-            {description.length > 100 ? (
-              <Tooltip title={description}>
-                <Typography variant={'h6'} style={{ color: 'white' }}>
-                  Описание текущего канала:
-                  <Typography variant={'body1'}>
-                    {description.slice(0, 100) + '...'}
-                  </Typography>
-                </Typography>
-              </Tooltip>
-            ) : (
-              <Typography variant={'h6'} style={{ color: 'white' }}>
-                Описание текущего канала:
-                <Typography variant={'body1'}>{description}</Typography>
-              </Typography>
-            )}
-          </Box>
-          <Box
-            display={'flex'}
-            flexDirection={'column'}
-            justifyContent={'center'}
-            gap={2}
-          >
-            {isAuthor() ? (
-              <Button
-                variant="contained"
-                color="baseBlue"
-                onClick={handleCreateChild}
-              >
-                Создать {PLAYLIST}
-              </Button>
-            ) : (
-              ''
-            )}
-            {isMayModerate() ? (
-              <Button
-                variant="contained"
-                color="baseBlue"
-                onClick={handleDeleteChannel}
-              >
-                Удалить текущий {CHANNEL}
-              </Button>
-            ) : (
-              ''
-            )}
-          </Box>
-      </Stack> : ''}
-      {content}
-      {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
-    </Box>
+            <Box display={'flex'} justifyContent={'center'} gap={2}>
+              {isAuthor() ? (
+                <Button
+                  variant="outlined"
+                  color="whiteButton"
+                  onClick={handleCreateChild}
+                >
+                  <PlaylistAddIcon sx={{ mr: 1 }} />
+                  Создать новый плейлист
+                </Button>
+              ) : (
+                ''
+              )}
+              {isMayModerate() ? (
+                <Button
+                  variant="outlined"
+                  color="coplimentPink"
+                  onClick={handleOpenModal}
+                >
+                  <DeleteForeverIcon sx={{ mr: 1 }} />
+                  Удалить канал
+                </Button>
+              ) : (
+                ''
+              )}
+            </Box>
+          </Stack>
+        ) : (
+          ''
+        )}
+        {content}
+      </Box>
+
+      <ConfirmModal
+        submitAction={handleDeleteChannel}
+        openModal={openModal}
+        closeModal={handleCloseModal}
+        title="Вы хотите полностью удалить этот канал?"
+        content='Нажимая "Удалить", вы удалите канал вместе с видео, плейлистами и вашими подписчиками без возможности восстановления. Для отмены нажмите "Отмена".'
+        cancelButton="Отмена"
+        submitButton="Удалить канал"
+      />
+    </>
   );
 };
 

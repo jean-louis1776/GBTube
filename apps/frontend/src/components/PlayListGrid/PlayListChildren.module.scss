@@ -1,8 +1,25 @@
-.child {
-  width: 50vw;
-  height: 140px;
-  background-color: bisque;
+.PlaylistWrapper {
+  cursor: pointer;
+  transition: 0.3s;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 150px;
+  user-select: none;
+  border-radius: 18px;
+  border: 1px solid #464646;
+
+  &:hover {
+    background-color: #464646;
+    border-color: transparent;
+  }
+
   .title {
-    margin: 0 auto;
+    margin: 5px auto 0;
+    font-size: 1.1rem;
+    text-align: center;
   }
 }

@@ -195,10 +195,10 @@ const VideoCard = ({ idList, onChannelPage }) => {
         submitAction={handleDeleteVideo}
         openModal={openModal}
         closeModal={handleCloseModal}
-        title="Полное удаление видео"
+        title="Вы хотите полностью удалить видео?"
         content='Нажимая "Удалить", вы удалите видео вместе с просмотрами, лайками и комментариями без возможности восстановления. Для отмены нажмите "Отмена".'
         cancelButton="Отмена"
-        submitButton="Удалить"
+        submitButton="Удалить видео"
       />
     </>
   );

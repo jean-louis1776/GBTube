@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { notFoundLogo } from '@constants/frontend';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const NotFound = (props) => {
+  useEffect(() => {
+    document.title = '404 | GeekTube';
+  }, []);
+
   return (
     <Stack
       sx={{
@@ -14,9 +18,6 @@ const NotFound = (props) => {
         position: 'relative',
       }}
     >
-      {/* <Helmet>
-        <title>404 | GeekTube</title>
-      </Helmet> */}
       <Box
         sx={{
           width: '1150px',

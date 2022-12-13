@@ -13,6 +13,7 @@ import TabPanel from './TabPanel';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import EditItemController from '../../controllers/EditItemController';
 import VideoController from '../../controllers/VideoController';
+import EditIcon from '@mui/icons-material/Edit';
 
 const UserPage = () => {
   const theme = useTheme();
@@ -30,15 +31,15 @@ const UserPage = () => {
     return authorId === userId;
   };
 
-  const SubscribeButton = styled(Button)(({ theme }) => ({
-    borderRadius: '40px',
-    padding: '7px 15px',
-    transition: '.3s ease',
-    '&:hover': {
-      backgroundColor: theme.palette.shadows.main,
-      color: theme.palette.coplimentPink.contrastText,
-    },
-  }));
+  // const SubscribeButton = styled(Button)(({ theme }) => ({
+  //   borderRadius: '40px',
+  //   padding: '7px 15px',
+  //   transition: '.3s ease',
+  //   '&:hover': {
+  //     backgroundColor: theme.palette.shadows.main,
+  //     color: theme.palette.coplimentPink.contrastText,
+  //   },
+  // }));
 
   useEffect(() => {
     const fetchChannelData = async () => {
@@ -59,7 +60,8 @@ const UserPage = () => {
         console.log('Fetch channel data error');
         console.log(err);
       });
-  }, []);
+    document.title = `${channelName} | GeekTube`;
+  }, [channelName]);
 
   const handleChangeTab = (event, newValue) => {
     setTabNumber(newValue);
@@ -102,11 +104,12 @@ const UserPage = () => {
               </Typography>
             </Box>
             {isOwner() ? (
-              <SubscribeButton variant="outlined" color="whiteButton">
+              <Button variant="outlined" color="whiteButton">
+                <EditIcon sx={{ mr: 1 }} />
                 Редактировать
-              </SubscribeButton>
+              </Button>
             ) : !isSubscribed ? (
-              <SubscribeButton
+              <Button
                 onClick={handleSubscribe}
                 disabled={!isAuth}
                 sx={{
@@ -115,15 +118,15 @@ const UserPage = () => {
                 }}
               >
                 Подписаться
-              </SubscribeButton>
+              </Button>
             ) : (
-              <SubscribeButton
+              <Button
                 disabled={!isAuth}
                 onClick={handleSubscribe}
                 color="whiteButton"
               >
                 Отписаться
-              </SubscribeButton>
+              </Button>
             )}
           </Box>
         </Box>
@@ -142,7 +145,6 @@ const UserPage = () => {
           >
             <Tabs value={tabNumber} onChange={handleChangeTab}>
               {userChannelTabs.map((tab, index) => (
-                // <Link to={tab.link} key={index}>
                 <Tab
                   key={index}
                   label={tab.name}
@@ -151,7 +153,6 @@ const UserPage = () => {
                     paddingX: 12,
                   }}
                 />
-                // </Link>
               ))}
             </Tabs>
           </Box>
@@ -174,7 +175,7 @@ const UserPage = () => {
             />
           </TabPanel>
           <TabPanel tabNumber={tabNumber} index={1}>
-            <PlayListGrid isParent={false} />
+            <PlayListGrid isParent={true} />
           </TabPanel>
           <TabPanel tabNumber={tabNumber} index={2}>
             <UserAbout description={description} />

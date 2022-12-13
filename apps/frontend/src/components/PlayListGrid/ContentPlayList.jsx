@@ -6,14 +6,17 @@ import PlayListChildren from './PlayListChildren';
 export const ContentPlayList = ({ children }) => {
   return (
     <Stack
-      direction={/*direction ||*/ 'column'}
-      flexWrap="wrap"
-      justifyContent="center"
-      alignItems="center"
+      sx={{
+        display: 'grid',
+        justifyItems: 'center',
+        gridTemplateColumns: 'repeat(5,1fr)',
+        columnGap: '1rem',
+        rowGap: '1rem',
+        pt: 5,
+      }}
     >
       {children.map((item, idx) => (
         <Box key={idx}>
-          {/*<p style={{color: 'white'}}>Плейлист: {idx}</p>*/}
           <PlayListChildren
             itemId={item.idList.split(';').at(-1)}
             childType={PLAYLIST}

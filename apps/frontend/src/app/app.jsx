@@ -101,6 +101,7 @@ export function App() {
           path={`/${VIDEO}/get_all/:idList`}
           element={
             <VideoGrid
+              withHeader
               isParent={true}
               getChildren={GetChildrenController.getAllItemsById}
             />

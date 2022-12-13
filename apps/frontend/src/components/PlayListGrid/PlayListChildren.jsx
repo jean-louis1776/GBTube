@@ -1,11 +1,13 @@
-import styles from './PlayListChildren.module.scss';
-import { Button, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { Loader } from '../index';
 import { VIDEO } from '@constants/frontend';
 import { useTheme } from '@mui/material/styles';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+
+import styles from './PlayListChildren.module.scss';
 
 export const PlayListChildren = ({ childType, itemId }) => {
   const theme = useTheme();
@@ -22,10 +24,10 @@ export const PlayListChildren = ({ childType, itemId }) => {
       );
       setIdList([...idList.split('_')]);
       setContent(
-        title.length > 220 ? (
+        title.length > 30 ? (
           <Tooltip title={title}>
             <Typography className={styles.title}>
-              {title.slice(0, 280) + '...'}
+              {title.slice(0, 30) + '...'}
             </Typography>
           </Tooltip>
         ) : (
@@ -46,13 +48,11 @@ export const PlayListChildren = ({ childType, itemId }) => {
   };
 
   return (
-    <Button
-      sx={{ borderTop: 1, borderColor: theme.palette.shadows.main }}
-      onClick={handleClick}
-      className={styles.child}
-    >
+    <Box className={styles.PlaylistWrapper} onClick={handleClick}>
+      <PlaylistPlayIcon color="baseBlue" sx={{ fontSize: '3rem' }} />
+
       {content}
-    </Button>
+    </Box>
   );
 };
 export default PlayListChildren;
