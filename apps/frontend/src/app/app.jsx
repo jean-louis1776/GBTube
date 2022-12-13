@@ -135,11 +135,11 @@ export function App() {
           path={`/${VIDEO}/create/:idList`}
           element={<UploadVideoDraft />}
         />
-
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />
         <Route path="/videoDetail" element={<VideoDetail />} />
         <Route path="*" element={<NotFound />} />
+        //!
         <Route path={`/confirmModal`} element={<ConfirmModal />} />
       </Routes>
     </Box>
