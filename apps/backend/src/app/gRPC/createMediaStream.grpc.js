@@ -7,6 +7,7 @@ export const createMediaStream = (req, res, pathToMedia, callback) => {
     let needCallback = true;
     clientVideo.callMediaInfo({ pathToMedia }, (err, resGrpc) => {
       if (err) {
+        // err покажет ошибку чтения на удалённом сервере
         throw ApiError.InternalServerError('Remote Server Error');
       }
 
@@ -34,6 +35,7 @@ export const createMediaStream = (req, res, pathToMedia, callback) => {
 
       res.writeHead(statusCode, headers);
       stream.on('data', (chunk) => {
+        // Тут нужно проверять isError
         res.write(chunk.mediaStream);
       });
 

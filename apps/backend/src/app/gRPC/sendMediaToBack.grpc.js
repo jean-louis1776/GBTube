@@ -14,11 +14,18 @@ export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {
         throw ApiError.InternalServerError('Remote file already exist');
       }
       const rdStream = fs.createReadStream(fileNameFrom);
+      // Добавить res и смотреть значение status в нём, чтобы понять что загрузка окончена
       const serviceCall = clientVideo.sendMedia((err) => {
         if(err) {
+          // Здесь в err покажется ошибка записи на удалённом сервере.
           throw ApiError.InternalServerError(`Remote Server Error: ${err.message}`);
         }
       });
+      // Вынести в отдельное сообщение отправку fileName
+/*      serviceCall.write({ fileName: fileNameTo });
+      rdStream.on('data', (chunk) => {
+        serviceCall.write({ chunk });
+      });*/
       rdStream.on('data', (chunk) => {
         serviceCall.write({ fileName: fileNameTo, chunk });
       });
@@ -29,6 +36,7 @@ export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {
       rdStream.on('end', () => {
         serviceCall.end();
       });
+      // Полагаю в базу нужно добавить статус завершения загрузки, чтобы до этого момента не показывать клавишу на удаление.
       rdStream.on('close', () => {
         try {
           if (callback) return callback();
