@@ -33,9 +33,12 @@ const Likes = (props) => {
           )
         : setLikesVideoComp(
             <Box className={styles.likesGrid}>
-              {videos.map((idList) => (
-                <VideoCard idList={idList} key={idList} />
-              ))}
+              {videos
+                .slice()
+                .reverse()
+                .map((idList) => (
+                  <VideoCard idList={idList} key={idList} />
+                ))}
             </Box>
           );
     });

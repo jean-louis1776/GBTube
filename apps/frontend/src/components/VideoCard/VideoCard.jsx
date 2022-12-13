@@ -152,10 +152,10 @@ const VideoCard = ({ idList, onChannelPage }) => {
 
           <Box className={styles.videoInfo}>
             <Box className={styles.videoInfoTitle}>
-              {video?.title?.length > 50 ? (
+              {video?.title?.length > 40 ? (
                 <Tooltip title={video.title}>
                   <Typography className={styles.title}>
-                    {video.title.slice(0, 50) + '...'}
+                    {video.title.slice(0, 40) + '...'}
                   </Typography>
                 </Tooltip>
               ) : (
