@@ -7,8 +7,10 @@ export default class GetChildrenController {
     return (await $authApi.get(url)).data;
   }
   static async getItemById(childType, id, userId = 0) {
-    const url = childType === PLAYLIST ? `/${childType}/get_one/${id}` :
-      `/${childType}/get_one?channel_id=${id}&user_id=${userId}`;
+    const url =
+      childType === PLAYLIST
+        ? `/${childType}/get_one/${id}`
+        : `/${childType}/get_one?channel_id=${id}&user_id=${userId}`;
     return (await $authApi.get(url)).data;
   }
   static async getSubscriptions(userId) {

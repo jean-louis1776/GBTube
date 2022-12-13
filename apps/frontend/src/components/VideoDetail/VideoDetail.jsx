@@ -30,9 +30,10 @@ import { API_URL, CHANNEL, VIDEO } from '@constants/frontend';
 import { Player } from 'react-tuby';
 import 'react-tuby/css/main.css';
 import { shallowEqual, useSelector } from 'react-redux';
-import { getRole, getUserId } from '../../store/selectors';
+import { getAuthStatus, getRole, getUserId } from '../../store/selectors';
 import CommentController from '../../controllers/CommentController';
 import SendIcon from '@mui/icons-material/Send';
+import EditItemController from '../../controllers/EditItemController';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -41,9 +42,11 @@ const VideoDetail = () => {
   const videoId = idList.split('_').at(-1);
   const authorId = idList.split('_')[0];
   const userId = useSelector(getUserId, shallowEqual);
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
+  const channelId = idList.split('_').at(1);
   const userRole = useSelector(getRole, shallowEqual);
   const [videoContent, setVideoContent] = useState(<Loader />);
-  const [subscribe, setSubscribe] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [category, setCategory] = useState('');
   const [channelName, setChannelName] = useState('');
   const [createTimestamp, setCreateTimestamp] = useState('');
@@ -61,16 +64,6 @@ const VideoDetail = () => {
 
   const ReactionButton = styled(Button)(({ theme }) => ({
     borderRadius: '40px',
-    transition: '.3s ease',
-    '&:hover': {
-      backgroundColor: theme.palette.shadows.main,
-      color: theme.palette.coplimentPink.contrastText,
-    },
-  }));
-
-  const SubscribeButton = styled(Button)(({ theme }) => ({
-    borderRadius: '40px',
-    padding: '7px 15px',
     transition: '.3s ease',
     '&:hover': {
       backgroundColor: theme.palette.shadows.main,
@@ -129,16 +122,6 @@ const VideoDetail = () => {
         console.log('Fail get info about comments');
       });
   }, []);
-
-  // const handleDeleteVideo = async () => {
-  //   try {
-  //     await VideoController.deleteVideo(idList.split('_').at(-1));
-  //     const idListToPlayList = idList.split('_').slice(0, -1).join('_');
-  //     navigate(`/${VIDEO}/get_all/${idListToPlayList}`, { replace: true });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
 
   const handleChangeCommentText = (evt) => {
     setCommentText(evt.target.value);
@@ -229,6 +212,14 @@ const VideoDetail = () => {
     }
   };
 
+  const handleSubscribe = async () => {
+    const { isSubscribe } = await EditItemController.subscribe(
+      channelId,
+      userId
+    );
+    setIsSubscribed(isSubscribe);
+  };
+
   return (
     <Box className={styles.wrapper}>
       <Header />
@@ -276,26 +267,28 @@ const VideoDetail = () => {
               </Link>
               {isMayModerate() ? (
                 ''
-              ) : subscribe ? (
-                <SubscribeButton
-                  onClick={() => setSubscribe((prevState) => !prevState)}
+              ) : !isSubscribed ? (
+                <Button
+                  onClick={handleSubscribe}
+                  disabled={!isAuth}
                   sx={{
-                    marginLeft: '1rem',
                     backgroundColor: theme.palette.coplimentPink.main,
                     color: theme.palette.coplimentPink.contrastText,
                   }}
                 >
                   Подписаться
-                </SubscribeButton>
+                </Button>
               ) : (
-                <SubscribeButton
-                  onClick={() => setSubscribe((prevState) => !prevState)}
+                <Button
+                  disabled={!isAuth}
+                  onClick={handleSubscribe}
+                  color="whiteButton"
                   sx={{
-                    marginLeft: '1rem',
+                    backgroundColor: theme.palette.shadows.main,
                   }}
                 >
-                  Отписаться
-                </SubscribeButton>
+                  Вы подписаны
+                </Button>
               )}
             </Stack>
             <Stack direction="row" gap="10px">

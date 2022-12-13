@@ -23,9 +23,13 @@
     }
 
     .likesGrid {
+      width: 75vw;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      column-gap: 16px;
+      grid-template-columns: repeat(5, 1fr);
+      column-gap: 1rem;
+      row-gap: 1rem;
+      justify-items: center;
     }
   }
 }

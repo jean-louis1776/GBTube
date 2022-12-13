@@ -25,7 +25,7 @@ const Likes = (props) => {
     videoLikes(currentUserId).then((videos) => {
       refLikesVideos.current = videos;
 
-      refLikesVideos.current.length === 0
+      refLikesVideos.current.length !== 0
         ? setLikesVideoComp(
             <Typography variant="h5" sx={{ userSelect: 'none' }}>
               Поставьте лайк на свое первое видео, оно будет ждать тут
