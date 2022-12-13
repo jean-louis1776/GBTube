@@ -233,204 +233,204 @@ const VideoDetail = () => {
     <Box className={styles.wrapper}>
       <Header />
       <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
-        <Box>
-          <Box>
-            {<div className={styles.playerWrapper}>{videoContent}</div>}
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              py={3}
-              px={2}
+        <Box width={'1080px'}>
+          {videoContent}
+          <Stack
+            // className={styles.infoWrapper}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            py={3}
+            px={2}
+          >
+            <Typography
+              color="#fff"
+              variant="h5"
+              fontWeight="bold"
+              maxWidth="800px"
             >
-              <Typography color="#fff" variant="h5" fontWeight="bold">
-                {title}
-              </Typography>
-              <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
-                {viewsCount} просмотров
-              </Typography>
-            </Stack>
-            <Stack
-              direction={{
-                xs: 'column',
-                md: 'row',
-              }}
-              justifyContent="space-between"
-            >
-              <Stack direction="row" className={styles.channel_info}>
-                <Link to={`/${CHANNEL}/${channelNameLink}`}>
-                  <Box className={styles.channel_sub}>
-                    <Avatar sx={{ mr: '10px' }} />
-                    <Typography variant="subtitle1" fontWeight="500">
-                      {channelName}
-                    </Typography>
-                    <CheckCircle
-                      sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
-                    />
-                  </Box>
-                </Link>
-                {isMayModerate() ? (
-                  <Button onClick={handleDeleteVideo}>Удалить видео</Button>
-                ) : subscribe ? (
-                  <SubscribeButton
-                    onClick={() => setSubscribe((prevState) => !prevState)}
-                    sx={{
-                      marginLeft: '1rem',
-                      backgroundColor: theme.palette.coplimentPink.main,
-                      color: theme.palette.coplimentPink.contrastText,
-                    }}
-                  >
-                    Подписаться
-                  </SubscribeButton>
-                ) : (
-                  <SubscribeButton
-                    onClick={() => setSubscribe((prevState) => !prevState)}
-                    sx={{
-                      marginLeft: '1rem',
-                    }}
-                  >
-                    Отписаться
-                  </SubscribeButton>
-                )}
-              </Stack>
-              <Stack direction="row" gap="10px">
-                <Stack
-                  direction="row"
-                  gap="10px"
-                  className={styles.reactionsBtn}
-                >
-                  <Tooltip title="Нравится">
-                    <ReactionButton onClick={handleLikeReaction}>
-                      {currentReaction === 'like' ? (
-                        <ThumbUp
-                          sx={{
-                            color: theme.palette.coplimentPink.main,
-                          }}
-                        />
-                      ) : (
-                        <ThumbUpOutlined />
-                      )}
-                      <Typography
-                        variant={'body1'}
-                        sx={{ opacity: 0.7 }}
-                        marginLeft={2}
-                      >
-                        {likesCount}{' '}
-                      </Typography>
-                    </ReactionButton>
-                  </Tooltip>
-                  <Tooltip title="Не нравится">
-                    <ReactionButton onClick={handleDislikeReaction}>
-                      {currentReaction === 'dislike' ? (
-                        <ThumbDown
-                          sx={{
-                            color: theme.palette.coplimentPink.main,
-                          }}
-                        />
-                      ) : (
-                        <ThumbDownOutlined />
-                      )}
-                      <Typography
-                        variant="body1"
-                        sx={{ opacity: 0.7 }}
-                        marginLeft={2}
-                      >
-                        {dislikesCount}{' '}
-                      </Typography>
-                    </ReactionButton>
-                  </Tooltip>
-                </Stack>
-                <Tooltip title="Поделиться">
-                  <ReactionButton>
-                    <ReplyAllOutlined />
-                  </ReactionButton>
-                </Tooltip>
-                <Tooltip title="Добавить в плейлист">
-                  <ReactionButton>
-                    <PlaylistAdd />
-                  </ReactionButton>
-                </Tooltip>
-                <Tooltip title="Поддержка">
-                  <ReactionButton>
-                    <AnnouncementOutlined />
-                  </ReactionButton>
-                </Tooltip>
-              </Stack>
-            </Stack>
-
-            <Box
-              padding=".7rem"
-              marginTop="2rem"
-              width="100%"
-              className={styles.descriptionWrapper}
-            >
-              <Box variant="body1" sx={{ opacity: 0.7 }}>
-                <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
-                  Дата публикации: {createTimestamp}
-                </Typography>
-              </Box>
-              <ShowMoreText
-                className={styles.truncateText}
-                lines={1}
-                more="Читать далее"
-                less="Свернуть"
-                // anchorClass="show-more-less-clickable"
-                expanded={false}
-                keepNewLines={false}
-                // width={800}
-                truncatedEndingComponent={'... '}
-              >
-                {description}
-              </ShowMoreText>
-            </Box>
-
-            <Typography paddingLeft="1rem" marginTop="2rem">
-              Комментарии
+              {title}
             </Typography>
-
-            <Box
-              className={styles.commentSection}
-              backgroundColor={theme.palette.shadows.main}
-            >
-              {
-                <Box className={styles.userCommentary}>
-                  <Avatar />
-                  <input
-                    type="text"
-                    className={styles.commentaryInput}
-                    placeholder="Оставьте комментарий"
-                    onChange={handleChangeCommentText}
-                    value={commentText}
-                  />
-                  <IconButton
-                    disabled={isCommentEmpty()}
-                    onClick={handleSendComment}
-                    size="large"
-                    variant="contained"
-                  >
-                    <SendIcon />
-                  </IconButton>
-                </Box>
-              }
-
-              <Box>
-                {comments?.length > 0 ? (
-                  comments?.map((comment, index) => (
-                    // <p style={{color: 'white'}} key={index}>{comment.description}</p>
-                    <VideoCommentary
-                      key={index}
-                      commentData={comment}
-                      currentUserId={userId}
-                      videoOwnerId={authorId}
-                      handleDelete={handleDeleteComment(comment)}
-                    />
-                  ))
-                ) : (
-                  <Typography variant={'body1'}>
-                    Пока нет комментариев...
+            <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
+              {viewsCount} просмотров
+            </Typography>
+          </Stack>
+          <Stack
+            direction={{
+              xs: 'column',
+              md: 'row',
+            }}
+            justifyContent="space-between"
+          >
+            <Stack direction="row" className={styles.channel_info}>
+              <Link to={`/${CHANNEL}/${channelNameLink}`}>
+                <Box className={styles.channel_sub}>
+                  <Avatar sx={{ mr: '10px' }} />
+                  <Typography variant="subtitle1" fontWeight="500">
+                    {channelName}
                   </Typography>
-                )}
+                  <CheckCircle
+                    sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
+                  />
+                </Box>
+              </Link>
+              {isMayModerate() ? (
+                <Button onClick={handleDeleteVideo}>Удалить видео</Button>
+              ) : subscribe ? (
+                <SubscribeButton
+                  onClick={() => setSubscribe((prevState) => !prevState)}
+                  sx={{
+                    marginLeft: '1rem',
+                    backgroundColor: theme.palette.coplimentPink.main,
+                    color: theme.palette.coplimentPink.contrastText,
+                  }}
+                >
+                  Подписаться
+                </SubscribeButton>
+              ) : (
+                <SubscribeButton
+                  onClick={() => setSubscribe((prevState) => !prevState)}
+                  sx={{
+                    marginLeft: '1rem',
+                  }}
+                >
+                  Отписаться
+                </SubscribeButton>
+              )}
+            </Stack>
+            <Stack direction="row" gap="10px">
+              <Stack direction="row" gap="10px" className={styles.reactionsBtn}>
+                <Tooltip title="Нравится">
+                  <ReactionButton onClick={handleLikeReaction}>
+                    {currentReaction === 'like' ? (
+                      <ThumbUp
+                        sx={{
+                          color: theme.palette.coplimentPink.main,
+                        }}
+                      />
+                    ) : (
+                      <ThumbUpOutlined />
+                    )}
+                    <Typography
+                      variant={'body1'}
+                      sx={{ opacity: 0.7 }}
+                      marginLeft={2}
+                    >
+                      {likesCount}{' '}
+                    </Typography>
+                  </ReactionButton>
+                </Tooltip>
+                <Tooltip title="Не нравится">
+                  <ReactionButton onClick={handleDislikeReaction}>
+                    {currentReaction === 'dislike' ? (
+                      <ThumbDown
+                        sx={{
+                          color: theme.palette.coplimentPink.main,
+                        }}
+                      />
+                    ) : (
+                      <ThumbDownOutlined />
+                    )}
+                    <Typography
+                      variant="body1"
+                      sx={{ opacity: 0.7 }}
+                      marginLeft={2}
+                    >
+                      {dislikesCount}{' '}
+                    </Typography>
+                  </ReactionButton>
+                </Tooltip>
+              </Stack>
+              <Tooltip title="Поделиться">
+                <ReactionButton>
+                  <ReplyAllOutlined />
+                </ReactionButton>
+              </Tooltip>
+              <Tooltip title="Добавить в плейлист">
+                <ReactionButton>
+                  <PlaylistAdd />
+                </ReactionButton>
+              </Tooltip>
+              <Tooltip title="Поддержка">
+                <ReactionButton>
+                  <AnnouncementOutlined />
+                </ReactionButton>
+              </Tooltip>
+            </Stack>
+          </Stack>
+
+          <Box
+            padding=".7rem"
+            marginTop="2rem"
+            width="100%"
+            className={styles.descriptionWrapper}
+          >
+            <Box variant="body1" sx={{ opacity: 0.7 }}>
+              <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
+                Дата публикации: {createTimestamp}
+              </Typography>
+            </Box>
+            <ShowMoreText
+              className={styles.truncateText}
+              lines={1}
+              more="Читать далее"
+              less="Свернуть"
+              // anchorClass="show-more-less-clickable"
+              expanded={false}
+              keepNewLines={false}
+              // width={800}
+              truncatedEndingComponent={'... '}
+            >
+              {description}
+            </ShowMoreText>
+          </Box>
+
+          <Typography paddingLeft="1rem" marginTop="2rem">
+            Комментарии
+          </Typography>
+
+          <Box
+            className={styles.commentSection}
+            backgroundColor={theme.palette.shadows.main}
+          >
+            {
+              <Box className={styles.userCommentary}>
+                <Avatar />
+                <input
+                  type="text"
+                  className={styles.commentaryInput}
+                  placeholder="Оставьте комментарий"
+                  onChange={handleChangeCommentText}
+                  value={commentText}
+                />
+                <IconButton
+                  disabled={isCommentEmpty()}
+                  onClick={handleSendComment}
+                  size="large"
+                  variant="contained"
+                >
+                  <SendIcon />
+                </IconButton>
               </Box>
+            }
+
+            <Box>
+              {comments?.length > 0 ? (
+                comments?.map((comment, index) => (
+                  // <p style={{color: 'white'}} key={index}>{comment.description}</p>
+                  <VideoCommentary
+                    key={index}
+                    commentData={comment}
+                    currentUserId={userId}
+                    videoOwnerId={authorId}
+                    handleDelete={handleDeleteComment(comment)}
+                  />
+                ))
+              ) : (
+                <Typography variant={'body1'}>
+                  Пока нет комментариев...
+                </Typography>
+              )}
             </Box>
           </Box>
         </Box>
