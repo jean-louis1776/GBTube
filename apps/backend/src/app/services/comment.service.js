@@ -55,7 +55,6 @@ class CommentService {
         if (isGrade === undefined) value.grade = '';
         value.nickName = value.User.nickName;
         delete value.User;
-        delete value.id;
       }));
       return getAllCommentsVideo;
     } catch (e) {
