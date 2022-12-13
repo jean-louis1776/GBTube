@@ -35,10 +35,15 @@ const ConfirmModal = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={closeModal} variant="outlined" color="whiteButton">
+        <Button
+          onClick={closeModal}
+          variant="contained"
+          color="baseBlue"
+          autoFocus
+        >
           {cancelButton}
         </Button>
-        <Button onClick={submitAction} autoFocus variant="contained">
+        <Button onClick={submitAction} variant="outlined" color="whiteButton">
           {submitButton}
         </Button>
       </DialogActions>
