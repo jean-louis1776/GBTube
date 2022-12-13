@@ -21,6 +21,6 @@ router.patch('/dislike', videoValidation.subscribeOrLike, videoController.dislik
 router.patch('/edit', videoValidation.edit, videoController.edit);
 router.delete('/:id', videoValidation.checkId, videoController.remove);
 router.delete('/history/del_one', videoValidation.removeOne, videoController.removeOneFromHistory);
-router.delete('/history/del_all/user_id', videoValidation.checkUserId, videoController.removeAllFromHistory);
+router.delete('/history/del_all/:user_id', videoValidation.checkUserId, videoController.removeAllFromHistory);
 
 export default router;

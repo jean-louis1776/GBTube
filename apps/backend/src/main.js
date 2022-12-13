@@ -27,7 +27,6 @@ app.all('*', (req, res) => res.redirect(`${process.env.CLIENT_URL}/404NotFound`)
 
 app.use(apiErrorMiddleware);         //!!!!!! Эта строка ОБЯЗАТЕЛЬНО должна быть ПОСЛЕДНИМ app.use()
 
-
 (async () => {
   try {
     await runDB();
