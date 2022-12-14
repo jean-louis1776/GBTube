@@ -12,6 +12,7 @@ import { tokenQueries } from '../queries/TokenQueries.js';
 import { imageExtensions } from '../util/videoImageExtensions.js';
 import { removeFile } from '../gRPC/removeFile.grpc.js';
 import { sendMediaToBack } from '../gRPC/sendMediaToBack.grpc.js';
+import { channelQueries } from "../queries/ChannelQueries";
 
 class UserService {
   async getAll() {
@@ -152,10 +153,12 @@ class UserService {
   }
 
   async remove(id) {
+    const videoIdArr = await channelQueries.findAllUserChannelsId(id);
+    await Promise.all(videoIdArr.map(value => value.map(value => removeFile(value))));
     if (!userQueries.deleteUser(id)) {                  // удаляет Users, UserInfos, Tokens
       throw ApiError.InternalServerError('Can\'t remove user');
     }
-    return;
+    return id;
   }
 
   async uploadAvatar(id, files) {
