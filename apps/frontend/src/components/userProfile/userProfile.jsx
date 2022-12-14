@@ -25,7 +25,15 @@ const UserProfile = () => {
     }
 
     fetchData().then((data) => {
-      setUserData(data);
+      if (data.birthDate === '') {
+        setUserData(data);
+      } else {
+        const date = new Date(data.birthDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1) > 10 ? `${date.getMonth() + 1}` : `0${date.getMonth() + 1}`;
+        const day = (date.getDate() + 1) > 10 ? `${date.getDate() + 1}` : `0${date.getDate() + 1}`;
+        setUserData({ ...data, birthDate: `${year}-${month}-${day}`});
+      }
       setIsInfoUpdated(true);
       console.log(data);
     }).catch((err) => {
@@ -69,7 +77,7 @@ const UserProfile = () => {
             <Typography>Псевдоним: {userData.nickName}</Typography>
             <Typography>Имя: {userData.firstName}</Typography>
             <Typography>Фамилия: {userData.lastName}</Typography>
-            <Typography>Дата рождения: {userData.birthDate}</Typography>
+            <Typography>Дата рождения: {`${userData.birthDate}`}</Typography>
             <Typography>Электронная почта: {userData.email}</Typography>
             <Typography>Зарегистрирован: {(new Date(userData.createdTimestamp)).toLocaleString()}</Typography>
             <Typography>Роль: {userData.role}</Typography>
