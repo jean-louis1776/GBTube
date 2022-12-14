@@ -1,9 +1,9 @@
 import Header from '../Header/Header';
 import { Avatar, Box, Button, Tab, Tabs, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { CHANNEL, userChannelTabs } from '@constants/frontend';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserAbout from './UserAbout';
 import PlayListGrid from '../PlayListGrid';
 import VideoGrid from '../VideoGrid/VideoGrid';
@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const UserPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const { idList } = useParams();
   const userId = useSelector(getUserId, shallowEqual);
   const isAuth = useSelector(getAuthStatus, shallowEqual);
@@ -64,6 +65,10 @@ const UserPage = () => {
     setSubscribersCount(subscribersCount);
   };
 
+  const handleEdit = () => {
+    navigate(`/${CHANNEL}/edit/${idList}`);
+  }
+
   return (
     <>
       <Header withNavbar />
@@ -94,7 +99,7 @@ const UserPage = () => {
               </Typography>
             </Box>
             {isOwner() ? (
-              <Button variant="outlined" color="whiteButton">
+              <Button onClick={handleEdit} variant="outlined" color="whiteButton">
                 <EditIcon sx={{ mr: 1 }} />
                 Редактировать
               </Button>

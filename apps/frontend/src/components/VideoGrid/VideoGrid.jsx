@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Paper, Tooltip, Typography } from '@mui/material';
 import { Header, Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 import styles from './VideoGrid.module.scss';
+import EditIcon from '@mui/icons-material/Edit';
 
 const VideoGrid = ({ isParent, getChildren, withHeader }) => {
   const { idList } = useParams();
@@ -97,6 +98,10 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const handleEdit = () => {
+    navigate(`/${PLAYLIST}/edit/${idList}`);
+  }
 
   return (
     <>
@@ -206,6 +211,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
               gap={2}
             >
               {isAuthor() ? (
+                <>
                 <Button
                   variant="contained"
                   color="baseBlue"
@@ -214,6 +220,11 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   <VideoCallIcon sx={{ mr: 1 }} />
                   Добавить видео
                 </Button>
+                <Button onClick={handleEdit} variant="outlined" color="whiteButton">
+                  <EditIcon sx={{ mr: 1 }} />
+                  Редактировать
+                </Button>
+                </>
               ) : (
                 ''
               )}
