@@ -61,7 +61,7 @@ const UserProfile = () => {
               position: 'relative',
             }}
             alt="avatar"
-            src={`/user/avatar/${userId}`}
+            src={`/api/user/avatar/${userId}`}
           />
   {/*        <Stack
             direction="column"
