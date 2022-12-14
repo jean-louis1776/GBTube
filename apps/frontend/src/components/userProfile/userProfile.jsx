@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import { Box, Avatar, Paper, Tabs, Tab, Typography } from '@mui/material';
-import styles from './userProfile.module.scss';
 import { theme } from '../../theme';
 import TabPanel from '../UserPage/TabPanel';
 import Personal from './Personal';
@@ -11,6 +10,8 @@ import UserController from '../../controllers/UsersController';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getUserId } from '../../store/selectors';
 import UploadAvatar from './uploadAvatar';
+
+import styles from './userProfile.module.scss';
 
 const UserProfile = () => {
   const [tabNumber, setTabNumber] = useState(0);
@@ -68,38 +69,65 @@ const UserProfile = () => {
       <Header />
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
         <Paper className={styles.userForm_container}>
-          <Avatar
+          <Box
             sx={{
-              width: 100,
-              height: 100,
-              marginBottom: 3,
-              position: 'relative',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '2rem',
+              pb: '2rem',
             }}
-            alt="avatar"
-            src={`/api/user/avatar/${userId}`}
-          />
-          {/*        <Stack
-            direction="column"
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={4}
-            mt={3}
-            sx={{
-              '& .MuiTextField-root': { m: 1, width: '60ch' },
-            }}
-          >*/}
-          <Typography>Идентификатор: {userData.id}</Typography>
-          <Typography>Псевдоним: {userData.nickName}</Typography>
-          <Typography>Имя: {userData.firstName}</Typography>
-          <Typography>Фамилия: {userData.lastName}</Typography>
-          <Typography>Дата рождения: {`${userData.birthDate}`}</Typography>
-          <Typography>Электронная почта: {userData.email}</Typography>
-          <Typography>
-            Зарегистрирован:{' '}
-            {new Date(userData.createdTimestamp).toLocaleString()}
-          </Typography>
-          <Typography>Роль: {userData.role}</Typography>
-          {/*</Stack>*/}
+          >
+            <Typography
+              variant="h5"
+              fontWeight={600}
+              sx={{ textAlign: 'center' }}
+            >
+              Ваш профиль
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '6rem' }}>
+              <Box>
+                <Avatar
+                  sx={{
+                    width: 150,
+                    height: 150,
+                    position: 'relative',
+                  }}
+                  alt="avatar"
+                  src={`/api/user/avatar/${userId}`}
+                />
+              </Box>
+              <Box>
+                <Typography className={styles.userInfo}>
+                  <span>ID пользователя:</span> {userData.id}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Псевдоним:</span> {userData.nickName}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Имя:</span> {userData.firstName}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Фамилия:</span> {userData.lastName}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Дата рождения:</span>{' '}
+                  {new Date(userData.birthDate).toLocaleDateString()}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Email:</span> {userData.email}
+                </Typography>
+                <Typography className={styles.userInfo}>
+                  <span>Дата регистрации:</span>{' '}
+                  {new Date(userData.createdTimestamp).toLocaleDateString()}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* <Typography>Роль: {userData.role}</Typography> */}
 
           <Box
             sx={{
@@ -121,6 +149,7 @@ const UserProfile = () => {
                     sx={{
                       color: 'white',
                       paddingX: 12,
+                      maxWidth: '250px',
                     }}
                   />
                 ))}
@@ -131,10 +160,12 @@ const UserProfile = () => {
             sx={{
               color: 'white',
               maxWidth: '70vw',
-              margin: '20px auto',
+              height: '100%',
+              margin: '0 auto',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <TabPanel tabNumber={tabNumber} index={0}>

@@ -1,12 +1,13 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
-import styles from '../SignupForm/SignupForm.module.scss';
 import React, { useState } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import UserController from '../../controllers/UsersController';
 
-const Email = ({currentEmail, refreshData, userId}) => {
+import styles from './Email.module.scss';
+
+const Email = ({ currentEmail, refreshData, userId }) => {
   const [handleStatusOk, setHandleStatusOk] = useState(false);
   const schema = yup.object({
     email1: yup
@@ -33,9 +34,9 @@ const Email = ({currentEmail, refreshData, userId}) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({email1}) => {
+  const onSubmit = async ({ email1 }) => {
     try {
-      await UserController.updateUser(userId, { email: email1});
+      await UserController.updateUser(userId, { email: email1 });
       setHandleStatusOk(true);
       reset();
       refreshData();
@@ -44,50 +45,65 @@ const Email = ({currentEmail, refreshData, userId}) => {
       console.log('Failed change email');
       console.log(err);
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.signupForm}>
-      {handleStatusOk ? <Typography>Успешно заменено</Typography> : ''}
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.emailForm}>
+      {handleStatusOk ? (
+        <Typography variant="h6" textAlign="center" mb={2}>
+          Успешно изменено
+        </Typography>
+      ) : (
+        ''
+      )}
       <Stack
         direction="column"
         justifyContent="space-between"
         alignItems="center"
-        spacing={4}
-        mt={3}
-        sx={{ '& .MuiTextField-root': { m: 1, width: '60ch' } }}
+        sx={{
+          width: '100%',
+          mb: 3,
+        }}
       >
-
-        <Box className={styles.signupInputBox}>
-          <input {...register('email1')} type='email' placeholder="Новый E-mail" />
+        <Box className={styles.emailInputBox}>
+          <input
+            {...register('email1')}
+            type="email"
+            placeholder="Новый E-mail"
+            className={styles.emailInput}
+          />
         </Box>
-
         {errors?.email1 && (
           <p className={styles.error}>
             {errors?.email1?.message || 'Err!!!!!'}
           </p>
         )}
 
-        <Box className={styles.signupInputBox}>
-          <input {...register('email2')} type='email' placeholder="Повтор нового E-mail" />
+        <Box className={styles.emailInputBox}>
+          <input
+            {...register('email2')}
+            type="email"
+            placeholder="Повторите новый E-mail"
+            className={styles.emailInput}
+          />
         </Box>
-
         {errors?.email2 && (
           <p className={styles.error}>
             {errors?.email2?.message || 'Err!!!!!'}
           </p>
         )}
-        <Button
-          type="submit"
-          color="baseBlue"
-          variant="contained"
-          disabled={!isValid}
-        >
-          Сохранить
-        </Button>
       </Stack>
+
+      <Button
+        type="submit"
+        color="baseBlue"
+        variant="contained"
+        disabled={!isValid}
+      >
+        Сохранить
+      </Button>
     </form>
   );
-}
+};
 
 export default Email;

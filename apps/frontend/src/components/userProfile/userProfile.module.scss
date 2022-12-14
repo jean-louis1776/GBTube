@@ -3,14 +3,26 @@
   flex-direction: column;
   justify-content: center;
   height: 100vh;
+  padding-top: 64px;
+
   &_container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 25px 50px;
     border-radius: 5px;
-    //background-color: #999999;
     margin: 0 auto;
+    width: 1140px;
+    height: 800px;
+    padding: 40px;
+
+    .userInfo {
+      font-size: 1.1rem;
+      font-weight: 400;
+
+      span {
+        color: #0089eb;
+        font-weight: 600;
+      }
+    }
   }
 }
-

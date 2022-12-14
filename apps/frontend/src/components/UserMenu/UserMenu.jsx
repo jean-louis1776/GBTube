@@ -108,6 +108,7 @@ const UserMenu = () => {
               height: 40,
               bgcolor: isAuth ? 'baseBlue.main' : deepOrange[500],
             }}
+            src={`/api/user/avatar/${userId}`}
           />
         </IconButton>
       </Tooltip>
@@ -151,16 +152,6 @@ const UserMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {isAuth ? (
-          <MenuItem
-            sx={{ color: deepOrange[500] }}
-            onClick={handleUserProfileClick('/userProfile')}
-          >
-            {nickName || 'Где ник?'}
-          </MenuItem>
-        ) : (
-          ''
-        )}
         <MenuItem
           sx={{ py: 2 }}
           onClick={handleUserProfileClick('/userProfile')}
@@ -169,6 +160,7 @@ const UserMenu = () => {
             sx={{
               bgcolor: 'baseBlue.main',
             }}
+            src={`/api/user/avatar/${userId}`}
           />
           <Typography>Мой профиль</Typography>
         </MenuItem>
