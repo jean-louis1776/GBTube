@@ -1,5 +1,3 @@
-import { createSelector } from 'reselect';
-
 export const getNickName = (store) => store.profileReducer.nickName;
 
 export const getUserId = (store) => store.profileReducer.id;

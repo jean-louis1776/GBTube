@@ -12,14 +12,12 @@ import { setHistoryList, setSearchString } from '../../store/slice';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import styles from './History.module.scss';
-import { useNavigate } from 'react-router-dom';
 
 const History = () => {
   const selectedCategory = 'История';
 
   const { profileReducer } = store.getState();
   const currentUserId = Number(profileReducer.id);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const historyList = useSelector(historyListSelector);
 
