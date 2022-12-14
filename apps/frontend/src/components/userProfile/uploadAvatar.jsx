@@ -33,7 +33,12 @@ const UploadAvatar = ({ userId, refreshData }) => {
   return (
     <>
       {handleStatusOk ? (
-        <Typography variant="h6" textAlign="center" mb={2}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          mb={2}
+          sx={{ userSelect: 'none' }}
+        >
           Успешно изменено
         </Typography>
       ) : (

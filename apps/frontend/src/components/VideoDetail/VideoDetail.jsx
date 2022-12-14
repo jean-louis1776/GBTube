@@ -22,7 +22,6 @@ import {
 } from '@mui/icons-material';
 import Loader from '../Loader/Loader';
 import ShowMoreText from 'react-show-more-text';
-import styles from './VideoDetail.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import VideoCommentary from '../VideoCommentary/VideoCommentary';
 import VideoController from '../../controllers/VideoController';
@@ -34,6 +33,8 @@ import { getAuthStatus, getRole, getUserId } from '../../store/selectors';
 import CommentController from '../../controllers/CommentController';
 import SendIcon from '@mui/icons-material/Send';
 import EditItemController from '../../controllers/EditItemController';
+
+import styles from './VideoDetail.module.scss';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -227,7 +228,6 @@ const VideoDetail = () => {
         <Box width={'1080px'}>
           {videoContent}
           <Stack
-            // className={styles.infoWrapper}
             direction="row"
             justifyContent="space-between"
             alignItems="center"
@@ -252,9 +252,13 @@ const VideoDetail = () => {
               md: 'row',
             }}
             justifyContent="space-between"
+            px={2}
           >
             <Stack direction="row" className={styles.channel_info}>
-              <Link to={`/${CHANNEL}/${channelNameLink}`}>
+              <Link
+                to={`/${CHANNEL}/${channelNameLink}`}
+                style={{ marginRight: '2rem' }}
+              >
                 <Box className={styles.channel_sub}>
                   <Avatar sx={{ mr: '10px' }} />
                   <Typography variant="subtitle1" fontWeight="500">
@@ -265,6 +269,7 @@ const VideoDetail = () => {
                   />
                 </Box>
               </Link>
+
               {isMayModerate() ? (
                 ''
               ) : !isSubscribed ? (
@@ -318,7 +323,7 @@ const VideoDetail = () => {
                     {currentReaction === 'dislike' ? (
                       <ThumbDown
                         sx={{
-                          color: theme.palette.coplimentPink.main,
+                          color: theme.palette.baseBlue.main,
                         }}
                       />
                     ) : (
@@ -334,7 +339,7 @@ const VideoDetail = () => {
                   </ReactionButton>
                 </Tooltip>
               </Stack>
-              <Tooltip title="Поделиться">
+              {/* <Tooltip title="Поделиться">
                 <ReactionButton>
                   <ReplyAllOutlined />
                 </ReactionButton>
@@ -348,7 +353,7 @@ const VideoDetail = () => {
                 <ReactionButton>
                   <AnnouncementOutlined />
                 </ReactionButton>
-              </Tooltip>
+              </Tooltip> */}
             </Stack>
           </Stack>
 
@@ -388,7 +393,7 @@ const VideoDetail = () => {
           >
             {
               <Box className={styles.userCommentary}>
-                <Avatar />
+                <Avatar alt="avatar" src={`/api/user/avatar/${userId}`} />
                 <input
                   type="text"
                   className={styles.commentaryInput}
@@ -410,7 +415,6 @@ const VideoDetail = () => {
             <Box>
               {comments?.length > 0 ? (
                 comments?.map((comment, index) => (
-                  // <p style={{color: 'white'}} key={index}>{comment.description}</p>
                   <VideoCommentary
                     key={index}
                     commentData={comment}
@@ -431,14 +435,7 @@ const VideoDetail = () => {
           // py={{ md: 1, xs: 5 }}
           justifyContent="center"
           alignItems="center"
-        >
-          {/*<VideoGrid />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-          {/*<VideoCard videos={videos} direction="column" />*/}
-        </Box>
+        ></Box>
       </Stack>
     </Box>
   );

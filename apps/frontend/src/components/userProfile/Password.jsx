@@ -102,7 +102,12 @@ const Password = ({ userId }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.passForm}>
       {handleStatusOk ? (
-        <Typography variant="h6" textAlign="center" mb={2}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          mb={2}
+          sx={{ userSelect: 'none' }}
+        >
           Успешно изменено
         </Typography>
       ) : (

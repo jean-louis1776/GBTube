@@ -21,6 +21,7 @@ const SearchHistoryForm = () => {
       className={styles.searchBar}
       component="form"
       onSubmit={handleSubmit}
+      sx={{ p: '10px' }}
     >
       <input
         className={styles.searchInput}
@@ -28,15 +29,6 @@ const SearchHistoryForm = () => {
         // value={searchStringSelector}
         onChange={(event) => dispatch(setSearchString(event.target.value))}
       />
-      <Tooltip title="Поиск">
-        <IconButton
-          className={styles.searchBtn}
-          type="submit"
-          sx={{ p: '10px', color: 'baseBlue.main' }}
-        >
-          <SearchIcon onSubmit={handleSubmit} />
-        </IconButton>
-      </Tooltip>
     </Paper>
   );
 };

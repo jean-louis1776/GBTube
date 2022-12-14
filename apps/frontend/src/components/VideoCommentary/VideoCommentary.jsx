@@ -46,9 +46,8 @@ const VideoCommentary = ({
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
-    borderRadius: '40px',
-    backgroundColor: theme.palette.shadows.main,
     transition: '.4s ease',
+    color: theme.palette.whiteButton.main,
     '&:hover': {
       backgroundColor: theme.palette.coplimentPink.main,
       color: theme.palette.coplimentPink.contrastText,
@@ -57,8 +56,6 @@ const VideoCommentary = ({
 
   const CancelButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
-    borderRadius: '40px',
-    backgroundColor: theme.palette.shadows.main,
     transition: '.4s ease',
     '&:hover': {
       backgroundColor: theme.palette.baseBlue.main,
@@ -91,10 +88,7 @@ const VideoCommentary = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await CommentController.like(
-        commentId,
-        userId
-      );
+      const { data: status } = await CommentController.like(commentId, userId);
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -140,10 +134,10 @@ const VideoCommentary = ({
       <Box className={styles.comment}>
         <Box className={styles.avatar}>
           <Link to="/user/:id">
-            <Avatar />
+            <Avatar alt="avatar" src={`/api/user/avatar/${userId}`} />
           </Link>
         </Box>
-        <Box>
+        <Box sx={{ width: '100%' }}>
           <Stack direction="row" alignItems="center">
             <Link to="/user/:id">
               <Typography variant="subtitle1">
@@ -172,7 +166,7 @@ const VideoCommentary = ({
           >
             {commentData.description}
           </ShowMoreText>
-          <Box>
+          <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Нравится">
               <ReactionButton onClick={handleLikeReaction}>
                 {currentReaction === 'like' ? (
@@ -182,7 +176,11 @@ const VideoCommentary = ({
                     }}
                   />
                 ) : (
-                  <ThumbUpOutlined />
+                  <ThumbUpOutlined
+                    sx={{
+                      color: theme.palette.whiteButton.main,
+                    }}
+                  />
                 )}
                 <Typography
                   variant={'body1'}
@@ -198,11 +196,15 @@ const VideoCommentary = ({
                 {currentReaction === 'dislike' ? (
                   <ThumbDown
                     sx={{
-                      color: theme.palette.coplimentPink.main,
+                      color: theme.palette.baseBlue.main,
                     }}
                   />
                 ) : (
-                  <ThumbDownOutlined />
+                  <ThumbDownOutlined
+                    sx={{
+                      color: theme.palette.whiteButton.main,
+                    }}
+                  />
                 )}
                 <Typography
                   variant="body1"
@@ -216,18 +218,24 @@ const VideoCommentary = ({
             <CommentButton onClick={handleToggleVisibleAnswer}>
               Ответить
             </CommentButton>
-            <IconButton
+            <Button
               size="large"
               disabled={isMayRemove()}
               onClick={handleDelete}
-              variant="contained"
+              variant="text"
+              color="baseBlue"
             >
-              <DeleteForeverIcon />
-            </IconButton>
+              Удалить
+            </Button>
           </Box>
           {isVisibleSetAnswer ? (
             <Box sx={{ display: 'flex' }} className={styles.comment_answer}>
-              <input className={styles.comment_inputField} />
+              <input
+                type="text"
+                className={styles.comment_inputField}
+                placeholder="Оставьте ответ"
+              />
+              {/* <input className={styles.comment_inputField} /> */}
               <Box gap="30px" className={styles.comment_btn}>
                 <CommentButton>Отправить</CommentButton>
                 <CancelButton onClick={handleHideAnswer}>Отмена</CancelButton>

@@ -50,7 +50,12 @@ const Email = ({ currentEmail, refreshData, userId }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.emailForm}>
       {handleStatusOk ? (
-        <Typography variant="h6" textAlign="center" mb={2}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          mb={2}
+          sx={{ userSelect: 'none' }}
+        >
           Успешно изменено
         </Typography>
       ) : (

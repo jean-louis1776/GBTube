@@ -97,12 +97,25 @@ const Personal = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: '650px' }}>
       {handleStatusOk ? (
-        <Typography variant="h6" textAlign="center" mb={2}>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          mb={2}
+          sx={{ userSelect: 'none' }}
+        >
           Успешно изменено
         </Typography>
       ) : (
         ''
       )}
+      <Typography
+        variant="body1"
+        textAlign="center"
+        mb={2}
+        sx={{ userSelect: 'none', opacity: 0.6 }}
+      >
+        Чтобы сохранить изменения, пожалуйста, заполните все поля
+      </Typography>
       <Stack
         justifyContent="space-between"
         flexDirection="row"
