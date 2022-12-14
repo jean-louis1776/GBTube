@@ -103,9 +103,10 @@ const UploadVideoDraft = () => {
       navigate(`/${VIDEO}/get_all/${idList}`, { replace: true });
     } catch(err) {
       setIsLoading(false);
-      setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
       if (err.message.includes('409')) {
         setIsExistErr(true);
+      } else {
+        setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
       }
       console.log(err);
     }
