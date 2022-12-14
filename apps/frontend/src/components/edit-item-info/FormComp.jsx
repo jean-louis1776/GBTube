@@ -23,6 +23,7 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
     try {
       await sendData(elemType, dto);
       reset();
+      setIsExistErr(false);
       navigate(-1, { replace: true });
     } catch (err) {
       if (err.message.includes('409')) {
