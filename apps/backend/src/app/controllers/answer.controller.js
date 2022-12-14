@@ -46,7 +46,7 @@ class AnswerController {
   async getAllAnswerOfComment(req, res, next) {
     try {
       // validateError(req);
-      return res.json(await AnswerService.getAllAnswerOfComment(req.params.commentId));
+      return res.json(await AnswerService.getAllAnswerOfComment(req.query));
     } catch (e) {
       next(e);
     }

@@ -1,6 +1,9 @@
 import { Answer } from "../models/Answer";
 import { ApiError } from "../errors/apiError";
 import { AnswerLike } from "../models/AnswerLike";
+import { User } from "../models/Users";
+import { CommentLike } from "../models/CommentLike";
+import { Comment } from "../models/Comment";
 
 class AnswerQueries {
 
@@ -38,7 +41,11 @@ class AnswerQueries {
 
   async getAnswerById(id) {
     try {
-      const gAnswerById = await Answer.findOne({where: {id}, attributes: {exclude: ['updateTimestamp']}});
+      const gAnswerById = await Answer.findOne({
+        where: {id},
+        attributes: {exclude: ['updateTimestamp', 'id', 'commentId']},
+        include: [{model: User, attributes: {exclude: ['id']}}, {model: AnswerLike}],
+      });
       if (gAnswerById) return gAnswerById.toJSON();
       throw ApiError.BadRequest(`Ответ по Id не найден`);
     } catch (e) {
@@ -49,11 +56,23 @@ class AnswerQueries {
 
   async getAllAnswerComment(commentId) {
     try {
-      const gAllAnswerComment = Answer.findAll({where: {commentId}, attributes: {exclude: ['updateTimestamp']}});
-      if (gAllAnswerComment) {
-        return (await gAllAnswerComment).map(value => value.toJSON());
-      }
+      const gAllAnswerComment = await Answer.findAll({
+        where: {commentId},
+        attributes: {exclude: ['updateTimestamp', 'commentId']},
+        include: [{model: User, attributes: {exclude: ['id']}}],
+      });
+      if (gAllAnswerComment) return (gAllAnswerComment).map(value => value.toJSON());
       throw ApiError.NotFound(`Ответа с id ${commentId} не существует`);
+    } catch (e) {
+      console.log(e.message);
+      throw(e);
+    }
+  }
+
+  async getGrade(userId, answerId) {
+    try {
+      const gGrade = await AnswerLike.findOne({where: {userId, answerId}})
+      if (gGrade) return gGrade.liked;
     } catch (e) {
       console.log(e.message);
       throw(e);
