@@ -14,6 +14,7 @@ import GetChildrenController from '../../controllers/GetChildrenController';
 import EditItemController from '../../controllers/EditItemController';
 import VideoController from '../../controllers/VideoController';
 import EditIcon from '@mui/icons-material/Edit';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 
 const UserPage = () => {
   const theme = useTheme();
@@ -27,6 +28,8 @@ const UserPage = () => {
   const [subscribersCount, setSubscribersCount] = useState('0');
   const [tabNumber, setTabNumber] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
   const isOwner = () => {
     const authorId = idList.split('_')[0];
     return authorId === userId;
@@ -184,6 +187,8 @@ const UserPage = () => {
           </TabPanel>
         </Box>
       </Box>
+
+      {/* <ConfirmModal/> */}
     </>
   );
 };
