@@ -45,7 +45,7 @@ class AnswerController {
 
   async getAllAnswerOfComment(req, res, next) {
     try {
-      // validateError(req);
+      validateError(req);
       return res.json(await AnswerService.getAllAnswerOfComment(req.query));
     } catch (e) {
       next(e);
@@ -54,7 +54,7 @@ class AnswerController {
 
   async like(req, res, next) {
     try {
-      // validateError(req);
+      validateError(req);
       const {answerId, userId} = req.body;
       return res.json(await AnswerService.like(answerId, userId));
     } catch (e) {
@@ -64,7 +64,7 @@ class AnswerController {
 
   async dislike(req, res, next) {
     try {
-      // validateError(req);
+      validateError(req);
       const {answerId, userId} = req.body;
       return res.json(await AnswerService.dislike(answerId, userId));
     } catch (e) {
