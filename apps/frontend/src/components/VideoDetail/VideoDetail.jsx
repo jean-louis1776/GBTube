@@ -389,7 +389,12 @@ const VideoDetail = () => {
             </ShowMoreText>
           </Box>
 
-          <Typography paddingLeft="1rem" marginTop="2rem">
+          <Typography
+            variant="h6"
+            paddingLeft="1rem"
+            marginTop="2rem"
+            sx={{ userSelect: 'none' }}
+          >
             Комментарии
           </Typography>
 
