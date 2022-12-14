@@ -1,6 +1,8 @@
 import { ApiError } from '../errors/apiError';
 import { channelQueries } from '../queries/ChannelQueries';
 import { playListQueries } from '../queries/PlayListQueries';
+import { removeFile } from '../gRPC/removeFile.grpc.js';
+import { videoQueries } from "../queries/VideoQueries";
 
 /* eslint-disable no-useless-catch */
 class PlaylistService {
@@ -22,6 +24,8 @@ class PlaylistService {
 
   async remove(id) {
     try {
+      const videoIdArr = await videoQueries.findVideosIdInPlayList(id);
+      await Promise.all(videoIdArr.map(value => removeFile(value)));
       const result = await playListQueries.deletePlayList(id);
       if (!result) {
         throw ApiError.NotFound(`Плейлиста с id ${id} не существует`);
