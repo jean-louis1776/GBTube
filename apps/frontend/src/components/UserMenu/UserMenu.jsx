@@ -14,7 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { deepOrange } from '@mui/material/colors';
-import { userMenu } from '@constants/frontend';
+import { API_URL, userMenu } from '@constants/frontend';
 
 import styles from './UserMenu.module.scss';
 import AuthController from '../../controllers/AuthController';
@@ -108,7 +108,7 @@ const UserMenu = () => {
               height: 40,
               bgcolor: isAuth ? 'baseBlue.main' : deepOrange[500],
             }}
-            src={`/api/user/avatar/${userId}`}
+            src={`${API_URL}/user/avatar/${userId}`}
           />
         </IconButton>
       </Tooltip>
@@ -160,7 +160,7 @@ const UserMenu = () => {
             sx={{
               bgcolor: 'baseBlue.main',
             }}
-            src={`/api/user/avatar/${userId}`}
+            src={`${API_URL}/user/avatar/${userId}`}
           />
           <Typography>Мой профиль</Typography>
         </MenuItem>

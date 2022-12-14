@@ -393,7 +393,7 @@ const VideoDetail = () => {
           >
             {
               <Box className={styles.userCommentary}>
-                <Avatar alt="avatar" src={`/api/user/avatar/${userId}`} />
+                <Avatar alt="avatar" src={`${API_URL}/user/avatar/${userId}`} />
                 <input
                   type="text"
                   className={styles.commentaryInput}

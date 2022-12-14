@@ -26,6 +26,7 @@ import { getUserId } from '../../store/selectors';
 import styles from './VideoCommentary.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
 import CommentAnswers from './CommentAnswers';
+import { API_URL } from '@constants/frontend';
 
 const VideoCommentary = ({
   commentData,
@@ -134,7 +135,7 @@ const VideoCommentary = ({
       <Box className={styles.comment}>
         <Box className={styles.avatar}>
           <Link to="/user/:id">
-            <Avatar alt="avatar" src={`/api/user/avatar/${userId}`} />
+            <Avatar alt="avatar" src={`${API_URL}/user/avatar/${userId}`} />
           </Link>
         </Box>
         <Box sx={{ width: '100%' }}>

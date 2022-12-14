@@ -10,6 +10,7 @@ import UserController from '../../controllers/UsersController';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getUserId } from '../../store/selectors';
 import UploadAvatar from './uploadAvatar';
+import { API_URL } from '@constants/frontend';
 
 import styles from './userProfile.module.scss';
 
@@ -96,7 +97,7 @@ const UserProfile = () => {
                     position: 'relative',
                   }}
                   alt="avatar"
-                  src={`/api/user/avatar/${userId}`}
+                  src={`${API_URL}/user/avatar/${userId}`}
                 />
               </Box>
               <Box>

@@ -67,7 +67,7 @@ const UserPage = () => {
 
   const handleEdit = () => {
     navigate(`/${CHANNEL}/edit/${idList}`);
-  }
+  };
 
   return (
     <>
@@ -99,7 +99,11 @@ const UserPage = () => {
               </Typography>
             </Box>
             {isOwner() ? (
-              <Button onClick={handleEdit} variant="outlined" color="whiteButton">
+              <Button
+                onClick={handleEdit}
+                variant="outlined"
+                color="whiteButton"
+              >
                 <EditIcon sx={{ mr: 1 }} />
                 Редактировать
               </Button>

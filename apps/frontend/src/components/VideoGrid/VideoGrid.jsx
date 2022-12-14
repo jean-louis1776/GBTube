@@ -3,7 +3,7 @@ import { Box, Button, Paper, Tooltip, Typography } from '@mui/material';
 import { Header, Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { useNavigate, useParams } from 'react-router-dom';
-import { PLAYLIST, VIDEO } from '@constants/frontend';
+import { CHANNEL, PLAYLIST, VIDEO } from '@constants/frontend';
 import EditItemController from '../../controllers/EditItemController';
 import VideoCard from '../VideoCard/VideoCard';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -83,10 +83,9 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
   const handleDeletePlaylist = async () => {
     try {
       await EditItemController.deleteItem(PLAYLIST, playListId);
-      navigate(
-        `/${PLAYLIST}/get_all/${idList.split('_').slice(0, -1).join('_')}`,
-        { replace: true }
-      );
+      navigate(`/${CHANNEL}/${idList.split('_').slice(0, -1).join('_')}`, {
+        replace: true,
+      });
     } catch (err) {
       console.log('delete playlist fail', err);
     }
@@ -101,7 +100,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
 
   const handleEdit = () => {
     navigate(`/${PLAYLIST}/edit/${idList}`);
-  }
+  };
 
   return (
     <>
@@ -212,18 +211,22 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
             >
               {isAuthor() ? (
                 <>
-                <Button
-                  variant="contained"
-                  color="baseBlue"
-                  onClick={handleCreateChild}
-                >
-                  <VideoCallIcon sx={{ mr: 1 }} />
-                  Добавить видео
-                </Button>
-                <Button onClick={handleEdit} variant="outlined" color="whiteButton">
-                  <EditIcon sx={{ mr: 1 }} />
-                  Редактировать
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="baseBlue"
+                    onClick={handleCreateChild}
+                  >
+                    <VideoCallIcon sx={{ mr: 1 }} />
+                    Добавить видео
+                  </Button>
+                  <Button
+                    onClick={handleEdit}
+                    variant="outlined"
+                    color="whiteButton"
+                  >
+                    <EditIcon sx={{ mr: 1 }} />
+                    Редактировать
+                  </Button>
                 </>
               ) : (
                 ''

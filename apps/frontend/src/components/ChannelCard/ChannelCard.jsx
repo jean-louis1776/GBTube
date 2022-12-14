@@ -28,36 +28,6 @@ const ChannelCard = ({ idList }) => {
   }, []);
 
   return (
-    // <Box className={styles.videoCard}>
-    //   <Link to={`/${CHANNEL}/${idList}`} className={styles.channelLink}>
-    //     <Box className={styles.videoInfo}>
-    //       <Box className={styles.videoInfoTitle}>
-    //         {channelData?.title?.length > 50 ? (
-    //           <Tooltip title={channelData.title}>
-    //             <Typography className={styles.title}>
-    //               {channelData.title.slice(0, 50) + '...'}
-    //             </Typography>
-    //           </Tooltip>
-    //         ) : (
-    //           <Typography className={styles.title}>
-    //             {channelData.title}
-    //           </Typography>
-    //         )}
-    //       </Box>
-
-    //       <Box className={styles.videoInfoView}>
-    //         {Object.hasOwn(channelData, 'title') ? (
-    //           <Typography variant="subtitle2" className={styles.channelName}>
-    //             <VerifiedIcon sx={{ mr: 1, fontSize: '1rem' }} />
-    //             {channelData.title}
-    //           </Typography>
-    //         ) : (
-    //           ''
-    //         )}
-    //       </Box>
-    //     </Box>
-    //   </Link>
-    // </Box>
     <Box className={styles.ChannelWrapper}>
       <Link to={`/${CHANNEL}/${idList}`} className={styles.ChannelLink}>
         <Avatar />
