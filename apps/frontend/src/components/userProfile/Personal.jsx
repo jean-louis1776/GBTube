@@ -5,6 +5,8 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import React, { useState } from 'react';
 import styles from '../SignupForm/SignupForm.module.scss';
 import UserController from '../../controllers/UsersController';
+import { useDispatch } from 'react-redux';
+import { setNickName } from '../../store/slice';
 
 const Personal = (props) => {
   const {userId,
@@ -13,6 +15,7 @@ const Personal = (props) => {
     currentNickName,
     currentBirthDate,
     refreshData} = props;
+  const dispatch = useDispatch();
   const [handleStatusOk, setHandleStatusOk] = useState(false);
   const schema = yup.object({
     nickName: yup
@@ -68,6 +71,7 @@ const Personal = (props) => {
         dto.birthDate = birthDate;
       }
       await UserController.updateUser(userId, dto);
+      dispatch(setNickName(nickName));
       setHandleStatusOk(true);
       refreshData();
     } catch (err) {
