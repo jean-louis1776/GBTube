@@ -63,13 +63,8 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
 
           <div className={styles.error}>
             {errors[TITLE] && <p>{errors[TITLE].message || 'Err!!!!!'}</p>}
+            {isExistErr ? <p>Это название уже занято</p> : ''}
           </div>
-
-          {isExistErr ? (
-            <p className={styles.error}>Это название уже занято.</p>
-          ) : (
-            ''
-          )}
         </Box>
 
         <Box className={styles.inputBox}>

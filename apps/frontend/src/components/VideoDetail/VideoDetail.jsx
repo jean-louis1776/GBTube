@@ -299,7 +299,10 @@ const VideoDetail = () => {
             <Stack direction="row" gap="10px">
               <Stack direction="row" gap="10px" className={styles.reactionsBtn}>
                 <Tooltip title="Нравится">
-                  <ReactionButton onClick={handleLikeReaction}>
+                  <ReactionButton
+                    onClick={handleLikeReaction}
+                    disabled={!isAuth}
+                  >
                     {currentReaction === 'like' ? (
                       <ThumbUp
                         sx={{
@@ -319,7 +322,10 @@ const VideoDetail = () => {
                   </ReactionButton>
                 </Tooltip>
                 <Tooltip title="Не нравится">
-                  <ReactionButton onClick={handleDislikeReaction}>
+                  <ReactionButton
+                    onClick={handleDislikeReaction}
+                    disabled={!isAuth}
+                  >
                     {currentReaction === 'dislike' ? (
                       <ThumbDown
                         sx={{
