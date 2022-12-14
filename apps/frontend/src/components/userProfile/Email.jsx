@@ -35,7 +35,7 @@ const Email = ({currentEmail, refreshData, userId}) => {
 
   const onSubmit = async ({email1}) => {
     try {
-      await UserController.changeEmail(userId, email1);
+      await UserController.updateUser(userId, { email: email1});
       setHandleStatusOk(true);
       reset();
       refreshData();
