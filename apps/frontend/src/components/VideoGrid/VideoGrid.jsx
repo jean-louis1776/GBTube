@@ -156,7 +156,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   <Typography
                     variant="h6"
                     fontWeight={300}
-                    sx={{ width: '100%' }}
+                    sx={{ wordBreak: 'break-word' }}
                   >
                     {title.slice(0, 60) + '...'}
                   </Typography>
@@ -170,13 +170,18 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   >
                     Название плейлиста:
                   </Typography>
-                  <Typography marginBottom={2} variant="h6" fontWeight={300}>
+                  <Typography
+                    marginBottom={2}
+                    variant="h6"
+                    fontWeight={300}
+                    sx={{ wordBreak: 'break-word' }}
+                  >
                     {title}
                   </Typography>
                 </>
               )}
               {description.length > 100 ? (
-                <Tooltip title={description}>
+                <>
                   <Typography
                     variant={'h5'}
                     fontWeight={600}
@@ -184,10 +189,14 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   >
                     Описание:
                   </Typography>
-                  <Typography variant="h6" fontWeight={300}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={300}
+                    sx={{ wordBreak: 'break-word' }}
+                  >
                     {description.slice(0, 100) + '...'}
                   </Typography>
-                </Tooltip>
+                </>
               ) : (
                 <>
                   <Typography
@@ -197,7 +206,11 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   >
                     Описание:
                   </Typography>
-                  <Typography variant="h6" fontWeight={300}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={300}
+                    sx={{ wordBreak: 'break-word' }}
+                  >
                     {description}
                   </Typography>
                 </>
