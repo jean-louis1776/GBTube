@@ -1,6 +1,6 @@
-import { Button, Typography } from '@mui/material';
+import { Avatar, Button, Typography } from '@mui/material';
 import UserController from '../../controllers/UsersController';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const UploadAvatar = ({userId, refreshData}) => {
   const [image, setImage] = useState(null);
@@ -12,7 +12,8 @@ const UploadAvatar = ({userId, refreshData}) => {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    const formData = new FormData(evt.target);
+    const formData = new FormData();
+    formData.append('files', image);
     try {
       await UserController.addAvatar(userId, formData);
       setHandleStatusOk(true);
@@ -33,8 +34,16 @@ const UploadAvatar = ({userId, refreshData}) => {
         <Button disabled={!image} type='submit' >Отправить</Button>
       </form>
       {handleStatusOk ? <Typography>Успешно загружено</Typography> : ''}
-      {/*Почему-то ни как не хочет рисовать выбранное изображение*/}
-      {image ? <img src={image} alt='avatar-new'/> : ''}
+      {image ? <Avatar
+        sx={{
+          width: 100,
+          height: 100,
+          marginBottom: 3,
+          position: 'relative',
+        }}
+        alt="avatar"
+        src={URL.createObjectURL(image)}
+      /> : ''}
     </>
   );
 }
