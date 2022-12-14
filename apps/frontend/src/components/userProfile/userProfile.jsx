@@ -1,121 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../Header/Header';
-import {
-  TextField,
-  Box,
-  Avatar,
-  Stack,
-  Button,
-  Paper,
-  IconButton,
-} from '@mui/material';
-import { styled, useTheme } from '@mui/material/styles';
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { useDispatch, useSelector } from 'react-redux';
-// import {
-//   clearUser,
-//   userDataUpdate,
-// } from '../../features/userProfile/userProfileSlice';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { userProfileFormSchema } from './validation';
-// import { getSelector } from '../../store/getSelector';
-import { PhotoCamera } from '@mui/icons-material';
-// import store from '../../store/store';
-
+import { Box, Avatar, Paper, Tabs, Tab, Typography } from '@mui/material';
 import styles from './userProfile.module.scss';
+import { theme } from '../../theme';
+import TabPanel from '../UserPage/TabPanel';
+import Personal from './Personal';
+import Email from './Email';
+import Password from './Password';
+import UserController from '../../controllers/UsersController';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getUserId } from '../../store/selectors';
+import UploadAvatar from './uploadAvatar';
 
 const UserProfile = () => {
-  const theme = useTheme();
+  const [tabNumber, setTabNumber] = useState(0);
+  const tabsNameList = ['Персональная информация', 'Электронная почта', 'Пароль', 'Аватар'];
+  const userId = useSelector(getUserId, shallowEqual);
+  const [userData, setUserData] = useState({});
+  const [isInfoUpdated, setIsInfoUpdated] = useState(false);
 
-  const ColorButton = styled(IconButton)(({ theme }) => ({
-    color: 'transparent',
-    backgroundColor: theme.palette.shadows.main,
-    opacity: 0.7,
-    transition: '.3s ease',
-    '&:hover': {
-      color: theme.palette.baseBlue.main,
-    },
-  }));
+  const refreshData = () => {
+    const fetchData = async () => {
+      return UserController.getUserById(userId);
+    }
 
-  const AvatarUpload = styled(PhotoCamera)(({ theme }) => ({
-    width: 50,
-    height: 50,
-    color: 'transparent',
-    position: 'absolute',
-    top: '-600%',
-    backgroundColor: 'transparent',
-    transition: '.3s ease',
-    '&:hover': {
-      color: theme.palette.baseBlue.main,
-    },
-  }));
+    fetchData().then((data) => {
+      if (data.birthDate === '') {
+        setUserData(data);
+      } else {
+        const date = new Date(data.birthDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1) > 10 ? `${date.getMonth() + 1}` : `0${date.getMonth() + 1}`;
+        const day = (date.getDate() + 1) > 10 ? `${date.getDate() + 1}` : `0${date.getDate() + 1}`;
+        setUserData({ ...data, birthDate: `${year}-${month}-${day}`});
+      }
+      setIsInfoUpdated(true);
+      console.log(data);
+    }).catch((err) => {
+      console.log('Fetch user data failed');
+      console.log(err);
+    });
+  }
 
-  const FormField = styled(TextField)(({ theme }) => ({
-    backgroundColor: theme.palette.baseBlue.contrastText,
-    '&:active': {
-      borderColor: theme.palette.coplimentPink.main,
-    },
-  }));
 
-  // const user = useSelector(getSelector('userProfile', 'user'));
-  // console.log(user);
-
-  const {
-    handleSubmit,
-    control,
-    register,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    // defaultValues: user,
-    resolver: yupResolver(userProfileFormSchema),
-  });
-
-  const [emailDisabled, setEmailDisabled] = useState(true);
-
-  // const currentUserState = store.getState().userProfile;
-  // const [currentState, setCurrentState] = useState(currentUserState);
-  // console.log('currentUserState:', currentUserState);
-
-  const resolveMailEdit = () => {
-    setEmailDisabled((prevDisabled) => !prevDisabled);
+  useEffect(refreshData, []);
+  const handleChangeTab = (event, newValue) => {
+    setTabNumber(newValue);
   };
-
-  // const [isEqualUserData, setIsEqualUserData] = useState(true);
-  // const compareUserData = () => {
-  //   setIsEqualUserData((prevCompare) => !prevCompare);
-  // };
-
-  // const dispatch = useDispatch();
-
-  const onChangeDate = (date) => {
-    setValue('birthDate', date);
-  };
-
-  const onSubmitForm = handleSubmit((updatingUser) => {
-    // dispatch(userDataUpdate(updatingUser));
-  });
-
-  // useEffect(() => {
-  //   return () => {
-  //     dispatch(clearUser());
-  //   };
-  // }, [dispatch]);
-
-  useEffect(() => {
-    console.log('errors', errors);
-  }, [errors]);
 
   return (
     <>
-      {/* <Helmet>
-        <title>GeekTube | Мой профиль</title>
-      </Helmet> */}
-
       <Header />
-
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
         <Paper className={styles.userForm_container}>
           <Avatar
@@ -126,69 +61,88 @@ const UserProfile = () => {
               position: 'relative',
             }}
             alt="avatar"
-            src=""
+            src={`/api/user/avatar/${userId}`}
           />
-          <ColorButton
-            color="primary"
-            aria-label="upload picture"
-            component="label"
-          >
-            <input hidden accept="image/*" type="file" />
-            <AvatarUpload />
-          </ColorButton>
-          <Box
-            component="form"
-            sx={{
-              '& .MuiTextField-root': { m: 1, width: '60ch' },
-            }}
-            autoComplete="off"
-            // onChange={compareUserData}
-          >
-            <Stack>
-              <FormField label="Имя" {...register('firstName')} />
-              <FormField label="Фамилия" {...register('lastName')} />
-              <FormField label="Никнейм" {...register('nickName')} />
-              <Controller
-                name={'birthDate'}
-                control={control}
-                render={({ field }) => (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DesktopDatePicker
-                      {...field}
-                      onChange={onChangeDate}
-                      label="Дата рождения"
-                      inputFormat="DD.MM.YYYY"
-                      renderInput={(params) => <FormField {...params} />}
-                    />
-                  </LocalizationProvider>
-                )}
-              />
-              <FormField
-                {...register('email')}
-                disabled={emailDisabled}
-                // defaultValue="usermail@mail.ru"
-                label="e-mail"
-              />
-            </Stack>
-          </Box>
-          <Stack
-            direction="row"
+  {/*        <Stack
+            direction="column"
             justifyContent="space-between"
             alignItems="center"
             spacing={4}
             mt={3}
-          >
-            <Button onClick={resolveMailEdit} variant="contained">
-              {emailDisabled ? 'Изменить почту' : 'Подтвердить'}
-            </Button>
-            <Button
-              // disabled={isEqualUserData}
-              onClick={onSubmitForm}
-              variant="contained"
+            sx={{
+              '& .MuiTextField-root': { m: 1, width: '60ch' },
+            }}
+          >*/}
+            <Typography>Идентификатор: {userData.id}</Typography>
+            <Typography>Псевдоним: {userData.nickName}</Typography>
+            <Typography>Имя: {userData.firstName}</Typography>
+            <Typography>Фамилия: {userData.lastName}</Typography>
+            <Typography>Дата рождения: {`${userData.birthDate}`}</Typography>
+            <Typography>Электронная почта: {userData.email}</Typography>
+            <Typography>Зарегистрирован: {(new Date(userData.createdTimestamp)).toLocaleString()}</Typography>
+            <Typography>Роль: {userData.role}</Typography>
+          {/*</Stack>*/}
+
+          <Box
+          sx={{
+            width: '100%',
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{ borderBottom: 1, borderColor: theme.palette.shadows.main }}
             >
-              Сохранить данные
-            </Button>
-          </Stack>
+              <Tabs value={tabNumber} onChange={handleChangeTab}>
+                {tabsNameList.map((tab, index) => (
+                  <Tab
+                    key={index}
+                    label={tab}
+                    sx={{
+                      color: 'white',
+                      paddingX: 12,
+                    }}
+                  />
+                ))}
+              </Tabs>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              color: 'white',
+              maxWidth: '70vw',
+              margin: '20px auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <TabPanel tabNumber={tabNumber} index={0}>
+              {isInfoUpdated ? <Personal
+                currentNickName={userData.nickName}
+                currentFirstName={userData.firstName}
+                currentLastName={userData.lastName}
+                currentBirthDate={userData.birthDate}
+                refreshData={refreshData}
+                userId={userId}
+              /> : ''}
+            </TabPanel>
+            <TabPanel tabNumber={tabNumber} index={1}>
+              {isInfoUpdated ? <Email
+                currentEmail={userData.email}
+                refreshData={refreshData}
+                userId={userId}
+              /> : ''}
+            </TabPanel>
+            <TabPanel tabNumber={tabNumber} index={2}>
+              {isInfoUpdated ? <Password userId={userId} /> : ''}
+            </TabPanel>
+            <TabPanel tabNumber={tabNumber} index={3}>
+              {isInfoUpdated ? <UploadAvatar refreshData={refreshData} userId={userId} /> : ''}
+            </TabPanel>
+          </Box>
         </Paper>
       </Box>
     </>

@@ -49,11 +49,11 @@ export const userMenu = [
     icon: <LiveTvIcon color="baseBlue" />,
     link: '/channel',
   },
-  {
-    name: 'Настройки',
-    icon: <SettingsIcon color="baseBlue" />,
-    link: '/settings',
-  },
+  // {
+  //   name: 'Настройки',
+  //   icon: <SettingsIcon color="baseBlue" />,
+  //   link: '/settings',
+  // },
   {
     name: 'Выйти',
     icon: <LogoutIcon color="baseBlue" />,

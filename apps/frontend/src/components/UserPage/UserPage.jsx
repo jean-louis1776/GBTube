@@ -31,16 +31,6 @@ const UserPage = () => {
     return authorId === userId;
   };
 
-  // const SubscribeButton = styled(Button)(({ theme }) => ({
-  //   borderRadius: '40px',
-  //   padding: '7px 15px',
-  //   transition: '.3s ease',
-  //   '&:hover': {
-  //     backgroundColor: theme.palette.shadows.main,
-  //     color: theme.palette.coplimentPink.contrastText,
-  //   },
-  // }));
-
   useEffect(() => {
     const fetchChannelData = async () => {
       return await GetChildrenController.getItemById(
@@ -124,8 +114,11 @@ const UserPage = () => {
                 disabled={!isAuth}
                 onClick={handleSubscribe}
                 color="whiteButton"
+                sx={{
+                  backgroundColor: theme.palette.shadows.main,
+                }}
               >
-                Отписаться
+                Вы подписаны
               </Button>
             )}
           </Box>

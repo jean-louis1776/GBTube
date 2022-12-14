@@ -77,7 +77,7 @@ const VideoCommentary = ({
 
   const isMayRemove = () => {
     return !(
-      currentUserId === String(userId) ||
+      currentUserId === String(commentData.userId) ||
       currentUserId === videoOwnerId
     );
   };

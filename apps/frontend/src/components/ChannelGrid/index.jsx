@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {Box, Button, Stack, Tooltip, Typography} from '@mui/material';
+import { Box, Button, Stack, Tooltip, Typography } from '@mui/material';
 import { Loader } from '../';
 import GetChildrenController from '../../controllers/GetChildrenController';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CHANNEL } from '@constants/frontend';
+import { CHANNEL, searchErrorLogo } from '@constants/frontend';
 import { ContentChannel } from './ContentChannel';
 import { useTheme } from '@mui/material/styles';
 import Header from '../Header/Header';
@@ -26,10 +26,39 @@ const ChannelGrid = () => {
         authorId,
         CHANNEL
       );
-      // console.log(children);
       if (children.length === 0) {
         setContent(
-          <Typography variant='h6'>Не создано ни одного Канала </Typography>
+          <Box
+            sx={{
+              width: '100%',
+              mt: '2rem',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                mt: '5rem',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={searchErrorLogo}
+                alt="No results"
+                style={{ width: '500px' }}
+              />
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 600, fontSize: '1.7rem', userSelect: 'none' }}
+              >
+                К сожалению, у вас не создано ни одного канала
+              </Typography>
+            </Box>
+          </Box>
         );
       } else {
         setContent(<ContentChannel children={children} />);
@@ -40,7 +69,9 @@ const ChannelGrid = () => {
       setContent('');
       console.log(`Load ${CHANNEL} fail in ChannelGrid`);
     });
-  }, []);
+
+    document.title = `Каналы ${authorNick} | GeekTube`;
+  }, [authorNick]);
 
   const handleCreateChild = () => {
     navigate(`/${CHANNEL}/create/${userId}`);
@@ -49,51 +80,81 @@ const ChannelGrid = () => {
   const isAuthor = () => authorId === userId;
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Stack
+    <>
+      <Header />
+
+      <Box
         sx={{
-          flexDirection: 'row',
-          width: '72vw',
-          margin: '20px auto',
-          justifyContent: 'space-around',
-          alignItems: 'center',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          p: '80px 32px 16px',
+          background:
+            'linear-gradient(0deg, rgba(31, 31, 31, 0.36) 40%, rgba(25, 118, 210, 0.17) 100%)',
         }}
       >
-        <Box maxWidth={'25vw'}>
-          {authorNick.length > 60 ? (
-            <Tooltip title={authorNick}>
-              <Typography variant={'h6'} color={'white'} marginBottom={2}>
-                Каналы пользователя:
-                <Typography variant={'body1'}>
+        <Stack>
+          <Box>
+            {authorNick.length > 60 ? (
+              <Tooltip title={authorNick}>
+                <Typography
+                  variant="h4"
+                  fontWeight={600}
+                  sx={{ userSelect: 'none' }}
+                >
+                  Каналы пользователя:
+                </Typography>
+                <Typography
+                  variant="h6"
+                  marginBottom={2}
+                  sx={{ userSelect: 'none' }}
+                >
                   {authorNick.slice(0, 60) + '...'}
                 </Typography>
-              </Typography>
-            </Tooltip>
+              </Tooltip>
+            ) : (
+              <>
+                <Typography
+                  variant="h4"
+                  fontWeight={600}
+                  sx={{ userSelect: 'none' }}
+                >
+                  Каналы пользователя:
+                </Typography>
+                <Typography
+                  variant="h6"
+                  marginBottom={2}
+                  sx={{ userSelect: 'none' }}
+                >
+                  {authorNick}
+                </Typography>
+              </>
+            )}
+          </Box>
+        </Stack>
+
+        <Box
+          sx={{
+            margin: '0 auto',
+          }}
+        >
+          {isAuthor() ? (
+            <Button
+              variant="contained"
+              color="baseBlue"
+              onClick={handleCreateChild}
+            >
+              Создать канал
+            </Button>
           ) : (
-            <Typography variant={'h6'} color={'white'} marginBottom={2}>
-              Каналы пользователя:
-              <Typography variant={'body1'}>{authorNick}</Typography>
-            </Typography>
+            ''
           )}
         </Box>
-        {isAuthor() ?
-        <Button
-          variant='contained'
-          color='baseBlue'
-          onClick={handleCreateChild}
-        >
-          Создать {CHANNEL}
-        </Button> : ''}
-      </Stack>
-      {content}
-      {/*<Link to={`/${childrenType}/create`}>Создать {childrenType}</Link>*/}
-    </Box>
+
+        {content}
+      </Box>
+    </>
   );
 };
 

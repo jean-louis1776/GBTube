@@ -45,7 +45,11 @@ const VideoFeed = () => {
                   />
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: 600, fontSize: '1.7rem' }}
+                    sx={{
+                      fontWeight: 600,
+                      fontSize: '1.7rem',
+                      userSelect: 'none',
+                    }}
                   >
                     К сожалению, на сервере нет ни одного видео
                   </Typography>
