@@ -13,7 +13,8 @@ export default class UserController {
     return (await $authApi.get(`/user/find_min/${id}`)).data;
   }
 
-  static async updateUser(userId, dto) {
+  static async updateUser(userId, userData) {
+    const dto = {updatingObject: userData};
     const url = `/user/edit/${userId}`;
     console.log(url);
     console.log(dto);
@@ -27,11 +28,6 @@ export default class UserController {
   static async changePassword(userId, oldPassword, newPassword) {
     const dto = { id: userId, oldPassword, newPassword };
     await $authApi.patch(`/user/change_password`, dto);
-  }
-
-  static async changeEmail(userId, newEmail) {
-    const dto = {userId, newEmail};
-    await $authApi.patch(`/user/change_email`, dto);
   }
 
   static async addAvatar(userId, formData) {
