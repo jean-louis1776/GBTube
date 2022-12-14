@@ -13,8 +13,8 @@ const UploadAvatar = ({userId, refreshData}) => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     const formData = new FormData(evt.target);
-    // const formData = new FormData(evt.target);
     // formData.append('files', image);
+    console.dir(formData);
     try {
       await UserController.addAvatar(userId, formData);
       setHandleStatusOk(true);
@@ -29,7 +29,7 @@ const UploadAvatar = ({userId, refreshData}) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input onChange={imgChange} type='file'
+        <input name="image" onChange={imgChange} type='file'
                accept="image/*,.jpg,.jpeg,.png,.apng,.webp,.gif,.avif,.svg,.ico,.bmp"
         />
         <Button disabled={!image} type='submit' >Отправить</Button>
