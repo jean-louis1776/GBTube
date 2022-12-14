@@ -121,6 +121,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
               flexDirection: 'column',
               justifyContent: 'space-around',
               minHeight: '86vh',
+              width: '350px',
               position: 'fixed',
               left: '64px',
               top: 'auto',
@@ -152,7 +153,11 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   >
                     Название плейлиста:
                   </Typography>
-                  <Typography variant="h6" fontWeight={300}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={300}
+                    sx={{ width: '100%' }}
+                  >
                     {title.slice(0, 60) + '...'}
                   </Typography>
                 </Tooltip>

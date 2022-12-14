@@ -80,7 +80,7 @@ const VideoDetail = () => {
     setVideoContent(<Loader />);
     const fetchVideoData = async () => {
       const videoInfo = await VideoController.getVideoInfo(videoId, userId);
-      document.title = videoInfo.title;
+      document.title = `${videoInfo.title} | GeekTube`;
       setCategory(videoInfo.category);
       setChannelName(videoInfo.channelName);
       setCreateTimestamp(
