@@ -8,7 +8,7 @@ router.post('/create', answerValidation.create, answerController.create);
 router.patch('/edit', answerValidation.edit, answerController.edit);
 router.delete('/:id', answerValidation.checkId, answerController.remove);
 router.get('/get_one/:id', answerValidation.checkId, answerController.getOne);
-router.get('/get_all/:commentId', answerValidation.getAllAnswerComment, answerController.getAllAnswerOfComment);
+router.get('/get_all', answerValidation.getAllAnswerComment, answerController.getAllAnswerOfComment);
 router.patch('/like', answerValidation.subscribeOrLike, answerController.like);
 router.patch('/dislike', answerValidation.subscribeOrLike, answerController.dislike);
 

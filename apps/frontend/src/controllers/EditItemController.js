@@ -26,12 +26,14 @@ export default class EditItemController {
   }
   /**
    * @param {'channel' | 'playlist'} elemType
-   * @param {{idList: string, title: string, description: string}} dto
+   * @param {{idList: string, title: string, description: string}} data
    * @returns {Promise<AxiosResponse<any>>}
    */
-  static async updateItem(elemType, dto) {
+  static async updateItem(elemType, data) {
+    const { idList, title, description } = data;
     const url = `/${elemType}/edit`;
     console.log(url);
+    const dto = { idList, updatingObject: {title, description} };
     console.log(dto);
     return await $authApi.patch(url, dto, {
       headers: {
