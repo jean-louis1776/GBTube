@@ -3,11 +3,13 @@ import { Button, Stack, Typography } from '@mui/material';
 import { CHANNEL, DESCRIPTION, TITLE } from '@constants/frontend';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
 
   let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
   const navigate = useNavigate();
+  const [isExistErr, setIsExistErr] = useState(false);
 
   const {
     register,
@@ -22,8 +24,12 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
       await sendData(elemType, dto);
       reset();
       navigate(-1, { replace: true });
-    } catch {
+    } catch(err) {
+      if (err.message.includes('409')) {
+        setIsExistErr(true);
+      }
       console.log(`Create ${elemType} failed`);
+      console.log(err);
     }
   };
 
@@ -57,6 +63,10 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
             autoFocus
           />
         </label>
+        {isExistErr ? <p className={styles.error}>
+          Это название уже занято.
+        </p> : ''
+        }
         <label className={styles.copyright}>
           Описание {elemName}
           <br />

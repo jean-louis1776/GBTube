@@ -43,6 +43,14 @@
         }
       }
 
+      .error {
+        margin: 3px 0;
+        color: #fd5757;
+        user-select: none;
+        font-size: 0.8rem;
+        hyphens: auto;
+      }
+
       .redirectText {
         margin: 25px 0 0;
       }
