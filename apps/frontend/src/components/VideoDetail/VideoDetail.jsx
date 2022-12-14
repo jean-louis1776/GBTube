@@ -61,6 +61,7 @@ const VideoDetail = () => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [currentReaction, setCurrentReaction] = useState('');
+  const [commentId, setCommentId] = useState('');
 
   const channelNameLink = idList.split('_').slice(0, 2).join('_');
 
@@ -149,18 +150,27 @@ const VideoDetail = () => {
   const handleSendComment = async () => {
     console.log('Send comment');
     try {
-      await CommentController.send(idList, userId, commentText.trim());
-      setCommentText('');
+      const { data: commentId } = await CommentController.send(idList, userId, commentText.trim());
+      setCommentId(commentId)
       const comments = await CommentController.getAllItemsByVideo(
         videoId,
         userId
       );
       setComments(comments);
+      setCommentText('');
     } catch (err) {
       console.log('Send comment error');
       console.log(err);
     }
   };
+
+  const enterHandler = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      event.stopPropagation();
+      handleSendComment();
+    }
+  }
 
   const isCommentEmpty = () => commentText.length === 0;
 
@@ -424,6 +434,7 @@ const VideoDetail = () => {
                   placeholder="Оставьте комментарий"
                   onChange={handleChangeCommentText}
                   value={commentText}
+                  onKeyDown={enterHandler}
                   disabled={!isAuth}
                 />
                 <IconButton
@@ -445,6 +456,7 @@ const VideoDetail = () => {
                     commentData={comment}
                     currentUserId={userId}
                     videoOwnerId={authorId}
+                    commentId={commentId}
                     handleDelete={handleDeleteComment(comment)}
                   />
                 ))

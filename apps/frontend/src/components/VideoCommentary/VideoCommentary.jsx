@@ -35,6 +35,7 @@ const VideoCommentary = ({
   currentUserId,
   videoOwnerId,
   handleDelete,
+  commentId,
 }) => {
   const [isVisibleSetAnswer, setIsVisibleSetAnswer] = useState(false);
   const theme = useTheme();
@@ -46,13 +47,14 @@ const VideoCommentary = ({
   const [answerText, setAnswerText] = useState('');
   const [answers, setAnswers] = useState([]);
   const [isShownAllAnswers, setIsShownAllAnswers] = useState(false);
-  const commentId = useMemo(() => {
+  const [ answerId, setAnswerId] = useState('');
+  const currentCommentId = useMemo(() => {
     return commentData.idList.split('_').at(-1);
-  }, [commentData.idList]);
+  }, [commentData]);
   const isAuth = useSelector(getAuthStatus, shallowEqual);
 
   const getAllAnswers = async () => {
-    const answers = await AnswerController.getAllItems(commentId, userId);
+    const answers = await AnswerController.getAllItems(currentCommentId, userId);
     setAnswers(answers);
   };
   useEffect(() => {
@@ -98,7 +100,7 @@ const VideoCommentary = ({
     setIsVisibleSetAnswer(false);
   };
   const handleToggleVisibleAnswer = () => {
-    setIsVisibleSetAnswer(!isVisibleSetAnswer);
+    setIsVisibleSetAnswer((prev) => !prev);
   };
 
   const handleShowAnswers = () => {
@@ -109,27 +111,38 @@ const VideoCommentary = ({
     setAnswerText(evt.target.value);
   };
 
-  const handleSendComment = async () => {
+  const handleSendAnswerToComment = async () => {
     console.log('Send comment');
     try {
-      await AnswerController.send(
+      const { data: answerId } = await AnswerController.send(
         commentData.idList,
         userId,
         answerText.trim()
       );
       setAnswerText('');
+      setAnswerId(answerId)
       const answers = await AnswerController.getAllItems(commentId, userId);
       setAnswers(answers);
+      setIsVisibleSetAnswer((prev) => !prev);
+
     } catch (err) {
       console.log('Send comment error');
       console.log(err);
     }
   };
 
+  const enterHandler = (event) => {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      event.stopPropagation();
+      handleSendAnswerToComment();
+    }
+  }
+
   const isCommentEmpty = () => answerText.length === 0;
 
   const handleDeleteAnswer = (answer) => async () => {
-    const answerId = answer.idList.split('_').at(-1);
+    // const answerId = answer.idList.split('_').at(-1);
     try {
       await AnswerController.delete(answerId);
       const newAnswers = await AnswerController.getAllItems(commentId, userId);
@@ -246,7 +259,10 @@ const VideoCommentary = ({
               </ReactionButton>
             </Tooltip>
             <Tooltip title="Не нравится">
-              <ReactionButton onClick={handleDislikeReaction} disabled={!isAuth}>
+              <ReactionButton
+                onClick={handleDislikeReaction}
+                disabled={!isAuth}
+              >
                 {currentReaction === 'dislike' ? (
                   <ThumbDown
                     sx={{
@@ -269,19 +285,22 @@ const VideoCommentary = ({
                 </Typography>
               </ReactionButton>
             </Tooltip>
-            <CommentButton onClick={handleToggleVisibleAnswer} disabled={!isAuth}>
+            <CommentButton
+              onClick={handleToggleVisibleAnswer}
+              disabled={!isAuth}
+            >
               Ответить
             </CommentButton>
-           {
-            isMayRemove() && <Button
-            size="large"
-            onClick={handleDelete}
-            variant="text"
-            color="baseBlue"
-          >
-            Удалить
-          </Button>
-           }
+            {isMayRemove() && (
+              <Button
+                size="large"
+                onClick={handleDelete}
+                variant="text"
+                color="baseBlue"
+              >
+                Удалить
+              </Button>
+            )}
           </Box>
           {isVisibleSetAnswer ? (
             <Box sx={{ display: 'flex' }} className={styles.comment_answer}>
@@ -289,13 +308,13 @@ const VideoCommentary = ({
                 className={styles.comment_inputField}
                 onChange={handleChangeAnswerText}
                 value={answerText}
-                placeholder='Оставьте ответ'
-
+                onKeyDown={enterHandler}
+                placeholder="Оставьте ответ"
               />
               <Box gap="30px" className={styles.comment_btn}>
                 <CommentButton
                   disabled={isCommentEmpty()}
-                  onClick={handleSendComment}
+                  onClick={handleSendAnswerToComment}
                 >
                   Отправить
                 </CommentButton>
@@ -308,28 +327,29 @@ const VideoCommentary = ({
         </Box>
       </Box>
       <Box>
-        <IconButton onClick={handleShowAnswers}>
+      {!!answers?.length &&  <IconButton onClick={handleShowAnswers}>
           <Typography variant="subtitle1">
-            Показать все комментарии ({`${answers.length}`})
+          {isShownAllAnswers ? 'Скрыть' : 'Показать'} все ответы ({`${answers.length}`})
           </Typography>
           {isShownAllAnswers ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        </IconButton>
+        </IconButton>}
       </Box>
-     {isShownAllAnswers && <Box>
-        {answers?.length > 0 ? (
-          answers?.map((answer, index) => (
-            <CommentAnswers
-              key={index}
-              answerData={answer}
-              currentUserId={userId}
-              videoOwnerId={videoOwnerId}
-              handleDelete={handleDeleteAnswer(answer)}
-            />
-          ))
-        ) : (
-          <Typography variant={'body1'}>Пока нет комментариев...</Typography>
-        )}
-      </Box>}
+      {isShownAllAnswers && (
+        <Box>
+          {answers?.length > 0 && (
+            answers?.map((answer, index) => (
+              <CommentAnswers
+                key={index}
+                answerData={answer}
+                currentUserId={userId}
+                videoOwnerId={videoOwnerId}
+                answerId={answerId}
+                handleDelete={handleDeleteAnswer(answer)}
+              />
+            ))
+          )}
+        </Box>
+      )}
     </Stack>
   );
 };

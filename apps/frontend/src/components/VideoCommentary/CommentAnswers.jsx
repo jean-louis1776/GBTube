@@ -27,6 +27,7 @@ const CommentAnswers = ({
   answerData,
   currentUserId,
   videoOwnerId,
+  answerId,
   handleDelete,
 }) => {
   const [date, _] = useState(new Date(answerData?.createdTimestamp));
@@ -35,7 +36,7 @@ const CommentAnswers = ({
   const [dislikesCount, setDislikesCount] = useState(answerData?.dislikesCount);
   const [likesCount, setLikesCount] = useState(answerData?.likesCount);
   const [currentReaction, setCurrentReaction] = useState(answerData.grade);
-  const answerId = useMemo(() => {
+  const currentAnswerId = useMemo(() => {
     return answerData.idList.split('_').at(-1);
   }, [answerData.idList]);
   const isAuth = useSelector(getAuthStatus, shallowEqual);
