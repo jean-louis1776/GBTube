@@ -23,4 +23,5 @@ export const historySlice = createSlice({
 
 export const { setAccessToken, setAuthStatus, setId, setNickName, setRole } =
   profileSlice.actions;
-export const { setHistoryList, setSearchString } = historySlice.actions;
+export const { setHistoryList, setSearchString, deleteHistoryItem } =
+  historySlice.actions;

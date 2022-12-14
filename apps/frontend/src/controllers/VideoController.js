@@ -35,11 +35,11 @@ export default class VideoController {
   }
 
   static async getAllVideoFromChannel(channelId) {
-    return $authApi.get(`video/channel/${channelId}`);
+    return $authApi.get(`/video/channel/${channelId}`);
   }
 
   static async getFrameShotVideo(id) {
-    return $authApi.get(`video/frameshot/${id}`);
+    return $authApi.get(`/video/frameshot/${id}`);
   }
 
   static async getVideoCompilation() {
@@ -71,5 +71,15 @@ export default class VideoController {
   static async sendDislikeReactionVideo(videoId, userId) {
     const dto = { userId: +userId, id: +videoId };
     return await $authApi.patch(`/video/dislike`, dto);
+  }
+
+  static async delVideoFromHistory(userId, videoId) {
+    return await $authApi.delete(
+      `/video/history/del_one?user_id=${userId}&video_id=${videoId}`
+    );
+  }
+
+  static async clearUserHistory(userId) {
+    return await $authApi.delete(`/video/history/del_all/${userId}`);
   }
 }

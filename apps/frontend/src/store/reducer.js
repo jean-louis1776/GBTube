@@ -28,4 +28,10 @@ export const historyReducers = {
   setSearchString(state, { payload }) {
     state.searchString = payload;
   },
+
+  deleteHistoryItem(state, { payload }) {
+    state.historyList = state.historyList.filter(
+      (list) => !list.includes(payload)
+    );
+  },
 };

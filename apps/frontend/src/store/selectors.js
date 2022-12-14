@@ -13,7 +13,4 @@ export const getRole = (store) => store.profileReducer.role;
 export const searchStringSelector = (store) =>
   store.historyReducer.searchString;
 
-export const historyListSelector = createSelector(
-  [searchStringSelector, (store) => store.historyReducer.historyList],
-  (search, list) => list.filter((item) => item)
-);
+export const historyListSelector = (store) => store.historyReducer.historyList;

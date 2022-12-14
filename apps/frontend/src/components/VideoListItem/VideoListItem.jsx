@@ -2,16 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
 import styles from './VideoListItem.module.scss';
+import { store } from '../../store';
+import { searchStringSelector } from '../../store/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteHistoryItem } from '../../store/slice';
 
-const VideoListItem = ({ idList, deleteFromHistory }) => {
+const VideoListItem = ({ idList, userId, deleteFromHistory }) => {
   const videoId = idList.split('_').at(-1);
   const [video, setVideo] = useState({});
+  const dispatch = useDispatch();
+  const search = useSelector(searchStringSelector);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,6 +29,22 @@ const VideoListItem = ({ idList, deleteFromHistory }) => {
         console.log(`Video ID: ${idList} not found`);
       });
   }, []);
+
+  if (!video.title?.includes(search)) {
+    return null;
+  }
+
+  async function onDelFromStory() {
+    try {
+      await VideoController.delVideoFromHistory(userId, videoId);
+      dispatch(deleteHistoryItem(videoId));
+    } catch (error) {
+      console.log(
+        'Не удалось удалить видео из вашей истории. Текст ошибки:',
+        error.message
+      );
+    }
+  }
 
   return (
     <Box className={styles.videoListItem}>
@@ -94,7 +116,10 @@ const VideoListItem = ({ idList, deleteFromHistory }) => {
       {deleteFromHistory && (
         <Link className={styles.deleteLink}>
           <Tooltip title="Удалить из истории">
-            <IconButton className={styles.deleteButton}>
+            <IconButton
+              className={styles.deleteButton}
+              onClick={onDelFromStory}
+            >
               <CloseIcon />
             </IconButton>
           </Tooltip>

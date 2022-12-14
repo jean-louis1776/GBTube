@@ -6,19 +6,20 @@ import VideoListItem from '../VideoListItem/VideoListItem';
 import VideoController from '../../controllers/VideoController';
 import { store } from '../../store';
 import Loader from '../Loader/Loader';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { historyListSelector } from '../../store/selectors';
-import { setHistoryList } from '../../store/slice';
+import { setHistoryList, setSearchString } from '../../store/slice';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import styles from './History.module.scss';
+import { useNavigate } from 'react-router-dom';
 
 const History = () => {
   const selectedCategory = 'История';
 
   const { profileReducer } = store.getState();
   const currentUserId = Number(profileReducer.id);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const historyList = useSelector(historyListSelector);
 
@@ -31,16 +32,23 @@ const History = () => {
       dispatch(setHistoryList(videos))
     );
     return () => {
-      setHistoryList([]);
+      batch(() => {
+        dispatch(setHistoryList([]));
+        dispatch(setSearchString(''));
+      });
     };
   }, []);
 
-  if (!historyList.length)
-    return (
-      <Typography variant="h5" sx={{ userSelect: 'none' }}>
-        Похоже вы не еще не посмотрели свое первое видео
-      </Typography>
-    );
+  const onClearStory = async () => {
+    try {
+      await VideoController.clearUserHistory(+currentUserId);
+      dispatch(setHistoryList([]));
+    } catch (error) {
+      console.log(
+        `Не удается удалить видео из истории. Ошибка: ${error.message}`
+      );
+    }
+  };
 
   return (
     <>
@@ -54,18 +62,36 @@ const History = () => {
 
           <SearchHistoryForm />
 
-          <Button variant="outlined" color="whiteButton" sx={{ mb: 4 }}>
-            <DeleteIcon sx={{ mr: 1 }} />
-            Очистить историю
-          </Button>
+          {historyList && (
+            <Button
+              variant="outlined"
+              color="whiteButton"
+              sx={{ mb: 4 }}
+              onClick={onClearStory}
+            >
+              <DeleteIcon sx={{ mr: 1 }} />
+              Очистить историю
+            </Button>
+          )}
 
           <Box>
-            {historyList
-              .slice()
-              .reverse()
-              .map((idList) => (
-                <VideoListItem idList={idList} key={idList} deleteFromHistory />
-              ))}
+            {historyList.length === 0 ? (
+              <Typography variant="h5" sx={{ userSelect: 'none' }}>
+                Похоже вы не еще не посмотрели свое первое видео
+              </Typography>
+            ) : (
+              historyList
+                .slice()
+                .reverse()
+                .map((idList) => (
+                  <VideoListItem
+                    idList={idList}
+                    key={idList}
+                    userId={currentUserId}
+                    deleteFromHistory
+                  />
+                ))
+            )}
           </Box>
         </Box>
       </Box>
