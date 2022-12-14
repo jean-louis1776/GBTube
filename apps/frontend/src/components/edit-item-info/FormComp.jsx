@@ -41,7 +41,7 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.loginForm}>
-      <Typography variant="h6" sx={{ mb: 1, userSelect: 'none' }}>
+      <Typography variant="h6" sx={{ mb: 4, userSelect: 'none' }}>
         Создание / изменение {elemName}
       </Typography>
       <Stack
@@ -51,7 +51,7 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
         <Box className={styles.inputBox}>
           <input
             {...register(TITLE, {
-              required: 'Поле Название обязательно к заполнению',
+              required: 'Название канала обязательно',
               minLength: {
                 value: 1,
                 message: 'Требуется не менее 1 символа в поле Название',
