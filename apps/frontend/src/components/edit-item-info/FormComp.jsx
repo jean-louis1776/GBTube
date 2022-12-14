@@ -9,11 +9,11 @@ import styles from './edit-item-info.module.scss';
 const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
   let elemName = '';
   if (elemType === CHANNEL) {
-    elemType = 'канала';
+    elemName = 'канала';
   } else if (elemType === PLAYLIST) {
-    elemType = 'плейлиста';
+    elemName = 'плейлиста';
   } else if (elemType === VIDEO) {
-    elemType = 'видео';
+    elemName = 'видео';
   }
   const navigate = useNavigate();
   const [isExistErr, setIsExistErr] = useState(false);
