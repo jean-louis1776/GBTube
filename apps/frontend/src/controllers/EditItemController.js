@@ -32,7 +32,7 @@ export default class EditItemController {
   static async updateItem(elemType, data) {
     const url = `/${elemType}/edit`;
     console.log(url);
-    const dto = { updatingObject: data }
+    const dto = { updatingObject: data };
     console.log(dto);
     return await $authApi.patch(url, dto, {
       headers: {
