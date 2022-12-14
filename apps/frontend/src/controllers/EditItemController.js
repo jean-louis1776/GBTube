@@ -30,9 +30,10 @@ export default class EditItemController {
    * @returns {Promise<AxiosResponse<any>>}
    */
   static async updateItem(elemType, data) {
+    const { idList, title, description } = data;
     const url = `/${elemType}/edit`;
     console.log(url);
-    const dto = { updatingObject: data };
+    const dto = { idList, updatingObject: {title, description} };
     console.log(dto);
     return await $authApi.patch(url, dto, {
       headers: {
