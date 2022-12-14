@@ -24,6 +24,7 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const [passwordShownFirst, setPasswordShownFirst] = useState(false);
   const [passwordShownSecond, setPasswordShownSecond] = useState(false);
+  const [isExistErr, setIsExistErr] = useState(false);
 
   const schemaPsw = new PasswordValidator();
   schemaPsw
@@ -81,11 +82,15 @@ const SignupForm = () => {
       dispatch(setAccessToken(accessToken));
       dispatch(setId(String(id)));
       dispatch(setNickName(nickName));
-      // dispatch(registrationHandler({ nickName, email, password }));
+      setIsExistErr(false);
       reset();
       navigate('/', { replace: true });
-    } catch {
+    } catch(err) {
+      if (err.message.includes('409')) {
+        setIsExistErr(true);
+      }
       console.log('Registration failed');
+      console.log(err);
     }
   };
 
@@ -146,6 +151,10 @@ const SignupForm = () => {
                 {errors?.email?.message || 'Err!!!!!'}
               </p>
             )}
+            {isExistErr ? <p className={styles.error}>
+              Такой аккаунт уже зарегистрирован.
+            </p> : ''
+            }
 
             <Box className={`${styles.signupInputBox} ${styles.passwordBox}`}>
               <input
