@@ -295,8 +295,19 @@ const VideoDetail = () => {
                 >
                   <Box className={styles.channel_sub}>
                     <Avatar sx={{ mr: '10px' }} />
-                    <Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '5px',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
                         <Typography
                           variant="subtitle1"
                           fontWeight="500"
@@ -312,7 +323,7 @@ const VideoDetail = () => {
                       <Typography
                         variant="caption"
                         fontWeight="500"
-                        sx={{ opacity: 0.5 }}
+                        sx={{ opacity: 0.5, lineHeight: 1 }}
                       >
                         {subscribersCount} подписчиков
                       </Typography>
