@@ -35,6 +35,7 @@ const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
   };
 
   const handleResetForm = () => {
+    setIsExistErr(false);
     reset();
   };
 
