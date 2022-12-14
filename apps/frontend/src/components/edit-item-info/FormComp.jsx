@@ -1,5 +1,5 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
-import { CHANNEL, DESCRIPTION, TITLE } from '@constants/frontend';
+import { CHANNEL, DESCRIPTION, PLAYLIST, VIDEO, TITLE } from '@constants/frontend';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -7,7 +7,14 @@ import { useState } from 'react';
 import styles from './edit-item-info.module.scss';
 
 const FormComp = ({ elemType, idList, sendData, defaultValues }) => {
-  let elemName = elemType === CHANNEL ? 'канала' : 'плейлиста';
+  let elemName = '';
+  if (elemType === CHANNEL) {
+    elemType = 'канала';
+  } else if (elemType === PLAYLIST) {
+    elemType = 'плейлиста';
+  } else if (elemType === VIDEO) {
+    elemType = 'видео';
+  }
   const navigate = useNavigate();
   const [isExistErr, setIsExistErr] = useState(false);
 

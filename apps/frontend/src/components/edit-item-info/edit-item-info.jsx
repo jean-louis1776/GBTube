@@ -2,7 +2,7 @@ import styles from './edit-item-info.module.scss';
 import { Link, useParams } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import { Paper, Stack, Typography } from '@mui/material';
-import { DESCRIPTION, logo, TITLE } from '@constants/frontend';
+import { DESCRIPTION, logo, TITLE, VIDEO } from '@constants/frontend';
 import FormComp from './FormComp';
 
 /**
@@ -16,7 +16,7 @@ export function EditItemInfo({ elemType, sendData, isEdit, getItemById }) {
   useEffect(() => {
     const fetchData = async () => {
       const elemId = idList.split('_').at(-1);
-      return getItemById(elemType, elemId);
+      return elemType === VIDEO ? await getItemById(elemId) : await getItemById(elemType, elemId);
     }
     if (isEdit) {
       fetchData().then((data) => {
