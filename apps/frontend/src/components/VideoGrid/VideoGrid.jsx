@@ -126,6 +126,10 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
               top: 'auto',
               padding: '32px',
               margin: '32px',
+              background:
+                'linear-gradient(0deg, rgba(31,31,31,0.7) 7%, rgba(0,137,235,0.5) 50%, rgba(224,85,127,0.5) 95%)',
+              borderRadius: '4px 4px 0 0 ',
+              boxShadow: 'none',
             }}
           >
             <Box maxWidth={'25vw'}>

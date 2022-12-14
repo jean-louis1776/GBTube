@@ -435,7 +435,10 @@ const VideoDetail = () => {
               className={styles.descriptionWrapper}
             >
               <Box variant="body1" sx={{ opacity: 0.7 }}>
-                <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
+                <Typography
+                  variant={'body1'}
+                  sx={{ opacity: 0.7, userSelect: 'none' }}
+                >
                   Дата публикации: {createTimestamp}
                 </Typography>
               </Box>
