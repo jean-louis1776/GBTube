@@ -33,6 +33,7 @@ import { getAuthStatus, getRole, getUserId } from '../../store/selectors';
 import CommentController from '../../controllers/CommentController';
 import SendIcon from '@mui/icons-material/Send';
 import EditItemController from '../../controllers/EditItemController';
+import GetChildrenController from '../../controllers/GetChildrenController';
 
 import styles from './VideoDetail.module.scss';
 
@@ -123,6 +124,23 @@ const VideoDetail = () => {
         console.log('Fail get info about comments');
       });
   }, []);
+
+  useEffect(() => {
+    const fetchChannelData = async () => {
+      return await GetChildrenController.getItemById(
+        CHANNEL,
+        channelId,
+        userId
+      );
+    };
+    fetchChannelData()
+      .then((channelData) => {
+        setIsSubscribed(channelData.isSubscribed);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [channelName]);
 
   const handleChangeCommentText = (evt) => {
     setCommentText(evt.target.value);
