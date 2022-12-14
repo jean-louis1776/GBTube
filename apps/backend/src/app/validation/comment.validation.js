@@ -10,7 +10,7 @@ export class CommentValidation extends Validation {
     this.create.push(body('userId').optional().isNumeric().withMessage(NOT_INT));
 
     this.edit.shift();
-    this.getAllCommentsVideo = [ query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT),
+    this.getAllCommentsVideo = [query('video_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT),
       query('user_id').exists().withMessage(NOT_EXISTS).matches(REG_EXP_FOR_DIGITS).withMessage(NOT_DIGIT)];
     this.subscribeOrLike = [
       body('commentId').exists({ checkFalsy: true }).withMessage(NOT_EXISTS_OR_EMPTY).isNumeric().withMessage(NOT_INT),

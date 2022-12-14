@@ -1,5 +1,6 @@
 import { ApiError } from "../errors/apiError";
 import { answerQueries } from '../queries/AnswerQueries';
+import { commentQueries } from "../queries/CommentQueries";
 
 class AnswerService {
 
@@ -32,6 +33,10 @@ class AnswerService {
 
   async getOne(id) {
     try {
+      const gAnswerById = await answerQueries.getAnswerById(id);
+      gAnswerById.nickName = gAnswerById.User.nickName;
+      delete gAnswerById.User;
+      return gAnswerById;
       return answerQueries.getAnswerById(id);
     } catch (e) {
       console.log(e.message);
@@ -39,9 +44,20 @@ class AnswerService {
     }
   }
 
-  async getAllAnswerOfComment(commentId) {
+  async getAllAnswerOfComment(query) {
     try {
-      return answerQueries.getAllAnswerComment(commentId);
+      const {comment_id, user_id} = query;
+      const getAllAnswerComment = await answerQueries.getAllAnswerComment(comment_id);
+      await Promise.all(getAllAnswerComment.map(async (value) => {
+        const isGrade = await answerQueries.getGrade(user_id, value.id);
+        if (isGrade === true) value.grade = 'like';
+        if (isGrade === false) value.grade = 'dislike';
+        if (isGrade === undefined) value.grade = '';
+        value.nickName = value.User.nickName;
+        delete value.User;
+        delete value.id;
+      }));
+      return getAllAnswerComment;
     } catch (e) {
       console.log(e.message);
       throw(e);

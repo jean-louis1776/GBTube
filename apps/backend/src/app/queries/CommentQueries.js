@@ -67,17 +67,6 @@ class CommentQueries {
     }
   }
 
-  // async getAllLikesByUserId(userId) {
-  //   try {
-  //     const gAllLikesByUserId = await CommentLike.findAll({where: {userId}});
-  //     if (gAllLikesByUserId) return gAllLikesByUserId.map(value => value.toJSON());
-  //     return gAllLikesByUserId;
-  //   } catch (e) {
-  //     console.log(e.message);
-  //     throw(e);
-  //   }
-  // }
-
   async getGrade(userId, commentId) {
     try {
       const gGrade = await CommentLike.findOne({where: {userId, commentId}})
