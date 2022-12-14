@@ -104,6 +104,12 @@ const VideoCard = ({ idList, onChannelPage }) => {
               }}
             >
               <MenuItem
+                // onClick={handleOpenModal}
+                className={styles.deleteListItem}
+              >
+                <Typography>Редактировать</Typography>
+              </MenuItem>
+              <MenuItem
                 onClick={handleOpenModal}
                 className={styles.deleteListItem}
               >
