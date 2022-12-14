@@ -4,6 +4,7 @@ import { VideoHistory } from "../models/VideoHistory";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
 import { VideoLike } from "../models/VideoLike";
+import { Channel } from "../models/Channel";
 
 class VideoQueries {
 
@@ -54,7 +55,7 @@ class VideoQueries {
           idList,
           videoId,
           thumbnail,
-          duration
+          duration,
         });
         return videoId;
       }
@@ -312,8 +313,8 @@ class VideoQueries {
     try {
       const fVideoHistoryByUserId = await VideoHistory.findAll({
         where: {userId},
-        order: [['updatedTimestamp','DESC']],
-        attributes: ['videoId']
+        order: [['updatedTimestamp', 'DESC']],
+        attributes: ['videoId'],
       });
       if (fVideoHistoryByUserId) return (fVideoHistoryByUserId).map(value => value.toJSON().videoId);
       return null;
@@ -332,15 +333,42 @@ class VideoQueries {
           model: VideoInfo,
           attributes: ['idList'],
         }],
-        order: [[{model: VideoInfo} , 'createTimestamp', 'DESC']],
+        order: [[{model: VideoInfo}, 'createTimestamp', 'DESC']],
       });
       if (!videos) return null;
-      return videos.map(video => { return {idList: video.toJSON().VideoInfo.idList}});
+      return videos.map(video => {
+        return {idList: video.toJSON().VideoInfo.idList};
+      });
     } catch (e) {
       console.log(e.message);
       throw e;
     }
   }
+
+  async findVideosIdInPlayList(id) {
+    const videosId = await Video.findAll({
+      where: {playListId: id},
+      attributes: {exclude: ['id', 'playListId', 'title', 'channelId']},
+      include: [{
+        model: VideoInfo,
+        attributes: ['hashName'],
+      }],
+    });
+    return videosId.map(value => {return value.toJSON().VideoInfo.hashName});
+  }
+
+  async findVideosIdInChannel(id) {
+    const videosId = await Video.findAll({
+      where: {channelId: id},
+      attributes: {exclude: ['id', 'playListId', 'title', 'channelId']},
+      include: [{
+        model: VideoInfo,
+        attributes: ['hashName'],
+      }],
+    });
+    return videosId.map(value => {return value.toJSON().VideoInfo.hashName});
+  }
+
 
   async getLikesListByUserId(userId) {
     try {
@@ -358,7 +386,7 @@ class VideoQueries {
       const videosList = await VideoInfo.findAll({where: {videoId: listOfVideosId}, attributes: ['idList']});
       if (!videosList) throw ApiError.InternalServerError('Внутренняя ошибка сервера');
       return videosList.map(video => video.toJSON().idList);
-  } catch (e) {
+    } catch (e) {
       console.log(e.message);
       throw e;
     }
@@ -367,7 +395,7 @@ class VideoQueries {
   async removeOneFromHistory(userId, videoId) {
     try {
       return !!(await VideoHistory.destroy({where: {userId, videoId}}));
-    } catch(e) {
+    } catch (e) {
       console.log(e.message);
       throw e;
     }
@@ -376,7 +404,7 @@ class VideoQueries {
   async removeAllFromHistory(userId) {
     try {
       return !!(await VideoHistory.destroy({where: {userId}}));
-    } catch(e) {
+    } catch (e) {
       console.log(e.message);
       throw e;
     }

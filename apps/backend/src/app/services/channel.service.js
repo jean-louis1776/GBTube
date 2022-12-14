@@ -2,6 +2,9 @@ import { ApiError } from '../errors/apiError';
 import { channelQueries } from '../queries/ChannelQueries';
 import { userQueries } from '../queries/UserQueries';
 import { ChannelInfo } from "../models/ChannelInfo";
+import { videoQueries } from "../queries/VideoQueries";
+import { removeFile } from "../gRPC/removeFile.grpc";
+
 
 class ChannelService {
   makeResultObject(channel) {
@@ -32,7 +35,10 @@ class ChannelService {
   async subscribe(id, userId) {
     try {
       const isSubscribe = (await channelQueries.subscriber(id, userId));
-      const subscribe = (await ChannelInfo.findOne({where: {channelId: id}, attributes: ['subscribersCount']})).toJSON();
+      const subscribe = (await ChannelInfo.findOne({
+        where: {channelId: id},
+        attributes: ['subscribersCount'],
+      })).toJSON();
       subscribe.isSubscribe = isSubscribe;
       return subscribe;
     } catch (e) {
@@ -43,6 +49,8 @@ class ChannelService {
 
   async remove(id) {
     try {
+      const videoIdArr = await videoQueries.findVideosIdInChannel(id);
+      await Promise.all(videoIdArr.map(value => removeFile(value)));
       const result = channelQueries.deleteChannel(id);
       if (!result) {
         throw ApiError.NotFound(`Канала с id ${id} не существует`);

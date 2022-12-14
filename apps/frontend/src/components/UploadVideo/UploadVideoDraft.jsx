@@ -34,6 +34,7 @@ const UploadVideoDraft = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadErrorMsg, setUploadErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isExistErr, setIsExistErr] = useState(false);
   const navigate = useNavigate();
   const refDuration = useRef('');
 
@@ -98,10 +99,16 @@ const UploadVideoDraft = () => {
       await VideoController.addVideo(formData);
       evt.target.reset();
       setIsLoading(false);
+      setIsExistErr(false);
       navigate(`/${VIDEO}/get_all/${idList}`, { replace: true });
-    } catch {
+    } catch(err) {
       setIsLoading(false);
-      setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
+      if (err.message.includes('409')) {
+        setIsExistErr(true);
+      } else {
+        setUploadErrorMsg('Произошла ошибка при загрузке. Повторите попытку!');
+      }
+      console.log(err);
     }
   };
 
@@ -175,7 +182,11 @@ const UploadVideoDraft = () => {
                     Допускаются файлы формата: <br /> 3gp, .avi, .flv, .m4v,
                     .mkv, .mov, .mp4, .mpeg, .mpg, .wmv, .webm
                   </Typography>
-
+                  {isExistErr ? (
+                    <p className={styles.errorText}>Это название уже занято.</p>
+                  ) : (
+                    ''
+                  )}
                   <Typography className={styles.selectedFileText}>
                     {selectedFile ? `Выбранный файл: ${selectedFile.name}` : ''}
                   </Typography>

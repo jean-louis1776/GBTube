@@ -4,6 +4,8 @@ import { ChannelSubscriber } from "../models/ChannelSubscribers";
 import { ApiError } from "../errors/apiError";
 import { PlayList } from "../models/PlayList";
 import { Video } from "../models/Video";
+import { removeFile } from '../gRPC/removeFile.grpc.js';
+import { VideoInfo } from "../models/VideoInfo";
 
 class ChannelQueries {
   parsingQueryModel(modelFromQuery) {
@@ -95,6 +97,26 @@ class ChannelQueries {
     }
   }
 
+  async findAllUserChannelsId(UserId) {
+    const ChannelsId = await Channel.findAll({
+      where: {UserId},
+      attributes: {exclude: ['title', 'userId']},
+      include: [{
+        model: Video,
+        attributes: {exclude: ['playListId', 'title', 'channelId']},
+        include: [{
+          model: VideoInfo,
+          attributes: ['hashName'],
+        }],
+      }],
+    });
+    return ChannelsId.map(value => {
+      return value.Videos.map(value => {
+        return value.toJSON().VideoInfo.hashName;
+      });
+    });
+  }
+
   /**
    * Добавление/Удаление подписки
    * @param {number} userId - id пользователя отписавшегося от канала
@@ -180,9 +202,9 @@ class ChannelQueries {
           {
             model: ChannelSubscriber,
             where: {userId},
-            attributes: {exclude: ['id', 'userId', 'channelId']}
+            attributes: {exclude: ['id', 'userId', 'channelId']},
           },
-        ]
+        ],
       });
       if (!channels) return null;
       return channels.map(channel => channel.toJSON());
