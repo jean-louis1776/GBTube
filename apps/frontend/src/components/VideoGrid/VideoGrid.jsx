@@ -156,7 +156,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   <Typography
                     variant="h6"
                     fontWeight={300}
-                    sx={{ wordBreak: 'break-word' }}
+                    sx={{ wordBreak: 'break-word', fontSize: '1.1rem' }}
                   >
                     {title.slice(0, 60) + '...'}
                   </Typography>
@@ -174,7 +174,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                     marginBottom={2}
                     variant="h6"
                     fontWeight={300}
-                    sx={{ wordBreak: 'break-word' }}
+                    sx={{ wordBreak: 'break-word', fontSize: '1.1rem' }}
                   >
                     {title}
                   </Typography>
@@ -192,7 +192,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   <Typography
                     variant="h6"
                     fontWeight={300}
-                    sx={{ wordBreak: 'break-word' }}
+                    sx={{ wordBreak: 'break-word', fontSize: '1.1rem' }}
                   >
                     {description.slice(0, 100) + '...'}
                   </Typography>
@@ -209,7 +209,7 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   <Typography
                     variant="h6"
                     fontWeight={300}
-                    sx={{ wordBreak: 'break-word' }}
+                    sx={{ wordBreak: 'break-word', fontSize: '1.1rem' }}
                   >
                     {description}
                   </Typography>
