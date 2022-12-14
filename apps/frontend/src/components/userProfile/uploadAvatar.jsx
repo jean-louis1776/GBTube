@@ -29,7 +29,7 @@ const UploadAvatar = ({userId, refreshData}) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input name="image" onChange={imgChange} type='file'
+        <input name="avatarFile" onChange={imgChange} type='file'
                accept="image/*,.jpg,.jpeg,.png,.apng,.webp,.gif,.avif,.svg,.ico,.bmp"
         />
         <Button disabled={!image} type='submit' >Отправить</Button>
