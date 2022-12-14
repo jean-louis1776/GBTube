@@ -15,13 +15,15 @@ import {
   ThumbUp,
   ThumbUpOutlined,
 } from '@mui/icons-material';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import CommentController from '../../controllers/CommentController';
+import AnswerController from '../../controllers/AnswerController';
+
 import { shallowEqual, useSelector } from 'react-redux';
-import { getUserId } from '../../store/selectors';
+import { getAuthStatus, getUserId } from '../../store/selectors';
 
 import styles from './VideoCommentary.module.scss';
 import { styled, useTheme } from '@mui/material/styles';
@@ -41,9 +43,21 @@ const VideoCommentary = ({
   const [dislikesCount, setDislikesCount] = useState(commentData.dislikesCount);
   const [likesCount, setLikesCount] = useState(commentData.likesCount);
   const [currentReaction, setCurrentReaction] = useState(commentData.grade);
+  const [answerText, setAnswerText] = useState('');
+  const [answers, setAnswers] = useState([]);
+  const [isShownAllAnswers, setIsShownAllAnswers] = useState(false);
   const commentId = useMemo(() => {
     return commentData.idList.split('_').at(-1);
   }, [commentData.idList]);
+  const isAuth = useSelector(getAuthStatus, shallowEqual);
+
+  const getAllAnswers = async () => {
+    const answers = await AnswerController.getAllItems(commentId, userId);
+    setAnswers(answers);
+  };
+  useEffect(() => {
+    getAllAnswers();
+  }, []);
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -74,7 +88,7 @@ const VideoCommentary = ({
   }));
 
   const isMayRemove = () => {
-    return !(
+    return (
       currentUserId === String(commentData.userId) ||
       currentUserId === videoOwnerId
     );
@@ -85,6 +99,45 @@ const VideoCommentary = ({
   };
   const handleToggleVisibleAnswer = () => {
     setIsVisibleSetAnswer(!isVisibleSetAnswer);
+  };
+
+  const handleShowAnswers = () => {
+    setIsShownAllAnswers((prev) => !prev);
+  };
+
+  const handleChangeAnswerText = (evt) => {
+    setAnswerText(evt.target.value);
+  };
+
+  const handleSendComment = async () => {
+    console.log('Send comment');
+    try {
+      await AnswerController.send(
+        commentData.idList,
+        userId,
+        answerText.trim()
+      );
+      setAnswerText('');
+      const answers = await AnswerController.getAllItems(commentId, userId);
+      setAnswers(answers);
+    } catch (err) {
+      console.log('Send comment error');
+      console.log(err);
+    }
+  };
+
+  const isCommentEmpty = () => answerText.length === 0;
+
+  const handleDeleteAnswer = (answer) => async () => {
+    const answerId = answer.idList.split('_').at(-1);
+    try {
+      await AnswerController.delete(answerId);
+      const newAnswers = await AnswerController.getAllItems(commentId, userId);
+      setAnswers(newAnswers);
+    } catch (err) {
+      console.log(`Failed delete answer ${answerId}`);
+      console.log(err);
+    }
   };
 
   const handleLikeReaction = async () => {
@@ -169,7 +222,7 @@ const VideoCommentary = ({
           </ShowMoreText>
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Нравится">
-              <ReactionButton onClick={handleLikeReaction}>
+              <ReactionButton onClick={handleLikeReaction} disabled={!isAuth}>
                 {currentReaction === 'like' ? (
                   <ThumbUp
                     sx={{
@@ -193,7 +246,7 @@ const VideoCommentary = ({
               </ReactionButton>
             </Tooltip>
             <Tooltip title="Не нравится">
-              <ReactionButton onClick={handleDislikeReaction}>
+              <ReactionButton onClick={handleDislikeReaction} disabled={!isAuth}>
                 {currentReaction === 'dislike' ? (
                   <ThumbDown
                     sx={{
@@ -216,29 +269,36 @@ const VideoCommentary = ({
                 </Typography>
               </ReactionButton>
             </Tooltip>
-            <CommentButton onClick={handleToggleVisibleAnswer}>
+            <CommentButton onClick={handleToggleVisibleAnswer} disabled={!isAuth}>
               Ответить
             </CommentButton>
-            <Button
-              size="large"
-              disabled={isMayRemove()}
-              onClick={handleDelete}
-              variant="text"
-              color="baseBlue"
-            >
-              Удалить
-            </Button>
+           {
+            isMayRemove() && <Button
+            size="large"
+            onClick={handleDelete}
+            variant="text"
+            color="baseBlue"
+          >
+            Удалить
+          </Button>
+           }
           </Box>
           {isVisibleSetAnswer ? (
             <Box sx={{ display: 'flex' }} className={styles.comment_answer}>
               <input
-                type="text"
                 className={styles.comment_inputField}
-                placeholder="Оставьте ответ"
+                onChange={handleChangeAnswerText}
+                value={answerText}
+                placeholder='Оставьте ответ'
+
               />
-              {/* <input className={styles.comment_inputField} /> */}
               <Box gap="30px" className={styles.comment_btn}>
-                <CommentButton>Отправить</CommentButton>
+                <CommentButton
+                  disabled={isCommentEmpty()}
+                  onClick={handleSendComment}
+                >
+                  Отправить
+                </CommentButton>
                 <CancelButton onClick={handleHideAnswer}>Отмена</CancelButton>
               </Box>
             </Box>
@@ -247,14 +307,29 @@ const VideoCommentary = ({
           )}
         </Box>
       </Box>
-      {/*<Box>*/}
-      <IconButton>
-        <ArrowDropDownIcon />
-        <ArrowDropUpIcon />
-        Ответов
-      </IconButton>
-      {/*</Box>*/}
-      {/*<CommentAnswers/>*/}
+      <Box>
+        <IconButton onClick={handleShowAnswers}>
+          <Typography variant="subtitle1">
+            Показать все комментарии ({`${answers.length}`})
+          </Typography>
+          {isShownAllAnswers ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        </IconButton>
+      </Box>
+     {isShownAllAnswers && <Box>
+        {answers?.length > 0 ? (
+          answers?.map((answer, index) => (
+            <CommentAnswers
+              key={index}
+              answerData={answer}
+              currentUserId={userId}
+              videoOwnerId={videoOwnerId}
+              handleDelete={handleDeleteAnswer(answer)}
+            />
+          ))
+        ) : (
+          <Typography variant={'body1'}>Пока нет комментариев...</Typography>
+        )}
+      </Box>}
     </Stack>
   );
 };

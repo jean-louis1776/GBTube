@@ -406,6 +406,7 @@ const VideoDetail = () => {
                   placeholder="Оставьте комментарий"
                   onChange={handleChangeCommentText}
                   value={commentText}
+                  disabled={!isAuth}
                 />
                 <IconButton
                   disabled={isCommentEmpty()}

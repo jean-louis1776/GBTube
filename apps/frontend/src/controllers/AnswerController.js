@@ -1,9 +1,9 @@
 import $authApi from '../api/AuthClient';
 
 export default class AnswerController {
-  static async getAllItems(commentId) {
+  static async getAllItems(commentId, userId) {
     console.log('getAllCommentsByVideo run');
-    const url = `/answer/${commentId}`;
+    const url = `/answer/get_all?comment_id=${commentId}&user_id=${userId}`;
     console.log(url);
     return (await $authApi.get(url)).data;
   }
@@ -36,22 +36,14 @@ export default class AnswerController {
     const url = `/answer/${answerId}`;
     return await $authApi.delete(url);
   }
-  static async dislike(commentId, userId) {
+
+  static async dislike(answerId, userId) {
     const url = `/answer/dislike`;
-    const dto = {id: commentId, userId};
-    await $authApi.patch(url, dto, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return await $authApi.patch(url, {answerId, userId});
   }
-  static async like(commentId, userId) {
-    const url = `/comment/like`;
-    const dto = {id: commentId, userId};
-    await $authApi.patch(url, dto, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+
+  static async like(answerId, userId) {
+    const url = `/answer/like`;
+    return await $authApi.patch(url,{answerId, userId});
   }
 }
