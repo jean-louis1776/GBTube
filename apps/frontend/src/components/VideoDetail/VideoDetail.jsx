@@ -36,6 +36,7 @@ import EditItemController from '../../controllers/EditItemController';
 import GetChildrenController from '../../controllers/GetChildrenController';
 
 import styles from './VideoDetail.module.scss';
+import ConfirmModal from '../ConfirmModal/ConfirmModal';
 
 const VideoDetail = () => {
   const theme = useTheme();
@@ -57,10 +58,12 @@ const VideoDetail = () => {
   const [likesCount, setLikesCount] = useState(0);
   const [authorNickName, setAuthorNickName] = useState('');
   const [title, setTitle] = useState('');
+  const [subscribersCount, setSubscribersCount] = useState('0');
   const [viewsCount, setViewsCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [currentReaction, setCurrentReaction] = useState('');
+  const [openModal, setOpenModal] = useState(false);
 
   const channelNameLink = idList.split('_').slice(0, 2).join('_');
 
@@ -136,6 +139,7 @@ const VideoDetail = () => {
     fetchChannelData()
       .then((channelData) => {
         setIsSubscribed(channelData.isSubscribed);
+        setSubscribersCount(channelData.subscribersCount);
       })
       .catch((err) => {
         console.log(err);
@@ -232,138 +236,170 @@ const VideoDetail = () => {
   };
 
   const handleSubscribe = async () => {
-    const { isSubscribe } = await EditItemController.subscribe(
-      channelId,
-      userId
-    );
+    const { isSubscribe, subscribersCount } =
+      await EditItemController.subscribe(channelId, userId);
     setIsSubscribed(isSubscribe);
+    setSubscribersCount(subscribersCount);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleModalUnSub = () => {
+    handleSubscribe();
+    handleCloseModal();
   };
 
   return (
-    <Box className={styles.wrapper}>
-      <Header />
-      <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
-        <Box width={'1080px'}>
-          {videoContent}
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            py={3}
-            px={2}
-          >
-            <Typography
-              color="#fff"
-              variant="h5"
-              fontWeight="bold"
-              maxWidth="800px"
+    <>
+      <Box className={styles.wrapper}>
+        <Header />
+        <Stack direction={{ xs: 'column', md: 'row' }} className={styles.stack}>
+          <Box width={'1080px'}>
+            {videoContent}
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              py={3}
+              px={2}
             >
-              {title}
-            </Typography>
-            <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
-              {viewsCount} просмотров
-            </Typography>
-          </Stack>
-          <Stack
-            direction={{
-              xs: 'column',
-              md: 'row',
-            }}
-            justifyContent="space-between"
-            px={2}
-          >
-            <Stack direction="row" className={styles.channel_info}>
-              <Link
-                to={`/${CHANNEL}/${channelNameLink}`}
-                style={{ marginRight: '2rem' }}
+              <Typography
+                color="#fff"
+                variant="h5"
+                fontWeight="bold"
+                maxWidth="800px"
               >
-                <Box className={styles.channel_sub}>
-                  <Avatar sx={{ mr: '10px' }} />
-                  <Typography variant="subtitle1" fontWeight="500">
-                    {channelName}
-                  </Typography>
-                  <CheckCircle
-                    sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
-                  />
-                </Box>
-              </Link>
-
-              {isMayModerate() ? (
-                ''
-              ) : !isSubscribed ? (
-                <Button
-                  onClick={handleSubscribe}
-                  disabled={!isAuth}
-                  sx={{
-                    backgroundColor: theme.palette.coplimentPink.main,
-                    color: theme.palette.coplimentPink.contrastText,
-                  }}
-                >
-                  Подписаться
-                </Button>
-              ) : (
-                <Button
-                  disabled={!isAuth}
-                  onClick={handleSubscribe}
-                  color="whiteButton"
-                  sx={{
-                    backgroundColor: theme.palette.shadows.main,
-                  }}
-                >
-                  Вы подписаны
-                </Button>
-              )}
+                {title}
+              </Typography>
+              <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
+                {viewsCount} просмотров
+              </Typography>
             </Stack>
-            <Stack direction="row" gap="10px">
-              <Stack direction="row" gap="10px" className={styles.reactionsBtn}>
-                <Tooltip title="Нравится">
-                  <ReactionButton
-                    onClick={handleLikeReaction}
+            <Stack
+              direction={{
+                xs: 'column',
+                md: 'row',
+              }}
+              justifyContent="space-between"
+              px={2}
+            >
+              <Stack direction="row" className={styles.channel_info}>
+                <Link
+                  to={`/${CHANNEL}/${channelNameLink}`}
+                  style={{ marginRight: '2rem' }}
+                >
+                  <Box className={styles.channel_sub}>
+                    <Avatar sx={{ mr: '10px' }} />
+                    <Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="500"
+                          lineHeight={0.75}
+                        >
+                          {channelName}
+                        </Typography>
+                        <CheckCircle
+                          sx={{ fontSize: '15px', color: 'gray', ml: '5px' }}
+                        />
+                      </Box>
+
+                      <Typography
+                        variant="caption"
+                        fontWeight="500"
+                        sx={{ opacity: 0.5 }}
+                      >
+                        {subscribersCount} подписчиков
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Link>
+
+                {isMayModerate() ? (
+                  ''
+                ) : !isSubscribed ? (
+                  <Button
+                    onClick={handleSubscribe}
                     disabled={!isAuth}
+                    sx={{
+                      backgroundColor: theme.palette.coplimentPink.main,
+                      color: theme.palette.coplimentPink.contrastText,
+                    }}
                   >
-                    {currentReaction === 'like' ? (
-                      <ThumbUp
-                        sx={{
-                          color: theme.palette.coplimentPink.main,
-                        }}
-                      />
-                    ) : (
-                      <ThumbUpOutlined />
-                    )}
-                    <Typography
-                      variant={'body1'}
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
-                    >
-                      {likesCount}{' '}
-                    </Typography>
-                  </ReactionButton>
-                </Tooltip>
-                <Tooltip title="Не нравится">
-                  <ReactionButton
-                    onClick={handleDislikeReaction}
+                    Подписаться
+                  </Button>
+                ) : (
+                  <Button
                     disabled={!isAuth}
+                    onClick={handleOpenModal}
+                    color="whiteButton"
+                    sx={{
+                      backgroundColor: theme.palette.shadows.main,
+                    }}
                   >
-                    {currentReaction === 'dislike' ? (
-                      <ThumbDown
-                        sx={{
-                          color: theme.palette.baseBlue.main,
-                        }}
-                      />
-                    ) : (
-                      <ThumbDownOutlined />
-                    )}
-                    <Typography
-                      variant="body1"
-                      sx={{ opacity: 0.7 }}
-                      marginLeft={2}
-                    >
-                      {dislikesCount}{' '}
-                    </Typography>
-                  </ReactionButton>
-                </Tooltip>
+                    Вы подписаны
+                  </Button>
+                )}
               </Stack>
-              {/* <Tooltip title="Поделиться">
+              <Stack direction="row" gap="10px">
+                <Stack
+                  direction="row"
+                  gap="10px"
+                  className={styles.reactionsBtn}
+                >
+                  <Tooltip title="Нравится">
+                    <ReactionButton
+                      onClick={handleLikeReaction}
+                      disabled={!isAuth}
+                    >
+                      {currentReaction === 'like' ? (
+                        <ThumbUp
+                          sx={{
+                            color: theme.palette.coplimentPink.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbUpOutlined />
+                      )}
+                      <Typography
+                        variant={'body1'}
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {likesCount}{' '}
+                      </Typography>
+                    </ReactionButton>
+                  </Tooltip>
+                  <Tooltip title="Не нравится">
+                    <ReactionButton
+                      onClick={handleDislikeReaction}
+                      disabled={!isAuth}
+                    >
+                      {currentReaction === 'dislike' ? (
+                        <ThumbDown
+                          sx={{
+                            color: theme.palette.baseBlue.main,
+                          }}
+                        />
+                      ) : (
+                        <ThumbDownOutlined />
+                      )}
+                      <Typography
+                        variant="body1"
+                        sx={{ opacity: 0.7 }}
+                        marginLeft={2}
+                      >
+                        {dislikesCount}{' '}
+                      </Typography>
+                    </ReactionButton>
+                  </Tooltip>
+                </Stack>
+                {/* <Tooltip title="Поделиться">
                 <ReactionButton>
                   <ReplyAllOutlined />
                 </ReactionButton>
@@ -378,96 +414,110 @@ const VideoDetail = () => {
                   <AnnouncementOutlined />
                 </ReactionButton>
               </Tooltip> */}
+              </Stack>
             </Stack>
-          </Stack>
 
-          <Box
-            padding=".7rem"
-            marginTop="2rem"
-            width="100%"
-            className={styles.descriptionWrapper}
-          >
-            <Box variant="body1" sx={{ opacity: 0.7 }}>
-              <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
-                Дата публикации: {createTimestamp}
-              </Typography>
-            </Box>
-            <ShowMoreText
-              className={styles.truncateText}
-              lines={1}
-              more="Читать далее"
-              less="Свернуть"
-              // anchorClass="show-more-less-clickable"
-              expanded={false}
-              keepNewLines={false}
-              // width={800}
-              truncatedEndingComponent={'... '}
+            <Box
+              padding=".7rem"
+              marginTop="2rem"
+              width="100%"
+              className={styles.descriptionWrapper}
             >
-              {description}
-            </ShowMoreText>
-          </Box>
-
-          <Typography
-            variant="h6"
-            paddingLeft="1rem"
-            marginTop="2rem"
-            sx={{ userSelect: 'none' }}
-          >
-            Комментарии
-          </Typography>
-
-          <Box
-            className={styles.commentSection}
-            backgroundColor={theme.palette.shadows.main}
-          >
-            {
-              <Box className={styles.userCommentary}>
-                <Avatar alt="avatar" src={`${API_URL}/user/avatar/${userId}`} />
-                <input
-                  type="text"
-                  className={styles.commentaryInput}
-                  placeholder="Оставьте комментарий"
-                  onChange={handleChangeCommentText}
-                  value={commentText}
-                  disabled={!isAuth}
-                />
-                <IconButton
-                  disabled={isCommentEmpty()}
-                  onClick={handleSendComment}
-                  size="large"
-                  variant="contained"
-                >
-                  <SendIcon />
-                </IconButton>
-              </Box>
-            }
-
-            <Box>
-              {comments?.length > 0 ? (
-                comments?.map((comment, index) => (
-                  <VideoCommentary
-                    key={index}
-                    commentData={comment}
-                    currentUserId={userId}
-                    videoOwnerId={authorId}
-                    handleDelete={handleDeleteComment(comment)}
-                  />
-                ))
-              ) : (
-                <Typography variant={'body1'}>
-                  Пока нет комментариев...
+              <Box variant="body1" sx={{ opacity: 0.7 }}>
+                <Typography variant={'body1'} sx={{ opacity: 0.7 }}>
+                  Дата публикации: {createTimestamp}
                 </Typography>
-              )}
+              </Box>
+              <ShowMoreText
+                className={styles.truncateText}
+                lines={1}
+                more="Читать далее"
+                less="Свернуть"
+                // anchorClass="show-more-less-clickable"
+                expanded={false}
+                keepNewLines={false}
+                // width={800}
+                truncatedEndingComponent={'... '}
+              >
+                {description}
+              </ShowMoreText>
+            </Box>
+
+            <Typography
+              variant="h6"
+              paddingLeft="1rem"
+              marginTop="2rem"
+              sx={{ userSelect: 'none' }}
+            >
+              Комментарии
+            </Typography>
+
+            <Box
+              className={styles.commentSection}
+              backgroundColor={theme.palette.shadows.main}
+            >
+              {
+                <Box className={styles.userCommentary}>
+                  <Avatar
+                    alt="avatar"
+                    src={`${API_URL}/user/avatar/${userId}`}
+                  />
+                  <input
+                    type="text"
+                    className={styles.commentaryInput}
+                    placeholder="Оставьте комментарий"
+                    onChange={handleChangeCommentText}
+                    value={commentText}
+                    disabled={!isAuth}
+                  />
+                  <IconButton
+                    disabled={isCommentEmpty()}
+                    onClick={handleSendComment}
+                    size="large"
+                    variant="contained"
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </Box>
+              }
+
+              <Box>
+                {comments?.length > 0 ? (
+                  comments?.map((comment, index) => (
+                    <VideoCommentary
+                      key={index}
+                      commentData={comment}
+                      currentUserId={userId}
+                      videoOwnerId={authorId}
+                      handleDelete={handleDeleteComment(comment)}
+                    />
+                  ))
+                ) : (
+                  <Typography variant={'body1'}>
+                    Пока нет комментариев...
+                  </Typography>
+                )}
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <Box
-          // py={{ md: 1, xs: 5 }}
-          justifyContent="center"
-          alignItems="center"
-        ></Box>
-      </Stack>
-    </Box>
+          <Box
+            // py={{ md: 1, xs: 5 }}
+            justifyContent="center"
+            alignItems="center"
+          ></Box>
+        </Stack>
+      </Box>
+
+      <ConfirmModal
+        submitAction={handleModalUnSub}
+        openModal={openModal}
+        closeModal={handleCloseModal}
+        title="Вы уверены, что хотите отписаться?"
+        content='Нажимая "Отказаться от подписки", вы перестанете быть подписчиком данного канала и не сможете отслеживать новые видео.'
+        cancelButton="Отмена"
+        submitButton="Отказаться от подписки"
+      />
+    </>
   );
 };
 
