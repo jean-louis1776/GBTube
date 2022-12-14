@@ -18,6 +18,8 @@ const UploadAvatar = ({userId, refreshData}) => {
     try {
       await UserController.addAvatar(userId, formData);
       setHandleStatusOk(true);
+      setImage(null);
+      evt.target.reset();
       refreshData();
     } catch (err) {
       setHandleStatusOk(false);
