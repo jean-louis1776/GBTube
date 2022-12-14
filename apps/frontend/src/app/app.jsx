@@ -123,11 +123,33 @@ export function App() {
           }
         />
         <Route
+          path={`/${CHANNEL}/edit/:idList`}
+          element={
+            <EditItemInfo
+              elemType={CHANNEL}
+              sendData={EditItemController.updateItem}
+              isEdit={true}
+              getItemById={GetChildrenController.getItemById}
+            />
+          }
+        />
+        <Route
           path={`/${PLAYLIST}/create/:idList`}
           element={
             <EditItemInfo
               elemType={PLAYLIST}
               sendData={EditItemController.addItem}
+            />
+          }
+        />
+        <Route
+          path={`/${PLAYLIST}/edit/:idList`}
+          element={
+            <EditItemInfo
+              elemType={PLAYLIST}
+              sendData={EditItemController.updateItem}
+              isEdit={true}
+              getItemById={GetChildrenController.getItemById}
             />
           }
         />
