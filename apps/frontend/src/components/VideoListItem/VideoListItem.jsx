@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { CHANNEL, VIDEO } from '@constants/frontend';
 import { Loader } from '../index';
 import VideoController from '../../controllers/VideoController';
 
 import styles from './VideoListItem.module.scss';
-import { store } from '../../store';
 import { searchStringSelector } from '../../store/selectors';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteHistoryItem } from '../../store/slice';
@@ -30,7 +29,7 @@ const VideoListItem = ({ idList, userId, deleteFromHistory }) => {
       });
   }, []);
 
-  if (!video.title?.includes(search)) {
+  if (!video.title?.toLowerCase().includes(search.toLowerCase())) {
     return null;
   }
 
