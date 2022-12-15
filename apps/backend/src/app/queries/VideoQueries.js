@@ -4,7 +4,6 @@ import { VideoHistory } from "../models/VideoHistory";
 import { Op } from "sequelize";
 import { ApiError } from "../errors/apiError";
 import { VideoLike } from "../models/VideoLike";
-import { Channel } from "../models/Channel";
 
 class VideoQueries {
 
@@ -371,7 +370,7 @@ class VideoQueries {
 
   async getLikesListByUserId(userId) {
     try {
-      const videoList = await VideoLike.findAll({where: {userId}});
+      const videoList = await VideoLike.findAll({where: {userId, liked: true}});
       if (!videoList) return null;
       return (videoList).map(value => value.toJSON().videoId);
     } catch (e) {
