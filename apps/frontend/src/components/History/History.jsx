@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { Header } from '../';
 import SearchHistoryForm from './SearchHistoryForm';
@@ -16,6 +16,7 @@ import styles from './History.module.scss';
 const History = () => {
   const selectedCategory = 'История';
 
+  const [loading, setLoading] = useState(false);
   const { profileReducer } = store.getState();
   const currentUserId = Number(profileReducer.id);
   const dispatch = useDispatch();
@@ -23,18 +24,23 @@ const History = () => {
 
   useEffect(() => {
     document.title = 'История | GeekTube';
-    const videoHistory = async (userId) => {
-      return VideoController.getVideoHistory(userId);
-    };
-    videoHistory(currentUserId).then((videos) =>
-      dispatch(setHistoryList(videos))
-    );
-    return () => {
-      batch(() => {
-        dispatch(setHistoryList([]));
-        dispatch(setSearchString(''));
-      });
-    };
+    setLoading(true);
+    try {
+      const videoHistory = async (userId) => {
+        return VideoController.getVideoHistory(userId);
+      };
+      videoHistory(currentUserId)
+        .then((videos) => dispatch(setHistoryList(videos)))
+        .then(() => setLoading(false));
+      return () => {
+        batch(() => {
+          dispatch(setHistoryList([]));
+          dispatch(setSearchString(''));
+        });
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   const onClearStory = async () => {
@@ -73,9 +79,11 @@ const History = () => {
           )}
 
           <Box>
-            {historyList.length === 0 ? (
+            {loading ? (
+              <Loader />
+            ) : historyList.length === 0 ? (
               <Typography variant="h5" sx={{ userSelect: 'none' }}>
-                Похоже вы не еще не посмотрели свое первое видео
+                Похоже вы еще не посмотрели свое первое видео
               </Typography>
             ) : (
               historyList
