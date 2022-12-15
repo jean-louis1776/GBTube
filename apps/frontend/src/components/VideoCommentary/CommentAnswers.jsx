@@ -101,15 +101,12 @@ const CommentAnswers = ({
     <Stack direction="column" marginBottom={3}>
       <Box className={styles.comment} sx={{ marginLeft: '5rem' }}>
         <Box className={styles.avatar}>
-          <Link to="/user/:id">
-            <Avatar />
-          </Link>
+          <Avatar />
         </Box>
         <Box>
           <Stack direction="row" alignItems="center">
-            <Link to="/user/:id">
-              <Typography variant="subtitle1">{answerData.nickName}</Typography>
-            </Link>
+            <Typography variant="subtitle1">{answerData.nickName}</Typography>
+
             <Typography
               variant={'caption'}
               fontSize=".7rem"
