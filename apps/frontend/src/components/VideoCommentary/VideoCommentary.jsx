@@ -47,14 +47,17 @@ const VideoCommentary = ({
   const [answerText, setAnswerText] = useState('');
   const [answers, setAnswers] = useState([]);
   const [isShownAllAnswers, setIsShownAllAnswers] = useState(false);
-  const [ answerId, setAnswerId] = useState('');
+  const [answerId, setAnswerId] = useState('');
   const currentCommentId = useMemo(() => {
     return commentData.idList.split('_').at(-1);
   }, [commentData]);
   const isAuth = useSelector(getAuthStatus, shallowEqual);
 
   const getAllAnswers = async () => {
-    const answers = await AnswerController.getAllItems(currentCommentId, userId);
+    const answers = await AnswerController.getAllItems(
+      currentCommentId,
+      userId
+    );
     setAnswers(answers);
   };
   useEffect(() => {
@@ -120,11 +123,10 @@ const VideoCommentary = ({
         answerText.trim()
       );
       setAnswerText('');
-      setAnswerId(answerId)
+      setAnswerId(answerId);
       const answers = await AnswerController.getAllItems(+commentId, userId);
       setAnswers(answers);
       setIsVisibleSetAnswer((prev) => !prev);
-
     } catch (err) {
       console.log('Send comment error');
       console.log(err);
@@ -137,7 +139,7 @@ const VideoCommentary = ({
       event.stopPropagation();
       handleSendAnswerToComment();
     }
-  }
+  };
 
   const isCommentEmpty = () => answerText.length === 0;
 
@@ -327,16 +329,19 @@ const VideoCommentary = ({
         </Box>
       </Box>
       <Box>
-      {!!answers?.length &&  <IconButton onClick={handleShowAnswers}>
-          <Typography variant="subtitle1">
-          {isShownAllAnswers ? 'Скрыть' : 'Показать'} все ответы ({`${answers.length}`})
-          </Typography>
-          {isShownAllAnswers ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-        </IconButton>}
+        {!!answers?.length && (
+          <IconButton onClick={handleShowAnswers} sx={{ borderRadius: '40px' }}>
+            <Typography variant="subtitle1" sx={{ pl: '8px' }}>
+              {isShownAllAnswers ? 'Скрыть' : 'Показать'} все ответы (
+              {`${answers.length}`})
+            </Typography>
+            {isShownAllAnswers ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </IconButton>
+        )}
       </Box>
       {isShownAllAnswers && (
         <Box>
-          {answers?.length > 0 && (
+          {answers?.length > 0 &&
             answers?.map((answer, index) => (
               <CommentAnswers
                 key={index}
@@ -346,8 +351,7 @@ const VideoCommentary = ({
                 answerId={answerId}
                 handleDelete={handleDeleteAnswer(answer)}
               />
-            ))
-          )}
+            ))}
         </Box>
       )}
     </Stack>
