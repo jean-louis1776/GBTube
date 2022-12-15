@@ -10,9 +10,22 @@ const UserAbout = ({ description }) => {
       >
         Описание
       </Typography>
-      <Typography sx={{ fontSize: '1.1rem' }}>
-        {description || 'Описание не задано'}
-      </Typography>
+      {description === '' ? (
+        <Typography
+          sx={{
+            fontSize: '1.1rem',
+            fontStyle: 'italic',
+            opacity: 0.7,
+            userSelect: 'none',
+          }}
+        >
+          Описание не задано
+        </Typography>
+      ) : (
+        <Typography sx={{ fontSize: '1.1rem' }}>
+          {description || 'Описание не задано'}
+        </Typography>
+      )}
     </Box>
   );
 };
