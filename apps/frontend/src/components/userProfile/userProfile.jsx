@@ -117,7 +117,7 @@ const UserProfile = () => {
             <Typography
               variant="h5"
               fontWeight={600}
-              sx={{ textAlign: 'center' }}
+              sx={{ textAlign: 'center', userSelect: 'none' }}
             >
               Ваш профиль
             </Typography>
