@@ -111,12 +111,12 @@ const CommentAnswers = ({
               <Typography variant="subtitle1">{answerData.nickName}</Typography>
             </Link>
             <Typography
-              variant={'overline'}
-              fontSize=".6rem"
-              fontWeight="200"
+              variant={'caption'}
+              fontSize=".7rem"
               marginLeft="10px"
+              sx={{ userSelect: 'none', opacity: 0.6 }}
             >
-              Дата публикации: {date.toLocaleDateString()}
+              Опубликовано: {date.toLocaleDateString()}
             </Typography>
           </Stack>
           <ShowMoreText
