@@ -74,6 +74,7 @@ class VideoController {
   async edit(req, res, next) {
     try {
       validateError(req);
+      console.log(req.body);
       const {idList, updatingObject} = req.body;
       return res.json(await videoService.edit(idList, updatingObject));
     } catch (e) {

@@ -82,7 +82,6 @@ class VideoQueries {
     }
   }
 
-  //async updateVideoInfo(id, title, category, description) {
   async updateVideoInfo(id, data) {
     try {
       let isUpdate = 0;
@@ -109,7 +108,7 @@ class VideoQueries {
         updObj.playlistId = data.playlistId;
         delete data.playlistId;
       }
-      if (Object.keys(updObj).length) isUpdate += await Video.update({title: data.title}, {where: {id}});
+      if (Object.keys(updObj).length) isUpdate += await Video.update(updObj, {where: {id}});
       if (Object.keys(data).length) isUpdate += await VideoInfo.update(data, {where: {videoId: id}});
       return !!isUpdate;
     } catch (e) {

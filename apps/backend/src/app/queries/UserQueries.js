@@ -3,9 +3,6 @@ import { Op } from 'sequelize';
 
 import { User } from "../models/Users";
 import { UserInfo } from "../models/UserInfo";
-import { Token } from "../models/Tokens";
-import { Channel } from "../models/Channel";
-import { ChannelInfo } from "../models/ChannelInfo";
 import { ApiError } from "../errors/apiError";
 
 class UserQueries {

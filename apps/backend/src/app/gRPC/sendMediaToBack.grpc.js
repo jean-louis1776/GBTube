@@ -11,7 +11,7 @@ export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {
           throw ApiError.InternalServerError(`Remote Server Error: ${err.message}`);
       }
       if (resGrpc.fileExist) {
-        throw ApiError.InternalServerError('Remote file already exist');
+        throw ApiError.InternalServerError('Remote file is already exist');
       }
       const rdStream = fs.createReadStream(fileNameFrom);
       // Добавить res и смотреть значение status в нём, чтобы понять что загрузка окончена
@@ -22,13 +22,13 @@ export const sendMediaToBack = (fileNameFrom, fileNameTo, callback) => {
         }
       });
       // Вынести в отдельное сообщение отправку fileName
-/*      serviceCall.write({ fileName: fileNameTo });
+      serviceCall.write({ fileName: fileNameTo });
       rdStream.on('data', (chunk) => {
         serviceCall.write({ chunk });
-      });*/
-      rdStream.on('data', (chunk) => {
-        serviceCall.write({ fileName: fileNameTo, chunk });
       });
+/*       rdStream.on('data', (chunk) => {
+        serviceCall.write({ fileName: fileNameTo, chunk });
+      }); */
       rdStream.on('error', () => {
         serviceCall.end();
         throw ApiError.InternalServerError('Reading file Error');

@@ -6,7 +6,7 @@ service VideoService {
   rpc callMediaInfo (MediaReq) returns (MediaInfoRes);
   rpc callVideoChunk (VideoReq) returns (stream MediaRes);
   rpc callMediaSimple (MediaReq) returns (stream MediaRes);
-  rpc sendMedia (stream MediaSendReq) returns (Empty);
+  rpc sendMedia (stream MediaSendReq) returns (MediaSendRes);
   rpc isFileExist (ExistReq) returns (ExistRes);
   rpc deleteFile (DeleteFileReq) returns (Empty);
 }
@@ -28,12 +28,26 @@ message VideoReq {
 }
 
 message MediaRes {
-  bytes mediaStream = 1;
+  oneof response {
+    bytes mediaStream = 1;
+    bool isError = 2;
+  }
 }
 
 message MediaSendReq {
-  string fileName = 1;
-  bytes chunk = 2;
+  oneof request {
+    string fileName = 1;
+    bytes chunk = 2;
+  }
+}
+
+enum Status {
+  SUCCESS = 0;
+  FAILED = 1;
+}
+
+message MediaSendRes {
+  Status status = 1;
 }
 
 message Empty {}
