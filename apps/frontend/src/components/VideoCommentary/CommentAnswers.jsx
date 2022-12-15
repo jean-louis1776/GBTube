@@ -59,7 +59,10 @@ const CommentAnswers = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await AnswerController.like((answerId || currentAnswerId), userId);
+      const { data: status } = await AnswerController.like(
+        answerId || currentAnswerId,
+        userId
+      );
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -79,7 +82,10 @@ const CommentAnswers = ({
 
   const handleDislikeReaction = async () => {
     try {
-      const { data: status } = await AnswerController.dislike((answerId || currentAnswerId), userId);
+      const { data: status } = await AnswerController.dislike(
+        answerId || currentAnswerId,
+        userId
+      );
 
       if (status && currentReaction === '') {
         setDislikesCount(dislikesCount + 1);
@@ -99,7 +105,7 @@ const CommentAnswers = ({
 
   return (
     <Stack direction="column" marginBottom={3}>
-      <Box className={styles.comment} sx={{ marginLeft: '5rem' }}>
+      <Box className={styles.comment} sx={{ marginLeft: '3.4rem' }}>
         <Box className={styles.avatar}>
           <Avatar />
         </Box>
@@ -140,7 +146,11 @@ const CommentAnswers = ({
                     }}
                   />
                 ) : (
-                  <ThumbUpOutlined />
+                  <ThumbUpOutlined
+                    sx={{
+                      color: theme.palette.whiteButton.main,
+                    }}
+                  />
                 )}
                 <Typography
                   variant={'body1'}
@@ -163,7 +173,11 @@ const CommentAnswers = ({
                     }}
                   />
                 ) : (
-                  <ThumbDownOutlined />
+                  <ThumbDownOutlined
+                    sx={{
+                      color: theme.palette.whiteButton.main,
+                    }}
+                  />
                 )}
                 <Typography
                   variant="body1"
@@ -175,13 +189,9 @@ const CommentAnswers = ({
               </ReactionButton>
             </Tooltip>
             {isMayRemove() && (
-              <IconButton
-                size="large"
-                onClick={handleDelete}
-                variant="contained"
-              >
-                <DeleteForeverIcon />
-              </IconButton>
+              <Button onClick={handleDelete} variant="text" color="baseBlue">
+                Удалить
+              </Button>
             )}
           </Box>
         </Box>

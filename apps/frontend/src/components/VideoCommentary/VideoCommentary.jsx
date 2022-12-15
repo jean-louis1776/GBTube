@@ -158,7 +158,10 @@ const VideoCommentary = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await CommentController.like((+commentId || +currentCommentId), userId);
+      const { data: status } = await CommentController.like(
+        +commentId || +currentCommentId,
+        userId
+      );
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -179,7 +182,7 @@ const VideoCommentary = ({
   const handleDislikeReaction = async () => {
     try {
       const { data: status } = await CommentController.dislike(
-        (+commentId || +currentCommentId),
+        +commentId || +currentCommentId,
         userId
       );
 
@@ -293,12 +296,7 @@ const VideoCommentary = ({
               Ответить
             </CommentButton>
             {isMayRemove() && (
-              <Button
-                size="large"
-                onClick={handleDelete}
-                variant="text"
-                color="baseBlue"
-              >
+              <Button onClick={handleDelete} variant="text" color="baseBlue">
                 Удалить
               </Button>
             )}
@@ -327,14 +325,25 @@ const VideoCommentary = ({
           )}
         </Box>
       </Box>
-      <Box>
+      <Box sx={{ ml: '3.4rem', my: '0.5rem' }}>
         {!!answers?.length && (
-          <IconButton onClick={handleShowAnswers} sx={{ borderRadius: '40px' }}>
-            <Typography variant="subtitle1" sx={{ pl: '8px' }}>
-              {isShownAllAnswers ? 'Скрыть' : 'Показать'} все ответы (
+          <IconButton
+            onClick={handleShowAnswers}
+            sx={{ borderRadius: '40px' }}
+            color="baseBlue"
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{ pl: '8px', color: '#0089EB' }}
+            >
+              {isShownAllAnswers ? 'Скрыть' : 'Показать'} ответы (
               {`${answers.length}`})
             </Typography>
-            {isShownAllAnswers ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+            {isShownAllAnswers ? (
+              <ArrowDropUpIcon color="baseBlue" />
+            ) : (
+              <ArrowDropDownIcon color="baseBlue" />
+            )}
           </IconButton>
         )}
       </Box>

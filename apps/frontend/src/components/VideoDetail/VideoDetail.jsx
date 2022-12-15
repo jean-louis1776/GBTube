@@ -290,7 +290,10 @@ const VideoDetail = () => {
             >
               {title}
             </Typography>
-            <Typography variant={'body1'} sx={{ opacity: 0.85 }}>
+            <Typography
+              variant={'body1'}
+              sx={{ opacity: 0.85, userSelect: 'none' }}
+            >
               {viewsCount} просмотров
             </Typography>
           </Stack>
@@ -385,7 +388,11 @@ const VideoDetail = () => {
                         }}
                       />
                     ) : (
-                      <ThumbUpOutlined />
+                      <ThumbUpOutlined
+                        sx={{
+                          color: theme.palette.whiteButton.main,
+                        }}
+                      />
                     )}
                     <Typography
                       variant={'body1'}
@@ -408,7 +415,11 @@ const VideoDetail = () => {
                         }}
                       />
                     ) : (
-                      <ThumbDownOutlined />
+                      <ThumbDownOutlined
+                        sx={{
+                          color: theme.palette.whiteButton.main,
+                        }}
+                      />
                     )}
                     <Typography
                       variant="body1"
@@ -439,12 +450,12 @@ const VideoDetail = () => {
           </Stack>
 
           <Box
-            padding=".7rem"
+            padding="1.25rem"
             marginTop="2rem"
             width="100%"
             className={styles.descriptionWrapper}
           >
-            <Box variant="body1" sx={{ opacity: 0.7 }}>
+            <Box variant="body1" sx={{ opacity: 0.6 }}>
               <Typography
                 variant={'body1'}
                 sx={{ opacity: 0.7, userSelect: 'none' }}
@@ -452,7 +463,7 @@ const VideoDetail = () => {
                 Дата публикации: {createTimestamp}
               </Typography>
             </Box>
-            <Box variant="body1" sx={{ opacity: 0.7 }}>
+            <Box variant="body1" sx={{ opacity: 1 }}>
               <ShowMoreText
                 className={styles.truncateText}
                 lines={1}
@@ -469,7 +480,12 @@ const VideoDetail = () => {
             </Box>
           </Box>
 
-          <Typography paddingLeft="1rem" marginTop="2rem">
+          <Typography
+            paddingLeft="1rem"
+            marginTop="2rem"
+            fontSize="1.2rem"
+            sx={{ userSelect: 'none' }}
+          >
             Комментарии
           </Typography>
 
