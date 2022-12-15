@@ -62,7 +62,7 @@ const VideoCommentary = ({
   };
   useEffect(() => {
     getAllAnswers();
-  }, []);
+  }, [answerId]);
 
   const CommentButton = styled(Button)(({ theme }) => ({
     padding: '7px 15px',
@@ -138,6 +138,7 @@ const VideoCommentary = ({
       event.preventDefault();
       event.stopPropagation();
       handleSendAnswerToComment();
+      event.target.blur();
     }
   };
 
@@ -157,7 +158,7 @@ const VideoCommentary = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await CommentController.like(+commentId, userId);
+      const { data: status } = await CommentController.like((+commentId || +currentCommentId), userId);
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -178,7 +179,7 @@ const VideoCommentary = ({
   const handleDislikeReaction = async () => {
     try {
       const { data: status } = await CommentController.dislike(
-        +commentId,
+        (+commentId || +currentCommentId),
         userId
       );
 
