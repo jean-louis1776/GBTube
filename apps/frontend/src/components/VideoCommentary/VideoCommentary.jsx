@@ -202,17 +202,15 @@ const VideoCommentary = ({
     <Stack direction="column" marginBottom={3}>
       <Box className={styles.comment}>
         <Box className={styles.avatar}>
-          <Link to="/user/:id">
-            <Avatar alt="avatar" src={`${API_URL}/user/avatar/${userId}`} />
-          </Link>
+          {/*<Link to="/user/:id">*/}
+          <Avatar alt="avatar" src={`${API_URL}/user/avatar/${userId}`} />
+          {/*</Link>*/}
         </Box>
         <Box sx={{ width: '100%' }}>
           <Stack direction="row" alignItems="center">
-            <Link to="/user/:id">
-              <Typography variant="subtitle1">
-                {commentData.nickName}
-              </Typography>
-            </Link>
+            {/*<Link to="/user/:id">*/}
+            <Typography variant="subtitle1">{commentData.nickName}</Typography>
+            {/*</Link>*/}
             <Typography
               variant={'caption'}
               fontSize=".7rem"
