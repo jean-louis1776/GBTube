@@ -22,6 +22,7 @@ import {
 } from '@mui/icons-material';
 import AnswerController from '../../controllers/AnswerController';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { API_URL } from '@constants/frontend';
 
 const CommentAnswers = ({
   answerData,
@@ -107,7 +108,7 @@ const CommentAnswers = ({
     <Stack direction="column" marginBottom={3}>
       <Box className={styles.comment} sx={{ marginLeft: '3.4rem' }}>
         <Box className={styles.avatar}>
-          <Avatar />
+          <Avatar alt="avatar" src={`${API_URL}/user/avatar/${answerData.userId}`} />
         </Box>
         <Box>
           <Stack direction="row" alignItems="center">
