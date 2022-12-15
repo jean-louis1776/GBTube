@@ -46,8 +46,8 @@ const UserProfile = () => {
             date.getDate() > 10 ? `${date.getDate()}` : `0${date.getDate()}`;
           setUserData({ ...data, birthDate: `${year}-${month}-${day}` });
         }
+
         setIsInfoUpdated(true);
-        console.log(data);
       })
       .catch((err) => {
         console.log('Fetch user data failed');
@@ -63,6 +63,32 @@ const UserProfile = () => {
 
   const handleChangeTab = (event, newValue) => {
     setTabNumber(newValue);
+  };
+
+  const userAge = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const enteringBirthday = new Date(userData.birthDate)
+      .toLocaleDateString()
+      .split('.')
+      .reverse();
+    const birthday = new Date(
+      enteringBirthday[0],
+      enteringBirthday[1],
+      enteringBirthday[2]
+    );
+    const birthdayNow = new Date(
+      today.getFullYear(),
+      birthday.getMonth(),
+      birthday.getDate()
+    );
+    let age = today.getFullYear() - birthday.getFullYear();
+
+    if (today < birthdayNow) {
+      age -= 1;
+    }
+
+    return age;
   };
 
   return (
@@ -115,7 +141,10 @@ const UserProfile = () => {
                 </Typography>
                 <Typography className={styles.userInfo}>
                   <span>Дата рождения:</span>{' '}
-                  {new Date(userData.birthDate).toLocaleDateString()}
+                  {userData.birthDate === ''
+                    ? 'Не указано'
+                    : new Date(userData.birthDate).toLocaleDateString()}{' '}
+                  {userData.birthDate === '' ? '' : `(${userAge()} лет)`}
                 </Typography>
                 <Typography className={styles.userInfo}>
                   <span>Email:</span> {userData.email}

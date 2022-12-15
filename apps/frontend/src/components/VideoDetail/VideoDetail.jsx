@@ -537,68 +537,6 @@ const VideoDetail = () => {
                 </Typography>
               )}
             </Box>
-
-            {/* <Typography */}
-            {/* //   variant="h6"
-            //   paddingLeft="1rem"
-            //   marginTop="2rem"
-            //   sx={{ userSelect: 'none' }}
-            // >
-            //   Комментарии
-            // </Typography>
-
-            // <Box */}
-            {/* //   className={styles.commentSection}
-            //   backgroundColor={theme.palette.shadows.main}
-            // >
-            //   { */}
-            {/* //     <Box className={styles.userCommentary}>
-            //       <Avatar */}
-            {/* //         alt="avatar"
-            //         src={`${API_URL}/user/avatar/${userId}`}
-            //       />
-            //       <input */}
-            {/* //         type="text"
-            //         className={styles.commentaryInput}
-            //         placeholder="Оставьте комментарий"
-            //         onChange={handleChangeCommentText}
-            //         value={commentText}
-            //         disabled={!isAuth}
-            //       />
-            //       <IconButton */}
-            {/* //         disabled={isCommentEmpty()}
-            //         onClick={handleSendComment}
-            //         size="large"
-            //         variant="contained"
-            //       >
-            //         <SendIcon />
-            //       </IconButton>
-            //     </Box>
-
-
-          //       <Box>
-          //         {comments?.length > 0 ? ( */}
-            {/* //           comments?.map((comment, index) => (
-          //             <VideoCommentary */}
-            {/* //               key={index}
-          //               commentData={comment}
-          //               currentUserId={userId}
-          //               videoOwnerId={authorId}
-          //               handleDelete={handleDeleteComment(comment)}
-          //             />
-          //           ))
-          //         ) : (
-          //           <Typography variant={'body1'}>
-          //             Пока нет комментариев...
-          //           </Typography>
-          //         )}
-          //       </Box>
-          //   </Box>
-          // </Box> */}
-            {/* <Box
-           py={{ md: 1, xs: 5 }}
-             justifyContent="center"
-             alignItems="center" */}
           </Box>
         </Box>
       </Stack>
