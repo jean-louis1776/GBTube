@@ -39,6 +39,7 @@ import {
   setRole,
 } from '../store/slice';
 import GetChildrenController from '../controllers/GetChildrenController';
+import VideoController from '../controllers/VideoController';
 
 export function App() {
   const dispatch = useDispatch();
@@ -156,6 +157,17 @@ export function App() {
         <Route
           path={`/${VIDEO}/create/:idList`}
           element={<UploadVideoDraft />}
+        />
+        <Route
+          path={`/${VIDEO}/edit/:idList`}
+          element={
+            <EditItemInfo
+              elemType={VIDEO}
+              sendData={VideoController.editVideo}
+              isEdit={true}
+              getItemById={VideoController.getVideoInfo}
+            />
+          }
         />
         <Route path="/404NotFound" element={<NotFound />} />
         <Route path="/emailConfirm" element={<EmailConfirm />} />

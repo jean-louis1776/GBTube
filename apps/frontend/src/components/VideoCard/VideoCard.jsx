@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Typography,
   Tooltip,
@@ -20,6 +20,7 @@ import ConfirmModal from '../ConfirmModal/ConfirmModal';
 import styles from './VideoCard.module.scss';
 
 const VideoCard = ({ idList, onChannelPage }) => {
+  const navigate = useNavigate();
   const videoId = idList?.split('_').at(-1);
   const authorId = idList.split('_')[0];
   const userId = useSelector(getUserId, shallowEqual);
@@ -70,6 +71,10 @@ const VideoCard = ({ idList, onChannelPage }) => {
     setOpenModal(false);
   };
 
+  const handleEdit = () => {
+    navigate(`/${VIDEO}/edit/${idList}`);
+  }
+
   return (
     <>
       <Box className={styles.videoCard}>
@@ -104,7 +109,7 @@ const VideoCard = ({ idList, onChannelPage }) => {
               }}
             >
               <MenuItem
-                // onClick={handleOpenModal}
+                onClick={handleEdit}
                 className={styles.deleteListItem}
               >
                 <Typography>Редактировать</Typography>

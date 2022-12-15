@@ -121,11 +121,16 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
               flexDirection: 'column',
               justifyContent: 'space-around',
               minHeight: '86vh',
+              width: '350px',
               position: 'fixed',
               left: '64px',
               top: 'auto',
               padding: '32px',
               margin: '32px',
+              background:
+                'linear-gradient(0deg, rgba(31,31,31,0.7) 7%, rgba(0,137,235,0.5) 50%, rgba(224,85,127,0.5) 95%)',
+              borderRadius: '4px 4px 0 0 ',
+              boxShadow: 'none',
             }}
           >
             <Box maxWidth={'25vw'}>
@@ -148,7 +153,11 @@ const VideoGrid = ({ isParent, getChildren, withHeader }) => {
                   >
                     Название плейлиста:
                   </Typography>
-                  <Typography variant="h6" fontWeight={300}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={300}
+                    sx={{ width: '100%' }}
+                  >
                     {title.slice(0, 60) + '...'}
                   </Typography>
                 </Tooltip>

@@ -72,6 +72,18 @@ const UserPage = () => {
     navigate(`/${CHANNEL}/edit/${idList}`);
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleModalUnSub = () => {
+    handleSubscribe();
+    handleCloseModal();
+  };
+
   return (
     <>
       <Header withNavbar />
@@ -124,7 +136,7 @@ const UserPage = () => {
             ) : (
               <Button
                 disabled={!isAuth}
-                onClick={handleSubscribe}
+                onClick={handleOpenModal}
                 color="whiteButton"
                 sx={{
                   backgroundColor: theme.palette.shadows.main,
@@ -188,7 +200,15 @@ const UserPage = () => {
         </Box>
       </Box>
 
-      {/* <ConfirmModal/> */}
+      <ConfirmModal
+        submitAction={handleModalUnSub}
+        openModal={openModal}
+        closeModal={handleCloseModal}
+        title="Вы уверены, что хотите отписаться?"
+        content='Нажимая "Отказаться от подписки", вы перестанете быть подписчиком данного канала и не сможете отслеживать новые видео.'
+        cancelButton="Отмена"
+        submitButton="Отказаться от подписки"
+      />
     </>
   );
 };

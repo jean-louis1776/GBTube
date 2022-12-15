@@ -121,7 +121,7 @@ const VideoCommentary = ({
       );
       setAnswerText('');
       setAnswerId(answerId)
-      const answers = await AnswerController.getAllItems(commentId, userId);
+      const answers = await AnswerController.getAllItems(+commentId, userId);
       setAnswers(answers);
       setIsVisibleSetAnswer((prev) => !prev);
 
@@ -142,10 +142,10 @@ const VideoCommentary = ({
   const isCommentEmpty = () => answerText.length === 0;
 
   const handleDeleteAnswer = (answer) => async () => {
-    // const answerId = answer.idList.split('_').at(-1);
+    // const currrentAnswerId = answer.idList.split('_').at(-1);
     try {
       await AnswerController.delete(answerId);
-      const newAnswers = await AnswerController.getAllItems(commentId, userId);
+      const newAnswers = await AnswerController.getAllItems(+commentId, userId);
       setAnswers(newAnswers);
     } catch (err) {
       console.log(`Failed delete answer ${answerId}`);
@@ -155,7 +155,7 @@ const VideoCommentary = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await CommentController.like(commentId, userId);
+      const { data: status } = await CommentController.like(+commentId, userId);
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -176,7 +176,7 @@ const VideoCommentary = ({
   const handleDislikeReaction = async () => {
     try {
       const { data: status } = await CommentController.dislike(
-        commentId,
+        +commentId,
         userId
       );
 

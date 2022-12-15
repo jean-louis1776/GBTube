@@ -26,8 +26,11 @@ export default class VideoController {
     return $authApi.get(`/video/${id}`);
   }
 
-  static async editVideo(video) {
-    return $authApi.patch(`/video/edit/${video.id}`, { ...video });
+  static async editVideo(_, data) {
+    const { title, description, idList } = data;
+    const dto = {idList, updatingObject: {title, description}};
+    console.log(dto);
+    return $authApi.patch(`/video/edit`, dto);
   }
 
   static async deleteVideo(id) {
