@@ -50,7 +50,7 @@ export function EditItemInfo({ elemType, sendData, isEdit, getItemById }) {
     }
 
     document.title = `Создание / изменение ${elemName} | GeekTube`;
-  }, [elemType]);
+  }, []);
 
   return (
     <Stack className={styles.loginSection}>
