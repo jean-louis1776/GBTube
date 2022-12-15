@@ -207,7 +207,7 @@ const VideoCommentary = ({
       <Box className={styles.comment}>
         <Box className={styles.avatar}>
           {/*<Link to="/user/:id">*/}
-          <Avatar alt="avatar" />
+          <Avatar alt="avatar" src={`${API_URL}/user/avatar/${commentData.userId}`} />
           {/*</Link>*/}
         </Box>
         <Box sx={{ width: '100%' }}>
