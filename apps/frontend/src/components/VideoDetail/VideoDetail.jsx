@@ -177,6 +177,7 @@ const VideoDetail = () => {
       event.preventDefault();
       event.stopPropagation();
       handleSendComment();
+      event.target.blur();
     }
   };
 

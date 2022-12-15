@@ -59,7 +59,7 @@ const CommentAnswers = ({
 
   const handleLikeReaction = async () => {
     try {
-      const { data: status } = await AnswerController.like(answerId, userId);
+      const { data: status } = await AnswerController.like((answerId || currentAnswerId), userId);
 
       if (status && currentReaction === '') {
         setLikesCount(likesCount + 1);
@@ -79,7 +79,7 @@ const CommentAnswers = ({
 
   const handleDislikeReaction = async () => {
     try {
-      const { data: status } = await AnswerController.dislike(answerId, userId);
+      const { data: status } = await AnswerController.dislike((answerId || currentAnswerId), userId);
 
       if (status && currentReaction === '') {
         setDislikesCount(dislikesCount + 1);
