@@ -95,7 +95,14 @@ const UserProfile = () => {
     <>
       <Header />
       <Box className={styles.userForm} sx={{ bgcolor: 'darkBackground.main' }}>
-        <Paper className={styles.userForm_container}>
+        <Paper
+          className={styles.userForm_container}
+          sx={{
+            background:
+              'linear-gradient(0deg, rgba(31,31,31,0.7) 25%, rgba(224,85,127,0.5) 100%)',
+            boxShadow: 'none',
+          }}
+        >
           <Box
             sx={{
               width: '100%',
@@ -115,7 +122,7 @@ const UserProfile = () => {
               Ваш профиль
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '6rem' }}>
-              <Box>
+              <Box sx={{ border: '5px solid #0089EB', borderRadius: '50%' }}>
                 <Avatar
                   sx={{
                     width: 150,
