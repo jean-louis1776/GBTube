@@ -91,6 +91,8 @@ const UserProfile = () => {
     return age;
   };
 
+  console.log(userData);
+
   return (
     <>
       <Header />
@@ -128,9 +130,14 @@ const UserProfile = () => {
                     width: 150,
                     height: 150,
                     position: 'relative',
+                    bgcolor: 'baseBlue.main',
                   }}
                   alt="avatar"
-                  src={`${API_URL}/user/avatar/${userId}`}
+                  src={
+                    userData.avatar === ''
+                      ? null
+                      : `${API_URL}/user/avatar/${userId}`
+                  }
                 />
               </Box>
               <Box>
