@@ -81,7 +81,7 @@ const History = () => {
           <Box>
             {loading ? (
               <Loader />
-            ) : historyList.length === 0 ? (
+            ) : !historyList ? (
               <Typography variant="h5" sx={{ userSelect: 'none' }}>
                 Похоже вы еще не посмотрели свое первое видео
               </Typography>

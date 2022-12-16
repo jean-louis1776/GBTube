@@ -104,6 +104,17 @@ const VideoDetail = () => {
             seekDuration={5}
             primaryColor={theme.palette.baseBlue.main}
             keyboardShortcut={false}
+            internationalization={{
+              tooltipsPlay: 'Смотреть',
+              tooltipsPause: 'Пауза',
+              tooltipsMute: 'Отключить звук',
+              tooltipsUnmute: 'Включить звук',
+              tooltipsSettings: 'Настройки',
+              tooltipsFullscreen: 'Во весь экран',
+              tooltipsExitFullscreen: 'Выйти из полноэкранного режима',
+              settingsPlaybackSpeed: 'Скорость воспроизведения',
+              settingsPlaybackSpeedNormal: 'Обычная',
+            }}
           />
         </div>
       );
@@ -464,19 +475,25 @@ const VideoDetail = () => {
               </Typography>
             </Box>
             <Box variant="body1" sx={{ opacity: 1 }}>
-              <ShowMoreText
-                className={styles.truncateText}
-                lines={1}
-                more="Читать далее"
-                less="Свернуть"
-                // anchorClass="show-more-less-clickable"
-                expanded={false}
-                keepNewLines={false}
-                // width={800}
-                truncatedEndingComponent={'... '}
-              >
-                {description}
-              </ShowMoreText>
+              {description === '' ? (
+                <Typography sx={{ opacity: 0.7, userSelect: 'none' }}>
+                  Описание отсутствует
+                </Typography>
+              ) : (
+                <ShowMoreText
+                  className={styles.truncateText}
+                  lines={1}
+                  more="Читать далее"
+                  less="Свернуть"
+                  // anchorClass="show-more-less-clickable"
+                  expanded={false}
+                  keepNewLines={false}
+                  // width={800}
+                  truncatedEndingComponent={'... '}
+                >
+                  {description}
+                </ShowMoreText>
+              )}
             </Box>
           </Box>
 

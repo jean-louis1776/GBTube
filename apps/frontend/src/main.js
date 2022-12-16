@@ -8,6 +8,7 @@ import { store, persistor } from './store';
 import App from './app/app';
 import { PersistGate } from 'reduxjs-toolkit-persist/es/integration/react';
 import PersistLoader from './components/PersistLoader/PersistLoader';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,7 @@ root.render(
       <PersistGate loading={<PersistLoader />} persistor={persistor}>
         <BrowserRouter>
           <ThemeProvider theme={theme}>
+            <ScrollToTop />
             <App />
           </ThemeProvider>
         </BrowserRouter>
